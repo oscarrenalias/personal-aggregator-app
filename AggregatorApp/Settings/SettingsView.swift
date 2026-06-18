@@ -30,10 +30,10 @@ struct SettingsView: View {
                         switch status {
                         case .success(let version):
                             Label("Connected · v\(version)", systemImage: "checkmark.circle.fill")
-                                .foregroundStyle(.green)
+                                .foregroundStyle(Color(.systemGreen))
                         case .failure(let message):
                             Label(message, systemImage: "exclamationmark.triangle.fill")
-                                .foregroundStyle(.red)
+                                .foregroundStyle(Color(.systemRed))
                         }
                     }
                 }
