@@ -1,0 +1,79 @@
+{
+  "bead_id": "B-076d53d7",
+  "title": "Documentation \u2014 credential storage architecture and local setup",
+  "agent_type": "documentation",
+  "description": "Add accurate doc comments to CredentialsStore (storage contract: which keys go to UserDefaults vs Keychain, injectable test initialiser usage), KeychainHelper (upsert semantics, key namespace), and APIClient (CF header injection, path construction). Verify CLAUDE.md already covers the xcodegen + xcodebuild workflow; add a brief note if anything is missing for future developers onboarding to the project.",
+  "status": "ready",
+  "bead_type": "task",
+  "parent_id": "B-6f152256",
+  "dependencies": [
+    "B-b51b716f",
+    "B-a89b6c08",
+    "B-228539df",
+    "B-bb90df5b",
+    "B-c625129b",
+    "B-73a6c60f",
+    "B-a5287241",
+    "B-1c8b1f23",
+    "B-71b450a2"
+  ],
+  "acceptance_criteria": [
+    "CredentialsStore has a doc comment describing which properties persist to UserDefaults vs Keychain, default values, and how to use the test initialiser",
+    "KeychainHelper has a doc comment describing the upsert behaviour and key namespace",
+    "APIClient has a doc comment describing CF header injection and how path is constructed from baseURL",
+    "CLAUDE.md accurately reflects the xcodegen + simulator test command for this project (update if stale)"
+  ],
+  "linked_docs": [
+    "specs/planned/app-skeleton-credential-configuration-and-sources-integration.md",
+    "CLAUDE.md"
+  ],
+  "feature_root_id": "B-6f152256",
+  "execution_branch_name": "feature/b-6f152256",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-6f152256",
+  "expected_files": [],
+  "expected_globs": [
+    "AggregatorApp/Common/*.swift"
+  ],
+  "touched_files": [],
+  "changed_files": [],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "",
+    "remaining": "",
+    "risks": "",
+    "verdict": "",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [],
+    "updated_docs": [],
+    "next_action": "",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [],
+    "expected_globs": [],
+    "touched_files": [],
+    "conflict_risks": "",
+    "design_decisions": "",
+    "test_coverage_notes": "",
+    "known_limitations": ""
+  },
+  "block_reason": "",
+  "conflict_risks": "",
+  "branch_name": "",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-18T15:26:04.684422+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    }
+  ],
+  "metadata": {},
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

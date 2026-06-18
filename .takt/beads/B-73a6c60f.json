@@ -1,0 +1,76 @@
+{
+  "bead_id": "B-73a6c60f",
+  "title": "API client \u2014 generic HTTP layer with CF header injection",
+  "agent_type": "developer",
+  "description": "Implement APIClient.swift as a struct holding a CredentialsStore reference. Generic func get<T: Decodable>(_ path: String) async throws -> T builds a URLRequest from store.baseURL + path, injects CF-Access-Client-Id and CF-Access-Client-Secret headers from the store, calls URLSession.shared.data(for:), and decodes with JSONDecoder. func post(_ path: String) async throws does the same with HTTP POST and ignores the response body. Throws URLError on network failure; DecodingError on bad JSON. Add concrete methods: getSources() async throws -> [Source] (GET /sources) and healthCheck() async throws -> HealthResponse (GET /health).",
+  "status": "ready",
+  "bead_type": "task",
+  "parent_id": "B-6f152256",
+  "dependencies": [
+    "B-bb90df5b",
+    "B-c625129b"
+  ],
+  "acceptance_criteria": [
+    "APIClient is a struct with a single CredentialsStore property",
+    "Every request injects CF-Access-Client-Id and CF-Access-Client-Secret headers from the store",
+    "get<T> decodes the response body with JSONDecoder",
+    "post sets HTTP method to POST and does not attempt to decode the response body",
+    "getSources() issues GET /sources and returns [Source]",
+    "healthCheck() issues GET /health and returns HealthResponse",
+    "URLError is thrown on network failure; DecodingError is thrown on malformed JSON"
+  ],
+  "linked_docs": [
+    "specs/planned/app-skeleton-credential-configuration-and-sources-integration.md",
+    "docs/API.md",
+    "docs/openapi.json"
+  ],
+  "feature_root_id": "B-6f152256",
+  "execution_branch_name": "feature/b-6f152256",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-6f152256",
+  "expected_files": [
+    "AggregatorApp/Common/APIClient.swift"
+  ],
+  "expected_globs": [],
+  "touched_files": [],
+  "changed_files": [],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "",
+    "remaining": "",
+    "risks": "",
+    "verdict": "",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [],
+    "updated_docs": [],
+    "next_action": "",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [],
+    "expected_globs": [],
+    "touched_files": [],
+    "conflict_risks": "",
+    "design_decisions": "",
+    "test_coverage_notes": "",
+    "known_limitations": ""
+  },
+  "block_reason": "",
+  "conflict_risks": "",
+  "branch_name": "",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-18T15:26:04.679805+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    }
+  ],
+  "metadata": {},
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

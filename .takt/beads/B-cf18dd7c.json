@@ -1,0 +1,86 @@
+{
+  "bead_id": "B-cf18dd7c",
+  "title": "Code review \u2014 skeleton, networking, and Liquid Glass UI",
+  "agent_type": "review",
+  "description": "Review the complete implementation for correctness, security, iOS 26 convention compliance, and test quality. Key checkpoints: no Client ID or Client Secret outside Keychain; CF headers injected on every request; iOS 26 Tab { } syntax used; GlassEffectContainer wraps Sources list; injectable test backing prevents real Keychain access; no hardcoded hex colors or non-system font styles; every tab view has NavigationStack with navigationTitle.",
+  "status": "ready",
+  "bead_type": "task",
+  "parent_id": "B-6f152256",
+  "dependencies": [
+    "B-b51b716f",
+    "B-a89b6c08",
+    "B-228539df",
+    "B-bb90df5b",
+    "B-c625129b",
+    "B-73a6c60f",
+    "B-a5287241",
+    "B-1c8b1f23",
+    "B-71b450a2",
+    "B-042e8ec9",
+    "B-076d53d7"
+  ],
+  "acceptance_criteria": [
+    "clientId and clientSecret are stored exclusively in Keychain \u2014 not in UserDefaults, source files, or Info.plist",
+    "CF-Access-Client-Id and CF-Access-Client-Secret headers appear on every APIClient request",
+    "AppRoot uses iOS 26 Tab { } syntax (no .tabItem)",
+    "SourcesView wraps its List in a GlassEffectContainer with .listRowBackground(Color.clear) on each row",
+    "Unit tests use injectable in-memory backing and make no real Keychain or UserDefaults calls",
+    "No hardcoded hex color values anywhere in the codebase",
+    "All four tab views have a NavigationStack with a .navigationTitle matching the tab label",
+    "All primary views handle Loading, Empty, and Error states where data is fetched"
+  ],
+  "linked_docs": [
+    "specs/planned/app-skeleton-credential-configuration-and-sources-integration.md",
+    "CLAUDE.md"
+  ],
+  "feature_root_id": "B-6f152256",
+  "execution_branch_name": "feature/b-6f152256",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-6f152256",
+  "expected_files": [],
+  "expected_globs": [
+    "AggregatorApp/**/*.swift",
+    "AggregatorAppTests/**/*.swift"
+  ],
+  "touched_files": [],
+  "changed_files": [],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "",
+    "remaining": "",
+    "risks": "",
+    "verdict": "",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [],
+    "updated_docs": [],
+    "next_action": "",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [],
+    "expected_globs": [],
+    "touched_files": [],
+    "conflict_risks": "",
+    "design_decisions": "",
+    "test_coverage_notes": "",
+    "known_limitations": ""
+  },
+  "block_reason": "",
+  "conflict_risks": "",
+  "branch_name": "",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-18T15:26:04.685127+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    }
+  ],
+  "metadata": {},
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

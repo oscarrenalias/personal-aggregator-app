@@ -1,0 +1,76 @@
+{
+  "bead_id": "B-1c8b1f23",
+  "title": "Settings screen \u2014 Server and Cloudflare Access sections",
+  "agent_type": "developer",
+  "description": "Implement SettingsView.swift as a Form with two sections. Section 'Server': TextField bound to credentialsStore.baseURL (.keyboardType(.URL), .autocorrectionDisabled()); Button 'Test Connection' that calls healthCheck() and shows inline status below \u2014 success: Label('Connected \u00b7 v{version}', systemImage: 'checkmark.circle.fill') tinted .green; failure: Label('{error}', systemImage: 'exclamationmark.triangle.fill') tinted .red; in-flight: inline ProgressView. Section 'Cloudflare Access': TextField for clientId (.autocorrectionDisabled(), .textInputAutocapitalization(.never)); SecureField for clientSecret. No Save button \u2014 CredentialsStore persists on didSet.",
+  "status": "ready",
+  "bead_type": "task",
+  "parent_id": "B-6f152256",
+  "dependencies": [
+    "B-73a6c60f",
+    "B-bb90df5b"
+  ],
+  "acceptance_criteria": [
+    "Uses @Environment(CredentialsStore.self) for two-way field bindings",
+    "Form uses default .insetGrouped style (no explicit .listStyle needed on iOS 26)",
+    "Section 'Server' contains Base URL TextField and Test Connection button",
+    "Section 'Cloudflare Access' contains Client ID TextField and Client Secret SecureField",
+    "Test Connection shows inline ProgressView while in-flight",
+    "Test Connection shows green checkmark label with version string on success",
+    "Test Connection shows red triangle label with error message on failure",
+    "No Save button is present anywhere in the form",
+    "NavigationStack title is 'Settings'"
+  ],
+  "linked_docs": [
+    "specs/planned/app-skeleton-credential-configuration-and-sources-integration.md"
+  ],
+  "feature_root_id": "B-6f152256",
+  "execution_branch_name": "feature/b-6f152256",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-6f152256",
+  "expected_files": [
+    "AggregatorApp/Settings/SettingsView.swift"
+  ],
+  "expected_globs": [],
+  "touched_files": [],
+  "changed_files": [],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "",
+    "remaining": "",
+    "risks": "",
+    "verdict": "",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [],
+    "updated_docs": [],
+    "next_action": "",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [],
+    "expected_globs": [],
+    "touched_files": [],
+    "conflict_risks": "",
+    "design_decisions": "",
+    "test_coverage_notes": "",
+    "known_limitations": ""
+  },
+  "block_reason": "",
+  "conflict_risks": "",
+  "branch_name": "",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-18T15:26:04.681687+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    }
+  ],
+  "metadata": {},
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

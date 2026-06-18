@@ -1,0 +1,72 @@
+{
+  "bead_id": "B-71b450a2",
+  "title": "Unit tests \u2014 CredentialsStore defaults and Source decoding",
+  "agent_type": "developer",
+  "description": "Implement AggregatorAppTests.swift with three tests. (1) testCredentialsStoreDefaults: construct CredentialsStore via its test initialiser (in-memory backing); assert baseURL == 'https://aggregator-api.renaliaslabs.net/api/v1', clientId == '', clientSecret == '', isConfigured == false. (2) testCredentialsStoreIsConfigured: set all three to non-empty strings; assert isConfigured == true. (3) testSourceDecodingFromJSON: decode '{\"id\":1,\"name\":\"Test Feed\",\"feed_url\":\"https://example.com/feed.xml\"}' into Source; assert id == 1, name == 'Test Feed', feedURL == 'https://example.com/feed.xml'. No test may access the real Keychain or UserDefaults.",
+  "status": "ready",
+  "bead_type": "task",
+  "parent_id": "B-6f152256",
+  "dependencies": [
+    "B-bb90df5b",
+    "B-c625129b"
+  ],
+  "acceptance_criteria": [
+    "testCredentialsStoreDefaults passes with the expected default values",
+    "testCredentialsStoreIsConfigured passes: all three non-empty strings yields isConfigured == true",
+    "testSourceDecodingFromJSON passes: all three fields decode correctly including the feed_url \u2192 feedURL mapping",
+    "No test accesses the real Keychain or real UserDefaults (uses injectable in-memory backing from CredentialsStore)",
+    "All three tests pass under xcodebuild test"
+  ],
+  "linked_docs": [
+    "specs/planned/app-skeleton-credential-configuration-and-sources-integration.md"
+  ],
+  "feature_root_id": "B-6f152256",
+  "execution_branch_name": "feature/b-6f152256",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-6f152256",
+  "expected_files": [
+    "AggregatorAppTests/AggregatorAppTests.swift"
+  ],
+  "expected_globs": [],
+  "touched_files": [],
+  "changed_files": [],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "",
+    "remaining": "",
+    "risks": "",
+    "verdict": "",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [],
+    "updated_docs": [],
+    "next_action": "",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [],
+    "expected_globs": [],
+    "touched_files": [],
+    "conflict_risks": "",
+    "design_decisions": "",
+    "test_coverage_notes": "",
+    "known_limitations": ""
+  },
+  "block_reason": "",
+  "conflict_risks": "",
+  "branch_name": "",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-18T15:26:04.682625+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    }
+  ],
+  "metadata": {},
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

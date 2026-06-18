@@ -1,0 +1,75 @@
+{
+  "bead_id": "B-6f152256",
+  "title": "App skeleton, credential configuration, and sources integration",
+  "agent_type": "planner",
+  "description": "Non-runnable container bead. Orchestrates all scaffolding, credential layer, networking, UI tabs, and test work for the initial iOS app skeleton defined in spec-3da083df.",
+  "status": "done",
+  "bead_type": "feature",
+  "parent_id": "B-fb5c66f4",
+  "dependencies": [],
+  "acceptance_criteria": [
+    "All child beads complete successfully",
+    "xcodegen generate exits 0 with no warnings about missing source paths",
+    "xcodebuild test exits 0; all three unit tests pass",
+    "App launches in the simulator showing a Liquid Glass floating tab bar: Threads, Sources, Today, Settings in that order",
+    "Threads and Today tabs show ContentUnavailableView with 'Coming soon'",
+    "Settings tab pre-fills Base URL to https://aggregator-api.renaliaslabs.net/api/v1",
+    "Sources tab shows 'Not configured' ContentUnavailableView when credentials are absent",
+    "Sources tab shows glass-backed list rows when credentials are present",
+    "No Client ID or Client Secret stored outside Keychain (not in source files, Info.plist, or UserDefaults)"
+  ],
+  "linked_docs": [
+    "specs/planned/app-skeleton-credential-configuration-and-sources-integration.md",
+    "CLAUDE.md"
+  ],
+  "feature_root_id": "B-6f152256",
+  "execution_branch_name": "feature/b-6f152256",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-6f152256",
+  "expected_files": [],
+  "expected_globs": [
+    "AggregatorApp/**/*.swift",
+    "AggregatorAppTests/**/*.swift"
+  ],
+  "touched_files": [],
+  "changed_files": [],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "",
+    "remaining": "",
+    "risks": "",
+    "verdict": "",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [],
+    "updated_docs": [],
+    "next_action": "",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [],
+    "expected_globs": [],
+    "touched_files": [],
+    "conflict_risks": "",
+    "design_decisions": "",
+    "test_coverage_notes": "",
+    "known_limitations": ""
+  },
+  "block_reason": "",
+  "conflict_risks": "",
+  "branch_name": "",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-18T15:26:04.669530+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    }
+  ],
+  "metadata": {},
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

@@ -1,0 +1,74 @@
+{
+  "bead_id": "B-a89b6c08",
+  "title": "iOS 26 Liquid Glass tab shell",
+  "agent_type": "developer",
+  "description": "Implement AppRoot.swift using the iOS 26 Tab { } initialiser. Four tabs in spec order: Threads (bubble.left.and.bubble.right), Sources (antenna.radiowaves.left.and.right), Today (sparkles), Settings (gearshape). Default selection is Threads (tab 0). Implement ThreadsView.swift and TodayView.swift as stub views showing ContentUnavailableView with the tab name as title and 'Coming soon' as subtitle. Every tab wraps its content in a NavigationStack with a .navigationTitle matching the tab label. No .tabViewStyle override.",
+  "status": "ready",
+  "bead_type": "task",
+  "parent_id": "B-6f152256",
+  "dependencies": [
+    "B-b51b716f"
+  ],
+  "acceptance_criteria": [
+    "AppRoot uses iOS 26 Tab { } syntax, not legacy .tabItem",
+    "Tab order is Threads, Sources, Today, Settings",
+    "Default selected tab is Threads",
+    "Threads and Today views show ContentUnavailableView with tab name as title and 'Coming soon' as subtitle",
+    "Each tab owns a NavigationStack with .navigationTitle matching the tab label",
+    "No custom tab bar styling or .tabViewStyle modifier"
+  ],
+  "linked_docs": [
+    "specs/planned/app-skeleton-credential-configuration-and-sources-integration.md"
+  ],
+  "feature_root_id": "B-6f152256",
+  "execution_branch_name": "feature/b-6f152256",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-6f152256",
+  "expected_files": [
+    "AggregatorApp/AppRoot.swift",
+    "AggregatorApp/Threads/ThreadsView.swift",
+    "AggregatorApp/Today/TodayView.swift"
+  ],
+  "expected_globs": [],
+  "touched_files": [],
+  "changed_files": [],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "",
+    "remaining": "",
+    "risks": "",
+    "verdict": "",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [],
+    "updated_docs": [],
+    "next_action": "",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [],
+    "expected_globs": [],
+    "touched_files": [],
+    "conflict_risks": "",
+    "design_decisions": "",
+    "test_coverage_notes": "",
+    "known_limitations": ""
+  },
+  "block_reason": "",
+  "conflict_risks": "",
+  "branch_name": "",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-18T15:26:04.675885+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    }
+  ],
+  "metadata": {},
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

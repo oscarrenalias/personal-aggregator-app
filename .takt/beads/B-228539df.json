@@ -1,0 +1,71 @@
+{
+  "bead_id": "B-228539df",
+  "title": "Keychain helper",
+  "agent_type": "developer",
+  "description": "Implement KeychainHelper.swift as a struct with two static methods: read(key: String) -> String? and write(key: String, value: String). Use kSecClassGenericPassword. write must upsert \u2014 attempt SecItemAdd first; on errSecDuplicateItem, fall back to SecItemUpdate. Errors are swallowed at this scale (nil on read failure, silent on write failure).",
+  "status": "ready",
+  "bead_type": "task",
+  "parent_id": "B-6f152256",
+  "dependencies": [
+    "B-b51b716f"
+  ],
+  "acceptance_criteria": [
+    "KeychainHelper is a struct (not class)",
+    "read(key:) returns nil when no item exists for the given key",
+    "write(key:value:) upserts: adds on first write, updates on subsequent writes for the same key",
+    "kSecClassGenericPassword is used for both operations",
+    "No throwing or crashing on expected Keychain errors (duplicate item, not found)"
+  ],
+  "linked_docs": [
+    "specs/planned/app-skeleton-credential-configuration-and-sources-integration.md"
+  ],
+  "feature_root_id": "B-6f152256",
+  "execution_branch_name": "feature/b-6f152256",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-6f152256",
+  "expected_files": [
+    "AggregatorApp/Common/KeychainHelper.swift"
+  ],
+  "expected_globs": [],
+  "touched_files": [],
+  "changed_files": [],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "",
+    "remaining": "",
+    "risks": "",
+    "verdict": "",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [],
+    "updated_docs": [],
+    "next_action": "",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [],
+    "expected_globs": [],
+    "touched_files": [],
+    "conflict_risks": "",
+    "design_decisions": "",
+    "test_coverage_notes": "",
+    "known_limitations": ""
+  },
+  "block_reason": "",
+  "conflict_risks": "",
+  "branch_name": "",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-18T15:26:04.676957+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    }
+  ],
+  "metadata": {},
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(gh api *)",
+      "Bash(xcodegen --version)",
+      "Bash(xcodebuild -version)",
+      "Bash(uv --version)",
+      "Bash(xcrun simctl *)",
+      "Bash(awk 'NR>1{print $2}')",
+      "Bash(git check-ignore *)"
+    ]
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "bead_id": "B-a5287241",
+  "title": "Sources tab \u2014 live list with Liquid Glass rows",
+  "agent_type": "developer",
+  "description": "Implement SourcesView.swift. Read CredentialsStore from the environment. When isConfigured is false, show ContentUnavailableView('Not configured', systemImage: 'gearshape', description: Text('Enter your server credentials in Settings.')) without making any network call. When configured, fetch GET /sources via APIClient on appear. Handle four states \u2014 Loading: centered ProgressView; Empty: ContentUnavailableView with antenna.radiowaves.left.and.right; Error: error message + Retry button centered; Loaded: List of rows. Each row shows source.name (.body) and source.feedURL (.caption, .secondary color). Rows use .listRowBackground(Color.clear). Wrap the List in a GlassEffectContainer.",
+  "status": "ready",
+  "bead_type": "task",
+  "parent_id": "B-6f152256",
+  "dependencies": [
+    "B-73a6c60f"
+  ],
+  "acceptance_criteria": [
+    "Uses @Environment(CredentialsStore.self) to access credentials",
+    "Shows 'Not configured' ContentUnavailableView and makes no network call when isConfigured is false",
+    "Shows centered ProgressView while the fetch is in flight",
+    "Shows ContentUnavailableView with antenna.radiowaves.left.and.right when the source list is empty",
+    "Shows centered error message and Retry button on network or decoding failure",
+    "Loaded state shows a List with source.name in .body and source.feedURL in .caption/.secondary",
+    "All list rows use .listRowBackground(Color.clear)",
+    "List is wrapped in GlassEffectContainer",
+    "NavigationStack title is 'Sources'"
+  ],
+  "linked_docs": [
+    "specs/planned/app-skeleton-credential-configuration-and-sources-integration.md"
+  ],
+  "feature_root_id": "B-6f152256",
+  "execution_branch_name": "feature/b-6f152256",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-6f152256",
+  "expected_files": [
+    "AggregatorApp/Sources/SourcesView.swift"
+  ],
+  "expected_globs": [],
+  "touched_files": [],
+  "changed_files": [],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "",
+    "remaining": "",
+    "risks": "",
+    "verdict": "",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [],
+    "updated_docs": [],
+    "next_action": "",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [],
+    "expected_globs": [],
+    "touched_files": [],
+    "conflict_risks": "",
+    "design_decisions": "",
+    "test_coverage_notes": "",
+    "known_limitations": ""
+  },
+  "block_reason": "",
+  "conflict_risks": "",
+  "branch_name": "",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-18T15:26:04.680738+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    }
+  ],
+  "metadata": {},
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

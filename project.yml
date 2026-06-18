@@ -1,0 +1,45 @@
+name: AggregatorApp
+
+options:
+  bundleIdPrefix: net.renalias
+  deploymentTarget:
+    iOS: "26.0"
+  createIntermediateGroups: true
+
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+
+targets:
+  AggregatorApp:
+    type: application
+    platform: iOS
+    sources:
+      - path: AggregatorApp
+    settings:
+      base:
+        CODE_SIGN_STYLE: Automatic
+        DEVELOPMENT_TEAM: QEZ63CXN26
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
+        INFOPLIST_KEY_UISupportedInterfaceOrientations: "UIInterfaceOrientationPortrait"
+        PRODUCT_BUNDLE_IDENTIFIER: net.renalias.AggregatorApp
+        TARGETED_DEVICE_FAMILY: "1"
+        ENABLE_PREVIEWS: YES
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+    scheme:
+      testTargets:
+        - AggregatorAppTests
+
+  AggregatorAppTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: AggregatorAppTests
+    dependencies:
+      - target: AggregatorApp
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: net.renalias.AggregatorAppTests

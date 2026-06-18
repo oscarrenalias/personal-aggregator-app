@@ -1,0 +1,76 @@
+{
+  "bead_id": "B-bb90df5b",
+  "title": "CredentialsStore \u2014 @Observable credential state with persistent backing",
+  "agent_type": "developer",
+  "description": "Implement CredentialsStore.swift as an @Observable final class. Properties: baseURL (UserDefaults key aggregator.baseURL, default https://aggregator-api.renaliaslabs.net/api/v1), clientId (Keychain key aggregator.clientId, default \"\"), clientSecret (Keychain key aggregator.clientSecret, default \"\"). Computed isConfigured: Bool \u2014 true when all three are non-empty. All properties read from backing store at init. didSet observers persist changes immediately. Add a test initialiser that accepts injectable in-memory storage backends (protocol or closure-based) so unit tests avoid real Keychain/UserDefaults. Update AggregatorApp.swift to instantiate CredentialsStore as @State and inject via .environment(credentialsStore).",
+  "status": "ready",
+  "bead_type": "task",
+  "parent_id": "B-6f152256",
+  "dependencies": [
+    "B-a89b6c08",
+    "B-228539df"
+  ],
+  "acceptance_criteria": [
+    "CredentialsStore is @Observable final class",
+    "baseURL defaults to https://aggregator-api.renaliaslabs.net/api/v1 on first launch",
+    "clientId and clientSecret default to empty string on first launch",
+    "isConfigured is true only when all three properties are non-empty strings",
+    "didSet on baseURL writes to UserDefaults key aggregator.baseURL",
+    "didSet on clientId and clientSecret writes to Keychain via KeychainHelper",
+    "A test-only initialiser exists that accepts injectable in-memory backing, not real Keychain/UserDefaults",
+    "AggregatorApp.swift creates CredentialsStore as @State and injects it into the environment"
+  ],
+  "linked_docs": [
+    "specs/planned/app-skeleton-credential-configuration-and-sources-integration.md"
+  ],
+  "feature_root_id": "B-6f152256",
+  "execution_branch_name": "feature/b-6f152256",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-6f152256",
+  "expected_files": [
+    "AggregatorApp/Common/CredentialsStore.swift",
+    "AggregatorApp/AggregatorApp.swift"
+  ],
+  "expected_globs": [],
+  "touched_files": [],
+  "changed_files": [],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "",
+    "remaining": "",
+    "risks": "",
+    "verdict": "",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [],
+    "updated_docs": [],
+    "next_action": "",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [],
+    "expected_globs": [],
+    "touched_files": [],
+    "conflict_risks": "",
+    "design_decisions": "",
+    "test_coverage_notes": "",
+    "known_limitations": ""
+  },
+  "block_reason": "",
+  "conflict_risks": "",
+  "branch_name": "",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-18T15:26:04.677957+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    }
+  ],
+  "metadata": {},
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}
