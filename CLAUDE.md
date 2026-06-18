@@ -10,7 +10,7 @@ Full API contract: `docs/API.md` and `docs/openapi.json` in
 
 ## Project shape
 
-- `AggregatorApp/` — iOS app target. SwiftUI, iOS 17+.
+- `AggregatorApp/` — iOS app target. SwiftUI, iOS 26+.
 - `AggregatorAppTests/` — Unit test target (XCTest).
 - `specs/` — spec-driven development workflow. Three lifecycle folders
   (`drafts/`, `planned/`, `done/`). Managed exclusively via the
