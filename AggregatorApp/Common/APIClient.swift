@@ -3,16 +3,6 @@ import Foundation
 struct APIClient {
     let store: CredentialsStore
 
-    private struct ListResponse<T: Decodable>: Decodable {
-        let items: [T]
-        let nextCursor: String?
-
-        enum CodingKeys: String, CodingKey {
-            case items
-            case nextCursor = "next_cursor"
-        }
-    }
-
     func get<T: Decodable>(_ path: String) async throws -> T {
         guard let url = URL(string: store.baseURL + path) else {
             throw URLError(.badURL)
@@ -36,11 +26,10 @@ struct APIClient {
     }
 
     func getSources() async throws -> [Source] {
-        let response: ListResponse<Source> = try await get("/sources")
-        return response.items
+        return try await get("/sources")
     }
 
     func healthCheck() async throws -> HealthResponse {
-        return try await get("/health")
+        return try await get("/healthz")
     }
 }
