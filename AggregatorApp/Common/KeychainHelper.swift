@@ -17,15 +17,18 @@ struct KeychainHelper {
 
     static func write(key: String, value: String) {
         guard let data = value.data(using: .utf8) else { return }
-        let query: [CFString: Any] = [
+        let addQuery: [CFString: Any] = [
             kSecClass: kSecClassGenericPassword,
-            kSecAttrAccount: key
+            kSecAttrAccount: key,
+            kSecValueData: data
         ]
-        let status = SecItemUpdate(query as CFDictionary, [kSecValueData: data] as CFDictionary)
-        if status == errSecItemNotFound {
-            var addQuery = query
-            addQuery[kSecValueData] = data
-            SecItemAdd(addQuery as CFDictionary, nil)
+        let addStatus = SecItemAdd(addQuery as CFDictionary, nil)
+        if addStatus == errSecDuplicateItem {
+            let searchQuery: [CFString: Any] = [
+                kSecClass: kSecClassGenericPassword,
+                kSecAttrAccount: key
+            ]
+            SecItemUpdate(searchQuery as CFDictionary, [kSecValueData: data] as CFDictionary)
         }
     }
 }
