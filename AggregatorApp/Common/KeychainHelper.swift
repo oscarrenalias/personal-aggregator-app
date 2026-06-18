@@ -1,6 +1,10 @@
 import Foundation
 import Security
 
+/// Thin wrapper around `kSecClassGenericPassword` Keychain items.
+///
+/// Keys are stored under `kSecAttrAccount`. `write` is upsert: it attempts `SecItemAdd` first;
+/// on `errSecDuplicateItem` it falls back to `SecItemUpdate` for the same account key.
 struct KeychainHelper {
     static func read(key: String) -> String? {
         let query: [CFString: Any] = [

@@ -1,5 +1,12 @@
 import Foundation
 
+/// Thin HTTP client for the aggregator backend.
+///
+/// Every request URL is constructed by appending `path` to `store.baseURL`
+/// (e.g. `baseURL = "https://…/api/v1"`, `path = "/sources"` → `"https://…/api/v1/sources"`).
+/// `CF-Access-Client-Id` and `CF-Access-Client-Secret` headers are injected automatically from
+/// `CredentialsStore` on every request. A 403 response with an HTML body is a Cloudflare Access
+/// rejection, not an API error.
 struct APIClient {
     let store: CredentialsStore
 

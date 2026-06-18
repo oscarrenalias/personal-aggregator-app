@@ -1,6 +1,16 @@
 import Foundation
 import Observation
 
+/// Stores and observes app credentials.
+///
+/// Storage split:
+/// - `baseURL` — UserDefaults key `aggregator.baseURL`; defaults to the production API URL on first launch.
+/// - `clientId` / `clientSecret` — Keychain keys `aggregator.clientId` / `aggregator.clientSecret`; default to `""`.
+///
+/// For unit tests, inject a `.ephemeral` suite and stub closures to avoid touching real storage:
+/// ```swift
+/// CredentialsStore(defaults: testDefaults, keychainRead: { _ in nil }, keychainWrite: { _, _ in })
+/// ```
 @Observable
 final class CredentialsStore {
     private let keychainRead: (String) -> String?
