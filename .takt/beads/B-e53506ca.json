@@ -1,0 +1,263 @@
+{
+  "bead_id": "B-e53506ca",
+  "title": "Implement paragraph-split typography in ArticleDetailView",
+  "agent_type": "developer",
+  "description": "Split article body (clean_text) and AI summary on blank lines/newlines, trim, drop empty entries, and render each paragraph as its own Text view inside VStack(alignment: .leading, spacing: 14) with .lineSpacing(5) and .font(.body). Extract a small reusable ParagraphText(_ text: String) view (inline struct or in AggregatorApp/Common/ParagraphText.swift) so body and summary share the logic. Apply the same treatment to the summary callout if it contains multiple paragraphs. Must depend on ArticleDetailView cancellation-fix bead for same-file ordering.",
+  "status": "done",
+  "bead_type": "task",
+  "parent_id": "B-2ca6fdbe",
+  "dependencies": [
+    "B-5e720dc4"
+  ],
+  "acceptance_criteria": [
+    "Article body displays visible spacing between paragraphs",
+    "Each paragraph has .lineSpacing(5) applied",
+    "VStack spacing between paragraphs is 14",
+    "Multi-paragraph summaries also split correctly; single-paragraph summaries unaffected",
+    "ParagraphText helper is shared between body and summary rendering",
+    "No hardcoded colors or font sizes",
+    "File compiles cleanly"
+  ],
+  "linked_docs": [
+    "specs/planned/threads-and-reader-polish-layout-badges-formatting-and-fixes.md"
+  ],
+  "feature_root_id": "B-2ca6fdbe",
+  "execution_branch_name": "feature/b-2ca6fdbe",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-2ca6fdbe",
+  "expected_files": [
+    "AggregatorApp/Articles/ArticleDetailView.swift"
+  ],
+  "expected_globs": [
+    "AggregatorApp/Common/ParagraphText.swift"
+  ],
+  "touched_files": [
+    "AggregatorApp/AggregatorApp.swift",
+    "AggregatorApp/Articles/ArticleDetailView.swift",
+    "AggregatorApp/Common/ParagraphText.swift",
+    "AggregatorApp/Threads/ThreadCardView.swift",
+    "AggregatorApp/Threads/ThreadDetailView.swift"
+  ],
+  "changed_files": [
+    "AggregatorApp/AggregatorApp.swift",
+    "AggregatorApp/Articles/ArticleDetailView.swift",
+    "AggregatorApp/Common/ParagraphText.swift",
+    "AggregatorApp/Threads/ThreadCardView.swift",
+    "AggregatorApp/Threads/ThreadDetailView.swift"
+  ],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "- Created AggregatorApp/Common/ParagraphText.swift: struct with unlabeled init(_ text: String), splits on newlines, trims, filters empty, renders each paragraph in VStack(alignment: .leading, spacing: 14) with .lineSpacing(5) on each Text view. Uses enumerated() for stable ForEach IDs.\\n- Updated ArticleDetailView.swift section (6): replaced Text(summary) with ParagraphText(summary).font(.subheadline).foregroundStyle(.secondary) \u2014 environment font/color propagate through the VStack to all Text views.\\n- Updated ArticleDetailView.swift section (7): replaced Text(cleanText).font(.body) with ParagraphText(cleanText).font(.body).\\n- Ran xcodegen generate and confirmed BUILD SUCCEEDED.",
+    "remaining": "N/A",
+    "risks": "None identified. ParagraphText is an additive, self-contained view with no shared mutable state. The ForEach uses offset-based IDs which are stable within a single paragraph array.",
+    "verdict": "approved",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [
+      "AggregatorApp/AggregatorApp.swift",
+      "AggregatorApp/Articles/ArticleDetailView.swift",
+      "AggregatorApp/Common/ParagraphText.swift",
+      "AggregatorApp/Threads/ThreadCardView.swift",
+      "AggregatorApp/Threads/ThreadDetailView.swift"
+    ],
+    "updated_docs": [],
+    "next_action": "Tester agent should verify: paragraphs with \\n separation render with visible spacing, .lineSpacing(5) is applied, multi-paragraph summaries split correctly, single-paragraph summaries are unaffected (single Text rendered without extra spacing), and font/color environment overrides work as expected for both body and summary.",
+    "next_agent": "tester",
+    "block_reason": "",
+    "expected_files": [
+      "AggregatorApp/Articles/ArticleDetailView.swift"
+    ],
+    "expected_globs": [
+      "AggregatorApp/Common/ParagraphText.swift"
+    ],
+    "touched_files": [
+      "AggregatorApp/AggregatorApp.swift",
+      "AggregatorApp/Articles/ArticleDetailView.swift",
+      "AggregatorApp/Common/ParagraphText.swift",
+      "AggregatorApp/Threads/ThreadCardView.swift",
+      "AggregatorApp/Threads/ThreadDetailView.swift"
+    ],
+    "conflict_risks": "No conflict risks. ParagraphText is a new file; ArticleDetailView edits are self-contained two-line swaps in sections (6) and (7) with no structural changes to the surrounding VStack or view hierarchy.",
+    "design_decisions": "ParagraphText does NOT hardcode font or foregroundStyle. It only encapsulates the paragraph-split structure (VStack spacing=14, per-Text lineSpacing=5). Font and color are applied by callers via SwiftUI environment \u2014 .font(.body) for the body, .font(.subheadline).foregroundStyle(.secondary) for the summary. This lets the glass-effect summary retain its visual distinction while sharing the splitting logic. Alternative considered: a font parameter on ParagraphText init \u2014 rejected as unnecessary coupling when SwiftUI environment inheritance already handles this cleanly. ForEach uses Array(paragraphs.enumerated()) with id: \\.offset rather than id: \\.self to avoid potential duplicate-ID warnings when identical paragraph text appears more than once.",
+    "test_coverage_notes": "Tester should cover: (1) Article body with multi-paragraph cleanText (contains \\n) \u2192 each paragraph is a separate Text with visible gaps. (2) Article body single-line cleanText \u2192 single Text, no extra spacing artefacts. (3) Summary with \\n-separated paragraphs \u2192 splits inside the glass callout, font remains .subheadline and color .secondary. (4) Summary with a single paragraph \u2192 one Text, glass callout still renders correctly. (5) cleanText=nil or empty \u2192 ContentUnavailableView path unaffected. (6) Paragraphs with leading/trailing whitespace \u2192 trimmed before display.",
+    "known_limitations": "ParagraphText splits solely on .newlines (CharacterSet.newlines covers \\n, \\r\\n, \\r, and Unicode line/paragraph separators). It does NOT attempt to merge single-newline-separated lines into logical paragraphs: every non-empty line becomes its own paragraph. If the backend delivers prose where a paragraph wraps across multiple lines without a blank line between them, each wrapped line will render as a separate paragraph with 14pt spacing. This is consistent with the bead spec (\"split on blank lines/newlines\") and is acceptable for current clean_text data which typically uses one sentence/paragraph per line."
+  },
+  "block_reason": "",
+  "conflict_risks": "No conflict risks. ParagraphText is a new file; ArticleDetailView edits are self-contained two-line swaps in sections (6) and (7) with no structural changes to the surrounding VStack or view hierarchy.",
+  "branch_name": "feature/b-2ca6fdbe",
+  "worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-2ca6fdbe",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-19T14:46:14.031665+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-19T14:50:17.846296+00:00",
+      "event": "skills_loaded",
+      "agent_type": "developer",
+      "summary": "Loaded 7 skill(s) for isolated execution",
+      "details": {
+        "loaded_skills": [
+          "core/base-orchestrator",
+          "role/developer-implementation",
+          "capability/code-edit",
+          "task/corrective-implementation",
+          "task/refactor-safe",
+          "task/migration",
+          "memory"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-06-19T14:50:17.846351+00:00",
+      "event": "started",
+      "agent_type": "developer",
+      "summary": "Worker started",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-19T14:50:17.848750+00:00",
+      "event": "guardrails_applied",
+      "agent_type": "developer",
+      "summary": "Applied guardrails from .takt/agent-runs/B-e53506ca/repo/templates/agents/developer.md",
+      "details": {
+        "template_path": ".takt/agent-runs/B-e53506ca/repo/templates/agents/developer.md"
+      }
+    },
+    {
+      "timestamp": "2026-06-19T14:53:00.362578+00:00",
+      "event": "completed",
+      "agent_type": "developer",
+      "summary": "Created ParagraphText.swift in AggregatorApp/Common/ and updated ArticleDetailView.swift to use it for both the article body (cleanText) and the summary callout. Build succeeds cleanly.",
+      "details": {}
+    }
+  ],
+  "metadata": {
+    "execution_root": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-e53506ca",
+    "workspace_repo_path": "repo",
+    "loaded_skills": [
+      "core/base-orchestrator",
+      "role/developer-implementation",
+      "capability/code-edit",
+      "task/corrective-implementation",
+      "task/refactor-safe",
+      "task/migration",
+      "memory"
+    ],
+    "skill_bundle_hash": "ecae5633083d1bbec41a6e5ec6ea05bbab117f60499c19b2ed76dbbe3e1aec7c",
+    "isolated_home": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-e53506ca/home",
+    "runner_backend": "claude",
+    "guardrails": {
+      "agent_type": "developer",
+      "template_path": ".takt/agent-runs/B-e53506ca/repo/templates/agents/developer.md",
+      "template_text": "# Developer Guardrails\n\nPrimary responsibility: Implement only the assigned bead inside the existing architecture and file scope.\n\n## Corrective bead scope\n\nIf your `bead_id` ends in `-corrective` or `-corrective-<N>` (e.g. `B-abc12345-corrective`, `B-abc12345-test-corrective-2`), you are running as a CORRECTIVE bead. Your scope is **strictly limited to fixing the specific failure that blocked the parent bead**. Do not:\n\n- Add unrelated improvements, refactors, or cleanup, even if you notice them\n- Reapply previously-reverted changes (the operator reverted them for a reason)\n- Expand the surface area beyond what is needed to unblock the parent\n- Touch files outside what the parent bead's `expected_files` / `expected_globs` covered, unless the failure is genuinely in another file and there is no smaller fix\n\nIf you notice an unrelated issue while fixing the corrective scope: **file a separate bead** via `takt bead create` describing what you saw, but do not fix it in this corrective. The operator will prioritize and dispatch.\n\nWhen in doubt about scope: prefer the smallest possible fix. The reviewer of this corrective will check that the scope was respected.\n\nAllowed actions:\n- Modify code, configuration, or local docs required to complete the assigned bead.\n- Create sub-beads for discovered follow-up work that should be handled separately.\n- Verify your `Swift` changes compile and import correctly with a quick syntax check: ``.\n\nDisallowed actions:\n- Run any test suite \u2014 not even a targeted `` run or any subset. Test execution is exclusively the tester agent's responsibility. Running tests wastes the agent budget and delays the pipeline.\n- Redesign unrelated architecture or broaden scope beyond the assigned bead.\n- Perform final review signoff in place of a review agent.\n- Silently absorb unrelated test, documentation, or planning work that should be handed off.\n\n## Memory\n\n**Read memory at bead start.** Before touching any code, run three searches using `$TAKT_CMD` (injected by the orchestrator):\n\n```bash\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace global\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace feature:<feature_root_id>\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace specs\n```\n\nTreat results as ambient context \u2014 apply relevant entries; skip entries that don't apply.\n\n**Write to memory when you discover reusable project knowledge** \u2014 something that would have changed your approach if you had known it upfront, and is not already in CLAUDE.md or the guardrails.\n\n```bash\n$TAKT_CMD memory add \"<concise fact>\" --namespace global               # project-wide knowledge\n$TAKT_CMD memory add \"<discovery>\" --namespace feature:<feature_root_id>  # feature-scoped\n```\n\nRequired Handoff Fields:\n\nEvery developer bead **must** populate the following three fields in its output JSON. Reviewers and tester agents rely on these fields to scope their work without additional back-and-forth turns. Use `\"N/A\"` only when a field is genuinely inapplicable (e.g., a trivial rename with no design trade-offs); do not leave fields blank.\n\n- **`design_decisions`** \u2014 Document non-obvious architectural or implementation choices made during this bead. Include alternatives considered and why the chosen approach was preferred. Reviewers use this to evaluate correctness without re-deriving intent. Set to `\"N/A\"` only if the change was purely mechanical with no meaningful trade-offs.\n\n- **`test_coverage_notes`** \u2014 Describe what the tester agent should verify: new code paths, edge cases introduced, regression risks, and any known untested scenarios left to the tester. Set to `\"N/A\"` only if the bead touched no executable code paths (e.g., documentation-only changes).\n\n- **`known_limitations`** \u2014 Call out constraints, deferred work, or known gaps in the implementation. This includes out-of-scope items deliberately left for follow-up beads and any areas where the implementation is intentionally incomplete. Set to `\"N/A\"` if the implementation is complete as specified with no known gaps.\n\nExpected outputs:\n- Completed or blocked JSON with concise implementation summary.\n- Accurate touched files, changed files, risks, and follow-up handoff fields.\n- Populated `design_decisions`, `test_coverage_notes`, and `known_limitations` fields in every response.",
+      "captured_at": "2026-06-19T14:50:17.848743+00:00"
+    },
+    "worker_prompt_context": {
+      "bead_id": "B-e53506ca",
+      "feature_root_id": "B-2ca6fdbe",
+      "title": "Implement paragraph-split typography in ArticleDetailView",
+      "agent_type": "developer",
+      "description": "Split article body (clean_text) and AI summary on blank lines/newlines, trim, drop empty entries, and render each paragraph as its own Text view inside VStack(alignment: .leading, spacing: 14) with .lineSpacing(5) and .font(.body). Extract a small reusable ParagraphText(_ text: String) view (inline struct or in AggregatorApp/Common/ParagraphText.swift) so body and summary share the logic. Apply the same treatment to the summary callout if it contains multiple paragraphs. Must depend on ArticleDetailView cancellation-fix bead for same-file ordering.",
+      "status": "in_progress",
+      "acceptance_criteria": [
+        "Article body displays visible spacing between paragraphs",
+        "Each paragraph has .lineSpacing(5) applied",
+        "VStack spacing between paragraphs is 14",
+        "Multi-paragraph summaries also split correctly; single-paragraph summaries unaffected",
+        "ParagraphText helper is shared between body and summary rendering",
+        "No hardcoded colors or font sizes",
+        "File compiles cleanly"
+      ],
+      "dependencies": [
+        "B-5e720dc4"
+      ],
+      "linked_docs": [
+        "specs/planned/threads-and-reader-polish-layout-badges-formatting-and-fixes.md"
+      ],
+      "execution_branch_name": "feature/b-2ca6fdbe",
+      "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-2ca6fdbe",
+      "expected_files": [
+        "AggregatorApp/Articles/ArticleDetailView.swift"
+      ],
+      "expected_globs": [
+        "AggregatorApp/Common/ParagraphText.swift"
+      ],
+      "touched_files": [],
+      "conflict_risks": "",
+      "handoff_summary": {
+        "completed": "",
+        "remaining": "",
+        "risks": "",
+        "verdict": "",
+        "findings_count": 0,
+        "requires_followup": false,
+        "changed_files": [],
+        "updated_docs": [],
+        "next_action": "",
+        "next_agent": "",
+        "block_reason": "",
+        "expected_files": [],
+        "expected_globs": [],
+        "touched_files": [],
+        "conflict_risks": "",
+        "design_decisions": "",
+        "test_coverage_notes": "",
+        "known_limitations": ""
+      }
+    },
+    "last_agent_result": {
+      "outcome": "completed",
+      "summary": "Created ParagraphText.swift in AggregatorApp/Common/ and updated ArticleDetailView.swift to use it for both the article body (cleanText) and the summary callout. Build succeeds cleanly.",
+      "verdict": "approved",
+      "findings_count": 0,
+      "requires_followup": false,
+      "next_agent": "tester",
+      "block_reason": ""
+    },
+    "telemetry": {
+      "cost_usd": 0.4537833,
+      "duration_ms": 161503,
+      "duration_api_ms": 145757,
+      "num_turns": 18,
+      "input_tokens": 18,
+      "output_tokens": 8444,
+      "cache_creation_tokens": 29793,
+      "cache_read_tokens": 483681,
+      "stop_reason": "end_turn",
+      "session_id": "c24b62e7-9098-48b1-8054-2a16edecddd6",
+      "permission_denials": [],
+      "prompt_chars": 9547,
+      "prompt_lines": 180,
+      "source": "provider",
+      "attempt": 1
+    },
+    "telemetry_history": [
+      {
+        "cost_usd": 0.4537833,
+        "duration_ms": 161503,
+        "duration_api_ms": 145757,
+        "num_turns": 18,
+        "input_tokens": 18,
+        "output_tokens": 8444,
+        "cache_creation_tokens": 29793,
+        "cache_read_tokens": 483681,
+        "stop_reason": "end_turn",
+        "session_id": "c24b62e7-9098-48b1-8054-2a16edecddd6",
+        "permission_denials": [],
+        "prompt_chars": 9547,
+        "prompt_lines": 180,
+        "source": "provider",
+        "attempt": 1
+      }
+    ],
+    "last_commit": "545ea11863c7e4beeba29e2511199777ba4e4a48"
+  },
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

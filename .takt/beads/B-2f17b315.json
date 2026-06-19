@@ -1,0 +1,254 @@
+{
+  "bead_id": "B-2f17b315",
+  "title": "Integrate ThreadSeenStore into app environment, ThreadCardView, and ThreadDetailView",
+  "agent_type": "developer",
+  "description": "1) In AggregatorApp.swift, instantiate ThreadSeenStore and inject it into the environment alongside CredentialsStore. 2) In ThreadCardView.swift, replace the `thread.hasUpdates` dot condition with `seenStore.hasUnseenUpdate(thread)` reading from @Environment. 3) In ThreadDetailView.swift, after the thread loads successfully, call `seenStore.markSeen(id: thread.id, lastUpdated: thread.lastUpdated)`. Must depend on ThreadSeenStore bead and badge-colors bead (same ThreadDetailView file).",
+  "status": "done",
+  "bead_type": "task",
+  "parent_id": "B-2ca6fdbe",
+  "dependencies": [
+    "B-fb51ddd2",
+    "B-13890a25"
+  ],
+  "acceptance_criteria": [
+    "ThreadSeenStore injected into SwiftUI environment in AggregatorApp.swift",
+    "ThreadCardView reads from @Environment(ThreadSeenStore.self) for dot condition",
+    "ThreadDetailView calls markSeen after successful load",
+    "Opening a thread removes its dot; returning to list shows dot gone; dot absent after app restart if lastUpdated unchanged",
+    "No direct access to thread.hasUpdates for dot rendering in ThreadCardView",
+    "All modified files compile cleanly"
+  ],
+  "linked_docs": [
+    "specs/planned/threads-and-reader-polish-layout-badges-formatting-and-fixes.md"
+  ],
+  "feature_root_id": "B-2ca6fdbe",
+  "execution_branch_name": "feature/b-2ca6fdbe",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-2ca6fdbe",
+  "expected_files": [
+    "AggregatorApp/AggregatorApp.swift",
+    "AggregatorApp/Threads/ThreadCardView.swift",
+    "AggregatorApp/Threads/ThreadDetailView.swift"
+  ],
+  "expected_globs": [],
+  "touched_files": [
+    "AggregatorApp/AggregatorApp.swift",
+    "AggregatorApp/Threads/ThreadCardView.swift",
+    "AggregatorApp/Threads/ThreadDetailView.swift"
+  ],
+  "changed_files": [
+    "AggregatorApp/AggregatorApp.swift",
+    "AggregatorApp/Threads/ThreadCardView.swift",
+    "AggregatorApp/Threads/ThreadDetailView.swift"
+  ],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "All three acceptance criteria implemented: (1) ThreadSeenStore injected into environment in AggregatorApp.swift, (2) ThreadCardView.swift uses seenStore.hasUnseenUpdate(thread) instead of thread.hasUpdates for dot rendering, (3) ThreadDetailView.swift calls seenStore.markSeen(id:lastUpdated:) after successful thread load.",
+    "remaining": "N/A",
+    "risks": "ThreadSeenStore uses @Observable so SwiftUI observation is automatic. The store is a single @State on AggregatorApp (the root), so it lives for the entire app session and is shared across all navigation stacks \u2014 correct behavior for a seen-state cache.",
+    "verdict": "approved",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [
+      "AggregatorApp/AggregatorApp.swift",
+      "AggregatorApp/Threads/ThreadCardView.swift",
+      "AggregatorApp/Threads/ThreadDetailView.swift"
+    ],
+    "updated_docs": [],
+    "next_action": "Route to tester agent for UI and persistence verification.",
+    "next_agent": "tester",
+    "block_reason": "",
+    "expected_files": [
+      "AggregatorApp/AggregatorApp.swift",
+      "AggregatorApp/Threads/ThreadCardView.swift",
+      "AggregatorApp/Threads/ThreadDetailView.swift"
+    ],
+    "expected_globs": [],
+    "touched_files": [
+      "AggregatorApp/AggregatorApp.swift",
+      "AggregatorApp/Threads/ThreadCardView.swift",
+      "AggregatorApp/Threads/ThreadDetailView.swift"
+    ],
+    "conflict_risks": "No conflict risks. All three files were in this bead's exclusive scope; no sibling beads share these files.",
+    "design_decisions": "markSeen is called immediately after the successful async fetch (before isInitialLoad is reset to false), so the dot disappears on the list as soon as the user navigates back. This is the earliest possible moment within the .task closure that we have a valid Thread value. An alternative would be calling it from .onAppear of scrollContent, but that would add an extra render cycle and be structurally messier. The @State placement on AggregatorApp (the @main struct) ensures a single shared store instance for the entire app lifetime \u2014 no risk of multiple instances diverging.",
+    "test_coverage_notes": "Tester should verify: (1) a thread with hasUpdates=true shows the dot on initial load; (2) opening the thread (loading ThreadDetailView) and returning to the list causes the dot to disappear; (3) killing and relaunching the app with an unchanged lastUpdated for that thread still shows no dot; (4) a thread whose lastUpdated has changed since last seen re-shows the dot; (5) threads with hasUpdates=false never show the dot regardless of seen state.",
+    "known_limitations": "ThreadSeenStore persists to UserDefaults, which means the seen state is local to the device and not synced to the backend or other devices. This is intentional per the spec (client-side only)."
+  },
+  "block_reason": "",
+  "conflict_risks": "No conflict risks. All three files were in this bead's exclusive scope; no sibling beads share these files.",
+  "branch_name": "feature/b-2ca6fdbe",
+  "worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-2ca6fdbe",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-19T14:46:14.029722+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-19T14:52:00.210995+00:00",
+      "event": "skills_loaded",
+      "agent_type": "developer",
+      "summary": "Loaded 7 skill(s) for isolated execution",
+      "details": {
+        "loaded_skills": [
+          "core/base-orchestrator",
+          "role/developer-implementation",
+          "capability/code-edit",
+          "task/corrective-implementation",
+          "task/refactor-safe",
+          "task/migration",
+          "memory"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-06-19T14:52:00.211021+00:00",
+      "event": "started",
+      "agent_type": "developer",
+      "summary": "Worker started",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-19T14:52:00.214120+00:00",
+      "event": "guardrails_applied",
+      "agent_type": "developer",
+      "summary": "Applied guardrails from .takt/agent-runs/B-2f17b315/repo/templates/agents/developer.md",
+      "details": {
+        "template_path": ".takt/agent-runs/B-2f17b315/repo/templates/agents/developer.md"
+      }
+    },
+    {
+      "timestamp": "2026-06-19T14:53:34.822103+00:00",
+      "event": "completed",
+      "agent_type": "developer",
+      "summary": "Integrated ThreadSeenStore into the SwiftUI environment and wired it into ThreadCardView and ThreadDetailView. AggregatorApp.swift now instantiates and injects the store; ThreadCardView reads from @Environment(ThreadSeenStore.self) and calls hasUnseenUpdate() for the dot indicator; ThreadDetailView calls markSeen() immediately after a successful initial load. Build compiles cleanly with no errors.",
+      "details": {}
+    }
+  ],
+  "metadata": {
+    "execution_root": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-2f17b315",
+    "workspace_repo_path": "repo",
+    "loaded_skills": [
+      "core/base-orchestrator",
+      "role/developer-implementation",
+      "capability/code-edit",
+      "task/corrective-implementation",
+      "task/refactor-safe",
+      "task/migration",
+      "memory"
+    ],
+    "skill_bundle_hash": "ecae5633083d1bbec41a6e5ec6ea05bbab117f60499c19b2ed76dbbe3e1aec7c",
+    "isolated_home": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-2f17b315/home",
+    "runner_backend": "claude",
+    "guardrails": {
+      "agent_type": "developer",
+      "template_path": ".takt/agent-runs/B-2f17b315/repo/templates/agents/developer.md",
+      "template_text": "# Developer Guardrails\n\nPrimary responsibility: Implement only the assigned bead inside the existing architecture and file scope.\n\n## Corrective bead scope\n\nIf your `bead_id` ends in `-corrective` or `-corrective-<N>` (e.g. `B-abc12345-corrective`, `B-abc12345-test-corrective-2`), you are running as a CORRECTIVE bead. Your scope is **strictly limited to fixing the specific failure that blocked the parent bead**. Do not:\n\n- Add unrelated improvements, refactors, or cleanup, even if you notice them\n- Reapply previously-reverted changes (the operator reverted them for a reason)\n- Expand the surface area beyond what is needed to unblock the parent\n- Touch files outside what the parent bead's `expected_files` / `expected_globs` covered, unless the failure is genuinely in another file and there is no smaller fix\n\nIf you notice an unrelated issue while fixing the corrective scope: **file a separate bead** via `takt bead create` describing what you saw, but do not fix it in this corrective. The operator will prioritize and dispatch.\n\nWhen in doubt about scope: prefer the smallest possible fix. The reviewer of this corrective will check that the scope was respected.\n\nAllowed actions:\n- Modify code, configuration, or local docs required to complete the assigned bead.\n- Create sub-beads for discovered follow-up work that should be handled separately.\n- Verify your `Swift` changes compile and import correctly with a quick syntax check: ``.\n\nDisallowed actions:\n- Run any test suite \u2014 not even a targeted `` run or any subset. Test execution is exclusively the tester agent's responsibility. Running tests wastes the agent budget and delays the pipeline.\n- Redesign unrelated architecture or broaden scope beyond the assigned bead.\n- Perform final review signoff in place of a review agent.\n- Silently absorb unrelated test, documentation, or planning work that should be handed off.\n\n## Memory\n\n**Read memory at bead start.** Before touching any code, run three searches using `$TAKT_CMD` (injected by the orchestrator):\n\n```bash\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace global\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace feature:<feature_root_id>\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace specs\n```\n\nTreat results as ambient context \u2014 apply relevant entries; skip entries that don't apply.\n\n**Write to memory when you discover reusable project knowledge** \u2014 something that would have changed your approach if you had known it upfront, and is not already in CLAUDE.md or the guardrails.\n\n```bash\n$TAKT_CMD memory add \"<concise fact>\" --namespace global               # project-wide knowledge\n$TAKT_CMD memory add \"<discovery>\" --namespace feature:<feature_root_id>  # feature-scoped\n```\n\nRequired Handoff Fields:\n\nEvery developer bead **must** populate the following three fields in its output JSON. Reviewers and tester agents rely on these fields to scope their work without additional back-and-forth turns. Use `\"N/A\"` only when a field is genuinely inapplicable (e.g., a trivial rename with no design trade-offs); do not leave fields blank.\n\n- **`design_decisions`** \u2014 Document non-obvious architectural or implementation choices made during this bead. Include alternatives considered and why the chosen approach was preferred. Reviewers use this to evaluate correctness without re-deriving intent. Set to `\"N/A\"` only if the change was purely mechanical with no meaningful trade-offs.\n\n- **`test_coverage_notes`** \u2014 Describe what the tester agent should verify: new code paths, edge cases introduced, regression risks, and any known untested scenarios left to the tester. Set to `\"N/A\"` only if the bead touched no executable code paths (e.g., documentation-only changes).\n\n- **`known_limitations`** \u2014 Call out constraints, deferred work, or known gaps in the implementation. This includes out-of-scope items deliberately left for follow-up beads and any areas where the implementation is intentionally incomplete. Set to `\"N/A\"` if the implementation is complete as specified with no known gaps.\n\nExpected outputs:\n- Completed or blocked JSON with concise implementation summary.\n- Accurate touched files, changed files, risks, and follow-up handoff fields.\n- Populated `design_decisions`, `test_coverage_notes`, and `known_limitations` fields in every response.",
+      "captured_at": "2026-06-19T14:52:00.214111+00:00"
+    },
+    "worker_prompt_context": {
+      "bead_id": "B-2f17b315",
+      "feature_root_id": "B-2ca6fdbe",
+      "title": "Integrate ThreadSeenStore into app environment, ThreadCardView, and ThreadDetailView",
+      "agent_type": "developer",
+      "description": "1) In AggregatorApp.swift, instantiate ThreadSeenStore and inject it into the environment alongside CredentialsStore. 2) In ThreadCardView.swift, replace the `thread.hasUpdates` dot condition with `seenStore.hasUnseenUpdate(thread)` reading from @Environment. 3) In ThreadDetailView.swift, after the thread loads successfully, call `seenStore.markSeen(id: thread.id, lastUpdated: thread.lastUpdated)`. Must depend on ThreadSeenStore bead and badge-colors bead (same ThreadDetailView file).",
+      "status": "in_progress",
+      "acceptance_criteria": [
+        "ThreadSeenStore injected into SwiftUI environment in AggregatorApp.swift",
+        "ThreadCardView reads from @Environment(ThreadSeenStore.self) for dot condition",
+        "ThreadDetailView calls markSeen after successful load",
+        "Opening a thread removes its dot; returning to list shows dot gone; dot absent after app restart if lastUpdated unchanged",
+        "No direct access to thread.hasUpdates for dot rendering in ThreadCardView",
+        "All modified files compile cleanly"
+      ],
+      "dependencies": [
+        "B-fb51ddd2",
+        "B-13890a25"
+      ],
+      "linked_docs": [
+        "specs/planned/threads-and-reader-polish-layout-badges-formatting-and-fixes.md"
+      ],
+      "execution_branch_name": "feature/b-2ca6fdbe",
+      "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-2ca6fdbe",
+      "expected_files": [
+        "AggregatorApp/AggregatorApp.swift",
+        "AggregatorApp/Threads/ThreadCardView.swift",
+        "AggregatorApp/Threads/ThreadDetailView.swift"
+      ],
+      "expected_globs": [],
+      "touched_files": [],
+      "conflict_risks": "",
+      "handoff_summary": {
+        "completed": "",
+        "remaining": "",
+        "risks": "",
+        "verdict": "",
+        "findings_count": 0,
+        "requires_followup": false,
+        "changed_files": [],
+        "updated_docs": [],
+        "next_action": "",
+        "next_agent": "",
+        "block_reason": "",
+        "expected_files": [],
+        "expected_globs": [],
+        "touched_files": [],
+        "conflict_risks": "",
+        "design_decisions": "",
+        "test_coverage_notes": "",
+        "known_limitations": ""
+      }
+    },
+    "last_agent_result": {
+      "outcome": "completed",
+      "summary": "Integrated ThreadSeenStore into the SwiftUI environment and wired it into ThreadCardView and ThreadDetailView. AggregatorApp.swift now instantiates and injects the store; ThreadCardView reads from @Environment(ThreadSeenStore.self) and calls hasUnseenUpdate() for the dot indicator; ThreadDetailView calls markSeen() immediately after a successful initial load. Build compiles cleanly with no errors.",
+      "verdict": "approved",
+      "findings_count": 0,
+      "requires_followup": false,
+      "next_agent": "tester",
+      "block_reason": ""
+    },
+    "telemetry": {
+      "cost_usd": 0.33854340000000005,
+      "duration_ms": 94379,
+      "duration_api_ms": 83343,
+      "num_turns": 17,
+      "input_tokens": 16,
+      "output_tokens": 4527,
+      "cache_creation_tokens": 23235,
+      "cache_read_tokens": 426418,
+      "stop_reason": "end_turn",
+      "session_id": "e7b75e04-68e7-46a4-a35d-3b9a699d51c4",
+      "permission_denials": [],
+      "prompt_chars": 9648,
+      "prompt_lines": 180,
+      "source": "provider",
+      "attempt": 1
+    },
+    "telemetry_history": [
+      {
+        "cost_usd": 0.33854340000000005,
+        "duration_ms": 94379,
+        "duration_api_ms": 83343,
+        "num_turns": 17,
+        "input_tokens": 16,
+        "output_tokens": 4527,
+        "cache_creation_tokens": 23235,
+        "cache_read_tokens": 426418,
+        "stop_reason": "end_turn",
+        "session_id": "e7b75e04-68e7-46a4-a35d-3b9a699d51c4",
+        "permission_denials": [],
+        "prompt_chars": 9648,
+        "prompt_lines": 180,
+        "source": "provider",
+        "attempt": 1
+      }
+    ]
+  },
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

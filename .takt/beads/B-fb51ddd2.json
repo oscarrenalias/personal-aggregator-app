@@ -1,0 +1,236 @@
+{
+  "bead_id": "B-fb51ddd2",
+  "title": "Create ThreadSeenStore for local seen-thread tracking",
+  "agent_type": "developer",
+  "description": "Create AggregatorApp/Threads/ThreadSeenStore.swift: @Observable final class persisting a [Int: String] map (threadId \u2192 lastUpdated string seen at open time) in UserDefaults under key `aggregator.threadsSeen` (JSON-encoded). API: markSeen(id: Int, lastUpdated: String) stores/overwrites; hasUnseenUpdate(_ thread: Thread) -> Bool returns thread.hasUpdates && seen[thread.id] != thread.lastUpdated. Run xcodegen generate after creating the file.",
+  "status": "done",
+  "bead_type": "task",
+  "parent_id": "B-2ca6fdbe",
+  "dependencies": [],
+  "acceptance_criteria": [
+    "ThreadSeenStore.swift compiles as @Observable final class",
+    "markSeen stores to UserDefaults JSON map",
+    "hasUnseenUpdate returns true when thread.hasUpdates and id not yet seen or lastUpdated differs",
+    "hasUnseenUpdate returns false when seen with matching lastUpdated",
+    "No hardcoded UserDefaults suite \u2014 uses standard UserDefaults.standard unless injected"
+  ],
+  "linked_docs": [
+    "specs/planned/threads-and-reader-polish-layout-badges-formatting-and-fixes.md"
+  ],
+  "feature_root_id": "B-2ca6fdbe",
+  "execution_branch_name": "feature/b-2ca6fdbe",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-2ca6fdbe",
+  "expected_files": [
+    "AggregatorApp/Threads/ThreadSeenStore.swift"
+  ],
+  "expected_globs": [],
+  "touched_files": [
+    "AggregatorApp.xcodeproj/project.pbxproj",
+    "AggregatorApp/Threads/ThreadSeenStore.swift"
+  ],
+  "changed_files": [
+    "AggregatorApp.xcodeproj/project.pbxproj",
+    "AggregatorApp/Threads/ThreadSeenStore.swift"
+  ],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "ThreadSeenStore.swift created with all required API surface. xcodegen regenerated. Build verified clean (no compiler errors).",
+    "remaining": "None \u2014 bead scope fully satisfied.",
+    "risks": "SourceKit emits false-positive \"no member\" warnings for Thread.hasUpdates/id/lastUpdated because Foundation.Thread shadows the app's custom Thread struct in the language server index. The Swift compiler resolves same-module types first and builds correctly; downstream agents should expect these IDE warnings without taking action on them.",
+    "verdict": "approved",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [
+      "AggregatorApp.xcodeproj/project.pbxproj",
+      "AggregatorApp/Threads/ThreadSeenStore.swift"
+    ],
+    "updated_docs": [],
+    "next_action": "Tester agent should verify hasUnseenUpdate returns the correct Bool for all four combinations of hasUpdates \u00d7 seen-state.",
+    "next_agent": "tester",
+    "block_reason": "",
+    "expected_files": [
+      "AggregatorApp/Threads/ThreadSeenStore.swift"
+    ],
+    "expected_globs": [],
+    "touched_files": [
+      "AggregatorApp.xcodeproj/project.pbxproj",
+      "AggregatorApp/Threads/ThreadSeenStore.swift"
+    ],
+    "conflict_risks": "No conflicts expected. File is net-new; only project.pbxproj is modified by xcodegen and conflicts there are mechanical (sibling beads that also add files will each touch pbxproj, but xcodegen regeneration on merge resolves this).",
+    "design_decisions": "JSON keys are stored as String in UserDefaults because JSON object keys must be strings; Int keys are round-tripped via String(id) on write and Int(k) on read. UserDefaults instance is injected via init parameter (defaults: .standard) to allow unit-test isolation without requiring a custom suite name \u2014 satisfying the \"no hardcoded suite\" acceptance criterion while keeping the default ergonomic. The @Observable macro (iOS 17+) is used instead of ObservableObject; this matches the iOS 26 deployment target. Observation framework is imported explicitly to make the dependency clear to readers.",
+    "test_coverage_notes": "Verify: (1) hasUnseenUpdate returns false when thread.hasUpdates==false regardless of seen state; (2) returns true when hasUpdates==true and id not yet in seen map; (3) returns true when hasUpdates==true and stored lastUpdated differs; (4) returns false when hasUpdates==true and stored lastUpdated matches exactly. Also verify markSeen round-trips through UserDefaults: construct a second ThreadSeenStore instance reading the same defaults key and confirm the persisted value is visible. Edge case: id with non-numeric key in stored JSON should be silently skipped on load (compactMap handles this).",
+    "known_limitations": "Thread key collision with Foundation.Thread causes SourceKit false positives in IDE; this is cosmetic only and does not affect the build. If Foundation.Thread name collision becomes a broader maintenance burden, renaming the model to NewsThread or AggregatorThread would be the clean fix \u2014 filed separately if needed."
+  },
+  "block_reason": "",
+  "conflict_risks": "No conflicts expected. File is net-new; only project.pbxproj is modified by xcodegen and conflicts there are mechanical (sibling beads that also add files will each touch pbxproj, but xcodegen regeneration on merge resolves this).",
+  "branch_name": "feature/b-2ca6fdbe",
+  "worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-2ca6fdbe",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-19T14:46:14.028614+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-19T14:46:41.197590+00:00",
+      "event": "skills_loaded",
+      "agent_type": "developer",
+      "summary": "Loaded 7 skill(s) for isolated execution",
+      "details": {
+        "loaded_skills": [
+          "core/base-orchestrator",
+          "role/developer-implementation",
+          "capability/code-edit",
+          "task/corrective-implementation",
+          "task/refactor-safe",
+          "task/migration",
+          "memory"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-06-19T14:46:41.197624+00:00",
+      "event": "started",
+      "agent_type": "developer",
+      "summary": "Worker started",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-19T14:46:41.199893+00:00",
+      "event": "guardrails_applied",
+      "agent_type": "developer",
+      "summary": "Applied guardrails from .takt/agent-runs/B-fb51ddd2/repo/templates/agents/developer.md",
+      "details": {
+        "template_path": ".takt/agent-runs/B-fb51ddd2/repo/templates/agents/developer.md"
+      }
+    },
+    {
+      "timestamp": "2026-06-19T14:49:16.744101+00:00",
+      "event": "completed",
+      "agent_type": "developer",
+      "summary": "Created AggregatorApp/Threads/ThreadSeenStore.swift \u2014 an @Observable final class that persists a [Int: String] (threadId \u2192 lastUpdated) map to UserDefaults under key `aggregator.threadsSeen` using JSON encoding. markSeen(id:lastUpdated:) stores/overwrites; hasUnseenUpdate(_:) returns true when thread.hasUpdates and the stored lastUpdated differs (or is absent). Ran xcodegen generate; build passes cleanly.",
+      "details": {}
+    }
+  ],
+  "metadata": {
+    "execution_root": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-fb51ddd2",
+    "workspace_repo_path": "repo",
+    "loaded_skills": [
+      "core/base-orchestrator",
+      "role/developer-implementation",
+      "capability/code-edit",
+      "task/corrective-implementation",
+      "task/refactor-safe",
+      "task/migration",
+      "memory"
+    ],
+    "skill_bundle_hash": "ecae5633083d1bbec41a6e5ec6ea05bbab117f60499c19b2ed76dbbe3e1aec7c",
+    "isolated_home": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-fb51ddd2/home",
+    "runner_backend": "claude",
+    "guardrails": {
+      "agent_type": "developer",
+      "template_path": ".takt/agent-runs/B-fb51ddd2/repo/templates/agents/developer.md",
+      "template_text": "# Developer Guardrails\n\nPrimary responsibility: Implement only the assigned bead inside the existing architecture and file scope.\n\n## Corrective bead scope\n\nIf your `bead_id` ends in `-corrective` or `-corrective-<N>` (e.g. `B-abc12345-corrective`, `B-abc12345-test-corrective-2`), you are running as a CORRECTIVE bead. Your scope is **strictly limited to fixing the specific failure that blocked the parent bead**. Do not:\n\n- Add unrelated improvements, refactors, or cleanup, even if you notice them\n- Reapply previously-reverted changes (the operator reverted them for a reason)\n- Expand the surface area beyond what is needed to unblock the parent\n- Touch files outside what the parent bead's `expected_files` / `expected_globs` covered, unless the failure is genuinely in another file and there is no smaller fix\n\nIf you notice an unrelated issue while fixing the corrective scope: **file a separate bead** via `takt bead create` describing what you saw, but do not fix it in this corrective. The operator will prioritize and dispatch.\n\nWhen in doubt about scope: prefer the smallest possible fix. The reviewer of this corrective will check that the scope was respected.\n\nAllowed actions:\n- Modify code, configuration, or local docs required to complete the assigned bead.\n- Create sub-beads for discovered follow-up work that should be handled separately.\n- Verify your `Swift` changes compile and import correctly with a quick syntax check: ``.\n\nDisallowed actions:\n- Run any test suite \u2014 not even a targeted `` run or any subset. Test execution is exclusively the tester agent's responsibility. Running tests wastes the agent budget and delays the pipeline.\n- Redesign unrelated architecture or broaden scope beyond the assigned bead.\n- Perform final review signoff in place of a review agent.\n- Silently absorb unrelated test, documentation, or planning work that should be handed off.\n\n## Memory\n\n**Read memory at bead start.** Before touching any code, run three searches using `$TAKT_CMD` (injected by the orchestrator):\n\n```bash\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace global\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace feature:<feature_root_id>\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace specs\n```\n\nTreat results as ambient context \u2014 apply relevant entries; skip entries that don't apply.\n\n**Write to memory when you discover reusable project knowledge** \u2014 something that would have changed your approach if you had known it upfront, and is not already in CLAUDE.md or the guardrails.\n\n```bash\n$TAKT_CMD memory add \"<concise fact>\" --namespace global               # project-wide knowledge\n$TAKT_CMD memory add \"<discovery>\" --namespace feature:<feature_root_id>  # feature-scoped\n```\n\nRequired Handoff Fields:\n\nEvery developer bead **must** populate the following three fields in its output JSON. Reviewers and tester agents rely on these fields to scope their work without additional back-and-forth turns. Use `\"N/A\"` only when a field is genuinely inapplicable (e.g., a trivial rename with no design trade-offs); do not leave fields blank.\n\n- **`design_decisions`** \u2014 Document non-obvious architectural or implementation choices made during this bead. Include alternatives considered and why the chosen approach was preferred. Reviewers use this to evaluate correctness without re-deriving intent. Set to `\"N/A\"` only if the change was purely mechanical with no meaningful trade-offs.\n\n- **`test_coverage_notes`** \u2014 Describe what the tester agent should verify: new code paths, edge cases introduced, regression risks, and any known untested scenarios left to the tester. Set to `\"N/A\"` only if the bead touched no executable code paths (e.g., documentation-only changes).\n\n- **`known_limitations`** \u2014 Call out constraints, deferred work, or known gaps in the implementation. This includes out-of-scope items deliberately left for follow-up beads and any areas where the implementation is intentionally incomplete. Set to `\"N/A\"` if the implementation is complete as specified with no known gaps.\n\nExpected outputs:\n- Completed or blocked JSON with concise implementation summary.\n- Accurate touched files, changed files, risks, and follow-up handoff fields.\n- Populated `design_decisions`, `test_coverage_notes`, and `known_limitations` fields in every response.",
+      "captured_at": "2026-06-19T14:46:41.199886+00:00"
+    },
+    "worker_prompt_context": {
+      "bead_id": "B-fb51ddd2",
+      "feature_root_id": "B-2ca6fdbe",
+      "title": "Create ThreadSeenStore for local seen-thread tracking",
+      "agent_type": "developer",
+      "description": "Create AggregatorApp/Threads/ThreadSeenStore.swift: @Observable final class persisting a [Int: String] map (threadId \u2192 lastUpdated string seen at open time) in UserDefaults under key `aggregator.threadsSeen` (JSON-encoded). API: markSeen(id: Int, lastUpdated: String) stores/overwrites; hasUnseenUpdate(_ thread: Thread) -> Bool returns thread.hasUpdates && seen[thread.id] != thread.lastUpdated. Run xcodegen generate after creating the file.",
+      "status": "in_progress",
+      "acceptance_criteria": [
+        "ThreadSeenStore.swift compiles as @Observable final class",
+        "markSeen stores to UserDefaults JSON map",
+        "hasUnseenUpdate returns true when thread.hasUpdates and id not yet seen or lastUpdated differs",
+        "hasUnseenUpdate returns false when seen with matching lastUpdated",
+        "No hardcoded UserDefaults suite \u2014 uses standard UserDefaults.standard unless injected"
+      ],
+      "dependencies": [],
+      "linked_docs": [
+        "specs/planned/threads-and-reader-polish-layout-badges-formatting-and-fixes.md"
+      ],
+      "execution_branch_name": "feature/b-2ca6fdbe",
+      "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-2ca6fdbe",
+      "expected_files": [
+        "AggregatorApp/Threads/ThreadSeenStore.swift"
+      ],
+      "expected_globs": [],
+      "touched_files": [],
+      "conflict_risks": "",
+      "handoff_summary": {
+        "completed": "",
+        "remaining": "",
+        "risks": "",
+        "verdict": "",
+        "findings_count": 0,
+        "requires_followup": false,
+        "changed_files": [],
+        "updated_docs": [],
+        "next_action": "",
+        "next_agent": "",
+        "block_reason": "",
+        "expected_files": [],
+        "expected_globs": [],
+        "touched_files": [],
+        "conflict_risks": "",
+        "design_decisions": "",
+        "test_coverage_notes": "",
+        "known_limitations": ""
+      }
+    },
+    "last_agent_result": {
+      "outcome": "completed",
+      "summary": "Created AggregatorApp/Threads/ThreadSeenStore.swift \u2014 an @Observable final class that persists a [Int: String] (threadId \u2192 lastUpdated) map to UserDefaults under key `aggregator.threadsSeen` using JSON encoding. markSeen(id:lastUpdated:) stores/overwrites; hasUnseenUpdate(_:) returns true when thread.hasUpdates and the stored lastUpdated differs (or is absent). Ran xcodegen generate; build passes cleanly.",
+      "verdict": "approved",
+      "findings_count": 0,
+      "requires_followup": false,
+      "next_agent": "tester",
+      "block_reason": ""
+    },
+    "telemetry": {
+      "cost_usd": 0.3644769,
+      "duration_ms": 155281,
+      "duration_api_ms": 90357,
+      "num_turns": 13,
+      "input_tokens": 15,
+      "output_tokens": 4633,
+      "cache_creation_tokens": 34831,
+      "cache_read_tokens": 275993,
+      "stop_reason": "end_turn",
+      "session_id": "9ae83398-60b9-46aa-88e4-0f110a2c8d9a",
+      "permission_denials": [],
+      "prompt_chars": 9353,
+      "prompt_lines": 174,
+      "source": "provider",
+      "attempt": 1
+    },
+    "telemetry_history": [
+      {
+        "cost_usd": 0.3644769,
+        "duration_ms": 155281,
+        "duration_api_ms": 90357,
+        "num_turns": 13,
+        "input_tokens": 15,
+        "output_tokens": 4633,
+        "cache_creation_tokens": 34831,
+        "cache_read_tokens": 275993,
+        "stop_reason": "end_turn",
+        "session_id": "9ae83398-60b9-46aa-88e4-0f110a2c8d9a",
+        "permission_denials": [],
+        "prompt_chars": 9353,
+        "prompt_lines": 174,
+        "source": "provider",
+        "attempt": 1
+      }
+    ]
+  },
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

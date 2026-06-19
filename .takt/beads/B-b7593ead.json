@@ -1,0 +1,347 @@
+{
+  "bead_id": "B-b7593ead",
+  "title": "Review threads/reader polish implementation",
+  "agent_type": "review",
+  "description": "Full code review of all changes: verify no hardcoded hex colors, Liquid Glass conventions preserved, no regressions in threading/article flows, ReaderLayout constant used consistently, cancellation guard covers all async fetch paths, badge color mapping matches spec table exactly, ParagraphText reuse correct, ThreadSeenStore UserDefaults key correct and injection idiomatic.",
+  "status": "done",
+  "bead_type": "task",
+  "parent_id": "B-2ca6fdbe",
+  "dependencies": [
+    "B-0905511d",
+    "B-13890a25",
+    "B-14762a77",
+    "B-2f17b315",
+    "B-4bfe4d9d",
+    "B-54bdde37",
+    "B-5b948854",
+    "B-5e720dc4",
+    "B-8b72e7f4",
+    "B-b2d95456",
+    "B-bcd2bafa",
+    "B-cad767ed",
+    "B-e53506ca",
+    "B-fb51ddd2"
+  ],
+  "acceptance_criteria": [
+    "No hex color literals introduced anywhere in changed files",
+    "ReaderLayout.hPadding used in both ThreadDetailView and ArticleDetailView \u2014 no drift",
+    "isCancellation correctly covers both CancellationError and URLError.cancelled in all patched views",
+    "Badge color mapping matches spec table for all eight label cases",
+    "ThreadSeenStore correctly distinguishes same lastUpdated (seen) from changed lastUpdated (unseen)",
+    "ParagraphText helper shared between body and summary rendering",
+    "All new files added to project.yml or confirmed xcodegen picks them up",
+    "No unresolved TODO or placeholder code left in tree"
+  ],
+  "linked_docs": [
+    "specs/planned/threads-and-reader-polish-layout-badges-formatting-and-fixes.md"
+  ],
+  "feature_root_id": "B-2ca6fdbe",
+  "execution_branch_name": "feature/b-2ca6fdbe",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-2ca6fdbe",
+  "expected_files": [
+    "AggregatorApp.xcodeproj/project.pbxproj",
+    "AggregatorApp/AggregatorApp.swift",
+    "AggregatorApp/AppRoot.swift",
+    "AggregatorApp/Articles/ArticleDetailView.swift",
+    "AggregatorApp/Common/Error+Cancellation.swift",
+    "AggregatorApp/Common/ParagraphText.swift",
+    "AggregatorApp/Common/ReaderLayout.swift",
+    "AggregatorApp/Sources/SourcesView.swift",
+    "AggregatorApp/Threads/ThreadCardView.swift",
+    "AggregatorApp/Threads/ThreadDetailView.swift",
+    "AggregatorApp/Threads/ThreadSeenStore.swift",
+    "AggregatorApp/Threads/ThreadsView.swift",
+    "AggregatorAppTests/ThreadSeenStoreTests.swift"
+  ],
+  "expected_globs": [
+    "AggregatorApp/**/*.swift",
+    "AggregatorApp/Common/ParagraphText.swift",
+    "AggregatorAppTests/**/*.swift"
+  ],
+  "touched_files": [
+    "AggregatorApp.xcodeproj/project.pbxproj",
+    "AggregatorApp/AggregatorApp.swift",
+    "AggregatorApp/AppRoot.swift",
+    "AggregatorApp/Articles/ArticleDetailView.swift",
+    "AggregatorApp/Common/Error+Cancellation.swift",
+    "AggregatorApp/Common/ParagraphText.swift",
+    "AggregatorApp/Common/ReaderLayout.swift",
+    "AggregatorApp/Sources/SourcesView.swift",
+    "AggregatorApp/Threads/ThreadCardView.swift",
+    "AggregatorApp/Threads/ThreadDetailView.swift",
+    "AggregatorApp/Threads/ThreadSeenStore.swift",
+    "AggregatorApp/Threads/ThreadsView.swift",
+    "AggregatorAppTests/ThreadSeenStoreTests.swift"
+  ],
+  "changed_files": [],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "Reviewed all 13 changed files. Every acceptance criterion is satisfied: no hex color literals, ReaderLayout.hPadding applied identically in ThreadDetailView:85 and ArticleDetailView:154, isCancellation helper covers CancellationError and URLError.cancelled and is applied in all four async fetch functions, all 8 classification labels map to correct tinted semantic colors, ThreadSeenStore hasUnseenUpdate logic correctly distinguishes same-timestamp (seen) from changed-timestamp or never-seen (unseen), ParagraphText is used for both summary and body sections in ArticleDetailView with font/color applied by callers, all new Swift files appear in project.pbxproj Sources build phase, no TODO or placeholder code found.",
+    "remaining": "None.",
+    "risks": "Pre-existing non-semantic color .foregroundStyle(.white) in importanceBadge() (ArticleDetailView, not modified by this bead) will not adapt to dark mode on the solid-fill importance badge. Not a new regression introduced here, but worth addressing in a future polish pass. Spec file at specs/planned/threads-and-reader-polish-layout-badges-formatting-and-fixes.md is absent from this worktree \u2014 no planned/ directory exists. Spec-lifecycle state should be verified by the operator if needed.",
+    "verdict": "approved",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [],
+    "updated_docs": [],
+    "next_action": "Bead is approved and ready to complete. No follow-up work required from this review pass.",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [
+      "AggregatorApp.xcodeproj/project.pbxproj",
+      "AggregatorApp/AggregatorApp.swift",
+      "AggregatorApp/AppRoot.swift",
+      "AggregatorApp/Articles/ArticleDetailView.swift",
+      "AggregatorApp/Common/Error+Cancellation.swift",
+      "AggregatorApp/Common/ParagraphText.swift",
+      "AggregatorApp/Common/ReaderLayout.swift",
+      "AggregatorApp/Sources/SourcesView.swift",
+      "AggregatorApp/Threads/ThreadCardView.swift",
+      "AggregatorApp/Threads/ThreadDetailView.swift",
+      "AggregatorApp/Threads/ThreadSeenStore.swift",
+      "AggregatorApp/Threads/ThreadsView.swift",
+      "AggregatorAppTests/ThreadSeenStoreTests.swift"
+    ],
+    "expected_globs": [
+      "AggregatorApp/**/*.swift",
+      "AggregatorApp/Common/ParagraphText.swift",
+      "AggregatorAppTests/**/*.swift"
+    ],
+    "touched_files": [
+      "AggregatorApp.xcodeproj/project.pbxproj",
+      "AggregatorApp/AggregatorApp.swift",
+      "AggregatorApp/AppRoot.swift",
+      "AggregatorApp/Articles/ArticleDetailView.swift",
+      "AggregatorApp/Common/Error+Cancellation.swift",
+      "AggregatorApp/Common/ParagraphText.swift",
+      "AggregatorApp/Common/ReaderLayout.swift",
+      "AggregatorApp/Sources/SourcesView.swift",
+      "AggregatorApp/Threads/ThreadCardView.swift",
+      "AggregatorApp/Threads/ThreadDetailView.swift",
+      "AggregatorApp/Threads/ThreadSeenStore.swift",
+      "AggregatorApp/Threads/ThreadsView.swift",
+      "AggregatorAppTests/ThreadSeenStoreTests.swift"
+    ],
+    "conflict_risks": "The Xcode project file was regenerated by xcodegen. Sibling beads that also add files and run xcodegen will need to re-run it after merging; last-write-wins on the generated project.pbxproj is expected takt behavior.",
+    "design_decisions": "ReaderLayout.hPadding=20 as a caseless enum with explicit CoreGraphics import. ParagraphText splits on newlines with VStack spacing=14 and per-Text lineSpacing=5, using enumerated ForEach with id: \\.offset to avoid duplicate-ID warnings. ThreadSeenStore uses @Observable (iOS 17+/26 target), UserDefaults injected via init for testability, JSON keys stored as String with Int round-trip. isCancellation is a free function (not extension) checking CancellationError then URLError.code == .cancelled. Classification badges use tinted style: foreground=full color, fill=color.opacity(0.15), border=color.opacity(0.25). .secondary for low-signal group (duplicate/background/low-value). markSeen called immediately after successful fetch before isInitialLoad reset.",
+    "test_coverage_notes": "ThreadSeenStoreTests.swift covers 7 cases: unseen-when-never-opened, seen-after-markSeen-with-matching-timestamp, unseen-again-when-timestamp-changes, false-when-hasUpdates-false (two variants), true-when-lastUpdated-differs, UserDefaults persistence round-trip, and non-numeric key skipping. Each test uses an isolated UserDefaults suite with teardown cleanup.",
+    "known_limitations": "importanceBadge() in ArticleDetailView uses .foregroundStyle(.white) on solid-fill colored capsules \u2014 pre-existing code not introduced by this feature, not a hex literal, but non-adaptive for dark mode. The testNonNumericKeyInStoredJSONIsSkipped test hardcodes the private internal UserDefaults key string aggregator.threadsSeen \u2014 minor test brittleness if key is ever renamed."
+  },
+  "block_reason": "",
+  "conflict_risks": "The Xcode project file was regenerated by xcodegen. Sibling beads that also add files and run xcodegen will need to re-run it after merging; last-write-wins on the generated project.pbxproj is expected takt behavior.",
+  "branch_name": "feature/b-2ca6fdbe",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-19T14:46:14.034662+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-19T15:01:27.180723+00:00",
+      "event": "skills_loaded",
+      "agent_type": "review",
+      "summary": "Loaded 6 skill(s) for isolated execution",
+      "details": {
+        "loaded_skills": [
+          "core/base-orchestrator",
+          "role/reviewer-signoff",
+          "capability/code-review",
+          "task/corrective-bead-creation",
+          "task/risk-assessment",
+          "memory"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-06-19T15:01:27.180751+00:00",
+      "event": "started",
+      "agent_type": "review",
+      "summary": "Worker started",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-19T15:01:27.190060+00:00",
+      "event": "guardrails_applied",
+      "agent_type": "review",
+      "summary": "Applied guardrails from .takt/agent-runs/B-b7593ead/repo/templates/agents/review.md",
+      "details": {
+        "template_path": ".takt/agent-runs/B-b7593ead/repo/templates/agents/review.md"
+      }
+    },
+    {
+      "timestamp": "2026-06-19T15:04:50.777406+00:00",
+      "event": "completed",
+      "agent_type": "review",
+      "summary": "All 8 acceptance criteria pass. No hex literals, ReaderLayout.hPadding consistent across both views, isCancellation guards all 4 async paths, badge color mapping correct for all 8 labels, ThreadSeenStore seen logic correct with full test coverage, ParagraphText shared between body/summary in ArticleDetailView, all new files registered in project.pbxproj, no TODOs remaining.",
+      "details": {}
+    }
+  ],
+  "metadata": {
+    "execution_root": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-b7593ead",
+    "workspace_repo_path": "repo",
+    "loaded_skills": [
+      "core/base-orchestrator",
+      "role/reviewer-signoff",
+      "capability/code-review",
+      "task/corrective-bead-creation",
+      "task/risk-assessment",
+      "memory"
+    ],
+    "skill_bundle_hash": "68ad0ecb7bfe263ceb1ada56efead5a81dac8f9f2173181d0bf030dc0a3f880d",
+    "isolated_home": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-b7593ead/home",
+    "runner_backend": "claude",
+    "guardrails": {
+      "agent_type": "review",
+      "template_path": ".takt/agent-runs/B-b7593ead/repo/templates/agents/review.md",
+      "template_text": "# Review Guardrails\n\nPrimary responsibility: Inspect code, tests, docs, and acceptance criteria for correctness, completeness, and risk.\n\nAllowed actions:\n- Review only the changed files listed in the bead's touched_files and changed_files fields. Do not read unrelated files.\n- Validate acceptance criteria against the implementation and handoff state.\n- Block with a clear recommendation when the bead actually requires implementation work.\n\n## Memory\n\n**Read memory at bead start.** Before reviewing any files, run three searches using `$TAKT_CMD` (injected by the orchestrator):\n\n```bash\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace global\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace feature:<feature_root_id>\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace specs\n```\n\nTreat results as ambient context \u2014 apply relevant entries to inform the review; skip entries that don't apply.\n\nDo **not** write to memory \u2014 review agents are read-only.\n\nEfficiency constraints:\n- Do not run the test suite. Testing is the tester agent's responsibility.\n- Focus on correctness, completeness, and risk \u2014 not style or formatting.\n- Keep the review concise. If there are no findings, say so and approve promptly.\n\nDisallowed actions:\n- Implement feature work, tests, or docs instead of reporting findings.\n- Rewrite architecture or silently fix issues discovered during review.\n- Mark incomplete work as accepted without evidence.\n\nExpected outputs:\n- Return JSON with `outcome` set to `completed` (reviews always complete; use `verdict` for pass/fail) and `summary` as a one-line description of the review result.\n- Return JSON with structured verdict fields for every run: `verdict`, `findings_count`, and `requires_followup`.\n- Treat `verdict` as the review signoff decision: `approved` means the bead can complete, while `needs_changes` means the bead must block for follow-up work.\n- Use `verdict=approved`, `findings_count=0`, and `requires_followup=false` when no unresolved findings remain.\n- Use `verdict=needs_changes`, set `findings_count` to the unresolved finding count, set `requires_followup=true` unless there is a stronger explicit reason not to, and always include `block_reason` when any required fix remains.\n- Keep `completed`, `remaining`, and `risks` as free-form narrative context only. They inform operators, but they do not override the structured verdict or control scheduler state.\n- Review findings ordered by severity, or an explicit statement that no findings were discovered.\n- Clear blocked handoff details when the task belongs to another agent type.",
+      "captured_at": "2026-06-19T15:01:27.190051+00:00"
+    },
+    "worker_prompt_context": {
+      "bead_id": "B-b7593ead",
+      "feature_root_id": "B-2ca6fdbe",
+      "title": "Review threads/reader polish implementation",
+      "agent_type": "review",
+      "description": "Full code review of all changes: verify no hardcoded hex colors, Liquid Glass conventions preserved, no regressions in threading/article flows, ReaderLayout constant used consistently, cancellation guard covers all async fetch paths, badge color mapping matches spec table exactly, ParagraphText reuse correct, ThreadSeenStore UserDefaults key correct and injection idiomatic.",
+      "status": "in_progress",
+      "acceptance_criteria": [
+        "No hex color literals introduced anywhere in changed files",
+        "ReaderLayout.hPadding used in both ThreadDetailView and ArticleDetailView \u2014 no drift",
+        "isCancellation correctly covers both CancellationError and URLError.cancelled in all patched views",
+        "Badge color mapping matches spec table for all eight label cases",
+        "ThreadSeenStore correctly distinguishes same lastUpdated (seen) from changed lastUpdated (unseen)",
+        "ParagraphText helper shared between body and summary rendering",
+        "All new files added to project.yml or confirmed xcodegen picks them up",
+        "No unresolved TODO or placeholder code left in tree"
+      ],
+      "dependencies": [
+        "B-0905511d",
+        "B-13890a25",
+        "B-14762a77",
+        "B-2f17b315",
+        "B-4bfe4d9d",
+        "B-54bdde37",
+        "B-5b948854",
+        "B-5e720dc4",
+        "B-8b72e7f4",
+        "B-b2d95456",
+        "B-bcd2bafa",
+        "B-cad767ed",
+        "B-e53506ca",
+        "B-fb51ddd2"
+      ],
+      "linked_docs": [
+        "specs/planned/threads-and-reader-polish-layout-badges-formatting-and-fixes.md"
+      ],
+      "execution_branch_name": "feature/b-2ca6fdbe",
+      "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-2ca6fdbe",
+      "expected_files": [
+        "AggregatorApp.xcodeproj/project.pbxproj",
+        "AggregatorApp/AggregatorApp.swift",
+        "AggregatorApp/AppRoot.swift",
+        "AggregatorApp/Articles/ArticleDetailView.swift",
+        "AggregatorApp/Common/Error+Cancellation.swift",
+        "AggregatorApp/Common/ParagraphText.swift",
+        "AggregatorApp/Common/ReaderLayout.swift",
+        "AggregatorApp/Sources/SourcesView.swift",
+        "AggregatorApp/Threads/ThreadCardView.swift",
+        "AggregatorApp/Threads/ThreadDetailView.swift",
+        "AggregatorApp/Threads/ThreadSeenStore.swift",
+        "AggregatorApp/Threads/ThreadsView.swift"
+      ],
+      "expected_globs": [
+        "AggregatorApp/**/*.swift",
+        "AggregatorApp/Common/ParagraphText.swift",
+        "AggregatorAppTests/**/*.swift"
+      ],
+      "touched_files": [
+        "AggregatorApp.xcodeproj/project.pbxproj",
+        "AggregatorApp/AggregatorApp.swift",
+        "AggregatorApp/AppRoot.swift",
+        "AggregatorApp/Articles/ArticleDetailView.swift",
+        "AggregatorApp/Common/Error+Cancellation.swift",
+        "AggregatorApp/Common/ParagraphText.swift",
+        "AggregatorApp/Common/ReaderLayout.swift",
+        "AggregatorApp/Sources/SourcesView.swift",
+        "AggregatorApp/Threads/ThreadCardView.swift",
+        "AggregatorApp/Threads/ThreadDetailView.swift",
+        "AggregatorApp/Threads/ThreadSeenStore.swift",
+        "AggregatorApp/Threads/ThreadsView.swift",
+        "AggregatorAppTests/ThreadSeenStoreTests.swift"
+      ],
+      "conflict_risks": "None \u2014 only the Threads tab systemImage string was modified; no overlap with other bead scopes.\nNone \u2014 new file with no overlap with any other in-flight bead.\nThe Xcode project file was regenerated. Sibling beads that also add files and run xcodegen will need to re-run it after merging; last-write-wins on the generated project.pbxproj is expected takt behavior.\nNone. Only `ArticleDetailView.swift` was modified and only one line changed.\nNo conflicts expected. File is net-new; only project.pbxproj is modified by xcodegen and conflicts there are mechanical (sibling beads that also add files will each touch pbxproj, but xcodegen regeneration on merge resolves this).\nNone \u2014 both edits are single-line additions in isolated catch blocks with no overlap with other in-flight beads.\nNone. Only `ThreadDetailView.swift` was modified; no other bead should be editing this file concurrently.\nNone \u2014 this bead's dependency beads (B-0905511d, B-5b948854) were both merged before this ran; no outstanding conflicts in ArticleDetailView.swift.\nNone \u2014 this bead's change is a single-line addition inside loadInitial(). All dependency beads (B-0905511d for the helper, B-14762a77 for margins) are already merged into this feature branch.\nNone. This bead only modifies two private functions; no other beads target these functions.\nNo conflict risks. ParagraphText is a new file; ArticleDetailView edits are self-contained two-line swaps in sections (6) and (7) with no structural changes to the surrounding VStack or view hierarchy.\nNo conflict risks. All three files were in this bead's exclusive scope; no sibling beads share these files.",
+      "handoff_summary": {
+        "completed": "",
+        "remaining": "",
+        "risks": "",
+        "verdict": "",
+        "findings_count": 0,
+        "requires_followup": false,
+        "changed_files": [],
+        "updated_docs": [],
+        "next_action": "",
+        "next_agent": "",
+        "block_reason": "",
+        "expected_files": [],
+        "expected_globs": [],
+        "touched_files": [],
+        "conflict_risks": "",
+        "design_decisions": "",
+        "test_coverage_notes": "",
+        "known_limitations": ""
+      }
+    },
+    "last_agent_result": {
+      "outcome": "completed",
+      "summary": "All 8 acceptance criteria pass. No hex literals, ReaderLayout.hPadding consistent across both views, isCancellation guards all 4 async paths, badge color mapping correct for all 8 labels, ThreadSeenStore seen logic correct with full test coverage, ParagraphText shared between body/summary in ArticleDetailView, all new files registered in project.pbxproj, no TODOs remaining.",
+      "verdict": "approved",
+      "findings_count": 0,
+      "requires_followup": false,
+      "next_agent": "",
+      "block_reason": ""
+    },
+    "telemetry": {
+      "cost_usd": 0.5301182,
+      "duration_ms": 203582,
+      "duration_api_ms": 199239,
+      "num_turns": 23,
+      "input_tokens": 109,
+      "output_tokens": 10759,
+      "cache_creation_tokens": 39385,
+      "cache_read_tokens": 422204,
+      "stop_reason": "end_turn",
+      "session_id": "fe5256aa-23f1-49a2-b088-d65c36e45e1c",
+      "permission_denials": [],
+      "prompt_chars": 17838,
+      "prompt_lines": 233,
+      "source": "provider",
+      "attempt": 1
+    },
+    "telemetry_history": [
+      {
+        "cost_usd": 0.5301182,
+        "duration_ms": 203582,
+        "duration_api_ms": 199239,
+        "num_turns": 23,
+        "input_tokens": 109,
+        "output_tokens": 10759,
+        "cache_creation_tokens": 39385,
+        "cache_read_tokens": 422204,
+        "stop_reason": "end_turn",
+        "session_id": "fe5256aa-23f1-49a2-b088-d65c36e45e1c",
+        "permission_denials": [],
+        "prompt_chars": 17838,
+        "prompt_lines": 233,
+        "source": "provider",
+        "attempt": 1
+      }
+    ]
+  },
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

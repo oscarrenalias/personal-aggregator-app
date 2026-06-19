@@ -11,7 +11,8 @@
       "Bash(xcodegen generate *)",
       "Bash(xcodebuild test *)",
       "Bash(open AggregatorApp.xcodeproj)",
-      "Bash(awk 'NR>1{print $3}')"
+      "Bash(awk 'NR>1{print $3}')",
+      "Bash(open /tmp/threads-icons.png)"
     ]
   }
 }

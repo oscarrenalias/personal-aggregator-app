@@ -1,0 +1,62 @@
+{
+  "bead_id": "B-9169c35a",
+  "title": "Threads and Reader Polish: Layout, Badges, Formatting, and Fixes",
+  "agent_type": "planner",
+  "description": "Six focused client-side polish improvements for the threads/reader experience built on spec-37d1bbcf: consistent reader margins via a shared constant, silent cancellation-error handling on back-navigation, web-accurate tinted classification-badge colors, Threads tab icon correction, article paragraph typography, and local UserDefaults-backed clearing of the \"has updates\" dot when a thread is opened.",
+  "status": "done",
+  "bead_type": "epic",
+  "parent_id": null,
+  "dependencies": [],
+  "acceptance_criteria": [],
+  "linked_docs": [
+    "specs/planned/threads-and-reader-polish-layout-badges-formatting-and-fixes.md",
+    "docs/API.md"
+  ],
+  "feature_root_id": null,
+  "execution_branch_name": "",
+  "execution_worktree_path": "",
+  "expected_files": [],
+  "expected_globs": [],
+  "touched_files": [],
+  "changed_files": [],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "",
+    "remaining": "",
+    "risks": "",
+    "verdict": "",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [],
+    "updated_docs": [],
+    "next_action": "",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [],
+    "expected_globs": [],
+    "touched_files": [],
+    "conflict_risks": "",
+    "design_decisions": "",
+    "test_coverage_notes": "",
+    "known_limitations": ""
+  },
+  "block_reason": "",
+  "conflict_risks": "",
+  "branch_name": "",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-19T14:46:14.006995+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    }
+  ],
+  "metadata": {},
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

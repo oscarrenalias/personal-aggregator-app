@@ -1,0 +1,65 @@
+{
+  "bead_id": "B-2ca6fdbe",
+  "title": "Threads and Reader Polish \u2014 feature root",
+  "agent_type": "planner",
+  "description": "Non-runnable orchestration root. All implementation, testing, documentation, and review work lives in children. Six spec sections (\u00a71\u2013\u00a76) decomposed into 12 developer beads that respect per-file sequencing to avoid merge conflicts.",
+  "status": "done",
+  "bead_type": "feature",
+  "parent_id": "B-9169c35a",
+  "dependencies": [],
+  "acceptance_criteria": [
+    "All child beads complete with exit 0",
+    "xcodegen generate succeeds at repo root after merge",
+    "xcodebuild test exits 0 including new ThreadSeenStore unit tests"
+  ],
+  "linked_docs": [
+    "specs/planned/threads-and-reader-polish-layout-badges-formatting-and-fixes.md"
+  ],
+  "feature_root_id": "B-2ca6fdbe",
+  "execution_branch_name": "feature/b-2ca6fdbe",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-2ca6fdbe",
+  "expected_files": [],
+  "expected_globs": [],
+  "touched_files": [],
+  "changed_files": [],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "",
+    "remaining": "",
+    "risks": "",
+    "verdict": "",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [],
+    "updated_docs": [],
+    "next_action": "",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [],
+    "expected_globs": [],
+    "touched_files": [],
+    "conflict_risks": "",
+    "design_decisions": "",
+    "test_coverage_notes": "",
+    "known_limitations": ""
+  },
+  "block_reason": "",
+  "conflict_risks": "",
+  "branch_name": "",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-19T14:46:14.015444+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    }
+  ],
+  "metadata": {},
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

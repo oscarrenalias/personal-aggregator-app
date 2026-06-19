@@ -1,0 +1,247 @@
+{
+  "bead_id": "B-5b948854",
+  "title": "Apply consistent horizontal margins in ArticleDetailView",
+  "agent_type": "developer",
+  "description": "In ArticleDetailView.swift replace bare .padding() on content with .padding(.horizontal, ReaderLayout.hPadding) plus existing vertical padding. Hero images must remain full-bleed. Depends on ReaderLayout constant bead.",
+  "status": "done",
+  "bead_type": "task",
+  "parent_id": "B-2ca6fdbe",
+  "dependencies": [
+    "B-bcd2bafa"
+  ],
+  "acceptance_criteria": [
+    "ArticleDetailView imports/uses ReaderLayout.hPadding",
+    "Title, byline, body, summary callout share the same leading margin",
+    "Hero images span full width",
+    "File compiles cleanly"
+  ],
+  "linked_docs": [
+    "specs/planned/threads-and-reader-polish-layout-badges-formatting-and-fixes.md"
+  ],
+  "feature_root_id": "B-2ca6fdbe",
+  "execution_branch_name": "feature/b-2ca6fdbe",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-2ca6fdbe",
+  "expected_files": [
+    "AggregatorApp/Articles/ArticleDetailView.swift"
+  ],
+  "expected_globs": [],
+  "touched_files": [
+    "AggregatorApp/Articles/ArticleDetailView.swift",
+    "AggregatorApp/Sources/SourcesView.swift",
+    "AggregatorApp/Threads/ThreadDetailView.swift",
+    "AggregatorApp/Threads/ThreadsView.swift"
+  ],
+  "changed_files": [
+    "AggregatorApp/Articles/ArticleDetailView.swift",
+    "AggregatorApp/Sources/SourcesView.swift",
+    "AggregatorApp/Threads/ThreadDetailView.swift",
+    "AggregatorApp/Threads/ThreadsView.swift"
+  ],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "Replaced `.padding()` on the inner `VStack` (title, byline, badge, chips, summary, body) at line 154 with `.padding(.horizontal, ReaderLayout.hPadding)` + `.padding(.vertical)`. The hero `AsyncImage` block is a sibling of that inner VStack (not a child) so it stays full-bleed. `xcodebuild build` returned cleanly.",
+    "remaining": "N/A",
+    "risks": "None. Change is limited to a single modifier swap on one VStack. No logic altered.",
+    "verdict": "approved",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [
+      "AggregatorApp/Articles/ArticleDetailView.swift",
+      "AggregatorApp/Sources/SourcesView.swift",
+      "AggregatorApp/Threads/ThreadDetailView.swift",
+      "AggregatorApp/Threads/ThreadsView.swift"
+    ],
+    "updated_docs": [],
+    "next_action": "Reviewer to confirm hero image is full-bleed and all text content shares the same leading margin visually.",
+    "next_agent": "review",
+    "block_reason": "",
+    "expected_files": [
+      "AggregatorApp/Articles/ArticleDetailView.swift"
+    ],
+    "expected_globs": [],
+    "touched_files": [
+      "AggregatorApp/Articles/ArticleDetailView.swift",
+      "AggregatorApp/Sources/SourcesView.swift",
+      "AggregatorApp/Threads/ThreadDetailView.swift",
+      "AggregatorApp/Threads/ThreadsView.swift"
+    ],
+    "conflict_risks": "None. Only `ArticleDetailView.swift` was modified and only one line changed.",
+    "design_decisions": "Split the original `.padding()` into two modifiers rather than using `EdgeInsets` directly. This makes the horizontal value visibly tied to `ReaderLayout.hPadding` while leaving vertical as the system default (16 pt), matching the original behaviour exactly. The hero image was already a sibling (not child) of the padded VStack \u2014 no structural change was needed to keep it full-bleed.",
+    "test_coverage_notes": "Tester should verify: (1) title, byline, badge, chips, summary callout, and body text all share the same 20 pt leading margin; (2) hero image (when present) bleeds to both screen edges; (3) layout on iPhone SE (narrow) and iPhone Pro Max (wide) looks consistent.",
+    "known_limitations": "The summary callout block has its own internal `.padding()` (line 129) which adds 16 pt inside the glass background \u2014 this is intentional inner padding for the callout card and is not affected by this change."
+  },
+  "block_reason": "",
+  "conflict_risks": "None. Only `ArticleDetailView.swift` was modified and only one line changed.",
+  "branch_name": "feature/b-2ca6fdbe",
+  "worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-2ca6fdbe",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-19T14:46:14.022585+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-19T14:47:34.989750+00:00",
+      "event": "skills_loaded",
+      "agent_type": "developer",
+      "summary": "Loaded 7 skill(s) for isolated execution",
+      "details": {
+        "loaded_skills": [
+          "core/base-orchestrator",
+          "role/developer-implementation",
+          "capability/code-edit",
+          "task/corrective-implementation",
+          "task/refactor-safe",
+          "task/migration",
+          "memory"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-06-19T14:47:34.989771+00:00",
+      "event": "started",
+      "agent_type": "developer",
+      "summary": "Worker started",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-19T14:47:34.992260+00:00",
+      "event": "guardrails_applied",
+      "agent_type": "developer",
+      "summary": "Applied guardrails from .takt/agent-runs/B-5b948854/repo/templates/agents/developer.md",
+      "details": {
+        "template_path": ".takt/agent-runs/B-5b948854/repo/templates/agents/developer.md"
+      }
+    },
+    {
+      "timestamp": "2026-06-19T14:49:14.754496+00:00",
+      "event": "completed",
+      "agent_type": "developer",
+      "summary": "Replaced bare `.padding()` on the inner content VStack in ArticleDetailView with `.padding(.horizontal, ReaderLayout.hPadding)` + `.padding(.vertical)`. Hero image remains full-bleed as it sits outside the padded VStack. Build is clean.",
+      "details": {}
+    }
+  ],
+  "metadata": {
+    "execution_root": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-5b948854",
+    "workspace_repo_path": "repo",
+    "loaded_skills": [
+      "core/base-orchestrator",
+      "role/developer-implementation",
+      "capability/code-edit",
+      "task/corrective-implementation",
+      "task/refactor-safe",
+      "task/migration",
+      "memory"
+    ],
+    "skill_bundle_hash": "ecae5633083d1bbec41a6e5ec6ea05bbab117f60499c19b2ed76dbbe3e1aec7c",
+    "isolated_home": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-5b948854/home",
+    "runner_backend": "claude",
+    "guardrails": {
+      "agent_type": "developer",
+      "template_path": ".takt/agent-runs/B-5b948854/repo/templates/agents/developer.md",
+      "template_text": "# Developer Guardrails\n\nPrimary responsibility: Implement only the assigned bead inside the existing architecture and file scope.\n\n## Corrective bead scope\n\nIf your `bead_id` ends in `-corrective` or `-corrective-<N>` (e.g. `B-abc12345-corrective`, `B-abc12345-test-corrective-2`), you are running as a CORRECTIVE bead. Your scope is **strictly limited to fixing the specific failure that blocked the parent bead**. Do not:\n\n- Add unrelated improvements, refactors, or cleanup, even if you notice them\n- Reapply previously-reverted changes (the operator reverted them for a reason)\n- Expand the surface area beyond what is needed to unblock the parent\n- Touch files outside what the parent bead's `expected_files` / `expected_globs` covered, unless the failure is genuinely in another file and there is no smaller fix\n\nIf you notice an unrelated issue while fixing the corrective scope: **file a separate bead** via `takt bead create` describing what you saw, but do not fix it in this corrective. The operator will prioritize and dispatch.\n\nWhen in doubt about scope: prefer the smallest possible fix. The reviewer of this corrective will check that the scope was respected.\n\nAllowed actions:\n- Modify code, configuration, or local docs required to complete the assigned bead.\n- Create sub-beads for discovered follow-up work that should be handled separately.\n- Verify your `Swift` changes compile and import correctly with a quick syntax check: ``.\n\nDisallowed actions:\n- Run any test suite \u2014 not even a targeted `` run or any subset. Test execution is exclusively the tester agent's responsibility. Running tests wastes the agent budget and delays the pipeline.\n- Redesign unrelated architecture or broaden scope beyond the assigned bead.\n- Perform final review signoff in place of a review agent.\n- Silently absorb unrelated test, documentation, or planning work that should be handed off.\n\n## Memory\n\n**Read memory at bead start.** Before touching any code, run three searches using `$TAKT_CMD` (injected by the orchestrator):\n\n```bash\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace global\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace feature:<feature_root_id>\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace specs\n```\n\nTreat results as ambient context \u2014 apply relevant entries; skip entries that don't apply.\n\n**Write to memory when you discover reusable project knowledge** \u2014 something that would have changed your approach if you had known it upfront, and is not already in CLAUDE.md or the guardrails.\n\n```bash\n$TAKT_CMD memory add \"<concise fact>\" --namespace global               # project-wide knowledge\n$TAKT_CMD memory add \"<discovery>\" --namespace feature:<feature_root_id>  # feature-scoped\n```\n\nRequired Handoff Fields:\n\nEvery developer bead **must** populate the following three fields in its output JSON. Reviewers and tester agents rely on these fields to scope their work without additional back-and-forth turns. Use `\"N/A\"` only when a field is genuinely inapplicable (e.g., a trivial rename with no design trade-offs); do not leave fields blank.\n\n- **`design_decisions`** \u2014 Document non-obvious architectural or implementation choices made during this bead. Include alternatives considered and why the chosen approach was preferred. Reviewers use this to evaluate correctness without re-deriving intent. Set to `\"N/A\"` only if the change was purely mechanical with no meaningful trade-offs.\n\n- **`test_coverage_notes`** \u2014 Describe what the tester agent should verify: new code paths, edge cases introduced, regression risks, and any known untested scenarios left to the tester. Set to `\"N/A\"` only if the bead touched no executable code paths (e.g., documentation-only changes).\n\n- **`known_limitations`** \u2014 Call out constraints, deferred work, or known gaps in the implementation. This includes out-of-scope items deliberately left for follow-up beads and any areas where the implementation is intentionally incomplete. Set to `\"N/A\"` if the implementation is complete as specified with no known gaps.\n\nExpected outputs:\n- Completed or blocked JSON with concise implementation summary.\n- Accurate touched files, changed files, risks, and follow-up handoff fields.\n- Populated `design_decisions`, `test_coverage_notes`, and `known_limitations` fields in every response.",
+      "captured_at": "2026-06-19T14:47:34.992251+00:00"
+    },
+    "worker_prompt_context": {
+      "bead_id": "B-5b948854",
+      "feature_root_id": "B-2ca6fdbe",
+      "title": "Apply consistent horizontal margins in ArticleDetailView",
+      "agent_type": "developer",
+      "description": "In ArticleDetailView.swift replace bare .padding() on content with .padding(.horizontal, ReaderLayout.hPadding) plus existing vertical padding. Hero images must remain full-bleed. Depends on ReaderLayout constant bead.",
+      "status": "in_progress",
+      "acceptance_criteria": [
+        "ArticleDetailView imports/uses ReaderLayout.hPadding",
+        "Title, byline, body, summary callout share the same leading margin",
+        "Hero images span full width",
+        "File compiles cleanly"
+      ],
+      "dependencies": [
+        "B-bcd2bafa"
+      ],
+      "linked_docs": [
+        "specs/planned/threads-and-reader-polish-layout-badges-formatting-and-fixes.md"
+      ],
+      "execution_branch_name": "feature/b-2ca6fdbe",
+      "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-2ca6fdbe",
+      "expected_files": [
+        "AggregatorApp/Articles/ArticleDetailView.swift"
+      ],
+      "expected_globs": [],
+      "touched_files": [],
+      "conflict_risks": "",
+      "handoff_summary": {
+        "completed": "",
+        "remaining": "",
+        "risks": "",
+        "verdict": "",
+        "findings_count": 0,
+        "requires_followup": false,
+        "changed_files": [],
+        "updated_docs": [],
+        "next_action": "",
+        "next_agent": "",
+        "block_reason": "",
+        "expected_files": [],
+        "expected_globs": [],
+        "touched_files": [],
+        "conflict_risks": "",
+        "design_decisions": "",
+        "test_coverage_notes": "",
+        "known_limitations": ""
+      }
+    },
+    "last_agent_result": {
+      "outcome": "completed",
+      "summary": "Replaced bare `.padding()` on the inner content VStack in ArticleDetailView with `.padding(.horizontal, ReaderLayout.hPadding)` + `.padding(.vertical)`. Hero image remains full-bleed as it sits outside the padded VStack. Build is clean.",
+      "verdict": "approved",
+      "findings_count": 0,
+      "requires_followup": false,
+      "next_agent": "review",
+      "block_reason": ""
+    },
+    "telemetry": {
+      "cost_usd": 0.2716503,
+      "duration_ms": 99009,
+      "duration_api_ms": 76451,
+      "num_turns": 12,
+      "input_tokens": 14,
+      "output_tokens": 3935,
+      "cache_creation_tokens": 20441,
+      "cache_read_tokens": 289651,
+      "stop_reason": "end_turn",
+      "session_id": "194e33f6-922c-415d-bcdd-abdc38098664",
+      "permission_denials": [],
+      "prompt_chars": 8961,
+      "prompt_lines": 175,
+      "source": "provider",
+      "attempt": 1
+    },
+    "telemetry_history": [
+      {
+        "cost_usd": 0.2716503,
+        "duration_ms": 99009,
+        "duration_api_ms": 76451,
+        "num_turns": 12,
+        "input_tokens": 14,
+        "output_tokens": 3935,
+        "cache_creation_tokens": 20441,
+        "cache_read_tokens": 289651,
+        "stop_reason": "end_turn",
+        "session_id": "194e33f6-922c-415d-bcdd-abdc38098664",
+        "permission_denials": [],
+        "prompt_chars": 8961,
+        "prompt_lines": 175,
+        "source": "provider",
+        "attempt": 1
+      }
+    ],
+    "last_commit": "62c4e21c9bc055852663c619e257beb1afc421c4"
+  },
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

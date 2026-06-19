@@ -1,0 +1,299 @@
+{
+  "bead_id": "B-54bdde37",
+  "title": "Document threads/reader polish changes",
+  "agent_type": "documentation",
+  "description": "Update any inline documentation or developer notes warranted by the new ThreadSeenStore (observable, UserDefaults key, injection point) and the ReaderLayout constant (where to find it, when to use it). Update CLAUDE.md or relevant docs if new project-wide conventions are introduced. No documentation change is needed for trivial one-liner fixes.",
+  "status": "done",
+  "bead_type": "task",
+  "parent_id": "B-2ca6fdbe",
+  "dependencies": [
+    "B-bcd2bafa",
+    "B-14762a77",
+    "B-5b948854",
+    "B-0905511d",
+    "B-8b72e7f4",
+    "B-5e720dc4",
+    "B-cad767ed",
+    "B-13890a25",
+    "B-fb51ddd2",
+    "B-2f17b315",
+    "B-4bfe4d9d",
+    "B-e53506ca"
+  ],
+  "acceptance_criteria": [
+    "ThreadSeenStore has a brief doc comment explaining the UserDefaults key and persistence semantics",
+    "ReaderLayout constant has a brief doc comment if not self-evident from the name",
+    "CLAUDE.md updated if any new project-wide pattern (e.g. ReaderLayout, ThreadSeenStore injection) warrants mention"
+  ],
+  "linked_docs": [
+    "specs/planned/threads-and-reader-polish-layout-badges-formatting-and-fixes.md"
+  ],
+  "feature_root_id": "B-2ca6fdbe",
+  "execution_branch_name": "feature/b-2ca6fdbe",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-2ca6fdbe",
+  "expected_files": [
+    "AggregatorApp/Threads/ThreadSeenStore.swift",
+    "AggregatorApp/Common/ReaderLayout.swift"
+  ],
+  "expected_globs": [
+    "AggregatorApp/Common/ReaderLayout.swift",
+    "AggregatorApp/Threads/ThreadSeenStore.swift"
+  ],
+  "touched_files": [
+    "AggregatorApp/Common/ReaderLayout.swift",
+    "AggregatorApp/Threads/ThreadSeenStore.swift"
+  ],
+  "changed_files": [
+    "AggregatorApp/Common/ReaderLayout.swift",
+    "AggregatorApp/Threads/ThreadSeenStore.swift"
+  ],
+  "updated_docs": [
+    "AggregatorApp/Threads/ThreadSeenStore.swift",
+    "AggregatorApp/Common/ReaderLayout.swift"
+  ],
+  "handoff_summary": {
+    "completed": "Doc comments added to AggregatorApp/Threads/ThreadSeenStore.swift and AggregatorApp/Common/ReaderLayout.swift. CLAUDE.md assessed and no update required.",
+    "remaining": "Nothing remaining for this bead.",
+    "risks": "Pre-existing SourceKit diagnostics in ThreadSeenStore.swift (Thread model member resolution) are unrelated to documentation changes.",
+    "verdict": "approved",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [
+      "AggregatorApp/Common/ReaderLayout.swift",
+      "AggregatorApp/Threads/ThreadSeenStore.swift"
+    ],
+    "updated_docs": [
+      "AggregatorApp/Threads/ThreadSeenStore.swift",
+      "AggregatorApp/Common/ReaderLayout.swift"
+    ],
+    "next_action": "None \u2014 documentation bead is complete.",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [
+      "AggregatorApp/Threads/ThreadSeenStore.swift",
+      "AggregatorApp/Common/ReaderLayout.swift"
+    ],
+    "expected_globs": [
+      "AggregatorApp/Common/ReaderLayout.swift",
+      "AggregatorApp/Threads/ThreadSeenStore.swift"
+    ],
+    "touched_files": [
+      "AggregatorApp/Common/ReaderLayout.swift",
+      "AggregatorApp/Threads/ThreadSeenStore.swift"
+    ],
+    "conflict_risks": "None. Both files are exclusively within this bead's scope and the changes are doc-comment additions only.",
+    "design_decisions": "CLAUDE.md not updated: ThreadSeenStore environment injection follows the pre-existing CredentialsStore pattern; ReaderLayout is a local constants namespace not requiring project-wide documentation.",
+    "test_coverage_notes": "Documentation bead \u2014 no test coverage required.",
+    "known_limitations": "ParagraphText.swift has no doc comment added \u2014 its name and single-property initialiser are self-evident and the acceptance criteria does not list it."
+  },
+  "block_reason": "",
+  "conflict_risks": "None. Both files are exclusively within this bead's scope and the changes are doc-comment additions only.",
+  "branch_name": "feature/b-2ca6fdbe",
+  "worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-2ca6fdbe",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-19T14:46:14.033687+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-19T15:00:12.940504+00:00",
+      "event": "skills_loaded",
+      "agent_type": "documentation",
+      "summary": "Loaded 6 skill(s) for isolated execution",
+      "details": {
+        "loaded_skills": [
+          "core/base-orchestrator",
+          "role/docs-agent",
+          "capability/docs-edit",
+          "task/release-notes",
+          "task/spec-sync",
+          "memory"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-06-19T15:00:12.940531+00:00",
+      "event": "started",
+      "agent_type": "documentation",
+      "summary": "Worker started",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-19T15:00:12.947084+00:00",
+      "event": "guardrails_applied",
+      "agent_type": "documentation",
+      "summary": "Applied guardrails from .takt/agent-runs/B-54bdde37/repo/templates/agents/documentation.md",
+      "details": {
+        "template_path": ".takt/agent-runs/B-54bdde37/repo/templates/agents/documentation.md"
+      }
+    },
+    {
+      "timestamp": "2026-06-19T15:01:26.942254+00:00",
+      "event": "completed",
+      "agent_type": "documentation",
+      "summary": "Added doc comments to ThreadSeenStore (UserDefaults key, persistence semantics, environment injection point) and ReaderLayout (purpose, when to use hPadding). CLAUDE.md unchanged \u2014 no new project-wide patterns introduced.",
+      "details": {}
+    }
+  ],
+  "metadata": {
+    "execution_root": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-54bdde37",
+    "workspace_repo_path": "repo",
+    "loaded_skills": [
+      "core/base-orchestrator",
+      "role/docs-agent",
+      "capability/docs-edit",
+      "task/release-notes",
+      "task/spec-sync",
+      "memory"
+    ],
+    "skill_bundle_hash": "191f95261a4d31e4f4a691e9c39926c722504f21a3c370b6975facad92e3c1f0",
+    "isolated_home": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-54bdde37/home",
+    "runner_backend": "claude",
+    "guardrails": {
+      "agent_type": "documentation",
+      "template_path": ".takt/agent-runs/B-54bdde37/repo/templates/agents/documentation.md",
+      "template_text": "# Documentation Guardrails\n\nPrimary responsibility: Update documentation and examples that explain the assigned behavior without changing runtime feature behavior.\n\nAllowed actions:\n- Edit docs, examples, and explanatory text tied to the assigned bead.\n- Focus only on files listed in the bead's touched_files and changed_files fields. Do not read or modify unrelated documentation.\n- Align documentation with existing code and validated behavior.\n- Identify when implementation or tests must land first and block with a handoff.\n\nDisallowed actions:\n- Change runtime behavior, production code paths, or feature logic.\n- Invent undocumented behavior that is not present in the codebase.\n- Approve code quality or test completeness as a substitute for review.\n- Do not run the test suite. Testing is the tester agent's responsibility.\n\n## Memory\n\n**Read memory at bead start.** Before writing any documentation, run three searches using `$TAKT_CMD` (injected by the orchestrator):\n\n```bash\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace global\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace feature:<feature_root_id>\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace specs\n```\n\nTreat results as ambient context \u2014 apply relevant entries to inform documentation; skip entries that don't apply.\n\nDo **not** write to memory \u2014 documentation agents are read-only.\n\nEfficiency constraints:\n- Do not read the full codebase for context. Focus on the changed files and their immediate surroundings.\n- Keep documentation updates concise and proportional to the change.\n\nExpected outputs:\n- Return JSON with `outcome` set to `completed` (documentation beads always complete; use `verdict` for pass/fail) and `summary` as a one-line description of what was documented.\n- Return JSON with structured verdict fields for every run: `verdict`, `findings_count`, and `requires_followup`.\n- Use `verdict=approved`, `findings_count=0`, and `requires_followup=false` when documentation is complete with no gaps.\n- Use `verdict=needs_changes`, set `findings_count` to the number of unresolved documentation gaps, set `requires_followup=true`, and include `block_reason` when implementation must land first or documentation cannot be completed.\n- Keep `completed`, `remaining`, and `risks` as concise narrative context only; they do not override the structured verdict fields.\n- Accurate updated docs and clear next-agent recommendations when code changes are required first.",
+      "captured_at": "2026-06-19T15:00:12.947073+00:00"
+    },
+    "worker_prompt_context": {
+      "bead_id": "B-54bdde37",
+      "feature_root_id": "B-2ca6fdbe",
+      "title": "Document threads/reader polish changes",
+      "agent_type": "documentation",
+      "description": "Update any inline documentation or developer notes warranted by the new ThreadSeenStore (observable, UserDefaults key, injection point) and the ReaderLayout constant (where to find it, when to use it). Update CLAUDE.md or relevant docs if new project-wide conventions are introduced. No documentation change is needed for trivial one-liner fixes.",
+      "status": "in_progress",
+      "acceptance_criteria": [
+        "ThreadSeenStore has a brief doc comment explaining the UserDefaults key and persistence semantics",
+        "ReaderLayout constant has a brief doc comment if not self-evident from the name",
+        "CLAUDE.md updated if any new project-wide pattern (e.g. ReaderLayout, ThreadSeenStore injection) warrants mention"
+      ],
+      "dependencies": [
+        "B-bcd2bafa",
+        "B-14762a77",
+        "B-5b948854",
+        "B-0905511d",
+        "B-8b72e7f4",
+        "B-5e720dc4",
+        "B-cad767ed",
+        "B-13890a25",
+        "B-fb51ddd2",
+        "B-2f17b315",
+        "B-4bfe4d9d",
+        "B-e53506ca"
+      ],
+      "linked_docs": [
+        "specs/planned/threads-and-reader-polish-layout-badges-formatting-and-fixes.md"
+      ],
+      "execution_branch_name": "feature/b-2ca6fdbe",
+      "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-2ca6fdbe",
+      "expected_files": [
+        "AggregatorApp.xcodeproj/project.pbxproj",
+        "AggregatorApp/AggregatorApp.swift",
+        "AggregatorApp/AppRoot.swift",
+        "AggregatorApp/Articles/ArticleDetailView.swift",
+        "AggregatorApp/Common/Error+Cancellation.swift",
+        "AggregatorApp/Common/ParagraphText.swift",
+        "AggregatorApp/Common/ReaderLayout.swift",
+        "AggregatorApp/Sources/SourcesView.swift",
+        "AggregatorApp/Threads/ThreadCardView.swift",
+        "AggregatorApp/Threads/ThreadDetailView.swift",
+        "AggregatorApp/Threads/ThreadSeenStore.swift",
+        "AggregatorApp/Threads/ThreadsView.swift"
+      ],
+      "expected_globs": [
+        "AggregatorApp/Common/ParagraphText.swift",
+        "AggregatorApp/Common/ReaderLayout.swift",
+        "AggregatorApp/Threads/ThreadSeenStore.swift"
+      ],
+      "touched_files": [
+        "AggregatorApp.xcodeproj/project.pbxproj",
+        "AggregatorApp/AggregatorApp.swift",
+        "AggregatorApp/AppRoot.swift",
+        "AggregatorApp/Articles/ArticleDetailView.swift",
+        "AggregatorApp/Common/Error+Cancellation.swift",
+        "AggregatorApp/Common/ParagraphText.swift",
+        "AggregatorApp/Common/ReaderLayout.swift",
+        "AggregatorApp/Sources/SourcesView.swift",
+        "AggregatorApp/Threads/ThreadCardView.swift",
+        "AggregatorApp/Threads/ThreadDetailView.swift",
+        "AggregatorApp/Threads/ThreadSeenStore.swift",
+        "AggregatorApp/Threads/ThreadsView.swift"
+      ],
+      "conflict_risks": "None \u2014 only the Threads tab systemImage string was modified; no overlap with other bead scopes.\nNone \u2014 new file with no overlap with any other in-flight bead.\nThe Xcode project file was regenerated. Sibling beads that also add files and run xcodegen will need to re-run it after merging; last-write-wins on the generated project.pbxproj is expected takt behavior.\nNone. Only `ArticleDetailView.swift` was modified and only one line changed.\nNo conflicts expected. File is net-new; only project.pbxproj is modified by xcodegen and conflicts there are mechanical (sibling beads that also add files will each touch pbxproj, but xcodegen regeneration on merge resolves this).\nNone \u2014 both edits are single-line additions in isolated catch blocks with no overlap with other in-flight beads.\nNone. Only `ThreadDetailView.swift` was modified; no other bead should be editing this file concurrently.\nNone \u2014 this bead's dependency beads (B-0905511d, B-5b948854) were both merged before this ran; no outstanding conflicts in ArticleDetailView.swift.\nNone \u2014 this bead's change is a single-line addition inside loadInitial(). All dependency beads (B-0905511d for the helper, B-14762a77 for margins) are already merged into this feature branch.\nNone. This bead only modifies two private functions; no other beads target these functions.\nNo conflict risks. ParagraphText is a new file; ArticleDetailView edits are self-contained two-line swaps in sections (6) and (7) with no structural changes to the surrounding VStack or view hierarchy.\nNo conflict risks. All three files were in this bead's exclusive scope; no sibling beads share these files.",
+      "handoff_summary": {
+        "completed": "",
+        "remaining": "",
+        "risks": "",
+        "verdict": "",
+        "findings_count": 0,
+        "requires_followup": false,
+        "changed_files": [],
+        "updated_docs": [],
+        "next_action": "",
+        "next_agent": "",
+        "block_reason": "",
+        "expected_files": [],
+        "expected_globs": [],
+        "touched_files": [],
+        "conflict_risks": "",
+        "design_decisions": "",
+        "test_coverage_notes": "",
+        "known_limitations": ""
+      }
+    },
+    "last_agent_result": {
+      "outcome": "completed",
+      "summary": "Added doc comments to ThreadSeenStore (UserDefaults key, persistence semantics, environment injection point) and ReaderLayout (purpose, when to use hPadding). CLAUDE.md unchanged \u2014 no new project-wide patterns introduced.",
+      "verdict": "approved",
+      "findings_count": 0,
+      "requires_followup": false,
+      "next_agent": "",
+      "block_reason": ""
+    },
+    "telemetry": {
+      "cost_usd": 0.235103,
+      "duration_ms": 73358,
+      "duration_api_ms": 71214,
+      "num_turns": 11,
+      "input_tokens": 12,
+      "output_tokens": 3648,
+      "cache_creation_tokens": 18577,
+      "cache_read_tokens": 216970,
+      "stop_reason": "end_turn",
+      "session_id": "3ac53c8b-52ee-46df-ab15-68fad2e49892",
+      "permission_denials": [],
+      "prompt_chars": 10747,
+      "prompt_lines": 203,
+      "source": "provider",
+      "attempt": 1
+    },
+    "telemetry_history": [
+      {
+        "cost_usd": 0.235103,
+        "duration_ms": 73358,
+        "duration_api_ms": 71214,
+        "num_turns": 11,
+        "input_tokens": 12,
+        "output_tokens": 3648,
+        "cache_creation_tokens": 18577,
+        "cache_read_tokens": 216970,
+        "stop_reason": "end_turn",
+        "session_id": "3ac53c8b-52ee-46df-ab15-68fad2e49892",
+        "permission_denials": [],
+        "prompt_chars": 10747,
+        "prompt_lines": 203,
+        "source": "provider",
+        "attempt": 1
+      }
+    ],
+    "last_commit": "18f573a2a9e124f9c2ce742476ef7f1b7b29dddb"
+  },
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}
