@@ -165,6 +165,14 @@ struct APIClient {
         return try await get("/articles", query: query)
     }
 
+    /// Fetches today's generated brief.
+    ///
+    /// A 404 surfaces as `APIError.http(status: 404)`. `TodayView` treats this as the
+    /// empty state (no brief generated yet for today) rather than a hard error.
+    func getTodayBrief() async throws -> Brief {
+        return try await get("/brief/today")
+    }
+
     // MARK: - Write endpoints
 
     /// Dismisses a thread so it no longer appears in the default (non-dismissed) listing.
