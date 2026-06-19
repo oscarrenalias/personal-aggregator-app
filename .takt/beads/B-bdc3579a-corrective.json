@@ -1,0 +1,243 @@
+{
+  "bead_id": "B-bdc3579a-corrective",
+  "title": "Corrective fix for B-bdc3579a: Threads view does not remember sort / show-dismissed across launches",
+  "agent_type": "developer",
+  "description": "Blocked reason: Unsupported agent type for worker prompt: defect",
+  "status": "done",
+  "bead_type": "task",
+  "parent_id": "B-bdc3579a",
+  "dependencies": [],
+  "acceptance_criteria": [
+    "Implement the minimum fix required to unblock B-bdc3579a.",
+    "Update tests/docs as needed for the corrective change.",
+    "Leave a handoff summary that states how the parent bead can be retried."
+  ],
+  "linked_docs": [],
+  "feature_root_id": "B-bdc3579a",
+  "execution_branch_name": "feature/b-bdc3579a",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-bdc3579a",
+  "expected_files": [
+    "AggregatorApp/Common/ListPreferences.swift",
+    "AggregatorAppTests/ListPreferencesTests.swift"
+  ],
+  "expected_globs": [
+    "AggregatorApp/**/*.swift",
+    "AggregatorAppTests/**/*.swift"
+  ],
+  "touched_files": [
+    "AggregatorApp/AggregatorApp.swift",
+    "AggregatorApp/Common/ListPreferences.swift",
+    "AggregatorApp/Threads/ThreadsView.swift",
+    "AggregatorAppTests/ListPreferencesTests.swift"
+  ],
+  "changed_files": [
+    "AggregatorApp/AggregatorApp.swift",
+    "AggregatorApp/Common/ListPreferences.swift",
+    "AggregatorApp/Threads/ThreadsView.swift",
+    "AggregatorAppTests/ListPreferencesTests.swift"
+  ],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "Created AggregatorApp/Common/ListPreferences.swift (@Observable class backed by UserDefaults, keys aggregator.threadsSort / aggregator.threadsShowDismissed, injected defaults for testability). Updated AggregatorApp.swift to instantiate and inject ListPreferences into the environment. Updated ThreadsView.swift to read/write sort and showDismissed from the injected ListPreferences instead of ephemeral @State, using @Bindable inside body for the Picker/Toggle bindings. Created AggregatorAppTests/ListPreferencesTests.swift with two tests: defaults assertion and a round-trip persistence test across two instances sharing the same suite. Build verified clean (xcodebuild returned zero errors after xcodegen generate).",
+    "remaining": "None \u2014 implementation is complete. Parent bead B-bdc3579a can be retried via `uv run takt retry B-bdc3579a` or the scheduler can pick it up; the corrective has delivered the full defect fix that the defect agent type couldn't execute. The takt merge gate (full test suite) will run at merge time.",
+    "risks": "None significant. ListPreferences reads UserDefaults.bool() for threadsShowDismissed; on first launch with no stored key this correctly returns false (the default). ThreadSort raw value not in defaults returns nil from string(forKey:), which the nil-coalescing correctly falls back to .importance.",
+    "verdict": "approved",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [
+      "AggregatorApp/AggregatorApp.swift",
+      "AggregatorApp/Common/ListPreferences.swift",
+      "AggregatorApp/Threads/ThreadsView.swift",
+      "AggregatorAppTests/ListPreferencesTests.swift"
+    ],
+    "updated_docs": [],
+    "next_action": "Run takt merge B-bdc3579a to execute the full test suite and merge to main when ready.",
+    "next_agent": "tester",
+    "block_reason": "",
+    "expected_files": [
+      "AggregatorApp/Common/ListPreferences.swift",
+      "AggregatorAppTests/ListPreferencesTests.swift"
+    ],
+    "expected_globs": [
+      "AggregatorApp/**/*.swift",
+      "AggregatorAppTests/**/*.swift"
+    ],
+    "touched_files": [
+      "AggregatorApp/AggregatorApp.swift",
+      "AggregatorApp/Common/ListPreferences.swift",
+      "AggregatorApp/Threads/ThreadsView.swift",
+      "AggregatorAppTests/ListPreferencesTests.swift"
+    ],
+    "conflict_risks": "None. This bead adds one new file (ListPreferences.swift) and modifies two files (AggregatorApp.swift, ThreadsView.swift). No sibling beads are touching those files.",
+    "design_decisions": "ListPreferences is named generically (not ThreadsListPreferences) to accommodate the upcoming Sources spec which will add articlesSort / articlesUnreadOnly to the same store, as called out in the parent bead description. @Bindable is declared as a local variable inside var body rather than as a stored property because @Environment-sourced @Observable objects cannot be wrapped with @Bindable as stored properties; the local-var pattern is the standard idiom in the Observation framework. UserDefaults.bool(forKey:) returns false for missing keys, which is exactly the desired default for threadsShowDismissed, so no special fallback is needed. ThreadSort rawValue round-trips cleanly through UserDefaults string storage because it already conforms to String raw value.",
+    "test_coverage_notes": "ListPreferencesTests covers: (1) fresh instance returns .importance / false defaults; (2) setting both properties to non-defaults and reading them back through a new instance sharing the same UserDefaults suite confirms persistence. Tester should additionally verify: the onChange(of: listPreferences.threadsSort) / onChange(of: listPreferences.threadsShowDismissed) handlers trigger a list reload when values change (this is a UI-layer concern not coverable in unit tests). Regression: tests must fail if the didSet blocks are removed from ListPreferences.",
+    "known_limitations": "The Sources spec (articlesSort / articlesUnreadOnly) will need to add further properties to ListPreferences when that bead is implemented. The current implementation does not add those properties since they are out of scope for this defect fix."
+  },
+  "block_reason": "",
+  "conflict_risks": "None. This bead adds one new file (ListPreferences.swift) and modifies two files (AggregatorApp.swift, ThreadsView.swift). No sibling beads are touching those files.",
+  "branch_name": "feature/b-bdc3579a",
+  "worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-bdc3579a",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-19T15:59:28.842899+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-19T15:59:29.015355+00:00",
+      "event": "skills_loaded",
+      "agent_type": "developer",
+      "summary": "Loaded 7 skill(s) for isolated execution",
+      "details": {
+        "loaded_skills": [
+          "core/base-orchestrator",
+          "role/developer-implementation",
+          "capability/code-edit",
+          "task/corrective-implementation",
+          "task/refactor-safe",
+          "task/migration",
+          "memory"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-06-19T15:59:29.015375+00:00",
+      "event": "started",
+      "agent_type": "developer",
+      "summary": "Worker started",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-19T15:59:29.016966+00:00",
+      "event": "guardrails_applied",
+      "agent_type": "developer",
+      "summary": "Applied guardrails from .takt/agent-runs/B-bdc3579a-corrective/repo/templates/agents/developer.md",
+      "details": {
+        "template_path": ".takt/agent-runs/B-bdc3579a-corrective/repo/templates/agents/developer.md"
+      }
+    },
+    {
+      "timestamp": "2026-06-19T16:03:44.598208+00:00",
+      "event": "completed",
+      "agent_type": "developer",
+      "summary": "Implemented ListPreferences persistence store and wired it into ThreadsView so sort order and show-dismissed toggle survive app relaunches. Added regression test covering defaults and round-trip persistence via an isolated UserDefaults suite.",
+      "details": {}
+    }
+  ],
+  "metadata": {
+    "auto_corrective_for": "B-bdc3579a",
+    "execution_root": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-bdc3579a-corrective",
+    "workspace_repo_path": "repo",
+    "loaded_skills": [
+      "core/base-orchestrator",
+      "role/developer-implementation",
+      "capability/code-edit",
+      "task/corrective-implementation",
+      "task/refactor-safe",
+      "task/migration",
+      "memory"
+    ],
+    "skill_bundle_hash": "ecae5633083d1bbec41a6e5ec6ea05bbab117f60499c19b2ed76dbbe3e1aec7c",
+    "isolated_home": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-bdc3579a-corrective/home",
+    "runner_backend": "claude",
+    "guardrails": {
+      "agent_type": "developer",
+      "template_path": ".takt/agent-runs/B-bdc3579a-corrective/repo/templates/agents/developer.md",
+      "template_text": "# Developer Guardrails\n\nPrimary responsibility: Implement only the assigned bead inside the existing architecture and file scope.\n\n## Corrective bead scope\n\nIf your `bead_id` ends in `-corrective` or `-corrective-<N>` (e.g. `B-abc12345-corrective`, `B-abc12345-test-corrective-2`), you are running as a CORRECTIVE bead. Your scope is **strictly limited to fixing the specific failure that blocked the parent bead**. Do not:\n\n- Add unrelated improvements, refactors, or cleanup, even if you notice them\n- Reapply previously-reverted changes (the operator reverted them for a reason)\n- Expand the surface area beyond what is needed to unblock the parent\n- Touch files outside what the parent bead's `expected_files` / `expected_globs` covered, unless the failure is genuinely in another file and there is no smaller fix\n\nIf you notice an unrelated issue while fixing the corrective scope: **file a separate bead** via `takt bead create` describing what you saw, but do not fix it in this corrective. The operator will prioritize and dispatch.\n\nWhen in doubt about scope: prefer the smallest possible fix. The reviewer of this corrective will check that the scope was respected.\n\nAllowed actions:\n- Modify code, configuration, or local docs required to complete the assigned bead.\n- Create sub-beads for discovered follow-up work that should be handled separately.\n- Verify your `Swift` changes compile and import correctly with a quick syntax check: ``.\n\nDisallowed actions:\n- Run any test suite \u2014 not even a targeted `` run or any subset. Test execution is exclusively the tester agent's responsibility. Running tests wastes the agent budget and delays the pipeline.\n- Redesign unrelated architecture or broaden scope beyond the assigned bead.\n- Perform final review signoff in place of a review agent.\n- Silently absorb unrelated test, documentation, or planning work that should be handed off.\n\n## Memory\n\n**Read memory at bead start.** Before touching any code, run three searches using `$TAKT_CMD` (injected by the orchestrator):\n\n```bash\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace global\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace feature:<feature_root_id>\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace specs\n```\n\nTreat results as ambient context \u2014 apply relevant entries; skip entries that don't apply.\n\n**Write to memory when you discover reusable project knowledge** \u2014 something that would have changed your approach if you had known it upfront, and is not already in CLAUDE.md or the guardrails.\n\n```bash\n$TAKT_CMD memory add \"<concise fact>\" --namespace global               # project-wide knowledge\n$TAKT_CMD memory add \"<discovery>\" --namespace feature:<feature_root_id>  # feature-scoped\n```\n\nRequired Handoff Fields:\n\nEvery developer bead **must** populate the following three fields in its output JSON. Reviewers and tester agents rely on these fields to scope their work without additional back-and-forth turns. Use `\"N/A\"` only when a field is genuinely inapplicable (e.g., a trivial rename with no design trade-offs); do not leave fields blank.\n\n- **`design_decisions`** \u2014 Document non-obvious architectural or implementation choices made during this bead. Include alternatives considered and why the chosen approach was preferred. Reviewers use this to evaluate correctness without re-deriving intent. Set to `\"N/A\"` only if the change was purely mechanical with no meaningful trade-offs.\n\n- **`test_coverage_notes`** \u2014 Describe what the tester agent should verify: new code paths, edge cases introduced, regression risks, and any known untested scenarios left to the tester. Set to `\"N/A\"` only if the bead touched no executable code paths (e.g., documentation-only changes).\n\n- **`known_limitations`** \u2014 Call out constraints, deferred work, or known gaps in the implementation. This includes out-of-scope items deliberately left for follow-up beads and any areas where the implementation is intentionally incomplete. Set to `\"N/A\"` if the implementation is complete as specified with no known gaps.\n\nExpected outputs:\n- Completed or blocked JSON with concise implementation summary.\n- Accurate touched files, changed files, risks, and follow-up handoff fields.\n- Populated `design_decisions`, `test_coverage_notes`, and `known_limitations` fields in every response.",
+      "captured_at": "2026-06-19T15:59:29.016959+00:00"
+    },
+    "worker_prompt_context": {
+      "bead_id": "B-bdc3579a-corrective",
+      "feature_root_id": "B-bdc3579a",
+      "title": "Corrective fix for B-bdc3579a: Threads view does not remember sort / show-dismissed across launches",
+      "agent_type": "developer",
+      "description": "Blocked reason: Unsupported agent type for worker prompt: defect",
+      "status": "in_progress",
+      "acceptance_criteria": [
+        "Implement the minimum fix required to unblock B-bdc3579a.",
+        "Update tests/docs as needed for the corrective change.",
+        "Leave a handoff summary that states how the parent bead can be retried."
+      ],
+      "dependencies": [],
+      "linked_docs": [],
+      "execution_branch_name": "feature/b-bdc3579a",
+      "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-bdc3579a",
+      "expected_files": [],
+      "expected_globs": [],
+      "touched_files": [],
+      "conflict_risks": "",
+      "handoff_summary": {
+        "completed": "",
+        "remaining": "",
+        "risks": "",
+        "verdict": "",
+        "findings_count": 0,
+        "requires_followup": false,
+        "changed_files": [],
+        "updated_docs": [],
+        "next_action": "",
+        "next_agent": "",
+        "block_reason": "",
+        "expected_files": [],
+        "expected_globs": [],
+        "touched_files": [],
+        "conflict_risks": "",
+        "design_decisions": "",
+        "test_coverage_notes": "",
+        "known_limitations": ""
+      }
+    },
+    "last_agent_result": {
+      "outcome": "completed",
+      "summary": "Implemented ListPreferences persistence store and wired it into ThreadsView so sort order and show-dismissed toggle survive app relaunches. Added regression test covering defaults and round-trip persistence via an isolated UserDefaults suite.",
+      "verdict": "approved",
+      "findings_count": 0,
+      "requires_followup": false,
+      "next_agent": "tester",
+      "block_reason": ""
+    },
+    "telemetry": {
+      "cost_usd": 0.8039795999999999,
+      "duration_ms": 255227,
+      "duration_api_ms": 215505,
+      "num_turns": 32,
+      "input_tokens": 36,
+      "output_tokens": 12137,
+      "cache_creation_tokens": 40468,
+      "cache_read_tokens": 1253512,
+      "stop_reason": "end_turn",
+      "session_id": "fabc727b-ef47-4bbd-ad3b-d20f3cf05e4d",
+      "permission_denials": [],
+      "prompt_chars": 8719,
+      "prompt_lines": 168,
+      "source": "provider",
+      "attempt": 1
+    },
+    "telemetry_history": [
+      {
+        "cost_usd": 0.8039795999999999,
+        "duration_ms": 255227,
+        "duration_api_ms": 215505,
+        "num_turns": 32,
+        "input_tokens": 36,
+        "output_tokens": 12137,
+        "cache_creation_tokens": 40468,
+        "cache_read_tokens": 1253512,
+        "stop_reason": "end_turn",
+        "session_id": "fabc727b-ef47-4bbd-ad3b-d20f3cf05e4d",
+        "permission_denials": [],
+        "prompt_chars": 8719,
+        "prompt_lines": 168,
+        "source": "provider",
+        "attempt": 1
+      }
+    ]
+  },
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

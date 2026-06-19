@@ -1,0 +1,278 @@
+{
+  "bead_id": "B-bdc3579a",
+  "title": "Threads view does not remember sort / show-dismissed across launches",
+  "agent_type": "developer",
+  "description": "DEFECT: ThreadsView resets its sort (importance/recent) and the show-dismissed\ntoggle to defaults on every app launch. The user's last-chosen sort is not\nremembered \u2014 e.g. selecting \"Recent\" should persist so the next launch still\nuses Recent.\n\nFIX:\n- Add a new `AggregatorApp/Common/ListPreferences.swift`: an `@Observable final\n  class` persisting list preferences in UserDefaults, following the existing\n  pattern of `CredentialsStore` / `ThreadSeenStore` (accept an injected\n  `UserDefaults = .standard` so tests can use an isolated suite).\n  - Properties for now: `threadsSort: ThreadSort` (default `.importance`) and\n    `threadsShowDismissed: Bool` (default `false`), each persisted on `didSet`.\n  - Keys e.g. `aggregator.threadsSort`, `aggregator.threadsShowDismissed`.\n  - Design it to be extensible: the upcoming Sources spec will add\n    `articlesSort` / `articlesUnreadOnly` to the SAME store, so keep it generic\n    (do not hard-scope it to threads in its name or structure).\n- Inject `ListPreferences` into the environment from `AggregatorApp.swift`\n  alongside `CredentialsStore` and `ThreadSeenStore`.\n- Update `AggregatorApp/Threads/ThreadsView.swift` to read/write its sort and\n  show-dismissed from the injected `ListPreferences` instead of plain local\n  @State, so changes persist and are restored on launch. Reloading the list on\n  change must still work exactly as today.\n\nREGRESSION TEST (`AggregatorAppTests/ListPreferencesTests.swift`):\n- Using a `ListPreferences` backed by a UUID-named in-memory UserDefaults suite\n  (never the real defaults), assert: defaults are `.importance` / `false`;\n  after setting `threadsSort = .recent` and `threadsShowDismissed = true`, a NEW\n  `ListPreferences` instance reading the same suite reports `.recent` / `true`\n  (i.e. the values persist and reload). The test must fail without the fix and\n  pass with it.\n\nDo not run the full test suite (that happens at merge time); run the focused\nListPreferences test only.",
+  "status": "done",
+  "bead_type": "defect",
+  "parent_id": null,
+  "dependencies": [],
+  "acceptance_criteria": [],
+  "linked_docs": [],
+  "feature_root_id": "B-bdc3579a",
+  "execution_branch_name": "feature/b-bdc3579a",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-bdc3579a",
+  "expected_files": [
+    "AggregatorApp/Common/ListPreferences.swift",
+    "AggregatorApp/AggregatorApp.swift",
+    "AggregatorApp/Threads/ThreadsView.swift",
+    "AggregatorAppTests/ListPreferencesTests.swift"
+  ],
+  "expected_globs": [],
+  "touched_files": [
+    "AggregatorApp/AggregatorApp.swift",
+    "AggregatorApp/Common/ListPreferences.swift",
+    "AggregatorApp/Threads/ThreadsView.swift",
+    "AggregatorAppTests/ListPreferencesTests.swift"
+  ],
+  "changed_files": [
+    "AggregatorApp/AggregatorApp.swift",
+    "AggregatorApp/Common/ListPreferences.swift",
+    "AggregatorApp/Threads/ThreadsView.swift",
+    "AggregatorAppTests/ListPreferencesTests.swift"
+  ],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "Created ListPreferences.swift with @Observable class persisting threadsSort and threadsShowDismissed to UserDefaults (keys: aggregator.threadsSort, aggregator.threadsShowDismissed). Injected into environment from AggregatorApp.swift. Updated ThreadsView.swift to bind UI controls to @Environment(ListPreferences.self) instead of @State, preserving reload-on-change behavior. Added ListPreferencesTests.swift with isolated UserDefaults suite tests. Build verified with xcodebuild build (no errors).",
+    "remaining": "None. Implementation is complete. Tester agent should execute the ListPreferencesTests and the full test suite as the merge gate.",
+    "risks": "None. UserDefaults persistence is a well-understood pattern; isolated test suite prevents real defaults contamination. ThreadsView.onChange reload behavior is unchanged.",
+    "verdict": "approved",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [
+      "AggregatorApp/AggregatorApp.swift",
+      "AggregatorApp/Common/ListPreferences.swift",
+      "AggregatorApp/Threads/ThreadsView.swift",
+      "AggregatorAppTests/ListPreferencesTests.swift"
+    ],
+    "updated_docs": [],
+    "next_action": "Run tester agent to execute ListPreferencesTests and full test suite as merge gate.",
+    "next_agent": "tester",
+    "block_reason": "",
+    "expected_files": [
+      "AggregatorApp/Common/ListPreferences.swift",
+      "AggregatorApp/AggregatorApp.swift",
+      "AggregatorApp/Threads/ThreadsView.swift",
+      "AggregatorAppTests/ListPreferencesTests.swift"
+    ],
+    "expected_globs": [],
+    "touched_files": [
+      "AggregatorApp/AggregatorApp.swift",
+      "AggregatorApp/Common/ListPreferences.swift",
+      "AggregatorApp/Threads/ThreadsView.swift",
+      "AggregatorAppTests/ListPreferencesTests.swift"
+    ],
+    "conflict_risks": "None. ListPreferences is a new file. ThreadsView and AggregatorApp changes are self-contained and do not overlap with any other in-flight bead files.",
+    "design_decisions": "ListPreferences is named generically (not ThreadsListPreferences) to accommodate the upcoming Sources spec which will add articlesSort/articlesUnreadOnly to the same store. UserDefaults injection via init parameter (not a global) follows CredentialsStore/ThreadSeenStore patterns and makes test isolation trivial. @Observable (not ObservableObject) matches the iOS 26 app architecture. ThreadSort.rawValue (\"importance\"/\"recent\") is used directly as the UserDefaults string to avoid a separate mapping layer.",
+    "test_coverage_notes": "ListPreferencesTests.swift covers: (1) default values (.importance / false) with a fresh suite, (2) write-then-read persistence across two distinct instances sharing the same suite. The tester should also run ThreadsView integration paths to confirm the onChange reload still triggers correctly when sort/show-dismissed change.",
+    "known_limitations": "ListPreferences currently only stores threadsSort and threadsShowDismissed. The Sources spec will add articlesSort/articlesUnreadOnly \u2014 those properties should be added to this same class when that bead is implemented."
+  },
+  "block_reason": "",
+  "conflict_risks": "None. ListPreferences is a new file. ThreadsView and AggregatorApp changes are self-contained and do not overlap with any other in-flight bead files.",
+  "branch_name": "feature/b-bdc3579a",
+  "worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-bdc3579a",
+  "lease": null,
+  "retries": 1,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-19T15:59:19.895610+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-19T15:59:27.187575+00:00",
+      "event": "skills_isolation_unavailable",
+      "agent_type": "scheduler",
+      "summary": "Unsupported agent type for worker prompt: defect",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-19T15:59:27.187597+00:00",
+      "event": "started",
+      "agent_type": "defect",
+      "summary": "Worker started",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-19T15:59:28.796740+00:00",
+      "event": "failed",
+      "agent_type": "defect",
+      "summary": "Worker execution failed: Unsupported agent type for worker prompt: defect",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-19T15:59:28.821045+00:00",
+      "event": "agent_type_repaired",
+      "agent_type": "developer",
+      "summary": "Repaired unrunnable agent type to developer",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-19T15:59:28.843788+00:00",
+      "event": "corrective_planned",
+      "agent_type": "developer",
+      "summary": "Created corrective bead B-bdc3579a-corrective for blocked issue",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-19T16:03:44.640725+00:00",
+      "event": "retried",
+      "agent_type": "developer",
+      "summary": "Requeued blocked bead after corrective bead B-bdc3579a-corrective completed",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-19T16:03:44.903052+00:00",
+      "event": "skills_loaded",
+      "agent_type": "developer",
+      "summary": "Loaded 7 skill(s) for isolated execution",
+      "details": {
+        "loaded_skills": [
+          "core/base-orchestrator",
+          "role/developer-implementation",
+          "capability/code-edit",
+          "task/corrective-implementation",
+          "task/refactor-safe",
+          "task/migration",
+          "memory"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-06-19T16:03:44.903069+00:00",
+      "event": "started",
+      "agent_type": "developer",
+      "summary": "Worker started",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-19T16:03:44.905283+00:00",
+      "event": "guardrails_applied",
+      "agent_type": "developer",
+      "summary": "Applied guardrails from .takt/agent-runs/B-bdc3579a/repo/templates/agents/developer.md",
+      "details": {
+        "template_path": ".takt/agent-runs/B-bdc3579a/repo/templates/agents/developer.md"
+      }
+    },
+    {
+      "timestamp": "2026-06-19T16:05:31.075437+00:00",
+      "event": "completed",
+      "agent_type": "developer",
+      "summary": "ListPreferences persistence is fully implemented and committed. `AggregatorApp/Common/ListPreferences.swift` introduces an `@Observable final class` backed by UserDefaults (injected for testability). `AggregatorApp.swift` injects it into the environment. `ThreadsView.swift` reads/writes sort and show-dismissed from the environment store instead of ephemeral @State. `AggregatorAppTests/ListPreferencesTests.swift` asserts default values and round-trip persistence across instances. Build passes cleanly.",
+      "details": {}
+    }
+  ],
+  "metadata": {
+    "skills_warning": "Skill isolation unavailable: Unsupported agent type for worker prompt: defect",
+    "last_agent_result": {
+      "outcome": "completed",
+      "summary": "ListPreferences persistence is fully implemented and committed. `AggregatorApp/Common/ListPreferences.swift` introduces an `@Observable final class` backed by UserDefaults (injected for testability). `AggregatorApp.swift` injects it into the environment. `ThreadsView.swift` reads/writes sort and show-dismissed from the environment store instead of ephemeral @State. `AggregatorAppTests/ListPreferencesTests.swift` asserts default values and round-trip persistence across instances. Build passes cleanly.",
+      "verdict": "approved",
+      "findings_count": 0,
+      "requires_followup": false,
+      "next_agent": "tester",
+      "block_reason": ""
+    },
+    "auto_corrective_bead_id": "B-bdc3579a-corrective",
+    "last_corrective_retry_source": "B-bdc3579a-corrective",
+    "last_corrective_retry_commit": "",
+    "execution_root": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-bdc3579a",
+    "workspace_repo_path": "repo",
+    "loaded_skills": [
+      "core/base-orchestrator",
+      "role/developer-implementation",
+      "capability/code-edit",
+      "task/corrective-implementation",
+      "task/refactor-safe",
+      "task/migration",
+      "memory"
+    ],
+    "skill_bundle_hash": "ecae5633083d1bbec41a6e5ec6ea05bbab117f60499c19b2ed76dbbe3e1aec7c",
+    "isolated_home": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-bdc3579a/home",
+    "runner_backend": "claude",
+    "guardrails": {
+      "agent_type": "developer",
+      "template_path": ".takt/agent-runs/B-bdc3579a/repo/templates/agents/developer.md",
+      "template_text": "# Developer Guardrails\n\nPrimary responsibility: Implement only the assigned bead inside the existing architecture and file scope.\n\n## Corrective bead scope\n\nIf your `bead_id` ends in `-corrective` or `-corrective-<N>` (e.g. `B-abc12345-corrective`, `B-abc12345-test-corrective-2`), you are running as a CORRECTIVE bead. Your scope is **strictly limited to fixing the specific failure that blocked the parent bead**. Do not:\n\n- Add unrelated improvements, refactors, or cleanup, even if you notice them\n- Reapply previously-reverted changes (the operator reverted them for a reason)\n- Expand the surface area beyond what is needed to unblock the parent\n- Touch files outside what the parent bead's `expected_files` / `expected_globs` covered, unless the failure is genuinely in another file and there is no smaller fix\n\nIf you notice an unrelated issue while fixing the corrective scope: **file a separate bead** via `takt bead create` describing what you saw, but do not fix it in this corrective. The operator will prioritize and dispatch.\n\nWhen in doubt about scope: prefer the smallest possible fix. The reviewer of this corrective will check that the scope was respected.\n\nAllowed actions:\n- Modify code, configuration, or local docs required to complete the assigned bead.\n- Create sub-beads for discovered follow-up work that should be handled separately.\n- Verify your `Swift` changes compile and import correctly with a quick syntax check: ``.\n\nDisallowed actions:\n- Run any test suite \u2014 not even a targeted `` run or any subset. Test execution is exclusively the tester agent's responsibility. Running tests wastes the agent budget and delays the pipeline.\n- Redesign unrelated architecture or broaden scope beyond the assigned bead.\n- Perform final review signoff in place of a review agent.\n- Silently absorb unrelated test, documentation, or planning work that should be handed off.\n\n## Memory\n\n**Read memory at bead start.** Before touching any code, run three searches using `$TAKT_CMD` (injected by the orchestrator):\n\n```bash\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace global\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace feature:<feature_root_id>\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace specs\n```\n\nTreat results as ambient context \u2014 apply relevant entries; skip entries that don't apply.\n\n**Write to memory when you discover reusable project knowledge** \u2014 something that would have changed your approach if you had known it upfront, and is not already in CLAUDE.md or the guardrails.\n\n```bash\n$TAKT_CMD memory add \"<concise fact>\" --namespace global               # project-wide knowledge\n$TAKT_CMD memory add \"<discovery>\" --namespace feature:<feature_root_id>  # feature-scoped\n```\n\nRequired Handoff Fields:\n\nEvery developer bead **must** populate the following three fields in its output JSON. Reviewers and tester agents rely on these fields to scope their work without additional back-and-forth turns. Use `\"N/A\"` only when a field is genuinely inapplicable (e.g., a trivial rename with no design trade-offs); do not leave fields blank.\n\n- **`design_decisions`** \u2014 Document non-obvious architectural or implementation choices made during this bead. Include alternatives considered and why the chosen approach was preferred. Reviewers use this to evaluate correctness without re-deriving intent. Set to `\"N/A\"` only if the change was purely mechanical with no meaningful trade-offs.\n\n- **`test_coverage_notes`** \u2014 Describe what the tester agent should verify: new code paths, edge cases introduced, regression risks, and any known untested scenarios left to the tester. Set to `\"N/A\"` only if the bead touched no executable code paths (e.g., documentation-only changes).\n\n- **`known_limitations`** \u2014 Call out constraints, deferred work, or known gaps in the implementation. This includes out-of-scope items deliberately left for follow-up beads and any areas where the implementation is intentionally incomplete. Set to `\"N/A\"` if the implementation is complete as specified with no known gaps.\n\nExpected outputs:\n- Completed or blocked JSON with concise implementation summary.\n- Accurate touched files, changed files, risks, and follow-up handoff fields.\n- Populated `design_decisions`, `test_coverage_notes`, and `known_limitations` fields in every response.",
+      "captured_at": "2026-06-19T16:03:44.905277+00:00"
+    },
+    "worker_prompt_context": {
+      "bead_id": "B-bdc3579a",
+      "feature_root_id": "B-bdc3579a",
+      "title": "Threads view does not remember sort / show-dismissed across launches",
+      "agent_type": "developer",
+      "description": "DEFECT: ThreadsView resets its sort (importance/recent) and the show-dismissed\ntoggle to defaults on every app launch. The user's last-chosen sort is not\nremembered \u2014 e.g. selecting \"Recent\" should persist so the next launch still\nuses Recent.\n\nFIX:\n- Add a new `AggregatorApp/Common/ListPreferences.swift`: an `@Observable final\n  class` persisting list preferences in UserDefaults, following the existing\n  pattern of `CredentialsStore` / `ThreadSeenStore` (accept an injected\n  `UserDefaults = .standard` so tests can use an isolated suite).\n  - Properties for now: `threadsSort: ThreadSort` (default `.importance`) and\n    `threadsShowDismissed: Bool` (default `false`), each persisted on `didSet`.\n  - Keys e.g. `aggregator.threadsSort`, `aggregator.threadsShowDismissed`.\n  - Design it to be extensible: the upcoming Sources spec will add\n    `articlesSort` / `articlesUnreadOnly` to the SAME store, so keep it generic\n    (do not hard-scope it to threads in its name or structure).\n- Inject `ListPreferences` into the environment from `AggregatorApp.swift`\n  alongside `CredentialsStore` and `ThreadSeenStore`.\n- Update `AggregatorApp/Threads/ThreadsView.swift` to read/write its sort and\n  show-dismissed from the injected `ListPreferences` instead of plain local\n  @State, so changes persist and are restored on launch. Reloading the list on\n  change must still work exactly as today.\n\nREGRESSION TEST (`AggregatorAppTests/ListPreferencesTests.swift`):\n- Using a `ListPreferences` backed by a UUID-named in-memory UserDefaults suite\n  (never the real defaults), assert: defaults are `.importance` / `false`;\n  after setting `threadsSort = .recent` and `threadsShowDismissed = true`, a NEW\n  `ListPreferences` instance reading the same suite reports `.recent` / `true`\n  (i.e. the values persist and reload). The test must fail without the fix and\n  pass with it.\n\nDo not run the full test suite (that happens at merge time); run the focused\nListPreferences test only.",
+      "status": "in_progress",
+      "acceptance_criteria": [],
+      "dependencies": [],
+      "linked_docs": [],
+      "execution_branch_name": "feature/b-bdc3579a",
+      "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-bdc3579a",
+      "expected_files": [],
+      "expected_globs": [],
+      "touched_files": [],
+      "conflict_risks": "",
+      "handoff_summary": {
+        "completed": "",
+        "remaining": "",
+        "risks": "",
+        "verdict": "",
+        "findings_count": 0,
+        "requires_followup": false,
+        "changed_files": [],
+        "updated_docs": [],
+        "next_action": "",
+        "next_agent": "",
+        "block_reason": "Unsupported agent type for worker prompt: defect",
+        "expected_files": [],
+        "expected_globs": [],
+        "touched_files": [],
+        "conflict_risks": "",
+        "design_decisions": "",
+        "test_coverage_notes": "",
+        "known_limitations": ""
+      }
+    },
+    "telemetry": {
+      "cost_usd": 0.3144594,
+      "duration_ms": 105930,
+      "duration_api_ms": 85366,
+      "num_turns": 18,
+      "input_tokens": 2122,
+      "output_tokens": 4591,
+      "cache_creation_tokens": 20436,
+      "cache_read_tokens": 376808,
+      "stop_reason": "end_turn",
+      "session_id": "9ae423fb-5687-4642-8e44-b3fc5562c953",
+      "permission_denials": [],
+      "prompt_chars": 10740,
+      "prompt_lines": 171,
+      "source": "provider",
+      "attempt": 1
+    },
+    "telemetry_history": [
+      {
+        "cost_usd": 0.3144594,
+        "duration_ms": 105930,
+        "duration_api_ms": 85366,
+        "num_turns": 18,
+        "input_tokens": 2122,
+        "output_tokens": 4591,
+        "cache_creation_tokens": 20436,
+        "cache_read_tokens": 376808,
+        "stop_reason": "end_turn",
+        "session_id": "9ae423fb-5687-4642-8e44-b3fc5562c953",
+        "permission_denials": [],
+        "prompt_chars": 10740,
+        "prompt_lines": 171,
+        "source": "provider",
+        "attempt": 1
+      }
+    ]
+  },
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}
