@@ -77,9 +77,46 @@ struct ArticleListView: View {
         }
     }
 
+    private var feedHeader: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            HStack(spacing: 8) {
+                if let icon = feed.systemImage {
+                    Image(systemName: icon)
+                        .font(.title3)
+                        .foregroundStyle(.primary)
+                        .accessibilityHidden(true)
+                }
+                Text(feed.title)
+                    .font(.title3)
+                    .bold()
+            }
+            Text(sortFilterSummary)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.vertical, 4)
+        .listRowBackground(Color.clear)
+        .listRowSeparator(.hidden)
+        .accessibilityElement(children: .combine)
+    }
+
+    private var sortFilterSummary: String {
+        var parts: [String] = []
+        switch listPreferences.articlesSort {
+        case .importance: parts.append("Sorted by importance")
+        case .recent: parts.append("Most recent first")
+        }
+        if listPreferences.articlesUnreadOnly {
+            parts.append("Unread only")
+        }
+        return parts.joined(separator: " · ")
+    }
+
     private var articleList: some View {
         GlassEffectContainer {
             List {
+                feedHeader
                 ForEach(Array(articles.enumerated()), id: \.element.id) { index, article in
                     NavigationLink(value: index) {
                         ArticleRowView(article: article)
