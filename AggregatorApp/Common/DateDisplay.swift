@@ -1,6 +1,10 @@
 import Foundation
 
 enum DateDisplay {
+    /// Returns a human-readable relative string ("5m ago", "2h ago", "3d ago", or a short date).
+    ///
+    /// The `now` parameter defaults to `Date()` in production. Pass an explicit value in tests
+    /// to make relative calculations deterministic without mocking the clock at the process level.
     static func relative(_ iso: String?, now: Date = Date()) -> String {
         guard let iso else { return "" }
         guard let date = parseISO8601(iso) else { return "" }

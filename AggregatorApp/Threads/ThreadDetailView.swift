@@ -179,6 +179,8 @@ struct ThreadDetailView: View {
                 }
 
                 if !suppressedMembers.isEmpty {
+                    // Suppressed members show source name only — their titles duplicate content
+                    // already captured in the active members or thread summary.
                     Text("Also covered by")
                         .font(.headline)
                         .padding(.top, activeMembers.isEmpty ? 0 : 20)

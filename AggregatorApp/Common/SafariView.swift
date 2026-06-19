@@ -1,6 +1,7 @@
 import SafariServices
 import SwiftUI
 
+/// SwiftUI wrapper around `SFSafariViewController` for in-app browsing with Reader and sharing.
 struct SafariView: UIViewControllerRepresentable {
     let url: URL
 

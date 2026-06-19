@@ -47,6 +47,7 @@ struct Article: Decodable, Identifiable {
         cleanText = try container.decodeIfPresent(String.self, forKey: .cleanText)
         importanceScore = try container.decodeIfPresent(Int.self, forKey: .importanceScore)
         importanceReason = try container.decodeIfPresent(String.self, forKey: .importanceReason)
+        // Defensive: backend may omit or null these arrays; treat both as empty rather than failing decode.
         topics = (try? container.decodeIfPresent([String].self, forKey: .topics)).flatMap { $0 } ?? []
         categories = (try? container.decodeIfPresent([String].self, forKey: .categories)).flatMap { $0 } ?? []
         isRead = try container.decode(Bool.self, forKey: .isRead)
@@ -54,6 +55,7 @@ struct Article: Decodable, Identifiable {
         author = try container.decodeIfPresent(String.self, forKey: .author)
         wordCount = try container.decodeIfPresent(Int.self, forKey: .wordCount)
         language = try container.decodeIfPresent(String.self, forKey: .language)
+        // imageURL: backend field is absent today; try? future-proofs against type changes without breaking decode.
         imageURL = (try? container.decodeIfPresent(String.self, forKey: .imageURL)).flatMap { $0 }
     }
 }
