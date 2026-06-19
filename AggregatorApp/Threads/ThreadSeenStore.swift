@@ -1,6 +1,13 @@
 import Foundation
 import Observation
 
+/// Tracks which threads the user has already seen, persisted across launches.
+///
+/// Each entry maps a thread ID to the `lastUpdated` timestamp observed when the thread was last
+/// opened. A thread is considered to have unseen updates when its current `lastUpdated` differs
+/// from the stored value. State is serialised as JSON and stored in `UserDefaults` under the key
+/// `aggregator.threadsSeen`. The store is injected into the SwiftUI environment by `AggregatorApp`
+/// and consumed by `ThreadsView` / `ThreadCardView`.
 @Observable final class ThreadSeenStore {
     private static let defaultsKey = "aggregator.threadsSeen"
 
