@@ -1,5 +1,10 @@
 import Foundation
 
+enum ThreadSort: String {
+    case importance
+    case recent
+}
+
 enum APIError: Error, LocalizedError {
     case cloudflareRejected
     case http(status: Int)
@@ -65,6 +70,36 @@ struct APIClient {
 
     func healthCheck() async throws -> HealthResponse {
         return try await get("/healthz")
+    }
+
+    func getThreads(sort: ThreadSort, showDismissed: Bool, cursor: String? = nil) async throws -> PaginatedResponse<Thread> {
+        var query: [URLQueryItem] = [
+            URLQueryItem(name: "sort", value: sort.rawValue),
+            URLQueryItem(name: "show_dismissed", value: showDismissed ? "true" : "false"),
+            URLQueryItem(name: "limit", value: "50"),
+        ]
+        if let cursor {
+            query.append(URLQueryItem(name: "cursor", value: cursor))
+        }
+        return try await get("/threads", query: query)
+    }
+
+    func getThread(id: Int) async throws -> Thread {
+        return try await get("/threads/\(id)")
+    }
+
+    func getThreadMembers(id: Int, cursor: String? = nil) async throws -> PaginatedResponse<ThreadMember> {
+        var query: [URLQueryItem] = [
+            URLQueryItem(name: "limit", value: "50"),
+        ]
+        if let cursor {
+            query.append(URLQueryItem(name: "cursor", value: cursor))
+        }
+        return try await get("/threads/\(id)/members", query: query)
+    }
+
+    func getArticle(id: Int) async throws -> Article {
+        return try await get("/articles/\(id)")
     }
 
     // MARK: - Private helpers
