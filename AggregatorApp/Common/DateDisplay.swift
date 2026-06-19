@@ -20,6 +20,17 @@ enum DateDisplay {
         return formatter.string(from: date)
     }
 
+    /// Returns a medium-style date string (e.g. "Jun 19, 2026") for a valid ISO-8601 input.
+    /// Returns empty string for nil or unparseable input.
+    static func mediumDate(_ iso: String?) -> String {
+        guard let iso else { return "" }
+        guard let date = parseISO8601(iso) else { return "" }
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .none
+        return formatter.string(from: date)
+    }
+
     private static func parseISO8601(_ iso: String) -> Date? {
         // Try fractional seconds first (e.g. 2026-06-17T04:41:10.929002+00:00)
         let withFractional = ISO8601DateFormatter()
