@@ -8,6 +8,14 @@ enum ThreadSort: String {
     case recent
 }
 
+/// Sort order for the `/articles` list endpoint.
+enum ArticleSort: String {
+    /// Rank by backend-computed importance score (default).
+    case importance
+    /// Most recently published first.
+    case recent
+}
+
 enum APIError: Error, LocalizedError {
     /// The backend returned 403 with an HTML body — Cloudflare Access rejected the request.
     /// Check that CF-Access credentials in Keychain are valid and not expired.
@@ -126,6 +134,35 @@ struct APIClient {
     /// Fetches a single article by its numeric ID. Does not mark the article as read.
     func getArticle(id: Int) async throws -> Article {
         return try await get("/articles/\(id)")
+    }
+
+    /// Fetches a paginated list of articles for the given feed.
+    /// - Parameters:
+    ///   - feed: The feed to query. `.source(id:name:)` sends `source_id=<id>`;
+    ///     `.important` sends `view=important`; `.unread` sends `view=unread`.
+    ///   - sort: Controls ranking — `.importance` or `.recent`.
+    ///   - unreadOnly: When `true`, adds `unread_only=true`; param is omitted when `false`.
+    ///   - limit: Page size (default 25).
+    ///   - cursor: Opaque pagination cursor from the previous page; `nil` fetches the first page.
+    func getArticles(feed: ArticleFeed, sort: ArticleSort, unreadOnly: Bool, limit: Int = 25, cursor: String? = nil) async throws -> PaginatedResponse<Article> {
+        var query: [URLQueryItem] = []
+        switch feed {
+        case .source(let id, _):
+            query.append(URLQueryItem(name: "source_id", value: "\(id)"))
+        case .important:
+            query.append(URLQueryItem(name: "view", value: "important"))
+        case .unread:
+            query.append(URLQueryItem(name: "view", value: "unread"))
+        }
+        query.append(URLQueryItem(name: "sort", value: sort.rawValue))
+        if unreadOnly {
+            query.append(URLQueryItem(name: "unread_only", value: "true"))
+        }
+        query.append(URLQueryItem(name: "limit", value: "\(limit)"))
+        if let cursor {
+            query.append(URLQueryItem(name: "cursor", value: cursor))
+        }
+        return try await get("/articles", query: query)
     }
 
     // MARK: - Write endpoints

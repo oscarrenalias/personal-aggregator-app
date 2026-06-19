@@ -5,7 +5,7 @@ description: "Sources tab article browsing: real sources + Important/Unread virt
 dependencies: null
 priority: high
 complexity: null
-status: draft
+status: done
 tags:
 - sources
 - articles
@@ -219,21 +219,21 @@ xcodebuild test -project AggregatorApp.xcodeproj -scheme AggregatorApp \
 
 ## Acceptance Criteria
 
-- [ ] `xcodegen generate` succeeds; `xcodebuild test` exits 0 (incl. new ArticleFeed tests)
-- [ ] Sources tab shows a "Feeds" section (Important, Unread) above the real sources
-- [ ] Tapping Important lists important articles across all sources; Unread lists unread across all sources
-- [ ] Tapping a source lists that source's articles
-- [ ] The article list shows the current source/feed name as an in-view header at the top of the content (in addition to the nav-bar title)
-- [ ] Sort toggle offers Importance and Recent, both effective via the live `sort` param; the chosen sort and read/unread filter persist across launches (shared `ListPreferences` store)
-- [ ] Read/unread filter (All / Unread only) works for source and Important feeds; hidden for the Unread feed
-- [ ] Article list never appears frozen: a spinner shows during the initial load, content paints from a small first page, and a footer spinner shows while paginating
-- [ ] Scrolling to the bottom loads more via `next_cursor` without duplicate rows
-- [ ] Pull-to-refresh on the Sources list refreshes the sources; pull-to-refresh inside a feed refreshes that feed
-- [ ] Tapping an article opens the reader; swiping left/right moves to the next/previous article in the list
-- [ ] The reader's "Open original" opens the in-app Safari view (existing behavior)
-- [ ] Read articles are visually de-emphasised in the list vs unread
-- [ ] Cancelled fetches (navigation transitions) do not show an error state
-- [ ] No hardcoded hex colors; Liquid Glass conventions preserved
+- [x] `xcodegen generate` succeeds; `xcodebuild test` exits 0 (incl. new ArticleFeed tests)
+- [x] Sources tab shows a "Feeds" section (Important, Unread) above the real sources
+- [x] Tapping Important lists important articles across all sources; Unread lists unread across all sources
+- [x] Tapping a source lists that source's articles
+- [x] The article list shows the current source/feed name as an in-view header at the top of the content (in addition to the nav-bar title)
+- [x] Sort toggle offers Importance and Recent, both effective via the live `sort` param; the chosen sort and read/unread filter persist across launches (shared `ListPreferences` store)
+- [x] Read/unread filter (All / Unread only) works for source and Important feeds; hidden for the Unread feed
+- [x] Article list never appears frozen: a spinner shows during the initial load, content paints from a small first page, and a footer spinner shows while paginating
+- [x] Scrolling to the bottom loads more via `next_cursor` without duplicate rows
+- [x] Pull-to-refresh on the Sources list refreshes the sources; pull-to-refresh inside a feed refreshes that feed
+- [x] Tapping an article opens the reader; swiping left/right moves to the next/previous article in the list
+- [x] The reader's "Open original" opens the in-app Safari view (existing behavior)
+- [x] Read articles are visually de-emphasised in the list vs unread
+- [x] Cancelled fetches (navigation transitions) do not show an error state
+- [x] No hardcoded hex colors; Liquid Glass conventions preserved
 
 ## Pending Decisions
 
@@ -249,3 +249,30 @@ xcodebuild test -project AggregatorApp.xcodeproj -scheme AggregatorApp \
 - **Sequencing**: build after spec-19056cf7 (polish) and the list-preference
   persistence defect — reuses the `isCancellation` helper, `ReaderLayout`
   constant, and `ListPreferences` store.
+
+## Implementation Notes
+
+### ArticlePagerView: pagination is bounded to the loaded slice
+
+`ArticlePagerView` receives the `articles` array that `ArticleListView` has
+already loaded. Swiping past the last article in that array simply stops — no
+additional pages are fetched from within the pager. If the user reaches the
+end of the currently loaded page, they need to return to the list and scroll
+down to trigger the next page load before tapping into the pager again. This
+is a known limitation; loading further pages on-demand from within the pager
+is a future enhancement.
+
+### ListPreferences: UserDefaults key names for article preferences
+
+Two new keys were added to `ListPreferences` alongside the existing Threads
+keys:
+
+| Property | UserDefaults key | Default |
+|---|---|---|
+| `articlesSort` | `aggregator.articlesSort` | `.importance` |
+| `articlesUnreadOnly` | `aggregator.articlesUnreadOnly` | `false` |
+
+Both follow the same `aggregator.` prefix convention as the existing Threads
+keys (`aggregator.threadsSort`, `aggregator.threadsShowDismissed`). Pass a
+custom `UserDefaults` suite (e.g. `UserDefaults(suiteName: "test-…")`) to
+`ListPreferences(defaults:)` in tests to avoid touching the real defaults.
