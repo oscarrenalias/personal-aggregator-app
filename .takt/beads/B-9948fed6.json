@@ -1,0 +1,79 @@
+{
+  "bead_id": "B-9948fed6",
+  "title": "Sources reading experience",
+  "agent_type": "planner",
+  "description": "Non-runnable container for the full Sources tab reading flow. All implementation, testing, documentation, and review are expressed as children. Parallel entry points: ArticleFeed enum, ArticleRowView, and ArticlePagerView have no inter-dependencies and can start concurrently. APIClient and ArticleListView-core gate most downstream beads.",
+  "status": "done",
+  "bead_type": "feature",
+  "parent_id": "B-bd5b8edc",
+  "dependencies": [],
+  "acceptance_criteria": [
+    "All child beads complete successfully",
+    "xcodegen generate succeeds; xcodebuild test exits 0 including new ArticleFeedTests",
+    "Sources tab shows a Feeds section (Important, Unread) above real sources",
+    "Tapping Important or Unread lists cross-source articles; tapping a source lists that source's articles",
+    "Article list shows in-view scrolling header, sort toggle, read/unread filter, progressive loading, and pull-to-refresh",
+    "Sort and read/unread filter persist across launches via shared ListPreferences store",
+    "Tapping an article opens ArticleDetailView; swiping left/right navigates between articles in the list",
+    "Read articles visually de-emphasised vs unread in ArticleRowView",
+    "Cancelled fetches do not show an error state",
+    "No hardcoded hex colors; Liquid Glass conventions preserved throughout"
+  ],
+  "linked_docs": [
+    "specs/drafts/spec-7bb21007.md",
+    "docs/API.md",
+    "docs/openapi.json"
+  ],
+  "feature_root_id": "B-9948fed6",
+  "execution_branch_name": "feature/b-9948fed6",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-9948fed6",
+  "expected_files": [],
+  "expected_globs": [
+    "AggregatorApp/Articles/*.swift",
+    "AggregatorApp/Sources/SourcesView.swift",
+    "AggregatorApp/Common/APIClient.swift",
+    "AggregatorAppTests/ArticleFeedTests.swift"
+  ],
+  "touched_files": [],
+  "changed_files": [],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "",
+    "remaining": "",
+    "risks": "",
+    "verdict": "",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [],
+    "updated_docs": [],
+    "next_action": "",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [],
+    "expected_globs": [],
+    "touched_files": [],
+    "conflict_risks": "",
+    "design_decisions": "",
+    "test_coverage_notes": "",
+    "known_limitations": ""
+  },
+  "block_reason": "",
+  "conflict_risks": "",
+  "branch_name": "",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-19T16:44:02.063643+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    }
+  ],
+  "metadata": {},
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

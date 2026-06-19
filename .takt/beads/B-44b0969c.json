@@ -1,0 +1,242 @@
+{
+  "bead_id": "B-44b0969c",
+  "title": "ArticleListView: sort and read/unread filter toolbar with ListPreferences",
+  "agent_type": "developer",
+  "description": "Extend AggregatorApp/Articles/ArticleListView.swift: add a toolbar Menu (or segmented Picker) toggling Importance / Recent sort. Add a second toolbar control toggling All / Unread Only, shown only when feed.allowsUnreadFilter is true. Changing either control resets articles and nextCursor, then fetches page 1 with the new parameters. Persist the chosen sort as articlesSort and the filter state as articlesUnreadOnly in the shared ListPreferences store (the same store introduced by the Threads sort-persistence defect \u2014 add these two keys to it, do not create a parallel store). Restore persisted values on view init.",
+  "status": "done",
+  "bead_type": "task",
+  "parent_id": "B-9948fed6",
+  "dependencies": [
+    "B-7b0193e6"
+  ],
+  "acceptance_criteria": [
+    "Sort toolbar control cycles between Importance and Recent",
+    "Unread filter control hidden when feed.allowsUnreadFilter is false (e.g. .unread feed)",
+    "Changing sort or filter triggers reload from page 1",
+    "articlesSort persisted in ListPreferences and restored on relaunch",
+    "articlesUnreadOnly persisted in ListPreferences and restored on relaunch",
+    "No parallel ListPreferences store created"
+  ],
+  "linked_docs": [
+    "specs/drafts/spec-7bb21007.md"
+  ],
+  "feature_root_id": "B-9948fed6",
+  "execution_branch_name": "feature/b-9948fed6",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-9948fed6",
+  "expected_files": [
+    "AggregatorApp/Articles/ArticleListView.swift"
+  ],
+  "expected_globs": [],
+  "touched_files": [
+    "AggregatorApp/Articles/ArticleListView.swift",
+    "AggregatorApp/Common/ListPreferences.swift"
+  ],
+  "changed_files": [
+    "AggregatorApp/Articles/ArticleListView.swift",
+    "AggregatorApp/Common/ListPreferences.swift"
+  ],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "- `ListPreferences.articlesSort` (ArticleSort, default .importance) persisted under `aggregator.articlesSort`\n- `ListPreferences.articlesUnreadOnly` (Bool, default false) persisted under `aggregator.articlesUnreadOnly`\n- `ArticleListView` wired to `@Environment(ListPreferences.self)` via `@Bindable var prefs = listPreferences`\n- Sort Picker and Unread toggle bound to `$prefs.articlesSort` / `$prefs.articlesUnreadOnly`\n- `onChange` observers fire `loadFirstPage()` on either value change\n- `loadFirstPage()` and `loadNextPage()` read `listPreferences.articlesSort` and `listPreferences.articlesUnreadOnly`\n- Build verified clean with `xcodebuild build`",
+    "remaining": "None \u2014 all acceptance criteria are addressed.",
+    "risks": "Low. Pattern is identical to the ThreadsView/threadsSort+threadsShowDismissed implementation that already ships. No new abstractions introduced.",
+    "verdict": "approved",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [
+      "AggregatorApp/Articles/ArticleListView.swift",
+      "AggregatorApp/Common/ListPreferences.swift"
+    ],
+    "updated_docs": [],
+    "next_action": "Tester agent should verify: (1) sort toggle persists across app restarts, (2) unread filter toggle is hidden for the .unread feed and visible for .important and source feeds, (3) changing sort or filter triggers a page-1 reload, (4) articlesUnreadOnly defaults to false and is restored on relaunch.",
+    "next_agent": "tester",
+    "block_reason": "",
+    "expected_files": [
+      "AggregatorApp/Articles/ArticleListView.swift"
+    ],
+    "expected_globs": [],
+    "touched_files": [
+      "AggregatorApp/Articles/ArticleListView.swift",
+      "AggregatorApp/Common/ListPreferences.swift"
+    ],
+    "conflict_risks": "Minor: `ListPreferences.swift` is the single shared preference store. Any sibling bead that also edits this file would conflict, but no such bead is currently in-flight.",
+    "design_decisions": "Chose to make `articlesSort` and `articlesUnreadOnly` global preferences (shared across all feeds) rather than per-feed, which matches the acceptance criteria wording and is consistent with how `threadsSort` works. Kept exactly the same `@Bindable` + `@Environment` pattern as `ThreadsView` so there's one canonical implementation pattern in the codebase. The unread filter toggle is conditionally shown based on `feed.allowsUnreadFilter` \u2014 even if `articlesUnreadOnly` is true in prefs, it has no effect for the .unread feed because that feed is inherently unread-only at the API level.",
+    "test_coverage_notes": "Tester should verify: (1) `articlesSort` cycles between `.importance` and `.recent` and is restored on relaunch; (2) `articlesUnreadOnly` toggle is absent when `feed == .unread` and present for `.important` and `.source` feeds; (3) toggling either control resets `nextCursor` and triggers a fresh page-1 fetch; (4) persisted preferences survive app termination (write-on-didSet means immediate persistence); (5) regression \u2014 `threadsSort` and `threadsShowDismissed` are unaffected by these changes.",
+    "known_limitations": "`ArticleListView` is not yet navigated to from `SourcesView` (that wiring is a separate bead per the spec). The sort/filter controls are present and functional but won't be exercised by users until that navigation bead ships. Tests covering `ArticleListView` in isolation can still exercise the persistence logic using a custom `UserDefaults` suite as documented in `ListPreferences`."
+  },
+  "block_reason": "",
+  "conflict_risks": "Minor: `ListPreferences.swift` is the single shared preference store. Any sibling bead that also edits this file would conflict, but no such bead is currently in-flight.",
+  "branch_name": "feature/b-9948fed6",
+  "worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-9948fed6",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-19T16:44:02.081012+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-19T16:50:14.191689+00:00",
+      "event": "skills_loaded",
+      "agent_type": "developer",
+      "summary": "Loaded 7 skill(s) for isolated execution",
+      "details": {
+        "loaded_skills": [
+          "core/base-orchestrator",
+          "role/developer-implementation",
+          "capability/code-edit",
+          "task/corrective-implementation",
+          "task/refactor-safe",
+          "task/migration",
+          "memory"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-06-19T16:50:14.191710+00:00",
+      "event": "started",
+      "agent_type": "developer",
+      "summary": "Worker started",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-19T16:50:14.548666+00:00",
+      "event": "guardrails_applied",
+      "agent_type": "developer",
+      "summary": "Applied guardrails from .takt/agent-runs/B-44b0969c/repo/templates/agents/developer.md",
+      "details": {
+        "template_path": ".takt/agent-runs/B-44b0969c/repo/templates/agents/developer.md"
+      }
+    },
+    {
+      "timestamp": "2026-06-19T16:52:51.387375+00:00",
+      "event": "completed",
+      "agent_type": "developer",
+      "summary": "Added `articlesSort` and `articlesUnreadOnly` to `ListPreferences` (backed by UserDefaults keys `aggregator.articlesSort` / `aggregator.articlesUnreadOnly`). Updated `ArticleListView` to consume these via `@Environment(ListPreferences.self)` and `@Bindable`, replacing the prior local `@State` variables. Toolbar controls and `onChange` handlers now read from and write to the shared store. Unread filter toggle is still hidden when `feed.allowsUnreadFilter` is false. Build is clean.",
+      "details": {}
+    }
+  ],
+  "metadata": {
+    "execution_root": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-44b0969c",
+    "workspace_repo_path": "repo",
+    "loaded_skills": [
+      "core/base-orchestrator",
+      "role/developer-implementation",
+      "capability/code-edit",
+      "task/corrective-implementation",
+      "task/refactor-safe",
+      "task/migration",
+      "memory"
+    ],
+    "skill_bundle_hash": "ecae5633083d1bbec41a6e5ec6ea05bbab117f60499c19b2ed76dbbe3e1aec7c",
+    "isolated_home": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-44b0969c/home",
+    "runner_backend": "claude",
+    "guardrails": {
+      "agent_type": "developer",
+      "template_path": ".takt/agent-runs/B-44b0969c/repo/templates/agents/developer.md",
+      "template_text": "# Developer Guardrails\n\nPrimary responsibility: Implement only the assigned bead inside the existing architecture and file scope.\n\n## Corrective bead scope\n\nIf your `bead_id` ends in `-corrective` or `-corrective-<N>` (e.g. `B-abc12345-corrective`, `B-abc12345-test-corrective-2`), you are running as a CORRECTIVE bead. Your scope is **strictly limited to fixing the specific failure that blocked the parent bead**. Do not:\n\n- Add unrelated improvements, refactors, or cleanup, even if you notice them\n- Reapply previously-reverted changes (the operator reverted them for a reason)\n- Expand the surface area beyond what is needed to unblock the parent\n- Touch files outside what the parent bead's `expected_files` / `expected_globs` covered, unless the failure is genuinely in another file and there is no smaller fix\n\nIf you notice an unrelated issue while fixing the corrective scope: **file a separate bead** via `takt bead create` describing what you saw, but do not fix it in this corrective. The operator will prioritize and dispatch.\n\nWhen in doubt about scope: prefer the smallest possible fix. The reviewer of this corrective will check that the scope was respected.\n\nAllowed actions:\n- Modify code, configuration, or local docs required to complete the assigned bead.\n- Create sub-beads for discovered follow-up work that should be handled separately.\n- Verify your `Swift` changes compile and import correctly with a quick syntax check: ``.\n\nDisallowed actions:\n- Run any test suite \u2014 not even a targeted `` run or any subset. Test execution is exclusively the tester agent's responsibility. Running tests wastes the agent budget and delays the pipeline.\n- Redesign unrelated architecture or broaden scope beyond the assigned bead.\n- Perform final review signoff in place of a review agent.\n- Silently absorb unrelated test, documentation, or planning work that should be handed off.\n\n## Memory\n\n**Read memory at bead start.** Before touching any code, run three searches using `$TAKT_CMD` (injected by the orchestrator):\n\n```bash\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace global\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace feature:<feature_root_id>\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace specs\n```\n\nTreat results as ambient context \u2014 apply relevant entries; skip entries that don't apply.\n\n**Write to memory when you discover reusable project knowledge** \u2014 something that would have changed your approach if you had known it upfront, and is not already in CLAUDE.md or the guardrails.\n\n```bash\n$TAKT_CMD memory add \"<concise fact>\" --namespace global               # project-wide knowledge\n$TAKT_CMD memory add \"<discovery>\" --namespace feature:<feature_root_id>  # feature-scoped\n```\n\nRequired Handoff Fields:\n\nEvery developer bead **must** populate the following three fields in its output JSON. Reviewers and tester agents rely on these fields to scope their work without additional back-and-forth turns. Use `\"N/A\"` only when a field is genuinely inapplicable (e.g., a trivial rename with no design trade-offs); do not leave fields blank.\n\n- **`design_decisions`** \u2014 Document non-obvious architectural or implementation choices made during this bead. Include alternatives considered and why the chosen approach was preferred. Reviewers use this to evaluate correctness without re-deriving intent. Set to `\"N/A\"` only if the change was purely mechanical with no meaningful trade-offs.\n\n- **`test_coverage_notes`** \u2014 Describe what the tester agent should verify: new code paths, edge cases introduced, regression risks, and any known untested scenarios left to the tester. Set to `\"N/A\"` only if the bead touched no executable code paths (e.g., documentation-only changes).\n\n- **`known_limitations`** \u2014 Call out constraints, deferred work, or known gaps in the implementation. This includes out-of-scope items deliberately left for follow-up beads and any areas where the implementation is intentionally incomplete. Set to `\"N/A\"` if the implementation is complete as specified with no known gaps.\n\nExpected outputs:\n- Completed or blocked JSON with concise implementation summary.\n- Accurate touched files, changed files, risks, and follow-up handoff fields.\n- Populated `design_decisions`, `test_coverage_notes`, and `known_limitations` fields in every response.",
+      "captured_at": "2026-06-19T16:50:14.548663+00:00"
+    },
+    "worker_prompt_context": {
+      "bead_id": "B-44b0969c",
+      "feature_root_id": "B-9948fed6",
+      "title": "ArticleListView: sort and read/unread filter toolbar with ListPreferences",
+      "agent_type": "developer",
+      "description": "Extend AggregatorApp/Articles/ArticleListView.swift: add a toolbar Menu (or segmented Picker) toggling Importance / Recent sort. Add a second toolbar control toggling All / Unread Only, shown only when feed.allowsUnreadFilter is true. Changing either control resets articles and nextCursor, then fetches page 1 with the new parameters. Persist the chosen sort as articlesSort and the filter state as articlesUnreadOnly in the shared ListPreferences store (the same store introduced by the Threads sort-persistence defect \u2014 add these two keys to it, do not create a parallel store). Restore persisted values on view init.",
+      "status": "in_progress",
+      "acceptance_criteria": [
+        "Sort toolbar control cycles between Importance and Recent",
+        "Unread filter control hidden when feed.allowsUnreadFilter is false (e.g. .unread feed)",
+        "Changing sort or filter triggers reload from page 1",
+        "articlesSort persisted in ListPreferences and restored on relaunch",
+        "articlesUnreadOnly persisted in ListPreferences and restored on relaunch",
+        "No parallel ListPreferences store created"
+      ],
+      "dependencies": [
+        "B-7b0193e6"
+      ],
+      "linked_docs": [
+        "specs/drafts/spec-7bb21007.md"
+      ],
+      "execution_branch_name": "feature/b-9948fed6",
+      "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-9948fed6",
+      "expected_files": [
+        "AggregatorApp/Articles/ArticleListView.swift"
+      ],
+      "expected_globs": [],
+      "touched_files": [],
+      "conflict_risks": "",
+      "handoff_summary": {
+        "completed": "",
+        "remaining": "",
+        "risks": "",
+        "verdict": "",
+        "findings_count": 0,
+        "requires_followup": false,
+        "changed_files": [],
+        "updated_docs": [],
+        "next_action": "",
+        "next_agent": "",
+        "block_reason": "",
+        "expected_files": [],
+        "expected_globs": [],
+        "touched_files": [],
+        "conflict_risks": "",
+        "design_decisions": "",
+        "test_coverage_notes": "",
+        "known_limitations": ""
+      }
+    },
+    "last_agent_result": {
+      "outcome": "completed",
+      "summary": "Added `articlesSort` and `articlesUnreadOnly` to `ListPreferences` (backed by UserDefaults keys `aggregator.articlesSort` / `aggregator.articlesUnreadOnly`). Updated `ArticleListView` to consume these via `@Environment(ListPreferences.self)` and `@Bindable`, replacing the prior local `@State` variables. Toolbar controls and `onChange` handlers now read from and write to the shared store. Unread filter toggle is still hidden when `feed.allowsUnreadFilter` is false. Build is clean.",
+      "verdict": "approved",
+      "findings_count": 0,
+      "requires_followup": false,
+      "next_agent": "tester",
+      "block_reason": ""
+    },
+    "telemetry": {
+      "cost_usd": 0.4918398,
+      "duration_ms": 156575,
+      "duration_api_ms": 147738,
+      "num_turns": 24,
+      "input_tokens": 20,
+      "output_tokens": 8711,
+      "cache_creation_tokens": 31345,
+      "cache_read_tokens": 566156,
+      "stop_reason": "end_turn",
+      "session_id": "ad6bd57f-a4d4-43fa-88ab-453a179f9ece",
+      "permission_denials": [],
+      "prompt_chars": 9538,
+      "prompt_lines": 177,
+      "source": "provider",
+      "attempt": 1
+    },
+    "telemetry_history": [
+      {
+        "cost_usd": 0.4918398,
+        "duration_ms": 156575,
+        "duration_api_ms": 147738,
+        "num_turns": 24,
+        "input_tokens": 20,
+        "output_tokens": 8711,
+        "cache_creation_tokens": 31345,
+        "cache_read_tokens": 566156,
+        "stop_reason": "end_turn",
+        "session_id": "ad6bd57f-a4d4-43fa-88ab-453a179f9ece",
+        "permission_denials": [],
+        "prompt_chars": 9538,
+        "prompt_lines": 177,
+        "source": "provider",
+        "attempt": 1
+      }
+    ]
+  },
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

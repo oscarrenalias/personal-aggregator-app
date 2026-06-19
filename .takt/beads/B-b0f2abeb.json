@@ -1,0 +1,241 @@
+{
+  "bead_id": "B-b0f2abeb",
+  "title": "APIClient: ArticleSort enum and getArticles method",
+  "agent_type": "developer",
+  "description": "Add to AggregatorApp/Common/APIClient.swift: (1) ArticleSort enum with cases importance and recent (RawRepresentable String). (2) getArticles(feed:ArticleFeed, sort:ArticleSort, unreadOnly:Bool, limit:Int=25, cursor:String?=nil) async throws -> PaginatedResponse<Article>. Build URLQueryItems: feed's base param (source_id=<id> for .source; view=important or view=unread for virtual feeds), sort always included, unread_only=true only when unreadOnly is true (omit the param when false), limit, cursor when non-nil. Use existing generic get and makeURL helpers.",
+  "status": "done",
+  "bead_type": "task",
+  "parent_id": "B-9948fed6",
+  "dependencies": [
+    "B-b0dfaaed"
+  ],
+  "acceptance_criteria": [
+    "ArticleSort.importance and ArticleSort.recent compile with correct raw values",
+    ".source(id:11) produces source_id=11 query item",
+    ".important produces view=important; .unread produces view=unread",
+    "unread_only=true present when unreadOnly=true; param absent when false",
+    "cursor item present when non-nil; absent when nil",
+    "Method compiles and integrates with existing APIClient structure"
+  ],
+  "linked_docs": [
+    "specs/drafts/spec-7bb21007.md",
+    "docs/API.md"
+  ],
+  "feature_root_id": "B-9948fed6",
+  "execution_branch_name": "feature/b-9948fed6",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-9948fed6",
+  "expected_files": [
+    "AggregatorApp/Common/APIClient.swift"
+  ],
+  "expected_globs": [],
+  "touched_files": [
+    "AggregatorApp/Common/APIClient.swift"
+  ],
+  "changed_files": [
+    "AggregatorApp/Common/APIClient.swift"
+  ],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "ArticleSort enum with .importance/.recent cases added at top of file alongside ThreadSort. getArticles(feed:sort:unreadOnly:limit:cursor:) method added after getArticle, using existing generic get helper and matching all query-param rules from the spec.",
+    "remaining": "N/A",
+    "risks": "None identified. Changes are additive only; no existing code was modified.",
+    "verdict": "approved",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [
+      "AggregatorApp/Common/APIClient.swift"
+    ],
+    "updated_docs": [],
+    "next_action": "Tester agent should verify all acceptance criteria: ArticleSort raw values compile correctly, each ArticleFeed case produces the correct query item, unread_only param presence/absence, cursor param presence/absence.",
+    "next_agent": "tester",
+    "block_reason": "",
+    "expected_files": [
+      "AggregatorApp/Common/APIClient.swift"
+    ],
+    "expected_globs": [],
+    "touched_files": [
+      "AggregatorApp/Common/APIClient.swift"
+    ],
+    "conflict_risks": "Downstream beads that add SourcesView or ArticleListView will call getArticles \u2014 the signature is now stable and they can wire it in without changes.",
+    "design_decisions": "ArticleSort is defined as a top-level enum at file scope (parallel to ThreadSort) rather than nested inside APIClient. This matches the existing ThreadSort pattern and keeps both sort types accessible by callers without qualifying through APIClient. The unread_only param is omitted entirely (not sent as \"false\") when unreadOnly is false, matching the spec requirement and avoiding potential backend confusion with an explicit false value.",
+    "test_coverage_notes": "Tester should verify: (1) ArticleSort.importance.rawValue == \"importance\" and ArticleSort.recent.rawValue == \"recent\". (2) .source(id: 11, name: \"X\") produces exactly source_id=11. (3) .important produces view=important with no source_id. (4) .unread produces view=unread with no source_id. (5) unreadOnly=true appends unread_only=true; unreadOnly=false omits the param entirely. (6) cursor=nil omits the cursor param; cursor=\"abc\" appends cursor=abc. (7) sort is always present in the query. (8) limit defaults to 25 and is always included.",
+    "known_limitations": "The spec notes that for .unread feed, unreadOnly is already implied by the view param \u2014 the implementation allows unread_only=true to be sent alongside view=unread (harmless per spec), rather than suppressing it. This matches the spec's \"don't double-send, harmless if you do\" guidance."
+  },
+  "block_reason": "",
+  "conflict_risks": "Downstream beads that add SourcesView or ArticleListView will call getArticles \u2014 the signature is now stable and they can wire it in without changes.",
+  "branch_name": "feature/b-9948fed6",
+  "worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-9948fed6",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-19T16:44:02.077626+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-19T16:46:23.685371+00:00",
+      "event": "skills_loaded",
+      "agent_type": "developer",
+      "summary": "Loaded 7 skill(s) for isolated execution",
+      "details": {
+        "loaded_skills": [
+          "core/base-orchestrator",
+          "role/developer-implementation",
+          "capability/code-edit",
+          "task/corrective-implementation",
+          "task/refactor-safe",
+          "task/migration",
+          "memory"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-06-19T16:46:23.685388+00:00",
+      "event": "started",
+      "agent_type": "developer",
+      "summary": "Worker started",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-19T16:46:23.928194+00:00",
+      "event": "guardrails_applied",
+      "agent_type": "developer",
+      "summary": "Applied guardrails from .takt/agent-runs/B-b0f2abeb/repo/templates/agents/developer.md",
+      "details": {
+        "template_path": ".takt/agent-runs/B-b0f2abeb/repo/templates/agents/developer.md"
+      }
+    },
+    {
+      "timestamp": "2026-06-19T16:47:47.234811+00:00",
+      "event": "completed",
+      "agent_type": "developer",
+      "summary": "Added `ArticleSort` enum and `getArticles` method to `AggregatorApp/Common/APIClient.swift`. The enum defines `.importance` and `.recent` String raw values. The method maps each `ArticleFeed` case to the correct query param (`source_id`, `view=important`, `view=unread`), always includes `sort`, conditionally includes `unread_only=true`, and appends `cursor` only when non-nil. Build verified clean.",
+      "details": {}
+    }
+  ],
+  "metadata": {
+    "execution_root": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-b0f2abeb",
+    "workspace_repo_path": "repo",
+    "loaded_skills": [
+      "core/base-orchestrator",
+      "role/developer-implementation",
+      "capability/code-edit",
+      "task/corrective-implementation",
+      "task/refactor-safe",
+      "task/migration",
+      "memory"
+    ],
+    "skill_bundle_hash": "ecae5633083d1bbec41a6e5ec6ea05bbab117f60499c19b2ed76dbbe3e1aec7c",
+    "isolated_home": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-b0f2abeb/home",
+    "runner_backend": "claude",
+    "guardrails": {
+      "agent_type": "developer",
+      "template_path": ".takt/agent-runs/B-b0f2abeb/repo/templates/agents/developer.md",
+      "template_text": "# Developer Guardrails\n\nPrimary responsibility: Implement only the assigned bead inside the existing architecture and file scope.\n\n## Corrective bead scope\n\nIf your `bead_id` ends in `-corrective` or `-corrective-<N>` (e.g. `B-abc12345-corrective`, `B-abc12345-test-corrective-2`), you are running as a CORRECTIVE bead. Your scope is **strictly limited to fixing the specific failure that blocked the parent bead**. Do not:\n\n- Add unrelated improvements, refactors, or cleanup, even if you notice them\n- Reapply previously-reverted changes (the operator reverted them for a reason)\n- Expand the surface area beyond what is needed to unblock the parent\n- Touch files outside what the parent bead's `expected_files` / `expected_globs` covered, unless the failure is genuinely in another file and there is no smaller fix\n\nIf you notice an unrelated issue while fixing the corrective scope: **file a separate bead** via `takt bead create` describing what you saw, but do not fix it in this corrective. The operator will prioritize and dispatch.\n\nWhen in doubt about scope: prefer the smallest possible fix. The reviewer of this corrective will check that the scope was respected.\n\nAllowed actions:\n- Modify code, configuration, or local docs required to complete the assigned bead.\n- Create sub-beads for discovered follow-up work that should be handled separately.\n- Verify your `Swift` changes compile and import correctly with a quick syntax check: ``.\n\nDisallowed actions:\n- Run any test suite \u2014 not even a targeted `` run or any subset. Test execution is exclusively the tester agent's responsibility. Running tests wastes the agent budget and delays the pipeline.\n- Redesign unrelated architecture or broaden scope beyond the assigned bead.\n- Perform final review signoff in place of a review agent.\n- Silently absorb unrelated test, documentation, or planning work that should be handed off.\n\n## Memory\n\n**Read memory at bead start.** Before touching any code, run three searches using `$TAKT_CMD` (injected by the orchestrator):\n\n```bash\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace global\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace feature:<feature_root_id>\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace specs\n```\n\nTreat results as ambient context \u2014 apply relevant entries; skip entries that don't apply.\n\n**Write to memory when you discover reusable project knowledge** \u2014 something that would have changed your approach if you had known it upfront, and is not already in CLAUDE.md or the guardrails.\n\n```bash\n$TAKT_CMD memory add \"<concise fact>\" --namespace global               # project-wide knowledge\n$TAKT_CMD memory add \"<discovery>\" --namespace feature:<feature_root_id>  # feature-scoped\n```\n\nRequired Handoff Fields:\n\nEvery developer bead **must** populate the following three fields in its output JSON. Reviewers and tester agents rely on these fields to scope their work without additional back-and-forth turns. Use `\"N/A\"` only when a field is genuinely inapplicable (e.g., a trivial rename with no design trade-offs); do not leave fields blank.\n\n- **`design_decisions`** \u2014 Document non-obvious architectural or implementation choices made during this bead. Include alternatives considered and why the chosen approach was preferred. Reviewers use this to evaluate correctness without re-deriving intent. Set to `\"N/A\"` only if the change was purely mechanical with no meaningful trade-offs.\n\n- **`test_coverage_notes`** \u2014 Describe what the tester agent should verify: new code paths, edge cases introduced, regression risks, and any known untested scenarios left to the tester. Set to `\"N/A\"` only if the bead touched no executable code paths (e.g., documentation-only changes).\n\n- **`known_limitations`** \u2014 Call out constraints, deferred work, or known gaps in the implementation. This includes out-of-scope items deliberately left for follow-up beads and any areas where the implementation is intentionally incomplete. Set to `\"N/A\"` if the implementation is complete as specified with no known gaps.\n\nExpected outputs:\n- Completed or blocked JSON with concise implementation summary.\n- Accurate touched files, changed files, risks, and follow-up handoff fields.\n- Populated `design_decisions`, `test_coverage_notes`, and `known_limitations` fields in every response.",
+      "captured_at": "2026-06-19T16:46:23.928182+00:00"
+    },
+    "worker_prompt_context": {
+      "bead_id": "B-b0f2abeb",
+      "feature_root_id": "B-9948fed6",
+      "title": "APIClient: ArticleSort enum and getArticles method",
+      "agent_type": "developer",
+      "description": "Add to AggregatorApp/Common/APIClient.swift: (1) ArticleSort enum with cases importance and recent (RawRepresentable String). (2) getArticles(feed:ArticleFeed, sort:ArticleSort, unreadOnly:Bool, limit:Int=25, cursor:String?=nil) async throws -> PaginatedResponse<Article>. Build URLQueryItems: feed's base param (source_id=<id> for .source; view=important or view=unread for virtual feeds), sort always included, unread_only=true only when unreadOnly is true (omit the param when false), limit, cursor when non-nil. Use existing generic get and makeURL helpers.",
+      "status": "in_progress",
+      "acceptance_criteria": [
+        "ArticleSort.importance and ArticleSort.recent compile with correct raw values",
+        ".source(id:11) produces source_id=11 query item",
+        ".important produces view=important; .unread produces view=unread",
+        "unread_only=true present when unreadOnly=true; param absent when false",
+        "cursor item present when non-nil; absent when nil",
+        "Method compiles and integrates with existing APIClient structure"
+      ],
+      "dependencies": [
+        "B-b0dfaaed"
+      ],
+      "linked_docs": [
+        "specs/drafts/spec-7bb21007.md",
+        "docs/API.md"
+      ],
+      "execution_branch_name": "feature/b-9948fed6",
+      "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-9948fed6",
+      "expected_files": [
+        "AggregatorApp/Common/APIClient.swift"
+      ],
+      "expected_globs": [],
+      "touched_files": [],
+      "conflict_risks": "",
+      "handoff_summary": {
+        "completed": "",
+        "remaining": "",
+        "risks": "",
+        "verdict": "",
+        "findings_count": 0,
+        "requires_followup": false,
+        "changed_files": [],
+        "updated_docs": [],
+        "next_action": "",
+        "next_agent": "",
+        "block_reason": "",
+        "expected_files": [],
+        "expected_globs": [],
+        "touched_files": [],
+        "conflict_risks": "",
+        "design_decisions": "",
+        "test_coverage_notes": "",
+        "known_limitations": ""
+      }
+    },
+    "last_agent_result": {
+      "outcome": "completed",
+      "summary": "Added `ArticleSort` enum and `getArticles` method to `AggregatorApp/Common/APIClient.swift`. The enum defines `.importance` and `.recent` String raw values. The method maps each `ArticleFeed` case to the correct query param (`source_id`, `view=important`, `view=unread`), always includes `sort`, conditionally includes `unread_only=true`, and appends `cursor` only when non-nil. Build verified clean.",
+      "verdict": "approved",
+      "findings_count": 0,
+      "requires_followup": false,
+      "next_agent": "tester",
+      "block_reason": ""
+    },
+    "telemetry": {
+      "cost_usd": 0.2915302,
+      "duration_ms": 82557,
+      "duration_api_ms": 74029,
+      "num_turns": 16,
+      "input_tokens": 12,
+      "output_tokens": 4440,
+      "cache_creation_tokens": 22559,
+      "cache_read_tokens": 287814,
+      "stop_reason": "end_turn",
+      "session_id": "7de68bdf-bc1b-4897-b68b-151a6a2f8766",
+      "permission_denials": [],
+      "prompt_chars": 9423,
+      "prompt_lines": 178,
+      "source": "provider",
+      "attempt": 1
+    },
+    "telemetry_history": [
+      {
+        "cost_usd": 0.2915302,
+        "duration_ms": 82557,
+        "duration_api_ms": 74029,
+        "num_turns": 16,
+        "input_tokens": 12,
+        "output_tokens": 4440,
+        "cache_creation_tokens": 22559,
+        "cache_read_tokens": 287814,
+        "stop_reason": "end_turn",
+        "session_id": "7de68bdf-bc1b-4897-b68b-151a6a2f8766",
+        "permission_denials": [],
+        "prompt_chars": 9423,
+        "prompt_lines": 178,
+        "source": "provider",
+        "attempt": 1
+      }
+    ],
+    "last_commit": "2be511bf218cac66802e8aa04a6287a503712635"
+  },
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

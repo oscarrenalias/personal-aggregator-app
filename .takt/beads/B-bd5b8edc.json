@@ -1,0 +1,63 @@
+{
+  "bead_id": "B-bd5b8edc",
+  "title": "Sources reading experience: article lists, virtual feeds, and reader navigation",
+  "agent_type": "planner",
+  "description": "Build the full Sources tab reading flow: virtual feeds (Important, Unread) alongside real sources in a restructured SourcesView, an ArticleListView with sort/filter/pagination/pull-to-refresh, magazine-style ArticleRowView rows, and ArticlePagerView swipe navigation between articles. Depends on spec-19056cf7 being merged first (shared files: SourcesView, ArticleDetailView, APIClient, isCancellation helper, ReaderLayout constant, ListPreferences store).",
+  "status": "done",
+  "bead_type": "epic",
+  "parent_id": null,
+  "dependencies": [],
+  "acceptance_criteria": [],
+  "linked_docs": [
+    "specs/drafts/spec-7bb21007.md",
+    "docs/API.md",
+    "docs/openapi.json"
+  ],
+  "feature_root_id": null,
+  "execution_branch_name": "",
+  "execution_worktree_path": "",
+  "expected_files": [],
+  "expected_globs": [],
+  "touched_files": [],
+  "changed_files": [],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "",
+    "remaining": "",
+    "risks": "",
+    "verdict": "",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [],
+    "updated_docs": [],
+    "next_action": "",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [],
+    "expected_globs": [],
+    "touched_files": [],
+    "conflict_risks": "",
+    "design_decisions": "",
+    "test_coverage_notes": "",
+    "known_limitations": ""
+  },
+  "block_reason": "",
+  "conflict_risks": "",
+  "branch_name": "",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-19T16:44:02.047830+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    }
+  ],
+  "metadata": {},
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

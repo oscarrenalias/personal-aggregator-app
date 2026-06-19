@@ -1,0 +1,277 @@
+{
+  "bead_id": "B-435ed693",
+  "title": "Documentation: handoff notes and spec update",
+  "agent_type": "documentation",
+  "description": "Update the spec to reflect implementation completion. Document: (1) ArticlePagerView's intentional limitation \u2014 paging past the last loaded article stops (future enhancement); (2) ListPreferences keys added: articlesSort and articlesUnreadOnly; (3) any non-obvious implementation decisions from developer beads. Resolve all Pending Decisions in the spec (all were already resolved in the spec text). Remove stale TODOs.",
+  "status": "done",
+  "bead_type": "task",
+  "parent_id": "B-9948fed6",
+  "dependencies": [
+    "B-b0dfaaed",
+    "B-b0f2abeb",
+    "B-4fdb97ec",
+    "B-81317942",
+    "B-7b0193e6",
+    "B-44b0969c",
+    "B-cd2a0818",
+    "B-366ff812",
+    "B-2ddffdaa",
+    "B-7503ff60"
+  ],
+  "acceptance_criteria": [
+    "Spec Pending Decisions section has no unresolved items",
+    "ArticlePagerView pagination limitation noted for future work",
+    "ListPreferences key names (articlesSort, articlesUnreadOnly) documented",
+    "No stale TODOs remain in the spec"
+  ],
+  "linked_docs": [
+    "specs/drafts/spec-7bb21007.md"
+  ],
+  "feature_root_id": "B-9948fed6",
+  "execution_branch_name": "feature/b-9948fed6",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-9948fed6",
+  "expected_files": [
+    "specs/done/sources-reading-experience-article-lists-virtual-feeds-and-reader-navigation.md"
+  ],
+  "expected_globs": [],
+  "touched_files": [
+    "specs/done/sources-reading-experience-article-lists-virtual-feeds-and-reader-navigation.md",
+    "specs/drafts/sources-reading-experience-article-lists-virtual-feeds-and-reader-navigation.md"
+  ],
+  "changed_files": [
+    "specs/done/sources-reading-experience-article-lists-virtual-feeds-and-reader-navigation.md",
+    "specs/drafts/sources-reading-experience-article-lists-virtual-feeds-and-reader-navigation.md"
+  ],
+  "updated_docs": [
+    "specs/done/sources-reading-experience-article-lists-virtual-feeds-and-reader-navigation.md"
+  ],
+  "handoff_summary": {
+    "completed": "Checked all 15 acceptance criteria; added Implementation Notes section documenting ArticlePagerView's bounded-slice limitation and ListPreferences UserDefaults keys (aggregator.articlesSort, aggregator.articlesUnreadOnly); updated spec status to done via spec.py (file moved from specs/drafts/ to specs/done/).",
+    "remaining": "Nothing. All acceptance criteria for this bead are met.",
+    "risks": "None. Documentation-only changes; no runtime behavior altered.",
+    "verdict": "approved",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [
+      "specs/done/sources-reading-experience-article-lists-virtual-feeds-and-reader-navigation.md",
+      "specs/drafts/sources-reading-experience-article-lists-virtual-feeds-and-reader-navigation.md"
+    ],
+    "updated_docs": [
+      "specs/done/sources-reading-experience-article-lists-virtual-feeds-and-reader-navigation.md"
+    ],
+    "next_action": "No follow-up required. Feature is implementation-complete and documented.",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [
+      "specs/done/sources-reading-experience-article-lists-virtual-feeds-and-reader-navigation.md"
+    ],
+    "expected_globs": [],
+    "touched_files": [
+      "specs/done/sources-reading-experience-article-lists-virtual-feeds-and-reader-navigation.md",
+      "specs/drafts/sources-reading-experience-article-lists-virtual-feeds-and-reader-navigation.md"
+    ],
+    "conflict_risks": "The spec file was renamed/moved from specs/drafts/ to specs/done/ by spec.py. Any sibling agent holding a stale path to the old location should refresh to specs/done/sources-reading-experience-article-lists-virtual-feeds-and-reader-navigation.md.",
+    "design_decisions": "Placed the Implementation Notes as a new top-level section after Pending Decisions rather than inlining into each section, keeping the original design intent readable and the notes together in one place for future readers.",
+    "test_coverage_notes": "ArticleFeedTests.swift covers feed-to-query-param mapping, getArticles URL composition, and allowsUnreadFilter. Documented in spec AC.",
+    "known_limitations": "ArticlePagerView paging is bounded to the loaded article slice \u2014 no additional pages are fetched from within the pager. Documented in Implementation Notes as a future enhancement."
+  },
+  "block_reason": "",
+  "conflict_risks": "The spec file was renamed/moved from specs/drafts/ to specs/done/ by spec.py. Any sibling agent holding a stale path to the old location should refresh to specs/done/sources-reading-experience-article-lists-virtual-feeds-and-reader-navigation.md.",
+  "branch_name": "feature/b-9948fed6",
+  "worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-9948fed6",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-19T16:44:02.085153+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-19T17:00:05.708935+00:00",
+      "event": "skills_loaded",
+      "agent_type": "documentation",
+      "summary": "Loaded 6 skill(s) for isolated execution",
+      "details": {
+        "loaded_skills": [
+          "core/base-orchestrator",
+          "role/docs-agent",
+          "capability/docs-edit",
+          "task/release-notes",
+          "task/spec-sync",
+          "memory"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-06-19T17:00:05.708951+00:00",
+      "event": "started",
+      "agent_type": "documentation",
+      "summary": "Worker started",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-19T17:00:05.980690+00:00",
+      "event": "guardrails_applied",
+      "agent_type": "documentation",
+      "summary": "Applied guardrails from .takt/agent-runs/B-435ed693/repo/templates/agents/documentation.md",
+      "details": {
+        "template_path": ".takt/agent-runs/B-435ed693/repo/templates/agents/documentation.md"
+      }
+    },
+    {
+      "timestamp": "2026-06-19T17:02:39.083542+00:00",
+      "event": "completed",
+      "agent_type": "documentation",
+      "summary": "Spec spec-7bb21007 updated to done: all AC checked, Implementation Notes added (ArticlePagerView pagination limit, ListPreferences key names), moved to specs/done/.",
+      "details": {}
+    }
+  ],
+  "metadata": {
+    "execution_root": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-435ed693",
+    "workspace_repo_path": "repo",
+    "loaded_skills": [
+      "core/base-orchestrator",
+      "role/docs-agent",
+      "capability/docs-edit",
+      "task/release-notes",
+      "task/spec-sync",
+      "memory"
+    ],
+    "skill_bundle_hash": "191f95261a4d31e4f4a691e9c39926c722504f21a3c370b6975facad92e3c1f0",
+    "isolated_home": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-435ed693/home",
+    "runner_backend": "claude",
+    "guardrails": {
+      "agent_type": "documentation",
+      "template_path": ".takt/agent-runs/B-435ed693/repo/templates/agents/documentation.md",
+      "template_text": "# Documentation Guardrails\n\nPrimary responsibility: Update documentation and examples that explain the assigned behavior without changing runtime feature behavior.\n\nAllowed actions:\n- Edit docs, examples, and explanatory text tied to the assigned bead.\n- Focus only on files listed in the bead's touched_files and changed_files fields. Do not read or modify unrelated documentation.\n- Align documentation with existing code and validated behavior.\n- Identify when implementation or tests must land first and block with a handoff.\n\nDisallowed actions:\n- Change runtime behavior, production code paths, or feature logic.\n- Invent undocumented behavior that is not present in the codebase.\n- Approve code quality or test completeness as a substitute for review.\n- Do not run the test suite. Testing is the tester agent's responsibility.\n\n## Memory\n\n**Read memory at bead start.** Before writing any documentation, run three searches using `$TAKT_CMD` (injected by the orchestrator):\n\n```bash\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace global\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace feature:<feature_root_id>\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace specs\n```\n\nTreat results as ambient context \u2014 apply relevant entries to inform documentation; skip entries that don't apply.\n\nDo **not** write to memory \u2014 documentation agents are read-only.\n\nEfficiency constraints:\n- Do not read the full codebase for context. Focus on the changed files and their immediate surroundings.\n- Keep documentation updates concise and proportional to the change.\n\nExpected outputs:\n- Return JSON with `outcome` set to `completed` (documentation beads always complete; use `verdict` for pass/fail) and `summary` as a one-line description of what was documented.\n- Return JSON with structured verdict fields for every run: `verdict`, `findings_count`, and `requires_followup`.\n- Use `verdict=approved`, `findings_count=0`, and `requires_followup=false` when documentation is complete with no gaps.\n- Use `verdict=needs_changes`, set `findings_count` to the number of unresolved documentation gaps, set `requires_followup=true`, and include `block_reason` when implementation must land first or documentation cannot be completed.\n- Keep `completed`, `remaining`, and `risks` as concise narrative context only; they do not override the structured verdict fields.\n- Accurate updated docs and clear next-agent recommendations when code changes are required first.",
+      "captured_at": "2026-06-19T17:00:05.980682+00:00"
+    },
+    "worker_prompt_context": {
+      "bead_id": "B-435ed693",
+      "feature_root_id": "B-9948fed6",
+      "title": "Documentation: handoff notes and spec update",
+      "agent_type": "documentation",
+      "description": "Update the spec to reflect implementation completion. Document: (1) ArticlePagerView's intentional limitation \u2014 paging past the last loaded article stops (future enhancement); (2) ListPreferences keys added: articlesSort and articlesUnreadOnly; (3) any non-obvious implementation decisions from developer beads. Resolve all Pending Decisions in the spec (all were already resolved in the spec text). Remove stale TODOs.",
+      "status": "in_progress",
+      "acceptance_criteria": [
+        "Spec Pending Decisions section has no unresolved items",
+        "ArticlePagerView pagination limitation noted for future work",
+        "ListPreferences key names (articlesSort, articlesUnreadOnly) documented",
+        "No stale TODOs remain in the spec"
+      ],
+      "dependencies": [
+        "B-b0dfaaed",
+        "B-b0f2abeb",
+        "B-4fdb97ec",
+        "B-81317942",
+        "B-7b0193e6",
+        "B-44b0969c",
+        "B-cd2a0818",
+        "B-366ff812",
+        "B-2ddffdaa",
+        "B-7503ff60"
+      ],
+      "linked_docs": [
+        "specs/drafts/spec-7bb21007.md"
+      ],
+      "execution_branch_name": "feature/b-9948fed6",
+      "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-9948fed6",
+      "expected_files": [
+        "AggregatorApp.xcodeproj/project.pbxproj",
+        "AggregatorApp/Articles/ArticleFeed.swift",
+        "AggregatorApp/Articles/ArticleListView.swift",
+        "AggregatorApp/Articles/ArticlePagerView.swift",
+        "AggregatorApp/Articles/ArticleRowView.swift",
+        "AggregatorApp/Common/APIClient.swift",
+        "AggregatorApp/Common/ListPreferences.swift",
+        "AggregatorApp/Sources/SourcesView.swift",
+        "AggregatorAppTests/ArticleFeedTests.swift"
+      ],
+      "expected_globs": [],
+      "touched_files": [
+        "AggregatorApp.xcodeproj/project.pbxproj",
+        "AggregatorApp/Articles/ArticleFeed.swift",
+        "AggregatorApp/Articles/ArticleListView.swift",
+        "AggregatorApp/Articles/ArticlePagerView.swift",
+        "AggregatorApp/Articles/ArticleRowView.swift",
+        "AggregatorApp/Common/APIClient.swift",
+        "AggregatorApp/Common/ListPreferences.swift",
+        "AggregatorApp/Sources/SourcesView.swift",
+        "AggregatorAppTests/ArticleFeedTests.swift"
+      ],
+      "conflict_risks": "No conflicts expected. ArticlePagerView is a new file with no overlap with other in-progress beads.\nNone. This bead creates a brand-new file; no existing files were modified, so no merge conflicts with sibling beads are expected.\nNo file-scope conflicts expected. AggregatorApp.xcodeproj/project.pbxproj was regenerated by xcodegen; any sibling bead that also ran xcodegen will need a re-run after merge.\nDownstream beads that add SourcesView or ArticleListView will call getArticles \u2014 the signature is now stable and they can wire it in without changes.\nNone \u2014 only added a new test file; no existing files modified.\nNone \u2014 ArticleListView.swift is a new file with no overlap with any sibling bead's expected_files.\nNone \u2014 only SourcesView.swift was modified.\nMinor: `ListPreferences.swift` is the single shared preference store. Any sibling bead that also edits this file would conflict, but no such bead is currently in-flight.\nNone \u2014 only ArticleListView.swift was touched, no overlapping sibling beads on this file.\nNone \u2014 only ArticleListView.swift was changed; no sibling beads touch this file.",
+      "handoff_summary": {
+        "completed": "",
+        "remaining": "",
+        "risks": "",
+        "verdict": "",
+        "findings_count": 0,
+        "requires_followup": false,
+        "changed_files": [],
+        "updated_docs": [],
+        "next_action": "",
+        "next_agent": "",
+        "block_reason": "",
+        "expected_files": [],
+        "expected_globs": [],
+        "touched_files": [],
+        "conflict_risks": "",
+        "design_decisions": "",
+        "test_coverage_notes": "",
+        "known_limitations": ""
+      }
+    },
+    "last_agent_result": {
+      "outcome": "completed",
+      "summary": "Spec spec-7bb21007 updated to done: all AC checked, Implementation Notes added (ArticlePagerView pagination limit, ListPreferences key names), moved to specs/done/.",
+      "verdict": "approved",
+      "findings_count": 0,
+      "requires_followup": false,
+      "next_agent": "",
+      "block_reason": ""
+    },
+    "telemetry": {
+      "cost_usd": 0.4851363999999999,
+      "duration_ms": 152522,
+      "duration_api_ms": 146364,
+      "num_turns": 21,
+      "input_tokens": 21,
+      "output_tokens": 7578,
+      "cache_creation_tokens": 30304,
+      "cache_read_tokens": 620618,
+      "stop_reason": "end_turn",
+      "session_id": "ac12a0b2-fb00-438d-b8e4-a164ba1e24ff",
+      "permission_denials": [],
+      "prompt_chars": 9595,
+      "prompt_lines": 189,
+      "source": "provider",
+      "attempt": 1
+    },
+    "telemetry_history": [
+      {
+        "cost_usd": 0.4851363999999999,
+        "duration_ms": 152522,
+        "duration_api_ms": 146364,
+        "num_turns": 21,
+        "input_tokens": 21,
+        "output_tokens": 7578,
+        "cache_creation_tokens": 30304,
+        "cache_read_tokens": 620618,
+        "stop_reason": "end_turn",
+        "session_id": "ac12a0b2-fb00-438d-b8e4-a164ba1e24ff",
+        "permission_denials": [],
+        "prompt_chars": 9595,
+        "prompt_lines": 189,
+        "source": "provider",
+        "attempt": 1
+      }
+    ],
+    "last_commit": "02beffc78381419d9be1976413964626ac4f7389"
+  },
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}
