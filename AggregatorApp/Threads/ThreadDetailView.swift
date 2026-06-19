@@ -144,6 +144,9 @@ struct ThreadDetailView: View {
                 }
             }
         }
+        .padding()
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 12))
     }
 
     // MARK: - Members
