@@ -7,7 +7,9 @@
       "Bash(uv --version)",
       "Bash(xcrun simctl *)",
       "Bash(awk 'NR>1{print $2}')",
-      "Bash(git check-ignore *)"
+      "Bash(git check-ignore *)",
+      "Bash(xcodegen generate *)",
+      "Bash(xcodebuild test *)"
     ]
   }
 }

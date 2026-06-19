@@ -5,7 +5,7 @@ description: "Four-tab Liquid Glass shell (Threads/Sources/Today/Settings), Keyc
 dependencies: null
 priority: high
 complexity: medium
-status: planned
+status: done
 tags:
 - skeleton
 - settings
