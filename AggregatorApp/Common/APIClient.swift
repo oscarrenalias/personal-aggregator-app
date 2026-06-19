@@ -102,6 +102,32 @@ struct APIClient {
         return try await get("/articles/\(id)")
     }
 
+    // MARK: - Write endpoints
+
+    func dismissThread(id: Int) async throws {
+        try await post("/threads/\(id)/dismiss")
+    }
+
+    func restoreThread(id: Int) async throws {
+        try await post("/threads/\(id)/restore")
+    }
+
+    func markArticleRead(id: Int) async throws {
+        try await post("/articles/\(id)/read")
+    }
+
+    func markArticleUnread(id: Int) async throws {
+        try await post("/articles/\(id)/unread")
+    }
+
+    func saveArticle(id: Int) async throws {
+        try await post("/articles/\(id)/save")
+    }
+
+    func unsaveArticle(id: Int) async throws {
+        try await post("/articles/\(id)/unsave")
+    }
+
     // MARK: - Private helpers
 
     private func inspectResponse(_ response: URLResponse, data: Data) throws {
