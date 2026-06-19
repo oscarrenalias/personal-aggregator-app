@@ -12,7 +12,8 @@
       "Bash(xcodebuild test *)",
       "Bash(open AggregatorApp.xcodeproj)",
       "Bash(awk 'NR>1{print $3}')",
-      "Bash(open /tmp/threads-icons.png)"
+      "Bash(open /tmp/threads-icons.png)",
+      "Bash(xcodebuild -project AggregatorApp.xcodeproj -scheme AggregatorApp -destination 'platform=iOS Simulator,name=iPhone 17 \\(fresh\\),OS=latest' -derivedDataPath /tmp/aggr-dd clean build)"
     ]
   }
 }
