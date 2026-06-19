@@ -3,6 +3,10 @@ import SwiftUI
 struct ParagraphText: View {
     let text: String
 
+    init(_ text: String) {
+        self.text = text
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
             ForEach(Array(paragraphs.enumerated()), id: \.offset) { _, paragraph in

@@ -3,6 +3,8 @@ import SwiftUI
 struct ThreadCardView: View {
     let thread: Thread
 
+    @Environment(ThreadSeenStore.self) private var seenStore
+
     private var metaCaption: String {
         let sources = thread.sourceCount == 1 ? "1 source" : "\(thread.sourceCount) sources"
         let articles = thread.memberCount == 1 ? "1 article" : "\(thread.memberCount) articles"
@@ -15,7 +17,7 @@ struct ThreadCardView: View {
             VStack(alignment: .leading, spacing: 4) {
                 // Meta line
                 HStack(spacing: 4) {
-                    if thread.hasUpdates {
+                    if seenStore.hasUnseenUpdate(thread) {
                         Image(systemName: "circle.fill")
                             .font(.caption2)
                             .foregroundStyle(.tint)

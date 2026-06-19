@@ -4,6 +4,7 @@ struct ThreadDetailView: View {
     let threadId: Int
 
     @Environment(CredentialsStore.self) private var credentialsStore
+    @Environment(ThreadSeenStore.self) private var seenStore
     @State private var thread: Thread? = nil
     @State private var members: [ThreadMember] = []
     @State private var nextCursor: String? = nil
@@ -310,6 +311,7 @@ struct ThreadDetailView: View {
             thread = t
             members = m.items
             nextCursor = m.nextCursor
+            seenStore.markSeen(id: t.id, lastUpdated: t.lastUpdated)
         } catch {
             if isCancellation(error) { return }
             loadError = error
