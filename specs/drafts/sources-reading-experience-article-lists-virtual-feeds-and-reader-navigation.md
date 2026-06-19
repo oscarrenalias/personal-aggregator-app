@@ -42,28 +42,16 @@ Flow: **Sources tab (feeds) → article list (sorted/filtered) → article reade
 
 ### Verified API behavior (from the live backend)
 
-- `GET /articles` query params: `view`, `category`, `source_id`, `unread_only`,
-  `limit`, `cursor`. **No `sort` param today** — see the dependency below.
-- **Default order is importance-first** (importance_score desc, then published
-  desc). So importance sort == default ordering.
+- `GET /articles` query params: `view`, `sort`, `category`, `source_id`,
+  `unread_only`, `limit`, `cursor`.
+- `sort` accepts `importance` (default; importance_score desc, then published
+  desc) and `recent` (most-recently-published first) — **now live** in the
+  backend, mirroring `GET /threads`. Verified: `sort=recent` returns different,
+  newer articles than `sort=importance`.
 - `view=important` and `view=unread` work **cross-source** and **combine** with
   `source_id` and `unread_only` (e.g. `?source_id=11&view=important`,
   `?source_id=11&unread_only=true`).
 - Small `limit` works (e.g. `limit=4`) → progressive loading is feasible.
-- Unknown query params are ignored (200), so sending `sort=` is safe even before
-  the backend implements it (it just returns the default importance order).
-
-### Backend dependency (being implemented separately)
-
-This spec sends `sort=importance|recent` to `GET /articles`, mirroring
-`GET /threads`. The backend is adding this param (request handed off separately).
-Behavior:
-- `sort=importance` → importance-first (already the default; works today).
-- `sort=recent` → most-recently-published first (activates when the backend
-  ships the param; until then the API ignores it and returns importance order).
-
-The iOS code always sends the param; no app change is needed when the backend
-lands it.
 
 ## Changes
 
@@ -236,7 +224,7 @@ xcodebuild test -project AggregatorApp.xcodeproj -scheme AggregatorApp \
 - [ ] Tapping Important lists important articles across all sources; Unread lists unread across all sources
 - [ ] Tapping a source lists that source's articles
 - [ ] The article list shows the current source/feed name as an in-view header at the top of the content (in addition to the nav-bar title)
-- [ ] Sort toggle offers Importance and Recent; Importance orders importance-first today; Recent sends `sort=recent` (effective once the backend param ships)
+- [ ] Sort toggle offers Importance and Recent, both effective via the live `sort` param; the chosen sort and read/unread filter persist across launches (shared `ListPreferences` store)
 - [ ] Read/unread filter (All / Unread only) works for source and Important feeds; hidden for the Unread feed
 - [ ] Article list never appears frozen: a spinner shows during the initial load, content paints from a small first page, and a footer spinner shows while paginating
 - [ ] Scrolling to the bottom loads more via `next_cursor` without duplicate rows
@@ -249,11 +237,15 @@ xcodebuild test -project AggregatorApp.xcodeproj -scheme AggregatorApp \
 
 ## Pending Decisions
 
-- **Recency sort backend dependency**: resolved in principle — the backend is
-  adding `sort=importance|recent` to `GET /articles` (mirroring `/threads`). The
-  app sends the param now; recency becomes effective when the backend ships it.
-  Importance sort works today regardless.
+- **Recency sort backend dependency**: resolved — the backend now supports
+  `sort=importance|recent` on `GET /articles` (mirroring `/threads`). Both sorts
+  are fully effective; no further dependency.
 - **"Read only" filter**: the API supports "unread only" (`unread_only=true`) but
   has no "read only" filter, so the toggle is All / Unread only (not a 3-way).
-- **Sequencing**: build after spec-19056cf7 merges (shared files + reuses its
-  `isCancellation` helper and `ReaderLayout` constant).
+- **Preference persistence**: the article-list sort and read/unread filter must
+  persist across launches via the shared `ListPreferences` store (introduced by
+  the Threads-sort-persistence defect). Reuse that store; add `articlesSort` /
+  `articlesUnreadOnly` keys to it rather than creating a parallel store.
+- **Sequencing**: build after spec-19056cf7 (polish) and the list-preference
+  persistence defect — reuses the `isCancellation` helper, `ReaderLayout`
+  constant, and `ListPreferences` store.
