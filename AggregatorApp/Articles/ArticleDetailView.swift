@@ -4,6 +4,7 @@ struct ArticleDetailView: View {
     let articleId: Int
 
     @Environment(CredentialsStore.self) private var credentialsStore
+    @Environment(ArticleReadStore.self) private var readStore
     @State private var article: Article? = nil
     @State private var loadError: Error? = nil
     @State private var isRead = false
@@ -39,9 +40,9 @@ struct ArticleDetailView: View {
                 Button {
                     Task { await toggleRead() }
                 } label: {
-                    Image(systemName: isRead ? "circle.fill" : "circle")
+                    Image(systemName: effectiveIsRead ? "checkmark.circle.fill" : "circle")
                 }
-                .accessibilityLabel(isRead ? "Mark as unread" : "Mark as read")
+                .accessibilityLabel(effectiveIsRead ? "Mark as unread" : "Mark as read")
 
                 Button {
                     showSafari = true
@@ -184,12 +185,18 @@ struct ArticleDetailView: View {
         do {
             let fetched = try await apiClient.getArticle(id: articleId)
             article = fetched
-            isRead = fetched.isRead
+            isRead = readStore.isRead(id: articleId, fetched: fetched.isRead)
             isSaved = fetched.isSaved
-            // Auto-mark read on first view; swallow the error so it doesn't block display
-            if !fetched.isRead {
-                try? await apiClient.markArticleRead(id: articleId)
-                isRead = true
+            // Auto-mark read on first view. Only reflect "read" if the backend
+            // write succeeds, so the UI never claims a state the server lacks.
+            if !isRead {
+                do {
+                    try await apiClient.markArticleRead(id: articleId)
+                    isRead = true
+                    readStore.markRead(articleId)
+                } catch {
+                    // Leave unread on failure; the dot stays so state matches the server.
+                }
             }
         } catch {
             if isCancellation(error) { return }
@@ -197,9 +204,19 @@ struct ArticleDetailView: View {
         }
     }
 
+    /// Read state derived from the observable store (preferred) falling back to
+    /// the fetched value. Reading the store here keeps the toolbar indicator
+    /// reactive even when hosted in the paged reader, where local @State changes
+    /// don't reliably re-render the lifted navigation-bar toolbar.
+    private var effectiveIsRead: Bool {
+        readStore.isRead(id: articleId, fetched: article?.isRead ?? isRead)
+    }
+
     private func toggleRead() async {
-        let previous = isRead
-        isRead = !previous  // optimistic
+        let previous = effectiveIsRead
+        // Optimistically reflect the new state in the store so the toolbar updates.
+        if previous { readStore.markUnread(articleId) } else { readStore.markRead(articleId) }
+        isRead = !previous
         do {
             if previous {
                 try await apiClient.markArticleUnread(id: articleId)
@@ -207,7 +224,9 @@ struct ArticleDetailView: View {
                 try await apiClient.markArticleRead(id: articleId)
             }
         } catch {
-            isRead = previous  // revert on failure
+            // Revert both store and local state on failure.
+            if previous { readStore.markRead(articleId) } else { readStore.markUnread(articleId) }
+            isRead = previous
         }
     }
 

@@ -78,18 +78,9 @@ struct ArticleListView: View {
     }
 
     private var feedHeader: some View {
+        // The feed name is shown by the navigation title; this header only
+        // surfaces the current sort/filter status to avoid duplicating the name.
         VStack(alignment: .leading, spacing: 4) {
-            HStack(spacing: 8) {
-                if let icon = feed.systemImage {
-                    Image(systemName: icon)
-                        .font(.title3)
-                        .foregroundStyle(.primary)
-                        .accessibilityHidden(true)
-                }
-                Text(feed.title)
-                    .font(.title3)
-                    .bold()
-            }
             Text(sortFilterSummary)
                 .font(.caption)
                 .foregroundStyle(.secondary)
@@ -118,7 +109,13 @@ struct ArticleListView: View {
             List {
                 feedHeader
                 ForEach(Array(articles.enumerated()), id: \.element.id) { index, article in
-                    NavigationLink(value: index) {
+                    // Destination-based link (not value + navigationDestination):
+                    // SourcesView pushes ArticleListView with destination-based
+                    // NavigationLinks, and mixing those with value-based links in
+                    // the same stack made the first tap resolve to the wrong view.
+                    NavigationLink {
+                        ArticlePagerView(articles: articles, startIndex: index)
+                    } label: {
                         ArticleRowView(article: article)
                     }
                     .listRowBackground(Color.clear)
@@ -137,9 +134,6 @@ struct ArticleListView: View {
                     .listRowBackground(Color.clear)
                 }
             }
-        }
-        .navigationDestination(for: Int.self) { index in
-            ArticlePagerView(articles: articles, startIndex: index)
         }
         .refreshable {
             await loadFirstPage(showSpinner: false)

@@ -48,15 +48,10 @@ struct SourcesView: View {
                                 Section("Sources") {
                                     ForEach(loaded) { source in
                                         NavigationLink(destination: ArticleListView(feed: .source(id: source.id, name: source.name))) {
-                                            VStack(alignment: .leading, spacing: 4) {
-                                                Text(source.name)
-                                                    .font(.body)
-                                                Text(source.feedURL)
-                                                    .font(.caption)
-                                                    .foregroundStyle(.secondary)
-                                            }
+                                            Text(source.name)
+                                                .font(.body)
                                         }
-                                        .accessibilityLabel("\(source.name), \(source.feedURL)")
+                                        .accessibilityLabel(source.name)
                                         .listRowBackground(Color.clear)
                                     }
                                 }
