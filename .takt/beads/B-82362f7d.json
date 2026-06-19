@@ -1,0 +1,83 @@
+{
+  "bead_id": "B-82362f7d",
+  "title": "Threads reading experience: list, detail, and article reader",
+  "agent_type": "planner",
+  "description": "Non-runnable container for spec-37d1bbcf. Coordinates all implementation, testing, documentation, and review work for the full Threads tab reading flow: paginated thread list with dismiss/restore, swipe-between-threads pager, thread detail with hero image and member articles, and a reusable article reader with in-app Safari, importance badge, topic chips, and read/save/unread actions.",
+  "status": "done",
+  "bead_type": "feature",
+  "parent_id": "B-e62febb6",
+  "dependencies": [],
+  "acceptance_criteria": [
+    "xcodegen generate succeeds; xcodebuild test exits 0 with all new tests passing",
+    "Threads tab lists threads from GET /threads, default sort importance",
+    "Switching sort to recent reloads the list in recency order",
+    "Scrolling to the bottom loads the next page via next_cursor with no duplicate rows",
+    "Pull-to-refresh reloads the first page",
+    "Swiping a thread dismisses it; enabling show dismissed lists it with a Restore action that works",
+    "Tapping a thread opens the detail view showing hero image, rolling summary, known facts, and the member article list",
+    "Thread detail shows active members with classification-label badges and suppressed members under Also covered by",
+    "Swiping left/right in thread detail moves to the next/previous thread in the list",
+    "Tapping a member article opens the reader showing title, byline, importance badge, topic chips, AI summary, and full clean_text",
+    "Opening an unread article marks it read on the server; the read/unread toolbar toggle reflects and can change state",
+    "Save/unsave toggle persists to the server",
+    "Open original opens the article URL in an in-app Safari view that itself offers an Open in Safari action",
+    "With no credentials, the Threads tab shows the Not configured state with no crash or spinner hang",
+    "All network-touching screens handle loading, empty, and error states; icon-only buttons have accessibility labels",
+    "No hardcoded hex colors; Liquid Glass treatment consistent with SourcesView"
+  ],
+  "linked_docs": [
+    "docs/API.md",
+    "docs/openapi.json",
+    "specs/planned/threads-reading-experience-list-detail-and-article-reader.md"
+  ],
+  "feature_root_id": "B-82362f7d",
+  "execution_branch_name": "feature/b-82362f7d",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-82362f7d",
+  "expected_files": [],
+  "expected_globs": [
+    "AggregatorApp/**/*.swift",
+    "AggregatorAppTests/**/*.swift"
+  ],
+  "touched_files": [],
+  "changed_files": [],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "",
+    "remaining": "",
+    "risks": "",
+    "verdict": "",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [],
+    "updated_docs": [],
+    "next_action": "",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [],
+    "expected_globs": [],
+    "touched_files": [],
+    "conflict_risks": "",
+    "design_decisions": "",
+    "test_coverage_notes": "",
+    "known_limitations": ""
+  },
+  "block_reason": "",
+  "conflict_risks": "",
+  "branch_name": "",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-19T11:47:45.284598+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    }
+  ],
+  "metadata": {},
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

@@ -1,0 +1,260 @@
+{
+  "bead_id": "B-3af783e0",
+  "title": "ArticleDetailView \u2014 reusable article reader",
+  "agent_type": "developer",
+  "description": "Create AggregatorApp/Articles/ArticleDetailView.swift (new Articles/ directory). Initialised with `articleId: Int`. On appear: fetch `getArticle(id:)`; if `!article.isRead`, auto-call `markArticleRead(id:)` and flip local state. Content in a ScrollView: (1) full-width AsyncImage hero when article.imageURL is present \u2014 code path is built defensively and activates automatically when the API exposes the field; (2) title (.title2/.bold); (3) byline caption omitting missing pieces gracefully; (4) importance badge pill when importanceScore != nil, colored >= 80 .red / >= 50 .orange / else .secondary, accessibilityLabel includes importanceReason; (5) topic/category chips as wrapping layout (.caption, .regularMaterial); (6) summary as a .glassEffect() callout block; (7) cleanText as .body, or ContentUnavailableView 'No reader text' plus Open original button when nil/empty. Trailing toolbar: bookmark save/unsave toggle (saveArticle/unsaveArticle, optimistic update with revert on failure), circle read/unread toggle (markArticleRead/markArticleUnread), safari Open original presenting SafariView as a sheet (disabled when url is nil). All icon-only buttons have .accessibilityLabel. Handles loading, error, and empty states explicitly.",
+  "status": "done",
+  "bead_type": "task",
+  "parent_id": "B-82362f7d",
+  "dependencies": [
+    "B-eae96ec8",
+    "B-9f08e2a3",
+    "B-72b0175a",
+    "B-854ebafd"
+  ],
+  "acceptance_criteria": [
+    "Auto mark-read fires on first load when isRead is false; does not fire when already read",
+    "Read/unread and save/unsave toolbar toggles update local state optimistically and revert on API failure",
+    "Importance badge shows correct tier color (red/orange/secondary) and includes importanceReason in accessibilityLabel when present",
+    "Topic and category chips render as a wrapping chip layout using .regularMaterial",
+    "summary is displayed in a visually distinct .glassEffect() callout block",
+    "cleanText is shown as body text; nil/empty cleanText triggers ContentUnavailableView with Open original button",
+    "SafariView sheet is presented when Open original is tapped with a valid URL; button is disabled when url is nil",
+    "Article hero image code path is implemented and will activate when imageURL becomes non-nil",
+    "Loading, error, and empty states are explicitly handled",
+    "All icon-only toolbar buttons have .accessibilityLabel",
+    "No hardcoded hex colors"
+  ],
+  "linked_docs": [
+    "docs/API.md"
+  ],
+  "feature_root_id": "B-82362f7d",
+  "execution_branch_name": "feature/b-82362f7d",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-82362f7d",
+  "expected_files": [
+    "AggregatorApp/Articles/ArticleDetailView.swift"
+  ],
+  "expected_globs": [
+    "AggregatorApp/Articles/*.swift"
+  ],
+  "touched_files": [
+    "AggregatorApp/Articles/ArticleDetailView.swift"
+  ],
+  "changed_files": [
+    "AggregatorApp/Articles/ArticleDetailView.swift"
+  ],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "AggregatorApp/Articles/ArticleDetailView.swift created and committed. All acceptance criteria implemented: auto-mark-read, optimistic save/unsave and read/unread toggles with revert-on-failure, importance badge with tier colors (red/orange/secondary) and accessibilityLabel including importanceReason, topic+category chips in a custom ChipFlow wrapping Layout, summary in a .glassEffect() callout block, cleanText body or ContentUnavailableView with Open original button, hero AsyncImage code path active when imageURL is non-nil, SafariView sheet on Open original, all icon-only toolbar buttons with .accessibilityLabel, no hardcoded hex colors, explicit loading/error/empty states. xcodegen regenerated; build exits 0.",
+    "remaining": "None for this bead. Downstream: tester agent should verify acceptance criteria at runtime in a simulator.",
+    "risks": "The .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 12)) call is iOS 26-specific \u2014 if the SDK's exact overload signature differs (e.g. no labeled 'in:' parameter), the tester will surface a compile error and a corrective will be needed. SourceKit showed stale \"cannot find in scope\" diagnostics during indexing, but the compiler accepted the file without errors.",
+    "verdict": "approved",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [
+      "AggregatorApp/Articles/ArticleDetailView.swift"
+    ],
+    "updated_docs": [],
+    "next_action": "Tester agent runs acceptance criteria against a simulator build; no developer follow-up expected unless the .glassEffect call needs a minor signature fix.",
+    "next_agent": "tester",
+    "block_reason": "",
+    "expected_files": [
+      "AggregatorApp/Articles/ArticleDetailView.swift"
+    ],
+    "expected_globs": [
+      "AggregatorApp/Articles/*.swift"
+    ],
+    "touched_files": [
+      "AggregatorApp/Articles/ArticleDetailView.swift"
+    ],
+    "conflict_risks": "None \u2014 new file in new Articles/ directory, no overlap with existing files.",
+    "design_decisions": "1. ChipFlow custom Layout (iOS 16+ Layout protocol, available on iOS 26 target) chosen over a horizontal ScrollView because the spec explicitly requires a wrapping layout, not a horizontally scrolling one. LazyVGrid was considered but rejected since it requires fixed column sizing rather than content-driven chip widths. 2. Auto-mark-read uses try? so that a network failure on the mark-read call does not block the article from being displayed; the local isRead flag is still flipped to true optimistically since the intent to read is definite. 3. Optimistic updates for toggleRead/toggleSaved capture the previous state, flip immediately, then revert on any thrown error \u2014 standard iOS pattern for snappy UI. 4. Byline omits any nil/empty pieces by building a parts array and joining with \u00b7, so partially-populated articles degrade gracefully. 5. importanceBadge uses inline ternaries rather than a local Color variable to avoid @ViewBuilder local-binding ambiguity risks. 6. Navigation title uses article?.title ?? \"Article\" which naturally shows a placeholder during the loading phase without a separate title state variable.",
+    "test_coverage_notes": "1. Auto-mark-read: inject a mock APIClient where getArticle returns isRead=false; verify markArticleRead is called exactly once and isRead flips to true. Verify that when isRead=true, markArticleRead is not called. 2. Optimistic toggleRead: simulate API failure; verify isRead reverts to prior value. Same for toggleSaved with save/unsave. 3. Importance badge: test score=90 (red, High importance), score=60 (orange, Medium importance), score=30 (secondary, Low importance); verify accessibilityLabel includes importanceReason when present. 4. cleanText nil/empty: verify ContentUnavailableView appears and Open original button is present only when url is non-nil. 5. SafariView sheet: tap Open original and confirm sheet presents with correct URL. Verify Open original toolbar button is disabled when url is nil. 6. Chip layout: verify topic+category chips from sample article render without overflow in standard width. 7. Hero image: set imageURL to a valid URL, confirm AsyncImage renders; confirm block is absent when imageURL is nil. 8. Error state: simulate getArticle throwing; confirm error text and Retry button appear.",
+    "known_limitations": "1. .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 12)) \u2014 the exact iOS 26 public API overload was inferred from WWDC 2025 docs; if the shipping SDK uses a different signature (e.g. positional-only or a different label) this will be a compile error caught at test time. 2. The view does not paginate or lazy-load the cleanText body; for extremely long articles this could cause memory pressure in a production build, but is acceptable for a personal-use reader at this stage. 3. Article title is used as .navigationTitle; when nil the placeholder \"Article\" is shown \u2014 no separate title-loading state was added since it would complicate the loading flow for minimal gain."
+  },
+  "block_reason": "",
+  "conflict_risks": "None \u2014 new file in new Articles/ directory, no overlap with existing files.",
+  "branch_name": "feature/b-82362f7d",
+  "worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-82362f7d",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-19T11:47:45.296939+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-19T11:55:10.690099+00:00",
+      "event": "skills_loaded",
+      "agent_type": "developer",
+      "summary": "Loaded 7 skill(s) for isolated execution",
+      "details": {
+        "loaded_skills": [
+          "core/base-orchestrator",
+          "role/developer-implementation",
+          "capability/code-edit",
+          "task/corrective-implementation",
+          "task/refactor-safe",
+          "task/migration",
+          "memory"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-06-19T11:55:10.690120+00:00",
+      "event": "started",
+      "agent_type": "developer",
+      "summary": "Worker started",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-19T11:55:10.693666+00:00",
+      "event": "guardrails_applied",
+      "agent_type": "developer",
+      "summary": "Applied guardrails from .takt/agent-runs/B-3af783e0/repo/templates/agents/developer.md",
+      "details": {
+        "template_path": ".takt/agent-runs/B-3af783e0/repo/templates/agents/developer.md"
+      }
+    },
+    {
+      "timestamp": "2026-06-19T12:00:14.945558+00:00",
+      "event": "completed",
+      "agent_type": "developer",
+      "summary": "Created AggregatorApp/Articles/ArticleDetailView.swift implementing the full article reader per spec. The view takes an articleId: Int, fetches via getArticle(id:), auto-marks-read on first load when isRead is false, and renders all required content sections. Toolbar has three icon-only buttons (save/unsave, read/unread, open-in-browser) with optimistic updates and rollback. Build exits 0.",
+      "details": {}
+    }
+  ],
+  "metadata": {
+    "execution_root": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-3af783e0",
+    "workspace_repo_path": "repo",
+    "loaded_skills": [
+      "core/base-orchestrator",
+      "role/developer-implementation",
+      "capability/code-edit",
+      "task/corrective-implementation",
+      "task/refactor-safe",
+      "task/migration",
+      "memory"
+    ],
+    "skill_bundle_hash": "ecae5633083d1bbec41a6e5ec6ea05bbab117f60499c19b2ed76dbbe3e1aec7c",
+    "isolated_home": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-3af783e0/home",
+    "runner_backend": "claude",
+    "guardrails": {
+      "agent_type": "developer",
+      "template_path": ".takt/agent-runs/B-3af783e0/repo/templates/agents/developer.md",
+      "template_text": "# Developer Guardrails\n\nPrimary responsibility: Implement only the assigned bead inside the existing architecture and file scope.\n\n## Corrective bead scope\n\nIf your `bead_id` ends in `-corrective` or `-corrective-<N>` (e.g. `B-abc12345-corrective`, `B-abc12345-test-corrective-2`), you are running as a CORRECTIVE bead. Your scope is **strictly limited to fixing the specific failure that blocked the parent bead**. Do not:\n\n- Add unrelated improvements, refactors, or cleanup, even if you notice them\n- Reapply previously-reverted changes (the operator reverted them for a reason)\n- Expand the surface area beyond what is needed to unblock the parent\n- Touch files outside what the parent bead's `expected_files` / `expected_globs` covered, unless the failure is genuinely in another file and there is no smaller fix\n\nIf you notice an unrelated issue while fixing the corrective scope: **file a separate bead** via `takt bead create` describing what you saw, but do not fix it in this corrective. The operator will prioritize and dispatch.\n\nWhen in doubt about scope: prefer the smallest possible fix. The reviewer of this corrective will check that the scope was respected.\n\nAllowed actions:\n- Modify code, configuration, or local docs required to complete the assigned bead.\n- Create sub-beads for discovered follow-up work that should be handled separately.\n- Verify your `Swift` changes compile and import correctly with a quick syntax check: ``.\n\nDisallowed actions:\n- Run any test suite \u2014 not even a targeted `` run or any subset. Test execution is exclusively the tester agent's responsibility. Running tests wastes the agent budget and delays the pipeline.\n- Redesign unrelated architecture or broaden scope beyond the assigned bead.\n- Perform final review signoff in place of a review agent.\n- Silently absorb unrelated test, documentation, or planning work that should be handed off.\n\n## Memory\n\n**Read memory at bead start.** Before touching any code, run three searches using `$TAKT_CMD` (injected by the orchestrator):\n\n```bash\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace global\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace feature:<feature_root_id>\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace specs\n```\n\nTreat results as ambient context \u2014 apply relevant entries; skip entries that don't apply.\n\n**Write to memory when you discover reusable project knowledge** \u2014 something that would have changed your approach if you had known it upfront, and is not already in CLAUDE.md or the guardrails.\n\n```bash\n$TAKT_CMD memory add \"<concise fact>\" --namespace global               # project-wide knowledge\n$TAKT_CMD memory add \"<discovery>\" --namespace feature:<feature_root_id>  # feature-scoped\n```\n\nRequired Handoff Fields:\n\nEvery developer bead **must** populate the following three fields in its output JSON. Reviewers and tester agents rely on these fields to scope their work without additional back-and-forth turns. Use `\"N/A\"` only when a field is genuinely inapplicable (e.g., a trivial rename with no design trade-offs); do not leave fields blank.\n\n- **`design_decisions`** \u2014 Document non-obvious architectural or implementation choices made during this bead. Include alternatives considered and why the chosen approach was preferred. Reviewers use this to evaluate correctness without re-deriving intent. Set to `\"N/A\"` only if the change was purely mechanical with no meaningful trade-offs.\n\n- **`test_coverage_notes`** \u2014 Describe what the tester agent should verify: new code paths, edge cases introduced, regression risks, and any known untested scenarios left to the tester. Set to `\"N/A\"` only if the bead touched no executable code paths (e.g., documentation-only changes).\n\n- **`known_limitations`** \u2014 Call out constraints, deferred work, or known gaps in the implementation. This includes out-of-scope items deliberately left for follow-up beads and any areas where the implementation is intentionally incomplete. Set to `\"N/A\"` if the implementation is complete as specified with no known gaps.\n\nExpected outputs:\n- Completed or blocked JSON with concise implementation summary.\n- Accurate touched files, changed files, risks, and follow-up handoff fields.\n- Populated `design_decisions`, `test_coverage_notes`, and `known_limitations` fields in every response.",
+      "captured_at": "2026-06-19T11:55:10.693656+00:00"
+    },
+    "worker_prompt_context": {
+      "bead_id": "B-3af783e0",
+      "feature_root_id": "B-82362f7d",
+      "title": "ArticleDetailView \u2014 reusable article reader",
+      "agent_type": "developer",
+      "description": "Create AggregatorApp/Articles/ArticleDetailView.swift (new Articles/ directory). Initialised with `articleId: Int`. On appear: fetch `getArticle(id:)`; if `!article.isRead`, auto-call `markArticleRead(id:)` and flip local state. Content in a ScrollView: (1) full-width AsyncImage hero when article.imageURL is present \u2014 code path is built defensively and activates automatically when the API exposes the field; (2) title (.title2/.bold); (3) byline caption omitting missing pieces gracefully; (4) importance badge pill when importanceScore != nil, colored >= 80 .red / >= 50 .orange / else .secondary, accessibilityLabel includes importanceReason; (5) topic/category chips as wrapping layout (.caption, .regularMaterial); (6) summary as a .glassEffect() callout block; (7) cleanText as .body, or ContentUnavailableView 'No reader text' plus Open original button when nil/empty. Trailing toolbar: bookmark save/unsave toggle (saveArticle/unsaveArticle, optimistic update with revert on failure), circle read/unread toggle (markArticleRead/markArticleUnread), safari Open original presenting SafariView as a sheet (disabled when url is nil). All icon-only buttons have .accessibilityLabel. Handles loading, error, and empty states explicitly.",
+      "status": "in_progress",
+      "acceptance_criteria": [
+        "Auto mark-read fires on first load when isRead is false; does not fire when already read",
+        "Read/unread and save/unsave toolbar toggles update local state optimistically and revert on API failure",
+        "Importance badge shows correct tier color (red/orange/secondary) and includes importanceReason in accessibilityLabel when present",
+        "Topic and category chips render as a wrapping chip layout using .regularMaterial",
+        "summary is displayed in a visually distinct .glassEffect() callout block",
+        "cleanText is shown as body text; nil/empty cleanText triggers ContentUnavailableView with Open original button",
+        "SafariView sheet is presented when Open original is tapped with a valid URL; button is disabled when url is nil",
+        "Article hero image code path is implemented and will activate when imageURL becomes non-nil",
+        "Loading, error, and empty states are explicitly handled",
+        "All icon-only toolbar buttons have .accessibilityLabel",
+        "No hardcoded hex colors"
+      ],
+      "dependencies": [
+        "B-eae96ec8",
+        "B-9f08e2a3",
+        "B-72b0175a",
+        "B-854ebafd"
+      ],
+      "linked_docs": [
+        "docs/API.md"
+      ],
+      "execution_branch_name": "feature/b-82362f7d",
+      "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-82362f7d",
+      "expected_files": [
+        "AggregatorApp/Articles/ArticleDetailView.swift"
+      ],
+      "expected_globs": [
+        "AggregatorApp/Articles/*.swift"
+      ],
+      "touched_files": [],
+      "conflict_risks": "",
+      "handoff_summary": {
+        "completed": "",
+        "remaining": "",
+        "risks": "",
+        "verdict": "",
+        "findings_count": 0,
+        "requires_followup": false,
+        "changed_files": [],
+        "updated_docs": [],
+        "next_action": "",
+        "next_agent": "",
+        "block_reason": "",
+        "expected_files": [],
+        "expected_globs": [],
+        "touched_files": [],
+        "conflict_risks": "",
+        "design_decisions": "",
+        "test_coverage_notes": "",
+        "known_limitations": ""
+      }
+    },
+    "last_agent_result": {
+      "outcome": "completed",
+      "summary": "Created AggregatorApp/Articles/ArticleDetailView.swift implementing the full article reader per spec. The view takes an articleId: Int, fetches via getArticle(id:), auto-marks-read on first load when isRead is false, and renders all required content sections. Toolbar has three icon-only buttons (save/unsave, read/unread, open-in-browser) with optimistic updates and rollback. Build exits 0.",
+      "verdict": "approved",
+      "findings_count": 0,
+      "requires_followup": false,
+      "next_agent": "tester",
+      "block_reason": ""
+    },
+    "telemetry": {
+      "cost_usd": 0.7610221000000001,
+      "duration_ms": 303959,
+      "duration_api_ms": 283259,
+      "num_turns": 27,
+      "input_tokens": 21,
+      "output_tokens": 18464,
+      "cache_creation_tokens": 43398,
+      "cache_read_tokens": 733607,
+      "stop_reason": "end_turn",
+      "session_id": "68668d43-5c56-4a66-ba98-e0ad1516ee14",
+      "permission_denials": [],
+      "prompt_chars": 10757,
+      "prompt_lines": 187,
+      "source": "provider",
+      "attempt": 1
+    },
+    "telemetry_history": [
+      {
+        "cost_usd": 0.7610221000000001,
+        "duration_ms": 303959,
+        "duration_api_ms": 283259,
+        "num_turns": 27,
+        "input_tokens": 21,
+        "output_tokens": 18464,
+        "cache_creation_tokens": 43398,
+        "cache_read_tokens": 733607,
+        "stop_reason": "end_turn",
+        "session_id": "68668d43-5c56-4a66-ba98-e0ad1516ee14",
+        "permission_denials": [],
+        "prompt_chars": 10757,
+        "prompt_lines": 187,
+        "source": "provider",
+        "attempt": 1
+      }
+    ]
+  },
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

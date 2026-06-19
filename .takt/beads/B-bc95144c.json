@@ -1,0 +1,317 @@
+{
+  "bead_id": "B-bc95144c",
+  "title": "Shared documentation",
+  "agent_type": "documentation",
+  "description": "Add inline documentation to the public API surface introduced by this spec: APIClient new methods and APIError cases (parameters, error behavior), ThreadSort, DateDisplay.relative (document the now injection pattern for testing), and SafariView. Add one-line comments where the WHY is non-obvious: defensive decoding rationale on model fields, the imageURL nil-proofing for the future backend field, the suppressed-member 'Also covered by' rendering decision, and the auto mark-read on open behavior.",
+  "status": "done",
+  "bead_type": "task",
+  "parent_id": "B-82362f7d",
+  "dependencies": [
+    "B-c86d0dfc",
+    "B-eae96ec8",
+    "B-9f08e2a3",
+    "B-8d31394a",
+    "B-57db5496",
+    "B-72b0175a",
+    "B-854ebafd",
+    "B-39086fcc",
+    "B-3af783e0",
+    "B-f8159a17",
+    "B-c88b0ffd",
+    "B-dc49a704",
+    "B-34f82032"
+  ],
+  "acceptance_criteria": [
+    "APIClient new public methods have doc comments explaining parameters and error behavior",
+    "APIError cases have doc comments explaining when each is thrown",
+    "DateDisplay.relative documents the now parameter injection pattern",
+    "Non-obvious decisions (defensive decoding, imageURL nil-proofing, suppressed members, auto mark-read) have one-line comments explaining why"
+  ],
+  "linked_docs": [
+    "docs/API.md"
+  ],
+  "feature_root_id": "B-82362f7d",
+  "execution_branch_name": "feature/b-82362f7d",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-82362f7d",
+  "expected_files": [
+    "AggregatorApp/Common/APIClient.swift",
+    "AggregatorApp/Common/DateDisplay.swift",
+    "AggregatorApp/Common/SafariView.swift",
+    "AggregatorApp/Models/Article.swift",
+    "AggregatorApp/Models/Thread.swift",
+    "AggregatorApp/Threads/ThreadDetailView.swift"
+  ],
+  "expected_globs": [
+    "AggregatorApp/**/*.swift"
+  ],
+  "touched_files": [
+    "AggregatorApp/Common/APIClient.swift",
+    "AggregatorApp/Common/DateDisplay.swift",
+    "AggregatorApp/Common/SafariView.swift",
+    "AggregatorApp/Models/Article.swift",
+    "AggregatorApp/Threads/ThreadDetailView.swift"
+  ],
+  "changed_files": [
+    "AggregatorApp/Common/APIClient.swift",
+    "AggregatorApp/Common/DateDisplay.swift",
+    "AggregatorApp/Common/SafariView.swift",
+    "AggregatorApp/Models/Article.swift",
+    "AggregatorApp/Threads/ThreadDetailView.swift"
+  ],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "All acceptance criteria met: APIClient public methods and APIError cases have doc comments with parameter and error-behavior descriptions; DateDisplay.relative documents the now injection pattern for testing; non-obvious decisions (defensive decoding, imageURL nil-proofing, suppressed members, auto mark-read) all have one-line WHY comments. Auto mark-read and knownFacts defensive decoding comments were already present from dependency beads.",
+    "remaining": "Nothing remaining for this bead.",
+    "risks": "SourceKit editor-context diagnostics appeared in APIClient.swift, SafariView.swift, and ThreadDetailView.swift \u2014 these are pre-existing scope-resolution issues in the isolated editor environment (missing sibling source files in SourceKit index), not caused by the documentation changes. Build via xcodegen + xcodebuild will not be affected.",
+    "verdict": "approved",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [
+      "AggregatorApp/Common/APIClient.swift",
+      "AggregatorApp/Common/DateDisplay.swift",
+      "AggregatorApp/Common/SafariView.swift",
+      "AggregatorApp/Models/Article.swift",
+      "AggregatorApp/Threads/ThreadDetailView.swift"
+    ],
+    "updated_docs": [],
+    "next_action": "No follow-up required. Documentation bead is complete.",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [
+      "AggregatorApp/Common/APIClient.swift",
+      "AggregatorApp/Common/DateDisplay.swift",
+      "AggregatorApp/Common/SafariView.swift",
+      "AggregatorApp/Models/Article.swift",
+      "AggregatorApp/Models/Thread.swift",
+      "AggregatorApp/Threads/ThreadDetailView.swift"
+    ],
+    "expected_globs": [
+      "AggregatorApp/**/*.swift"
+    ],
+    "touched_files": [
+      "AggregatorApp/Common/APIClient.swift",
+      "AggregatorApp/Common/DateDisplay.swift",
+      "AggregatorApp/Common/SafariView.swift",
+      "AggregatorApp/Models/Article.swift",
+      "AggregatorApp/Threads/ThreadDetailView.swift"
+    ],
+    "conflict_risks": "None. All edits are additive comment/doc-comment insertions with no runtime behavior changes. No line deletions or signature modifications.",
+    "design_decisions": "ThreadMember.swift and PaginatedResponse.swift required no changes \u2014 they carry no non-obvious decisions. Thread.swift knownFacts defensive decode comment was already present. ArticleDetailView.swift auto mark-read comment was already present from a prior dependency bead.",
+    "test_coverage_notes": "No test changes made. Documentation only.",
+    "known_limitations": "Thread.imageURL uses standard decodeIfPresent (not try?) \u2014 the imageURL nil-proofing comment was added only to Article.swift where try? is actually used defensively. The bead description's reference to imageURL nil-proofing applies to Article, not Thread."
+  },
+  "block_reason": "",
+  "conflict_risks": "None. All edits are additive comment/doc-comment insertions with no runtime behavior changes. No line deletions or signature modifications.",
+  "branch_name": "feature/b-82362f7d",
+  "worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-82362f7d",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-19T11:47:45.302031+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-19T12:15:21.715033+00:00",
+      "event": "skills_loaded",
+      "agent_type": "documentation",
+      "summary": "Loaded 6 skill(s) for isolated execution",
+      "details": {
+        "loaded_skills": [
+          "core/base-orchestrator",
+          "role/docs-agent",
+          "capability/docs-edit",
+          "task/release-notes",
+          "task/spec-sync",
+          "memory"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-06-19T12:15:21.715054+00:00",
+      "event": "started",
+      "agent_type": "documentation",
+      "summary": "Worker started",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-19T12:15:21.720071+00:00",
+      "event": "guardrails_applied",
+      "agent_type": "documentation",
+      "summary": "Applied guardrails from .takt/agent-runs/B-bc95144c/repo/templates/agents/documentation.md",
+      "details": {
+        "template_path": ".takt/agent-runs/B-bc95144c/repo/templates/agents/documentation.md"
+      }
+    },
+    {
+      "timestamp": "2026-06-19T12:17:59.964136+00:00",
+      "event": "completed",
+      "agent_type": "documentation",
+      "summary": "Added inline documentation to all public API surface items: ThreadSort cases, APIError cases, get/post/all domain methods on APIClient, DateDisplay.relative now-injection pattern, SafariView wrapper purpose, Article defensive decoding and imageURL nil-proofing, and ThreadDetailView suppressed-member rendering decision.",
+      "details": {}
+    }
+  ],
+  "metadata": {
+    "execution_root": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-bc95144c",
+    "workspace_repo_path": "repo",
+    "loaded_skills": [
+      "core/base-orchestrator",
+      "role/docs-agent",
+      "capability/docs-edit",
+      "task/release-notes",
+      "task/spec-sync",
+      "memory"
+    ],
+    "skill_bundle_hash": "191f95261a4d31e4f4a691e9c39926c722504f21a3c370b6975facad92e3c1f0",
+    "isolated_home": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-bc95144c/home",
+    "runner_backend": "claude",
+    "guardrails": {
+      "agent_type": "documentation",
+      "template_path": ".takt/agent-runs/B-bc95144c/repo/templates/agents/documentation.md",
+      "template_text": "# Documentation Guardrails\n\nPrimary responsibility: Update documentation and examples that explain the assigned behavior without changing runtime feature behavior.\n\nAllowed actions:\n- Edit docs, examples, and explanatory text tied to the assigned bead.\n- Focus only on files listed in the bead's touched_files and changed_files fields. Do not read or modify unrelated documentation.\n- Align documentation with existing code and validated behavior.\n- Identify when implementation or tests must land first and block with a handoff.\n\nDisallowed actions:\n- Change runtime behavior, production code paths, or feature logic.\n- Invent undocumented behavior that is not present in the codebase.\n- Approve code quality or test completeness as a substitute for review.\n- Do not run the test suite. Testing is the tester agent's responsibility.\n\n## Memory\n\n**Read memory at bead start.** Before writing any documentation, run three searches using `$TAKT_CMD` (injected by the orchestrator):\n\n```bash\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace global\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace feature:<feature_root_id>\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace specs\n```\n\nTreat results as ambient context \u2014 apply relevant entries to inform documentation; skip entries that don't apply.\n\nDo **not** write to memory \u2014 documentation agents are read-only.\n\nEfficiency constraints:\n- Do not read the full codebase for context. Focus on the changed files and their immediate surroundings.\n- Keep documentation updates concise and proportional to the change.\n\nExpected outputs:\n- Return JSON with `outcome` set to `completed` (documentation beads always complete; use `verdict` for pass/fail) and `summary` as a one-line description of what was documented.\n- Return JSON with structured verdict fields for every run: `verdict`, `findings_count`, and `requires_followup`.\n- Use `verdict=approved`, `findings_count=0`, and `requires_followup=false` when documentation is complete with no gaps.\n- Use `verdict=needs_changes`, set `findings_count` to the number of unresolved documentation gaps, set `requires_followup=true`, and include `block_reason` when implementation must land first or documentation cannot be completed.\n- Keep `completed`, `remaining`, and `risks` as concise narrative context only; they do not override the structured verdict fields.\n- Accurate updated docs and clear next-agent recommendations when code changes are required first.",
+      "captured_at": "2026-06-19T12:15:21.720061+00:00"
+    },
+    "worker_prompt_context": {
+      "bead_id": "B-bc95144c",
+      "feature_root_id": "B-82362f7d",
+      "title": "Shared documentation",
+      "agent_type": "documentation",
+      "description": "Add inline documentation to the public API surface introduced by this spec: APIClient new methods and APIError cases (parameters, error behavior), ThreadSort, DateDisplay.relative (document the now injection pattern for testing), and SafariView. Add one-line comments where the WHY is non-obvious: defensive decoding rationale on model fields, the imageURL nil-proofing for the future backend field, the suppressed-member 'Also covered by' rendering decision, and the auto mark-read on open behavior.",
+      "status": "in_progress",
+      "acceptance_criteria": [
+        "APIClient new public methods have doc comments explaining parameters and error behavior",
+        "APIError cases have doc comments explaining when each is thrown",
+        "DateDisplay.relative documents the now parameter injection pattern",
+        "Non-obvious decisions (defensive decoding, imageURL nil-proofing, suppressed members, auto mark-read) have one-line comments explaining why"
+      ],
+      "dependencies": [
+        "B-c86d0dfc",
+        "B-eae96ec8",
+        "B-9f08e2a3",
+        "B-8d31394a",
+        "B-57db5496",
+        "B-72b0175a",
+        "B-854ebafd",
+        "B-39086fcc",
+        "B-3af783e0",
+        "B-f8159a17",
+        "B-c88b0ffd",
+        "B-dc49a704",
+        "B-34f82032"
+      ],
+      "linked_docs": [
+        "docs/API.md"
+      ],
+      "execution_branch_name": "feature/b-82362f7d",
+      "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-82362f7d",
+      "expected_files": [
+        "AggregatorApp.xcodeproj/project.pbxproj",
+        "AggregatorApp/Articles/ArticleDetailView.swift",
+        "AggregatorApp/Common/APIClient.swift",
+        "AggregatorApp/Common/DateDisplay.swift",
+        "AggregatorApp/Common/SafariView.swift",
+        "AggregatorApp/Models/Article.swift",
+        "AggregatorApp/Models/PaginatedResponse.swift",
+        "AggregatorApp/Models/Thread.swift",
+        "AggregatorApp/Models/ThreadMember.swift",
+        "AggregatorApp/Threads/ThreadCardView.swift",
+        "AggregatorApp/Threads/ThreadDetailView.swift",
+        "AggregatorApp/Threads/ThreadPagerView.swift",
+        "AggregatorApp/Threads/ThreadsView.swift",
+        "AggregatorAppTests/ThreadsModelTests.swift"
+      ],
+      "expected_globs": [
+        "AggregatorApp/Articles/*.swift"
+      ],
+      "touched_files": [
+        "AggregatorApp.xcodeproj/project.pbxproj",
+        "AggregatorApp/Articles/ArticleDetailView.swift",
+        "AggregatorApp/Common/APIClient.swift",
+        "AggregatorApp/Common/DateDisplay.swift",
+        "AggregatorApp/Common/SafariView.swift",
+        "AggregatorApp/Models/Article.swift",
+        "AggregatorApp/Models/PaginatedResponse.swift",
+        "AggregatorApp/Models/Thread.swift",
+        "AggregatorApp/Models/ThreadMember.swift",
+        "AggregatorApp/Threads/ThreadCardView.swift",
+        "AggregatorApp/Threads/ThreadDetailView.swift",
+        "AggregatorApp/Threads/ThreadPagerView.swift",
+        "AggregatorApp/Threads/ThreadsView.swift",
+        "AggregatorAppTests/ThreadsModelTests.swift"
+      ],
+      "conflict_risks": "None \u2014 files are new additions, no modifications to existing code paths.\nget() signature now accepts an optional query:[URLQueryItem]=[] parameter \u2014 backward-compatible, no downstream breakage expected. Any sibling bead that calls get() without query args will still compile unchanged.\nNone. SafariView.swift is a new file; no existing file was modified.\nNo conflicts expected \u2014 Article.swift is a new file with no overlap with PaginatedResponse.swift, Source.swift, or HealthResponse.swift.\nNo conflicts expected. These are new files. Downstream beads that use Thread or ThreadMember should confirm the field set (imageURL is String? not URL?, dates are String not Date).\nNone. Only APIClient.swift was modified; no overlapping file claims with sibling beads in this feature tree.\nNone expected. ThreadCardView.swift is a new file with no overlap with sibling beads.\nNo conflict risk \u2014 only new methods were appended; no existing lines were touched.\nxcodegen was re-run inside this worktree; any sibling bead that also ran xcodegen may need a re-run at merge time, per CLAUDE.md operational rules.\nNone \u2014 new file in new Articles/ directory, no overlap with existing files.\nThreadDetailView.swift is a new file \u2014 no merge conflicts expected. Sibling beads in the same worktree (e.g. ThreadPagerView, ThreadsView updates) may touch the same Threads/ directory but not this file.\nNone. ThreadPagerView is a new file with no overlap with other in-flight beads. ThreadsView is a placeholder and not modified here.\nThreadPagerView and ThreadCardView are read-only dependencies; no conflict risk. APIClient.getThreads, dismissThread, restoreThread used as-is.",
+      "handoff_summary": {
+        "completed": "",
+        "remaining": "",
+        "risks": "",
+        "verdict": "",
+        "findings_count": 0,
+        "requires_followup": false,
+        "changed_files": [],
+        "updated_docs": [],
+        "next_action": "",
+        "next_agent": "",
+        "block_reason": "",
+        "expected_files": [],
+        "expected_globs": [],
+        "touched_files": [],
+        "conflict_risks": "",
+        "design_decisions": "",
+        "test_coverage_notes": "",
+        "known_limitations": ""
+      }
+    },
+    "last_agent_result": {
+      "outcome": "completed",
+      "summary": "Added inline documentation to all public API surface items: ThreadSort cases, APIError cases, get/post/all domain methods on APIClient, DateDisplay.relative now-injection pattern, SafariView wrapper purpose, Article defensive decoding and imageURL nil-proofing, and ThreadDetailView suppressed-member rendering decision.",
+      "verdict": "approved",
+      "findings_count": 0,
+      "requires_followup": false,
+      "next_agent": "",
+      "block_reason": ""
+    },
+    "telemetry": {
+      "cost_usd": 0.6471789,
+      "duration_ms": 157352,
+      "duration_api_ms": 154995,
+      "num_turns": 29,
+      "input_tokens": 24,
+      "output_tokens": 8988,
+      "cache_creation_tokens": 38626,
+      "cache_read_tokens": 922363,
+      "stop_reason": "end_turn",
+      "session_id": "fdd9d89b-88d5-4e61-b4c5-5d65364008da",
+      "permission_denials": [],
+      "prompt_chars": 11060,
+      "prompt_lines": 209,
+      "source": "provider",
+      "attempt": 1
+    },
+    "telemetry_history": [
+      {
+        "cost_usd": 0.6471789,
+        "duration_ms": 157352,
+        "duration_api_ms": 154995,
+        "num_turns": 29,
+        "input_tokens": 24,
+        "output_tokens": 8988,
+        "cache_creation_tokens": 38626,
+        "cache_read_tokens": 922363,
+        "stop_reason": "end_turn",
+        "session_id": "fdd9d89b-88d5-4e61-b4c5-5d65364008da",
+        "permission_denials": [],
+        "prompt_chars": 11060,
+        "prompt_lines": 209,
+        "source": "provider",
+        "attempt": 1
+      }
+    ],
+    "last_commit": "815661149992162f2d5f805acf0bc4da0bf93129"
+  },
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

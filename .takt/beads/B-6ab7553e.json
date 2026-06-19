@@ -1,0 +1,467 @@
+{
+  "bead_id": "B-6ab7553e",
+  "title": "Shared review",
+  "agent_type": "review",
+  "description": "Review all changes in this feature branch for correctness, spec adherence, iOS/SwiftUI conventions per CLAUDE.md, and security. Check: no hardcoded hex colors, all icon-only buttons have .accessibilityLabel, Liquid Glass treatment (GlassEffectContainer, .listRowBackground(Color.clear)) consistent with SourcesView, no credentials in source, defensive decoding in place on all nullable/absent JSON fields, cursor values passed verbatim and never parsed or constructed, GET endpoint handlers do not call POST write endpoints (except the explicit auto mark-read case), optimistic updates have revert-on-failure logic, all network-backed screens explicitly handle loading/empty/error states.",
+  "status": "done",
+  "bead_type": "task",
+  "parent_id": "B-82362f7d",
+  "dependencies": [
+    "B-34f82032",
+    "B-39086fcc",
+    "B-3af783e0",
+    "B-4c0e0971",
+    "B-57db5496",
+    "B-72b0175a",
+    "B-854ebafd",
+    "B-8d31394a",
+    "B-9f08e2a3",
+    "B-bc95144c",
+    "B-c86d0dfc",
+    "B-c88b0ffd",
+    "B-dc49a704",
+    "B-eae96ec8",
+    "B-f8159a17"
+  ],
+  "acceptance_criteria": [
+    "No hardcoded hex color values in any new or modified file",
+    "All icon-only toolbar buttons in ArticleDetailView have .accessibilityLabel",
+    "Liquid Glass treatment matches SourcesView pattern across ThreadsView, ThreadCardView, ThreadDetailView",
+    "No credentials, API keys, or secrets appear in source files",
+    "Cursor values are passed verbatim and never parsed or constructed",
+    "POST write endpoints are not called from passive view-appear handlers except for the explicit auto mark-read case in ArticleDetailView",
+    "Optimistic UI updates in ThreadsView and ArticleDetailView include revert logic on API failure",
+    "All network-backed screens (ThreadsView, ThreadDetailView, ArticleDetailView) explicitly handle loading, error, and empty states"
+  ],
+  "linked_docs": [],
+  "feature_root_id": "B-82362f7d",
+  "execution_branch_name": "feature/b-82362f7d",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-82362f7d",
+  "expected_files": [
+    "AggregatorApp.xcodeproj/project.pbxproj",
+    "AggregatorApp/Articles/ArticleDetailView.swift",
+    "AggregatorApp/Common/APIClient.swift",
+    "AggregatorApp/Common/DateDisplay.swift",
+    "AggregatorApp/Common/SafariView.swift",
+    "AggregatorApp/Models/Article.swift",
+    "AggregatorApp/Models/PaginatedResponse.swift",
+    "AggregatorApp/Models/Thread.swift",
+    "AggregatorApp/Models/ThreadMember.swift",
+    "AggregatorApp/Threads/ThreadCardView.swift",
+    "AggregatorApp/Threads/ThreadDetailView.swift",
+    "AggregatorApp/Threads/ThreadPagerView.swift",
+    "AggregatorApp/Threads/ThreadsView.swift",
+    "AggregatorAppTests/ThreadsModelTests.swift"
+  ],
+  "expected_globs": [
+    "AggregatorApp/Articles/*.swift"
+  ],
+  "touched_files": [
+    "AggregatorApp/Articles/ArticleDetailView.swift",
+    "AggregatorApp/Common/APIClient.swift",
+    "AggregatorApp/Common/DateDisplay.swift",
+    "AggregatorApp/Common/SafariView.swift",
+    "AggregatorApp/Models/Article.swift",
+    "AggregatorApp/Models/PaginatedResponse.swift",
+    "AggregatorApp/Models/Thread.swift",
+    "AggregatorApp/Models/ThreadMember.swift",
+    "AggregatorApp/Threads/ThreadCardView.swift",
+    "AggregatorApp/Threads/ThreadDetailView.swift",
+    "AggregatorApp/Threads/ThreadPagerView.swift",
+    "AggregatorApp/Threads/ThreadsView.swift",
+    "AggregatorAppTests/ThreadsModelTests.swift"
+  ],
+  "changed_files": [
+    "AggregatorApp/Threads/ThreadDetailView.swift"
+  ],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "Reviewed all 14 changed files. AC1 (no hex colors), AC2 (accessibility labels), AC3 (Liquid Glass \u2014 now fixed), AC4 (no credentials), AC5 (cursor verbatim), AC6 (no passive POSTs), AC7 (optimistic revert), AC8 (loading/empty/error states) all pass. Corrective fix confirmed at ThreadDetailView.swift:149.",
+    "remaining": "None. All acceptance criteria satisfied. The advisory .foregroundStyle(.white) cosmetic finding from the prior review is carry-over only and does not block merge.",
+    "risks": "No blocking risks. The .white foreground in badge components is cosmetic \u2014 may degrade under color-invert accessibility settings but does not affect functionality.",
+    "verdict": "approved",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [
+      "AggregatorApp/Threads/ThreadDetailView.swift"
+    ],
+    "updated_docs": [],
+    "next_action": "Bead can complete \u2014 no developer follow-up required.",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [
+      "AggregatorApp.xcodeproj/project.pbxproj",
+      "AggregatorApp/Articles/ArticleDetailView.swift",
+      "AggregatorApp/Common/APIClient.swift",
+      "AggregatorApp/Common/DateDisplay.swift",
+      "AggregatorApp/Common/SafariView.swift",
+      "AggregatorApp/Models/Article.swift",
+      "AggregatorApp/Models/PaginatedResponse.swift",
+      "AggregatorApp/Models/Thread.swift",
+      "AggregatorApp/Models/ThreadMember.swift",
+      "AggregatorApp/Threads/ThreadCardView.swift",
+      "AggregatorApp/Threads/ThreadDetailView.swift",
+      "AggregatorApp/Threads/ThreadPagerView.swift",
+      "AggregatorApp/Threads/ThreadsView.swift",
+      "AggregatorAppTests/ThreadsModelTests.swift"
+    ],
+    "expected_globs": [
+      "AggregatorApp/Articles/*.swift"
+    ],
+    "touched_files": [
+      "AggregatorApp/Articles/ArticleDetailView.swift",
+      "AggregatorApp/Common/APIClient.swift",
+      "AggregatorApp/Common/DateDisplay.swift",
+      "AggregatorApp/Common/SafariView.swift",
+      "AggregatorApp/Models/Article.swift",
+      "AggregatorApp/Models/PaginatedResponse.swift",
+      "AggregatorApp/Models/Thread.swift",
+      "AggregatorApp/Models/ThreadMember.swift",
+      "AggregatorApp/Threads/ThreadCardView.swift",
+      "AggregatorApp/Threads/ThreadDetailView.swift",
+      "AggregatorApp/Threads/ThreadPagerView.swift",
+      "AggregatorApp/Threads/ThreadsView.swift",
+      "AggregatorAppTests/ThreadsModelTests.swift"
+    ],
+    "conflict_risks": "None. ThreadDetailView.swift is not touched by any other in-flight bead. The corrective change was additive only.",
+    "design_decisions": "Corrective fix followed the ArticleDetailView pattern exactly: .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 12)) applied to the knownFactsSection VStack with .padding() and .frame(maxWidth: .infinity, alignment: .leading), matching ArticleDetailView.swift:125-132.",
+    "test_coverage_notes": "Test suite covers PaginatedResponse, Thread, ThreadMember, Article decoding, APIClient.makeURL, and DateDisplay at appropriate depth. Liquid Glass is a view-layer concern not testable via XCTest \u2014 no test gaps introduced by corrective change.",
+    "known_limitations": "Advisory only: .foregroundStyle(.white) in classificationBadge (ThreadDetailView:253) and importanceBadge (ArticleDetailView:163) may degrade under color-invert accessibility settings. Non-blocking cosmetic issue tracked from prior review pass."
+  },
+  "block_reason": "",
+  "conflict_risks": "None. ThreadDetailView.swift is not touched by any other in-flight bead. The corrective change was additive only.",
+  "branch_name": "feature/b-82362f7d",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-19T11:47:45.302750+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-19T12:18:00.237905+00:00",
+      "event": "skills_loaded",
+      "agent_type": "review",
+      "summary": "Loaded 6 skill(s) for isolated execution",
+      "details": {
+        "loaded_skills": [
+          "core/base-orchestrator",
+          "role/reviewer-signoff",
+          "capability/code-review",
+          "task/corrective-bead-creation",
+          "task/risk-assessment",
+          "memory"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-06-19T12:18:00.237922+00:00",
+      "event": "started",
+      "agent_type": "review",
+      "summary": "Worker started",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-19T12:18:00.247189+00:00",
+      "event": "guardrails_applied",
+      "agent_type": "review",
+      "summary": "Applied guardrails from .takt/agent-runs/B-6ab7553e/repo/templates/agents/review.md",
+      "details": {
+        "template_path": ".takt/agent-runs/B-6ab7553e/repo/templates/agents/review.md"
+      }
+    },
+    {
+      "timestamp": "2026-06-19T12:21:49.808567+00:00",
+      "event": "blocked",
+      "agent_type": "review",
+      "summary": "Review complete: 2 findings \u2014 1 medium (ThreadDetailView missing Liquid Glass treatment, violates AC3), 1 low (non-adaptive .white foreground on badge components). All other acceptance criteria pass cleanly.",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-19T12:21:49.841482+00:00",
+      "event": "corrective_planned",
+      "agent_type": "review",
+      "summary": "Created corrective bead B-6ab7553e-corrective for blocked issue",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-19T12:23:26.122398+00:00",
+      "event": "retried",
+      "agent_type": "review",
+      "summary": "Requeued blocked bead after corrective bead B-6ab7553e-corrective completed",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-19T12:23:26.356142+00:00",
+      "event": "skills_loaded",
+      "agent_type": "review",
+      "summary": "Loaded 6 skill(s) for isolated execution",
+      "details": {
+        "loaded_skills": [
+          "core/base-orchestrator",
+          "role/reviewer-signoff",
+          "capability/code-review",
+          "task/corrective-bead-creation",
+          "task/risk-assessment",
+          "memory"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-06-19T12:23:26.356162+00:00",
+      "event": "started",
+      "agent_type": "review",
+      "summary": "Worker started",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-19T12:23:26.362602+00:00",
+      "event": "guardrails_applied",
+      "agent_type": "review",
+      "summary": "Applied guardrails from .takt/agent-runs/B-6ab7553e/repo/templates/agents/review.md",
+      "details": {
+        "template_path": ".takt/agent-runs/B-6ab7553e/repo/templates/agents/review.md"
+      }
+    },
+    {
+      "timestamp": "2026-06-19T12:25:09.953257+00:00",
+      "event": "completed",
+      "agent_type": "review",
+      "summary": "Re-review approved: all 8 acceptance criteria pass after corrective fix applied .glassEffect to ThreadDetailView.knownFactsSection",
+      "details": {}
+    }
+  ],
+  "metadata": {
+    "execution_root": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-6ab7553e",
+    "workspace_repo_path": "repo",
+    "loaded_skills": [
+      "core/base-orchestrator",
+      "role/reviewer-signoff",
+      "capability/code-review",
+      "task/corrective-bead-creation",
+      "task/risk-assessment",
+      "memory"
+    ],
+    "skill_bundle_hash": "68ad0ecb7bfe263ceb1ada56efead5a81dac8f9f2173181d0bf030dc0a3f880d",
+    "isolated_home": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-6ab7553e/home",
+    "runner_backend": "claude",
+    "guardrails": {
+      "agent_type": "review",
+      "template_path": ".takt/agent-runs/B-6ab7553e/repo/templates/agents/review.md",
+      "template_text": "# Review Guardrails\n\nPrimary responsibility: Inspect code, tests, docs, and acceptance criteria for correctness, completeness, and risk.\n\nAllowed actions:\n- Review only the changed files listed in the bead's touched_files and changed_files fields. Do not read unrelated files.\n- Validate acceptance criteria against the implementation and handoff state.\n- Block with a clear recommendation when the bead actually requires implementation work.\n\n## Memory\n\n**Read memory at bead start.** Before reviewing any files, run three searches using `$TAKT_CMD` (injected by the orchestrator):\n\n```bash\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace global\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace feature:<feature_root_id>\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace specs\n```\n\nTreat results as ambient context \u2014 apply relevant entries to inform the review; skip entries that don't apply.\n\nDo **not** write to memory \u2014 review agents are read-only.\n\nEfficiency constraints:\n- Do not run the test suite. Testing is the tester agent's responsibility.\n- Focus on correctness, completeness, and risk \u2014 not style or formatting.\n- Keep the review concise. If there are no findings, say so and approve promptly.\n\nDisallowed actions:\n- Implement feature work, tests, or docs instead of reporting findings.\n- Rewrite architecture or silently fix issues discovered during review.\n- Mark incomplete work as accepted without evidence.\n\nExpected outputs:\n- Return JSON with `outcome` set to `completed` (reviews always complete; use `verdict` for pass/fail) and `summary` as a one-line description of the review result.\n- Return JSON with structured verdict fields for every run: `verdict`, `findings_count`, and `requires_followup`.\n- Treat `verdict` as the review signoff decision: `approved` means the bead can complete, while `needs_changes` means the bead must block for follow-up work.\n- Use `verdict=approved`, `findings_count=0`, and `requires_followup=false` when no unresolved findings remain.\n- Use `verdict=needs_changes`, set `findings_count` to the unresolved finding count, set `requires_followup=true` unless there is a stronger explicit reason not to, and always include `block_reason` when any required fix remains.\n- Keep `completed`, `remaining`, and `risks` as free-form narrative context only. They inform operators, but they do not override the structured verdict or control scheduler state.\n- Review findings ordered by severity, or an explicit statement that no findings were discovered.\n- Clear blocked handoff details when the task belongs to another agent type.",
+      "captured_at": "2026-06-19T12:23:26.362588+00:00"
+    },
+    "worker_prompt_context": {
+      "bead_id": "B-6ab7553e",
+      "feature_root_id": "B-82362f7d",
+      "title": "Shared review",
+      "agent_type": "review",
+      "description": "Review all changes in this feature branch for correctness, spec adherence, iOS/SwiftUI conventions per CLAUDE.md, and security. Check: no hardcoded hex colors, all icon-only buttons have .accessibilityLabel, Liquid Glass treatment (GlassEffectContainer, .listRowBackground(Color.clear)) consistent with SourcesView, no credentials in source, defensive decoding in place on all nullable/absent JSON fields, cursor values passed verbatim and never parsed or constructed, GET endpoint handlers do not call POST write endpoints (except the explicit auto mark-read case), optimistic updates have revert-on-failure logic, all network-backed screens explicitly handle loading/empty/error states.",
+      "status": "in_progress",
+      "acceptance_criteria": [
+        "No hardcoded hex color values in any new or modified file",
+        "All icon-only toolbar buttons in ArticleDetailView have .accessibilityLabel",
+        "Liquid Glass treatment matches SourcesView pattern across ThreadsView, ThreadCardView, ThreadDetailView",
+        "No credentials, API keys, or secrets appear in source files",
+        "Cursor values are passed verbatim and never parsed or constructed",
+        "POST write endpoints are not called from passive view-appear handlers except for the explicit auto mark-read case in ArticleDetailView",
+        "Optimistic UI updates in ThreadsView and ArticleDetailView include revert logic on API failure",
+        "All network-backed screens (ThreadsView, ThreadDetailView, ArticleDetailView) explicitly handle loading, error, and empty states"
+      ],
+      "dependencies": [
+        "B-34f82032",
+        "B-39086fcc",
+        "B-3af783e0",
+        "B-4c0e0971",
+        "B-57db5496",
+        "B-72b0175a",
+        "B-854ebafd",
+        "B-8d31394a",
+        "B-9f08e2a3",
+        "B-bc95144c",
+        "B-c86d0dfc",
+        "B-c88b0ffd",
+        "B-dc49a704",
+        "B-eae96ec8",
+        "B-f8159a17"
+      ],
+      "linked_docs": [],
+      "execution_branch_name": "feature/b-82362f7d",
+      "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-82362f7d",
+      "expected_files": [
+        "AggregatorApp.xcodeproj/project.pbxproj",
+        "AggregatorApp/Articles/ArticleDetailView.swift",
+        "AggregatorApp/Common/APIClient.swift",
+        "AggregatorApp/Common/DateDisplay.swift",
+        "AggregatorApp/Common/SafariView.swift",
+        "AggregatorApp/Models/Article.swift",
+        "AggregatorApp/Models/PaginatedResponse.swift",
+        "AggregatorApp/Models/Thread.swift",
+        "AggregatorApp/Models/ThreadMember.swift",
+        "AggregatorApp/Threads/ThreadCardView.swift",
+        "AggregatorApp/Threads/ThreadDetailView.swift",
+        "AggregatorApp/Threads/ThreadPagerView.swift",
+        "AggregatorApp/Threads/ThreadsView.swift",
+        "AggregatorAppTests/ThreadsModelTests.swift"
+      ],
+      "expected_globs": [
+        "AggregatorApp/Articles/*.swift"
+      ],
+      "touched_files": [
+        "AggregatorApp.xcodeproj/project.pbxproj",
+        "AggregatorApp/Articles/ArticleDetailView.swift",
+        "AggregatorApp/Common/APIClient.swift",
+        "AggregatorApp/Common/DateDisplay.swift",
+        "AggregatorApp/Common/SafariView.swift",
+        "AggregatorApp/Models/Article.swift",
+        "AggregatorApp/Models/PaginatedResponse.swift",
+        "AggregatorApp/Models/Thread.swift",
+        "AggregatorApp/Models/ThreadMember.swift",
+        "AggregatorApp/Threads/ThreadCardView.swift",
+        "AggregatorApp/Threads/ThreadDetailView.swift",
+        "AggregatorApp/Threads/ThreadPagerView.swift",
+        "AggregatorApp/Threads/ThreadsView.swift",
+        "AggregatorAppTests/ThreadsModelTests.swift"
+      ],
+      "conflict_risks": "None for the corrective change \u2014 ThreadDetailView.swift is not touched by any other in-flight bead. Adding .glassEffect() to knownFactsSection is additive and does not break any existing logic.",
+      "handoff_summary": {
+        "completed": "Reviewed all 14 changed files against all 8 acceptance criteria. AC1 (no hex colors), AC2 (accessibility labels), AC4 (no credentials), AC5 (cursor verbatim), AC6 (no passive POST calls except auto mark-read), AC7 (optimistic revert logic), AC8 (loading/error/empty states) all pass. AC3 partially fails: ThreadsView and ThreadCardView correctly apply GlassEffectContainer and listRowBackground(Color.clear); ThreadDetailView has zero glass treatment despite being a ScrollView detail view identical in architecture to ArticleDetailView, which applies .glassEffect(.regular, ...) to its summary block in the same PR.",
+        "remaining": "Developer follow-up needed: apply .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 12)) to the knownFactsSection block in ThreadDetailView (and optionally to the headerSection) to match the ArticleDetailView summary block pattern established in this same PR. Optionally: replace .foregroundStyle(.white) in badge components with a semantic or dynamic foreground color.",
+        "risks": "ThreadDetailView Liquid Glass gap is a UI consistency gap against the acceptance criteria. Low risk of functional regression. The .white foreground is cosmetic and low-risk but may look wrong in some accessibility color-invert scenarios.",
+        "verdict": "needs_changes",
+        "findings_count": 2,
+        "requires_followup": true,
+        "changed_files": [
+          "AggregatorApp.xcodeproj/project.pbxproj",
+          "AggregatorApp/Articles/ArticleDetailView.swift",
+          "AggregatorApp/Common/APIClient.swift",
+          "AggregatorApp/Common/DateDisplay.swift",
+          "AggregatorApp/Common/SafariView.swift",
+          "AggregatorApp/Models/Article.swift",
+          "AggregatorApp/Models/PaginatedResponse.swift",
+          "AggregatorApp/Models/Thread.swift",
+          "AggregatorApp/Models/ThreadMember.swift",
+          "AggregatorApp/Threads/ThreadCardView.swift",
+          "AggregatorApp/Threads/ThreadDetailView.swift",
+          "AggregatorApp/Threads/ThreadPagerView.swift",
+          "AggregatorApp/Threads/ThreadsView.swift",
+          "AggregatorAppTests/ThreadsModelTests.swift"
+        ],
+        "updated_docs": [],
+        "next_action": "Return ThreadDetailView to a developer bead to add .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 12)) to the knownFactsSection VStack block, matching the ArticleDetailView summary block pattern. Optionally address .white foreground in badge components.",
+        "next_agent": "developer",
+        "block_reason": "AC3 (Liquid Glass treatment) fails for ThreadDetailView: the view has zero glass treatment. ArticleDetailView establishes the correct pattern for a ScrollView detail view by applying .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 12)) to its summary block (ArticleDetailView.swift:131). ThreadDetailView's knownFactsSection (ThreadDetailView.swift:132-147) is the direct analogue and must receive the same treatment. The acceptance criterion explicitly names ThreadDetailView as a required target for Liquid Glass treatment.",
+        "expected_files": [
+          "AggregatorApp.xcodeproj/project.pbxproj",
+          "AggregatorApp/Articles/ArticleDetailView.swift",
+          "AggregatorApp/Common/APIClient.swift",
+          "AggregatorApp/Common/DateDisplay.swift",
+          "AggregatorApp/Common/SafariView.swift",
+          "AggregatorApp/Models/Article.swift",
+          "AggregatorApp/Models/PaginatedResponse.swift",
+          "AggregatorApp/Models/Thread.swift",
+          "AggregatorApp/Models/ThreadMember.swift",
+          "AggregatorApp/Threads/ThreadCardView.swift",
+          "AggregatorApp/Threads/ThreadDetailView.swift",
+          "AggregatorApp/Threads/ThreadPagerView.swift",
+          "AggregatorApp/Threads/ThreadsView.swift",
+          "AggregatorAppTests/ThreadsModelTests.swift"
+        ],
+        "expected_globs": [
+          "AggregatorApp/Articles/*.swift"
+        ],
+        "touched_files": [
+          "AggregatorApp/Articles/ArticleDetailView.swift",
+          "AggregatorApp/Common/APIClient.swift",
+          "AggregatorApp/Common/DateDisplay.swift",
+          "AggregatorApp/Common/SafariView.swift",
+          "AggregatorApp/Models/Article.swift",
+          "AggregatorApp/Models/PaginatedResponse.swift",
+          "AggregatorApp/Models/Thread.swift",
+          "AggregatorApp/Models/ThreadMember.swift",
+          "AggregatorApp/Threads/ThreadCardView.swift",
+          "AggregatorApp/Threads/ThreadDetailView.swift",
+          "AggregatorApp/Threads/ThreadPagerView.swift",
+          "AggregatorApp/Threads/ThreadsView.swift",
+          "AggregatorAppTests/ThreadsModelTests.swift"
+        ],
+        "conflict_risks": "None for the corrective change \u2014 ThreadDetailView.swift is not touched by any other in-flight bead. Adding .glassEffect() to knownFactsSection is additive and does not break any existing logic.",
+        "design_decisions": "The pattern to follow is ArticleDetailView.swift:125-132: wrap a VStack/Text block in .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 12)) with .frame(maxWidth: .infinity, alignment: .leading). The same shape and effect level should be used in ThreadDetailView.knownFactsSection. No other structural changes are needed.",
+        "test_coverage_notes": "Test suite covers PaginatedResponse, Thread, ThreadMember, Article decoding, APIClient.makeURL, and DateDisplay \u2014 all at appropriate depth. No test gaps for the corrective change (Liquid Glass is a view-layer concern, not testable via XCTest).",
+        "known_limitations": "Review did not run the test suite (tester's responsibility). The .white foreground finding is advisory \u2014 it does not block merge but should be tracked for a future cleanup bead."
+      }
+    },
+    "last_agent_result": {
+      "outcome": "completed",
+      "summary": "Re-review approved: all 8 acceptance criteria pass after corrective fix applied .glassEffect to ThreadDetailView.knownFactsSection",
+      "verdict": "approved",
+      "findings_count": 0,
+      "requires_followup": false,
+      "next_agent": "",
+      "block_reason": ""
+    },
+    "telemetry": {
+      "cost_usd": 0.40344519999999995,
+      "duration_ms": 103587,
+      "duration_api_ms": 110419,
+      "num_turns": 16,
+      "input_tokens": 12,
+      "output_tokens": 5321,
+      "cache_creation_tokens": 36949,
+      "cache_read_tokens": 313034,
+      "stop_reason": "end_turn",
+      "session_id": "625bd995-4a10-42c6-8574-28d5448f3f66",
+      "permission_denials": [],
+      "prompt_chars": 26641,
+      "prompt_lines": 294,
+      "source": "provider",
+      "attempt": 2
+    },
+    "telemetry_history": [
+      {
+        "cost_usd": 0.5846364999999999,
+        "duration_ms": 229552,
+        "duration_api_ms": 226775,
+        "num_turns": 18,
+        "input_tokens": 13,
+        "output_tokens": 12380,
+        "cache_creation_tokens": 46423,
+        "cache_read_tokens": 378595,
+        "stop_reason": "end_turn",
+        "session_id": "38fe6ac6-62ee-492f-806c-15ecef27b8d0",
+        "permission_denials": [],
+        "prompt_chars": 22738,
+        "prompt_lines": 241,
+        "source": "provider",
+        "attempt": 1
+      },
+      {
+        "cost_usd": 0.40344519999999995,
+        "duration_ms": 103587,
+        "duration_api_ms": 110419,
+        "num_turns": 16,
+        "input_tokens": 12,
+        "output_tokens": 5321,
+        "cache_creation_tokens": 36949,
+        "cache_read_tokens": 313034,
+        "stop_reason": "end_turn",
+        "session_id": "625bd995-4a10-42c6-8574-28d5448f3f66",
+        "permission_denials": [],
+        "prompt_chars": 26641,
+        "prompt_lines": 294,
+        "source": "provider",
+        "attempt": 2
+      }
+    ],
+    "auto_corrective_bead_id": "B-6ab7553e-corrective",
+    "last_corrective_retry_source": "B-6ab7553e-corrective",
+    "last_corrective_retry_commit": "a6e6b977e28c3e51120e9476429fb3360f451e88"
+  },
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

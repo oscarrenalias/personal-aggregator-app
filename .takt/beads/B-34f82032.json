@@ -1,0 +1,247 @@
+{
+  "bead_id": "B-34f82032",
+  "title": "Unit tests \u2014 decoding, makeURL, and DateDisplay",
+  "agent_type": "developer",
+  "description": "Create AggregatorAppTests/ThreadsModelTests.swift with XCTest cases (no network calls): (1) PaginatedResponse decoding \u2014 two items with non-null next_cursor; assert items.count == 2 and nextCursor matches. (2) PaginatedResponse with null next_cursor; assert nextCursor == nil. (3) Thread decoding \u2014 real-shape JSON with null score fields and empty known_facts; assert representativeTitle, sourceCount, memberCount, hasUpdates, dismissed, and imageURL decode correctly, and knownFacts == []. (4) ThreadMember decoding \u2014 assert articleId, cleanTitle, sourceName, suppressed decode correctly. (5) Article decoding \u2014 assert isRead, isSaved, topics (array of strings), nil language, and nil imageURL when image_url is absent. (6) APIClient.makeURL \u2014 assert it builds the correct absolute URL for getThreads(sort: .recent, showDismissed: true, cursor: 'ABC==') including percent-encoding of the cursor, and that the cursor param is omitted when nil. (7) DateDisplay.relative \u2014 with a fixed injected now, assert a valid ISO timestamp ~2 hours earlier returns a short relative string, and that nil and garbage input return ''.",
+  "status": "done",
+  "bead_type": "task",
+  "parent_id": "B-82362f7d",
+  "dependencies": [
+    "B-c86d0dfc",
+    "B-8d31394a",
+    "B-57db5496",
+    "B-72b0175a"
+  ],
+  "acceptance_criteria": [
+    "All 7 test cases are present in ThreadsModelTests.swift",
+    "PaginatedResponse tests cover both non-null and null next_cursor",
+    "Thread decode test asserts knownFacts == [] when the field is an empty array",
+    "Article decode test asserts imageURL == nil when image_url is absent from the JSON",
+    "makeURL test asserts percent-encoding of the cursor value and its omission when nil",
+    "DateDisplay test injects a fixed Date() as now and asserts relative string output",
+    "No network calls are made in any test"
+  ],
+  "linked_docs": [],
+  "feature_root_id": "B-82362f7d",
+  "execution_branch_name": "feature/b-82362f7d",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-82362f7d",
+  "expected_files": [
+    "AggregatorAppTests/ThreadsModelTests.swift"
+  ],
+  "expected_globs": [],
+  "touched_files": [
+    "AggregatorApp.xcodeproj/project.pbxproj",
+    "AggregatorAppTests/ThreadsModelTests.swift"
+  ],
+  "changed_files": [
+    "AggregatorApp.xcodeproj/project.pbxproj",
+    "AggregatorAppTests/ThreadsModelTests.swift"
+  ],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "All 7 test scenarios implemented across 9 test functions: PaginatedResponse with non-null cursor (items.count==2, nextCursor matches), PaginatedResponse with null cursor (nextCursor==nil), Thread decoding with null top_grade/rolling_summary/novelty_label and empty known_facts, ThreadMember decoding (articleId/cleanTitle/sourceName/suppressed), Article decoding (isRead/isSaved/topics/nil language/nil imageURL when absent), APIClient.makeURL with percent-encoded cursor and with cursor omitted, DateDisplay.relative with fixed now (~2h ago \u2192 \"2h ago\"), nil \u2192 \"\", garbage \u2192 \"\". xcodegen and build-for-testing both passed.",
+    "remaining": "None \u2014 all acceptance criteria met.",
+    "risks": "None identified. All tests are pure in-memory with no network calls or simulator dependencies beyond XCTest.",
+    "verdict": "approved",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [
+      "AggregatorApp.xcodeproj/project.pbxproj",
+      "AggregatorAppTests/ThreadsModelTests.swift"
+    ],
+    "updated_docs": [],
+    "next_action": "Tester agent should run the full test suite to verify all 9 test functions pass.",
+    "next_agent": "tester",
+    "block_reason": "",
+    "expected_files": [
+      "AggregatorAppTests/ThreadsModelTests.swift"
+    ],
+    "expected_globs": [],
+    "touched_files": [
+      "AggregatorApp.xcodeproj/project.pbxproj",
+      "AggregatorAppTests/ThreadsModelTests.swift"
+    ],
+    "conflict_risks": "xcodegen was re-run inside this worktree; any sibling bead that also ran xcodegen may need a re-run at merge time, per CLAUDE.md operational rules.",
+    "design_decisions": "Used Source as the item type for PaginatedResponse tests \u2014 it is already defined, has a trivial JSON shape, and avoids coupling the pagination tests to Thread/Article specifics. The makeURL test calls the static method directly with hand-constructed URLQueryItems rather than through a higher-level getThreads helper (which does not yet exist) so it exercises the actual public surface and avoids testing a non-existent abstraction. The DateDisplay test pins `now` to `Date(timeIntervalSinceReferenceDate: 0)` (2001-01-01T00:00:00Z) \u2014 a value that is stable across timezones and won't drift \u2014 then derives the ISO string via the same ISO8601DateFormatter the production code uses, ensuring the formatter path is exercised without hard-coded strings. For the percent-encoding assertion, URLComponents is documented to encode '=' in query values as '%3D'; the test asserts both the positive form (cursor=ABC%3D%3D present) and negative form (cursor=ABC== absent) to make the intent explicit.",
+    "test_coverage_notes": "Tester agent should verify: (1) all 9 functions pass on an iOS 26 simulator; (2) the testMakeURLBuildsThreadsURLWithPercentEncodedCursor assertion on percent-encoding actually fires (not a no-op); (3) testArticleDecoding correctly gets nil imageURL when image_url is absent from JSON (exercises the flatMap unwrap in Article.init); (4) testThreadDecoding knownFacts==[] when the field is present as an empty array (not absent \u2014 exercises the decode path, not the fallback); (5) testDateDisplayRelativeTwoHoursAgo produces \"2h ago\" and not a formatted date string (i.e. the 3600-second branch is hit).",
+    "known_limitations": "The makeURL percent-encoding test assumes Apple's URLComponents encodes '=' in query values as '%3D'. This is consistent with RFC 3986 and observed Apple behavior but is technically an implementation detail. If Apple ever changed this, the assertion would fail. No workaround is needed at this time."
+  },
+  "block_reason": "",
+  "conflict_risks": "xcodegen was re-run inside this worktree; any sibling bead that also ran xcodegen may need a re-run at merge time, per CLAUDE.md operational rules.",
+  "branch_name": "feature/b-82362f7d",
+  "worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-82362f7d",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-19T11:47:45.300174+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-19T11:52:34.383502+00:00",
+      "event": "skills_loaded",
+      "agent_type": "developer",
+      "summary": "Loaded 7 skill(s) for isolated execution",
+      "details": {
+        "loaded_skills": [
+          "core/base-orchestrator",
+          "role/developer-implementation",
+          "capability/code-edit",
+          "task/corrective-implementation",
+          "task/refactor-safe",
+          "task/migration",
+          "memory"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-06-19T11:52:34.383525+00:00",
+      "event": "started",
+      "agent_type": "developer",
+      "summary": "Worker started",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-19T11:52:34.386616+00:00",
+      "event": "guardrails_applied",
+      "agent_type": "developer",
+      "summary": "Applied guardrails from .takt/agent-runs/B-34f82032/repo/templates/agents/developer.md",
+      "details": {
+        "template_path": ".takt/agent-runs/B-34f82032/repo/templates/agents/developer.md"
+      }
+    },
+    {
+      "timestamp": "2026-06-19T11:56:07.005793+00:00",
+      "event": "completed",
+      "agent_type": "developer",
+      "summary": "Created AggregatorAppTests/ThreadsModelTests.swift with 9 XCTest functions covering all 7 required scenarios. All tests use no network calls. `xcodegen generate` was run to register the file, and `build-for-testing` confirmed zero compile errors.",
+      "details": {}
+    }
+  ],
+  "metadata": {
+    "execution_root": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-34f82032",
+    "workspace_repo_path": "repo",
+    "loaded_skills": [
+      "core/base-orchestrator",
+      "role/developer-implementation",
+      "capability/code-edit",
+      "task/corrective-implementation",
+      "task/refactor-safe",
+      "task/migration",
+      "memory"
+    ],
+    "skill_bundle_hash": "ecae5633083d1bbec41a6e5ec6ea05bbab117f60499c19b2ed76dbbe3e1aec7c",
+    "isolated_home": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-34f82032/home",
+    "runner_backend": "claude",
+    "guardrails": {
+      "agent_type": "developer",
+      "template_path": ".takt/agent-runs/B-34f82032/repo/templates/agents/developer.md",
+      "template_text": "# Developer Guardrails\n\nPrimary responsibility: Implement only the assigned bead inside the existing architecture and file scope.\n\n## Corrective bead scope\n\nIf your `bead_id` ends in `-corrective` or `-corrective-<N>` (e.g. `B-abc12345-corrective`, `B-abc12345-test-corrective-2`), you are running as a CORRECTIVE bead. Your scope is **strictly limited to fixing the specific failure that blocked the parent bead**. Do not:\n\n- Add unrelated improvements, refactors, or cleanup, even if you notice them\n- Reapply previously-reverted changes (the operator reverted them for a reason)\n- Expand the surface area beyond what is needed to unblock the parent\n- Touch files outside what the parent bead's `expected_files` / `expected_globs` covered, unless the failure is genuinely in another file and there is no smaller fix\n\nIf you notice an unrelated issue while fixing the corrective scope: **file a separate bead** via `takt bead create` describing what you saw, but do not fix it in this corrective. The operator will prioritize and dispatch.\n\nWhen in doubt about scope: prefer the smallest possible fix. The reviewer of this corrective will check that the scope was respected.\n\nAllowed actions:\n- Modify code, configuration, or local docs required to complete the assigned bead.\n- Create sub-beads for discovered follow-up work that should be handled separately.\n- Verify your `Swift` changes compile and import correctly with a quick syntax check: ``.\n\nDisallowed actions:\n- Run any test suite \u2014 not even a targeted `` run or any subset. Test execution is exclusively the tester agent's responsibility. Running tests wastes the agent budget and delays the pipeline.\n- Redesign unrelated architecture or broaden scope beyond the assigned bead.\n- Perform final review signoff in place of a review agent.\n- Silently absorb unrelated test, documentation, or planning work that should be handed off.\n\n## Memory\n\n**Read memory at bead start.** Before touching any code, run three searches using `$TAKT_CMD` (injected by the orchestrator):\n\n```bash\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace global\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace feature:<feature_root_id>\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace specs\n```\n\nTreat results as ambient context \u2014 apply relevant entries; skip entries that don't apply.\n\n**Write to memory when you discover reusable project knowledge** \u2014 something that would have changed your approach if you had known it upfront, and is not already in CLAUDE.md or the guardrails.\n\n```bash\n$TAKT_CMD memory add \"<concise fact>\" --namespace global               # project-wide knowledge\n$TAKT_CMD memory add \"<discovery>\" --namespace feature:<feature_root_id>  # feature-scoped\n```\n\nRequired Handoff Fields:\n\nEvery developer bead **must** populate the following three fields in its output JSON. Reviewers and tester agents rely on these fields to scope their work without additional back-and-forth turns. Use `\"N/A\"` only when a field is genuinely inapplicable (e.g., a trivial rename with no design trade-offs); do not leave fields blank.\n\n- **`design_decisions`** \u2014 Document non-obvious architectural or implementation choices made during this bead. Include alternatives considered and why the chosen approach was preferred. Reviewers use this to evaluate correctness without re-deriving intent. Set to `\"N/A\"` only if the change was purely mechanical with no meaningful trade-offs.\n\n- **`test_coverage_notes`** \u2014 Describe what the tester agent should verify: new code paths, edge cases introduced, regression risks, and any known untested scenarios left to the tester. Set to `\"N/A\"` only if the bead touched no executable code paths (e.g., documentation-only changes).\n\n- **`known_limitations`** \u2014 Call out constraints, deferred work, or known gaps in the implementation. This includes out-of-scope items deliberately left for follow-up beads and any areas where the implementation is intentionally incomplete. Set to `\"N/A\"` if the implementation is complete as specified with no known gaps.\n\nExpected outputs:\n- Completed or blocked JSON with concise implementation summary.\n- Accurate touched files, changed files, risks, and follow-up handoff fields.\n- Populated `design_decisions`, `test_coverage_notes`, and `known_limitations` fields in every response.",
+      "captured_at": "2026-06-19T11:52:34.386608+00:00"
+    },
+    "worker_prompt_context": {
+      "bead_id": "B-34f82032",
+      "feature_root_id": "B-82362f7d",
+      "title": "Unit tests \u2014 decoding, makeURL, and DateDisplay",
+      "agent_type": "developer",
+      "description": "Create AggregatorAppTests/ThreadsModelTests.swift with XCTest cases (no network calls): (1) PaginatedResponse decoding \u2014 two items with non-null next_cursor; assert items.count == 2 and nextCursor matches. (2) PaginatedResponse with null next_cursor; assert nextCursor == nil. (3) Thread decoding \u2014 real-shape JSON with null score fields and empty known_facts; assert representativeTitle, sourceCount, memberCount, hasUpdates, dismissed, and imageURL decode correctly, and knownFacts == []. (4) ThreadMember decoding \u2014 assert articleId, cleanTitle, sourceName, suppressed decode correctly. (5) Article decoding \u2014 assert isRead, isSaved, topics (array of strings), nil language, and nil imageURL when image_url is absent. (6) APIClient.makeURL \u2014 assert it builds the correct absolute URL for getThreads(sort: .recent, showDismissed: true, cursor: 'ABC==') including percent-encoding of the cursor, and that the cursor param is omitted when nil. (7) DateDisplay.relative \u2014 with a fixed injected now, assert a valid ISO timestamp ~2 hours earlier returns a short relative string, and that nil and garbage input return ''.",
+      "status": "in_progress",
+      "acceptance_criteria": [
+        "All 7 test cases are present in ThreadsModelTests.swift",
+        "PaginatedResponse tests cover both non-null and null next_cursor",
+        "Thread decode test asserts knownFacts == [] when the field is an empty array",
+        "Article decode test asserts imageURL == nil when image_url is absent from the JSON",
+        "makeURL test asserts percent-encoding of the cursor value and its omission when nil",
+        "DateDisplay test injects a fixed Date() as now and asserts relative string output",
+        "No network calls are made in any test"
+      ],
+      "dependencies": [
+        "B-c86d0dfc",
+        "B-8d31394a",
+        "B-57db5496",
+        "B-72b0175a"
+      ],
+      "linked_docs": [],
+      "execution_branch_name": "feature/b-82362f7d",
+      "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-82362f7d",
+      "expected_files": [
+        "AggregatorAppTests/ThreadsModelTests.swift"
+      ],
+      "expected_globs": [],
+      "touched_files": [],
+      "conflict_risks": "",
+      "handoff_summary": {
+        "completed": "",
+        "remaining": "",
+        "risks": "",
+        "verdict": "",
+        "findings_count": 0,
+        "requires_followup": false,
+        "changed_files": [],
+        "updated_docs": [],
+        "next_action": "",
+        "next_agent": "",
+        "block_reason": "",
+        "expected_files": [],
+        "expected_globs": [],
+        "touched_files": [],
+        "conflict_risks": "",
+        "design_decisions": "",
+        "test_coverage_notes": "",
+        "known_limitations": ""
+      }
+    },
+    "last_agent_result": {
+      "outcome": "completed",
+      "summary": "Created AggregatorAppTests/ThreadsModelTests.swift with 9 XCTest functions covering all 7 required scenarios. All tests use no network calls. `xcodegen generate` was run to register the file, and `build-for-testing` confirmed zero compile errors.",
+      "verdict": "approved",
+      "findings_count": 0,
+      "requires_followup": false,
+      "next_agent": "tester",
+      "block_reason": ""
+    },
+    "telemetry": {
+      "cost_usd": 0.5127528,
+      "duration_ms": 211909,
+      "duration_api_ms": 190670,
+      "num_turns": 22,
+      "input_tokens": 543,
+      "output_tokens": 12404,
+      "cache_creation_tokens": 30669,
+      "cache_read_tokens": 458936,
+      "stop_reason": "end_turn",
+      "session_id": "53a06a96-c4ac-4d0b-8c61-5b01bb48d8c3",
+      "permission_denials": [],
+      "prompt_chars": 10166,
+      "prompt_lines": 179,
+      "source": "provider",
+      "attempt": 1
+    },
+    "telemetry_history": [
+      {
+        "cost_usd": 0.5127528,
+        "duration_ms": 211909,
+        "duration_api_ms": 190670,
+        "num_turns": 22,
+        "input_tokens": 543,
+        "output_tokens": 12404,
+        "cache_creation_tokens": 30669,
+        "cache_read_tokens": 458936,
+        "stop_reason": "end_turn",
+        "session_id": "53a06a96-c4ac-4d0b-8c61-5b01bb48d8c3",
+        "permission_denials": [],
+        "prompt_chars": 10166,
+        "prompt_lines": 179,
+        "source": "provider",
+        "attempt": 1
+      }
+    ],
+    "last_commit": "c542f34f0749004052b8f9da4221576e4e525e2c"
+  },
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}
