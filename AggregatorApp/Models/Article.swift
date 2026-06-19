@@ -47,13 +47,13 @@ struct Article: Decodable, Identifiable {
         cleanText = try container.decodeIfPresent(String.self, forKey: .cleanText)
         importanceScore = try container.decodeIfPresent(Int.self, forKey: .importanceScore)
         importanceReason = try container.decodeIfPresent(String.self, forKey: .importanceReason)
-        topics = (try? container.decodeIfPresent([String].self, forKey: .topics)) ?? []
-        categories = (try? container.decodeIfPresent([String].self, forKey: .categories)) ?? []
+        topics = (try? container.decodeIfPresent([String].self, forKey: .topics)).flatMap { $0 } ?? []
+        categories = (try? container.decodeIfPresent([String].self, forKey: .categories)).flatMap { $0 } ?? []
         isRead = try container.decode(Bool.self, forKey: .isRead)
         isSaved = try container.decode(Bool.self, forKey: .isSaved)
         author = try container.decodeIfPresent(String.self, forKey: .author)
         wordCount = try container.decodeIfPresent(Int.self, forKey: .wordCount)
         language = try container.decodeIfPresent(String.self, forKey: .language)
-        imageURL = (try? container.decodeIfPresent(String.self, forKey: .imageURL)) ?? nil
+        imageURL = (try? container.decodeIfPresent(String.self, forKey: .imageURL)).flatMap { $0 }
     }
 }
