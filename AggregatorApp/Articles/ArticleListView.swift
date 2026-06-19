@@ -10,11 +10,10 @@ struct ArticleListView: View {
     let feed: ArticleFeed
 
     @Environment(CredentialsStore.self) private var credentialsStore
+    @Environment(ListPreferences.self) private var listPreferences
 
     @State private var articles: [Article] = []
     @State private var nextCursor: String? = nil
-    @State private var sort: ArticleSort = .importance
-    @State private var unreadOnly: Bool = false
     @State private var phase: LoadPhase = .loading
     @State private var isLoadingMore: Bool = false
 
@@ -23,6 +22,7 @@ struct ArticleListView: View {
     }
 
     var body: some View {
+        @Bindable var prefs = listPreferences
         Group {
             switch phase {
             case .loading:
@@ -54,12 +54,12 @@ struct ArticleListView: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Menu {
-                    Picker("Sort", selection: $sort) {
+                    Picker("Sort", selection: $prefs.articlesSort) {
                         Text("By Importance").tag(ArticleSort.importance)
                         Text("Recent").tag(ArticleSort.recent)
                     }
                     if feed.allowsUnreadFilter {
-                        Toggle("Unread Only", isOn: $unreadOnly)
+                        Toggle("Unread Only", isOn: $prefs.articlesUnreadOnly)
                     }
                 } label: {
                     Label("Filter", systemImage: "line.3.horizontal.decrease.circle")
@@ -69,10 +69,10 @@ struct ArticleListView: View {
         .task {
             await loadFirstPage()
         }
-        .onChange(of: sort) {
+        .onChange(of: listPreferences.articlesSort) {
             Task { await loadFirstPage() }
         }
-        .onChange(of: unreadOnly) {
+        .onChange(of: listPreferences.articlesUnreadOnly) {
             Task { await loadFirstPage() }
         }
     }
@@ -110,8 +110,8 @@ struct ArticleListView: View {
         do {
             let response = try await apiClient.getArticles(
                 feed: feed,
-                sort: sort,
-                unreadOnly: unreadOnly,
+                sort: listPreferences.articlesSort,
+                unreadOnly: listPreferences.articlesUnreadOnly,
                 limit: 15,
                 cursor: nil
             )
@@ -131,8 +131,8 @@ struct ArticleListView: View {
         do {
             let response = try await apiClient.getArticles(
                 feed: feed,
-                sort: sort,
-                unreadOnly: unreadOnly,
+                sort: listPreferences.articlesSort,
+                unreadOnly: listPreferences.articlesUnreadOnly,
                 limit: 15,
                 cursor: cursor
             )

@@ -30,24 +30,40 @@ struct SourcesView: View {
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else if let loaded = sources {
-                    if loaded.isEmpty {
-                        ContentUnavailableView(
-                            "No sources",
-                            systemImage: "antenna.radiowaves.left.and.right"
-                        )
-                    } else {
-                        GlassEffectContainer {
-                            List(loaded) { source in
-                                VStack(alignment: .leading, spacing: 4) {
-                                    Text(source.name)
-                                        .font(.body)
-                                    Text(source.feedURL)
-                                        .font(.caption)
-                                        .foregroundStyle(.secondary)
+                    GlassEffectContainer {
+                        List {
+                            Section("Feeds") {
+                                NavigationLink(destination: ArticleListView(feed: .important)) {
+                                    Label("Important", systemImage: "exclamationmark.circle")
                                 }
-                                .accessibilityLabel("\(source.name), \(source.feedURL)")
+                                .accessibilityLabel("Important articles")
+                                .listRowBackground(Color.clear)
+                                NavigationLink(destination: ArticleListView(feed: .unread)) {
+                                    Label("Unread", systemImage: "envelope.badge")
+                                }
+                                .accessibilityLabel("Unread articles")
                                 .listRowBackground(Color.clear)
                             }
+                            if !loaded.isEmpty {
+                                Section("Sources") {
+                                    ForEach(loaded) { source in
+                                        NavigationLink(destination: ArticleListView(feed: .source(id: source.id, name: source.name))) {
+                                            VStack(alignment: .leading, spacing: 4) {
+                                                Text(source.name)
+                                                    .font(.body)
+                                                Text(source.feedURL)
+                                                    .font(.caption)
+                                                    .foregroundStyle(.secondary)
+                                            }
+                                        }
+                                        .accessibilityLabel("\(source.name), \(source.feedURL)")
+                                        .listRowBackground(Color.clear)
+                                    }
+                                }
+                            }
+                        }
+                        .refreshable {
+                            await loadSources()
                         }
                     }
                 } else {

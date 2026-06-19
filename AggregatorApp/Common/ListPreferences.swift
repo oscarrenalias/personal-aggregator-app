@@ -21,9 +21,19 @@ final class ListPreferences {
         didSet { defaults.set(threadsShowDismissed, forKey: "aggregator.threadsShowDismissed") }
     }
 
+    var articlesSort: ArticleSort {
+        didSet { defaults.set(articlesSort.rawValue, forKey: "aggregator.articlesSort") }
+    }
+
+    var articlesUnreadOnly: Bool {
+        didSet { defaults.set(articlesUnreadOnly, forKey: "aggregator.articlesUnreadOnly") }
+    }
+
     init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
         self.threadsSort = ThreadSort(rawValue: defaults.string(forKey: "aggregator.threadsSort") ?? "") ?? .importance
         self.threadsShowDismissed = defaults.bool(forKey: "aggregator.threadsShowDismissed")
+        self.articlesSort = ArticleSort(rawValue: defaults.string(forKey: "aggregator.articlesSort") ?? "") ?? .importance
+        self.articlesUnreadOnly = defaults.bool(forKey: "aggregator.articlesUnreadOnly")
     }
 }
