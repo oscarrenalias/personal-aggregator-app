@@ -8,11 +8,10 @@ private enum LoadPhase {
 
 struct ThreadsView: View {
     @Environment(CredentialsStore.self) private var credentialsStore
+    @Environment(ListPreferences.self) private var listPreferences
 
     @State private var threads: [Thread] = []
     @State private var nextCursor: String? = nil
-    @State private var sort: ThreadSort = .importance
-    @State private var showDismissed: Bool = false
     @State private var phase: LoadPhase = .loading
     @State private var isFetchingNextPage: Bool = false
 
@@ -21,6 +20,7 @@ struct ThreadsView: View {
     }
 
     var body: some View {
+        @Bindable var prefs = listPreferences
         NavigationStack {
             Group {
                 if !credentialsStore.isConfigured {
@@ -60,11 +60,11 @@ struct ThreadsView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Menu {
-                        Picker("Sort", selection: $sort) {
+                        Picker("Sort", selection: $prefs.threadsSort) {
                             Text("By Importance").tag(ThreadSort.importance)
                             Text("Recent").tag(ThreadSort.recent)
                         }
-                        Toggle("Show Dismissed", isOn: $showDismissed)
+                        Toggle("Show Dismissed", isOn: $prefs.threadsShowDismissed)
                     } label: {
                         Label("Filter", systemImage: "line.3.horizontal.decrease.circle")
                     }
@@ -79,10 +79,10 @@ struct ThreadsView: View {
                 await loadFirstPage()
             }
         }
-        .onChange(of: sort) {
+        .onChange(of: listPreferences.threadsSort) {
             Task { await loadFirstPage() }
         }
-        .onChange(of: showDismissed) {
+        .onChange(of: listPreferences.threadsShowDismissed) {
             Task { await loadFirstPage() }
         }
     }
@@ -96,7 +96,7 @@ struct ThreadsView: View {
                     }
                     .listRowBackground(Color.clear)
                     .swipeActions(edge: .trailing) {
-                        if showDismissed {
+                        if listPreferences.threadsShowDismissed {
                             Button("Restore") {
                                 Task { await restoreThread(at: index) }
                             }
@@ -127,7 +127,7 @@ struct ThreadsView: View {
         }
         nextCursor = nil
         do {
-            let response = try await apiClient.getThreads(sort: sort, showDismissed: showDismissed, cursor: nil)
+            let response = try await apiClient.getThreads(sort: listPreferences.threadsSort, showDismissed: listPreferences.threadsShowDismissed, cursor: nil)
             threads = response.items
             nextCursor = response.nextCursor
             phase = .loaded
@@ -142,7 +142,7 @@ struct ThreadsView: View {
         isFetchingNextPage = true
         defer { isFetchingNextPage = false }
         do {
-            let response = try await apiClient.getThreads(sort: sort, showDismissed: showDismissed, cursor: cursor)
+            let response = try await apiClient.getThreads(sort: listPreferences.threadsSort, showDismissed: listPreferences.threadsShowDismissed, cursor: cursor)
             threads.append(contentsOf: response.items)
             nextCursor = response.nextCursor
         } catch {
