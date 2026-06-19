@@ -91,6 +91,14 @@ struct ArticleListView: View {
                         }
                     }
                 }
+                if isLoadingMore {
+                    HStack {
+                        Spacer()
+                        ProgressView()
+                        Spacer()
+                    }
+                    .listRowBackground(Color.clear)
+                }
             }
         }
         .navigationDestination(for: Int.self) { index in
@@ -107,6 +115,7 @@ struct ArticleListView: View {
             articles = []
         }
         nextCursor = nil
+        isLoadingMore = false
         do {
             let response = try await apiClient.getArticles(
                 feed: feed,
@@ -133,7 +142,7 @@ struct ArticleListView: View {
                 feed: feed,
                 sort: listPreferences.articlesSort,
                 unreadOnly: listPreferences.articlesUnreadOnly,
-                limit: 15,
+                limit: 25,
                 cursor: cursor
             )
             articles.append(contentsOf: response.items)
