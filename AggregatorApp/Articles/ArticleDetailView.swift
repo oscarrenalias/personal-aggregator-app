@@ -192,6 +192,7 @@ struct ArticleDetailView: View {
                 isRead = true
             }
         } catch {
+            if isCancellation(error) { return }
             loadError = error
         }
     }

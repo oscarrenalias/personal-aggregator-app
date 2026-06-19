@@ -307,6 +307,7 @@ struct ThreadDetailView: View {
             members = m.items
             nextCursor = m.nextCursor
         } catch {
+            if isCancellation(error) { return }
             loadError = error
         }
         isInitialLoad = false
