@@ -81,7 +81,8 @@ struct ThreadDetailView: View {
 
                     membersSection()
                 }
-                .padding()
+                .padding(.horizontal, ReaderLayout.hPadding)
+                .padding(.vertical)
             }
         }
     }

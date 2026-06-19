@@ -70,6 +70,7 @@ struct SourcesView: View {
         do {
             sources = try await apiClient.getSources()
         } catch {
+            if isCancellation(error) { return }
             loadError = error
         }
     }

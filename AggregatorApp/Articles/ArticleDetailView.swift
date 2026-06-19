@@ -151,7 +151,8 @@ struct ArticleDetailView: View {
                         }
                     }
                 }
-                .padding()
+                .padding(.horizontal, ReaderLayout.hPadding)
+                .padding(.vertical)
             }
         }
     }

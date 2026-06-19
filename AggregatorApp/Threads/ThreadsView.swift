@@ -132,6 +132,7 @@ struct ThreadsView: View {
             nextCursor = response.nextCursor
             phase = .loaded
         } catch {
+            if isCancellation(error) { return }
             phase = .error(error)
         }
     }
