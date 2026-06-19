@@ -9,7 +9,8 @@
       "Bash(awk 'NR>1{print $2}')",
       "Bash(git check-ignore *)",
       "Bash(xcodegen generate *)",
-      "Bash(xcodebuild test *)"
+      "Bash(xcodebuild test *)",
+      "Bash(open AggregatorApp.xcodeproj)"
     ]
   }
 }
