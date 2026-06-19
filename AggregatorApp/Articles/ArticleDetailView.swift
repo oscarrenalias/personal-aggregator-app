@@ -123,7 +123,7 @@ struct ArticleDetailView: View {
 
                     // (6) Summary as glass callout block
                     if let summary = article.summary, !summary.isEmpty {
-                        Text(summary)
+                        ParagraphText(summary)
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
                             .padding()
@@ -133,7 +133,7 @@ struct ArticleDetailView: View {
 
                     // (7) Full article text or unavailable fallback with Open original
                     if let cleanText = article.cleanText, !cleanText.isEmpty {
-                        Text(cleanText)
+                        ParagraphText(cleanText)
                             .font(.body)
                     } else {
                         VStack(spacing: 12) {
@@ -151,7 +151,8 @@ struct ArticleDetailView: View {
                         }
                     }
                 }
-                .padding()
+                .padding(.horizontal, ReaderLayout.hPadding)
+                .padding(.vertical)
             }
         }
     }
@@ -191,6 +192,7 @@ struct ArticleDetailView: View {
                 isRead = true
             }
         } catch {
+            if isCancellation(error) { return }
             loadError = error
         }
     }

@@ -4,6 +4,7 @@ struct ThreadDetailView: View {
     let threadId: Int
 
     @Environment(CredentialsStore.self) private var credentialsStore
+    @Environment(ThreadSeenStore.self) private var seenStore
     @State private var thread: Thread? = nil
     @State private var members: [ThreadMember] = []
     @State private var nextCursor: String? = nil
@@ -81,7 +82,8 @@ struct ThreadDetailView: View {
 
                     membersSection()
                 }
-                .padding()
+                .padding(.horizontal, ReaderLayout.hPadding)
+                .padding(.vertical)
             }
         }
     }
@@ -247,12 +249,14 @@ struct ThreadDetailView: View {
 
     @ViewBuilder
     private func classificationBadge(for raw: String) -> some View {
+        let color = classificationBadgeColor(raw)
         Text(classificationDisplayLabel(raw))
             .font(.caption.bold())
-            .foregroundStyle(.white)
+            .foregroundStyle(color)
             .padding(.horizontal, 6)
             .padding(.vertical, 2)
-            .background(classificationBadgeColor(raw), in: Capsule())
+            .background(color.opacity(0.15), in: Capsule())
+            .overlay(Capsule().strokeBorder(color.opacity(0.25)))
             .accessibilityLabel("Classification: \(classificationDisplayLabel(raw))")
     }
 
@@ -275,9 +279,11 @@ struct ThreadDetailView: View {
     private func classificationBadgeColor(_ raw: String) -> Color {
         switch raw {
         case "new_thread", "related_new_thread":
-            return .blue
-        case "same_thread_new_fact", "same_thread_new_angle":
-            return .green
+            return .indigo
+        case "same_thread_new_fact":
+            return .teal
+        case "same_thread_new_angle":
+            return .purple
         case "correction_or_clarification":
             return .orange
         default:
@@ -305,7 +311,9 @@ struct ThreadDetailView: View {
             thread = t
             members = m.items
             nextCursor = m.nextCursor
+            seenStore.markSeen(id: t.id, lastUpdated: t.lastUpdated)
         } catch {
+            if isCancellation(error) { return }
             loadError = error
         }
         isInitialLoad = false
