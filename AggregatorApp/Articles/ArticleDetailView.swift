@@ -58,6 +58,15 @@ struct ArticleDetailView: View {
                 }
                 .accessibilityLabel("Open original in browser")
                 .disabled(article?.url == nil)
+
+                ShareLink(
+                    item: shareURL,
+                    subject: Text(article?.title ?? "")
+                ) {
+                    Image(systemName: "square.and.arrow.up")
+                }
+                .accessibilityLabel("Share article")
+                .disabled(article?.url == nil)
             }
         }
         .sheet(isPresented: $showSafari) {

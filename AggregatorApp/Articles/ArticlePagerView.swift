@@ -35,6 +35,12 @@ struct ArticlePagerView: View {
         return articles[i]
     }
 
+    // ShareLink requires a non-optional URL; this placeholder is only used when the button is disabled.
+    private var currentShareURL: URL {
+        guard let s = current.url, let url = URL(string: s) else { return URL(string: "https://example.com")! }
+        return url
+    }
+
     private func isRead(_ a: Article) -> Bool { readStore.isRead(id: a.id, fetched: a.isRead) }
     private func isSaved(_ a: Article) -> Bool { savedOverrides[a.id] ?? a.isSaved }
 
@@ -63,6 +69,9 @@ struct ArticlePagerView: View {
                     Image(systemName: isRead(current) ? "checkmark.circle.fill" : "circle")
                 }
                 .accessibilityLabel(isRead(current) ? "Mark as unread" : "Mark as read")
+
+                ShareLink(item: currentShareURL, subject: Text(current.title ?? ""))
+                    .disabled(current.url == nil)
 
                 Button {
                     openOriginal(current)
