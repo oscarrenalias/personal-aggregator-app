@@ -69,10 +69,19 @@ struct SourcesView: View {
                                 Section("Sources") {
                                     ForEach(loaded) { source in
                                         NavigationLink(destination: ArticleListView(feed: .source(id: source.id, name: source.name))) {
-                                            Text(source.name)
-                                                .font(.body)
+                                            HStack {
+                                                SourceFaviconView(feedURL: source.feedURL)
+                                                Text(source.name)
+                                                    .font(.body)
+                                                Spacer()
+                                                SourceActivityDot(source: source)
+                                            }
                                         }
-                                        .accessibilityLabel(source.name)
+                                        .accessibilityLabel(
+                                            source.hasPriority ? "\(source.name), important updates" :
+                                            source.hasNew ? "\(source.name), new updates" :
+                                            source.name
+                                        )
                                         .listRowBackground(Color.clear)
                                     }
                                 }
