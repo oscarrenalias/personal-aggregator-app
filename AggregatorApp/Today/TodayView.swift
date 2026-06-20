@@ -6,6 +6,7 @@ struct TodayView: View {
     @State private var nextCursor: String? = nil
     @State private var phase: Phase = .loading
     @State private var isLoadingMore: Bool = false
+    @State private var isFallback: Bool = false
 
     private enum Phase {
         case loading
@@ -54,7 +55,15 @@ struct TodayView: View {
                                 NavigationLink(destination: BriefDetailView(brief: brief)) {
                                     BriefCardView(brief: brief, isLatest: brief.id == briefs.first?.id)
                                 }
+                                .onAppear {
+                                    if !isFallback && brief.id == briefs.last?.id {
+                                        Task { await loadMoreBriefs() }
+                                    }
+                                }
                             }
+                        }
+                        .refreshable {
+                            await refreshBriefs()
                         }
                     }
                 }
@@ -70,6 +79,7 @@ struct TodayView: View {
 
     private func loadBriefs() async {
         phase = .loading
+        isFallback = false
         do {
             let response = try await apiClient.getBriefs(limit: 20)
             briefs = response.items
@@ -83,11 +93,41 @@ struct TodayView: View {
         }
     }
 
+    private func refreshBriefs() async {
+        isFallback = false
+        nextCursor = nil
+        do {
+            let response = try await apiClient.getBriefs(limit: 20)
+            briefs = response.items
+            nextCursor = response.nextCursor
+            phase = briefs.isEmpty ? .empty : .loaded
+        } catch APIError.http(status: 404) {
+            await loadTodayBriefFallback()
+        } catch {
+            if isCancellation(error) { return }
+            phase = .error(error)
+        }
+    }
+
+    private func loadMoreBriefs() async {
+        guard let cursor = nextCursor, !isLoadingMore else { return }
+        isLoadingMore = true
+        defer { isLoadingMore = false }
+        do {
+            let response = try await apiClient.getBriefs(cursor: cursor, limit: 20)
+            briefs.append(contentsOf: response.items)
+            nextCursor = response.nextCursor
+        } catch {
+            if isCancellation(error) { return }
+        }
+    }
+
     private func loadTodayBriefFallback() async {
         do {
             let brief = try await apiClient.getTodayBrief()
             briefs = [brief]
             nextCursor = nil
+            isFallback = true
             phase = .loaded
         } catch APIError.http(status: 404) {
             phase = .empty
