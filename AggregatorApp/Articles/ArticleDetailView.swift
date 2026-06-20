@@ -15,6 +15,13 @@ struct ArticleDetailView: View {
         APIClient(store: credentialsStore)
     }
 
+    private var shareURL: URL {
+        guard let a = article, let urlString = a.url, let url = URL(string: urlString) else {
+            return URL(string: "about:blank")!
+        }
+        return url
+    }
+
     var body: some View {
         Group {
             if let error = loadError {
