@@ -4,7 +4,7 @@
 common:
   default_runner: claude
   templates_dir: templates/agents
-  test_command: xcodebuild test -project AggregatorApp.xcodeproj -scheme AggregatorApp -destination 'platform=iOS Simulator,name=iPhone 17,OS=latest' -quiet
+  test_command: bash scripts/run-tests.sh
   test_timeout_seconds: 1800
   commit_bead_state: false
   agent_types:
