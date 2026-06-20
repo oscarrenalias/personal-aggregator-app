@@ -5,7 +5,7 @@ description: "Add a Categories section to the Sources tab (GET /categories, orde
 dependencies: null
 priority: medium
 complexity: null
-status: planned
+status: done
 tags:
 - categories
 - sources

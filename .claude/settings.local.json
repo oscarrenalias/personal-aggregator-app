@@ -15,7 +15,8 @@
       "Bash(open /tmp/threads-icons.png)",
       "Bash(xcodebuild -project AggregatorApp.xcodeproj -scheme AggregatorApp -destination 'platform=iOS Simulator,name=iPhone 17 \\(fresh\\),OS=latest' -derivedDataPath /tmp/aggr-dd clean build)",
       "Bash(python3 .claude/skills/skill-spec-management/spec.py set status done spec-f03dbf5c)",
-      "Bash(python3 .claude/skills/skill-spec-management/spec.py set status done spec-9f85467c)"
+      "Bash(python3 .claude/skills/skill-spec-management/spec.py set status done spec-9f85467c)",
+      "Bash(python3 .claude/skills/skill-spec-management/spec.py set status done spec-ac336102)"
     ]
   }
 }
