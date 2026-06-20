@@ -10,6 +10,7 @@ struct ArticleDetailView: View {
     @State private var isRead = false
     @State private var isSaved = false
     @State private var showSafari = false
+    @State private var showCommentsSafari = false
 
     private var apiClient: APIClient {
         APIClient(store: credentialsStore)
@@ -67,10 +68,23 @@ struct ArticleDetailView: View {
                 }
                 .accessibilityLabel("Share article")
                 .disabled(article?.url == nil)
+
+                Button {
+                    showCommentsSafari = true
+                } label: {
+                    Image(systemName: "bubble.left.and.bubble.right")
+                }
+                .accessibilityLabel("Open comments")
+                .disabled(article?.commentsURL == nil)
             }
         }
         .sheet(isPresented: $showSafari) {
             if let urlString = article?.url, let url = URL(string: urlString) {
+                SafariView(url: url)
+            }
+        }
+        .sheet(isPresented: $showCommentsSafari) {
+            if let urlString = article?.commentsURL, let url = URL(string: urlString) {
                 SafariView(url: url)
             }
         }

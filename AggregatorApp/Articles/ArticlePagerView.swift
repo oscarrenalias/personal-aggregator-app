@@ -80,6 +80,14 @@ struct ArticlePagerView: View {
                 }
                 .accessibilityLabel("Open original in browser")
                 .disabled(current.url == nil)
+
+                Button {
+                    openComments(current)
+                } label: {
+                    Image(systemName: "bubble.left.and.bubble.right")
+                }
+                .accessibilityLabel("Open comments")
+                .disabled(current.commentsURL == nil)
             }
         }
         .sheet(isPresented: $showSafari) {
@@ -95,6 +103,12 @@ struct ArticlePagerView: View {
 
     private func openOriginal(_ a: Article) {
         guard let urlString = a.url, let url = URL(string: urlString) else { return }
+        safariURL = url
+        showSafari = true
+    }
+
+    private func openComments(_ a: Article) {
+        guard let urlString = a.commentsURL, let url = URL(string: urlString) else { return }
         safariURL = url
         showSafari = true
     }
