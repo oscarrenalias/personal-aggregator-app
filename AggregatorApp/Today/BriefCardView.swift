@@ -30,5 +30,6 @@ struct BriefCardView: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .listRowBackground(Color.clear)
+        .accessibilityLabel("\(brief.headline ?? "Daily Brief"), \(dateLine), \(topicCountLine)")
     }
 }

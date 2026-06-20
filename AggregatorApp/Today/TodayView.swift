@@ -35,7 +35,7 @@ struct TodayView: View {
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
                     case .empty:
                         ContentUnavailableView(
-                            "No Brief Today",
+                            "No briefs yet",
                             systemImage: "sparkles",
                             description: Text("Today's brief hasn't been generated yet.")
                         )
