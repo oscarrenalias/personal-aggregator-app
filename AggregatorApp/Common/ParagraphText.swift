@@ -19,6 +19,7 @@ struct ParagraphText: View {
     var body: some View {
         Text(paragraphs.joined(separator: "\n\n"))
             .lineSpacing(5)
+            .textSelection(.enabled)
     }
 
     private var paragraphs: [String] {

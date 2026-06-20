@@ -19,6 +19,7 @@ struct Article: Decodable, Identifiable {
     let wordCount: Int?
     let language: String?
     let imageURL: String?
+    let commentsURL: String?
 
     enum CodingKeys: String, CodingKey {
         case id, title, url, summary, author, language
@@ -33,6 +34,7 @@ struct Article: Decodable, Identifiable {
         case isSaved = "is_saved"
         case wordCount = "word_count"
         case imageURL = "image_url"
+        case commentsURL = "comments_url"
     }
 
     init(from decoder: Decoder) throws {
@@ -57,5 +59,6 @@ struct Article: Decodable, Identifiable {
         language = try container.decodeIfPresent(String.self, forKey: .language)
         // imageURL: backend field is absent today; try? future-proofs against type changes without breaking decode.
         imageURL = (try? container.decodeIfPresent(String.self, forKey: .imageURL)).flatMap { $0 }
+        commentsURL = try container.decodeIfPresent(String.self, forKey: .commentsURL)
     }
 }
