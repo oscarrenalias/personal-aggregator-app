@@ -14,6 +14,7 @@ struct ThreadsView: View {
     @State private var nextCursor: String? = nil
     @State private var phase: LoadPhase = .loading
     @State private var isFetchingNextPage: Bool = false
+    @State private var loadGate = LoadOnceGate()
 
     private var apiClient: APIClient {
         APIClient(store: credentialsStore)
@@ -75,9 +76,8 @@ struct ThreadsView: View {
             }
         }
         .task {
-            if credentialsStore.isConfigured {
-                await loadFirstPage()
-            }
+            guard credentialsStore.isConfigured, loadGate.shouldLoad() else { return }
+            await loadFirstPage()
         }
         .onChange(of: listPreferences.threadsSort) {
             Task { await loadFirstPage() }
