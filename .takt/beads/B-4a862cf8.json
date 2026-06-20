@@ -1,0 +1,402 @@
+{
+  "bead_id": "B-4a862cf8",
+  "title": "Review: Today Brief History",
+  "agent_type": "review",
+  "description": "Review the complete implementation: APIClient getBriefs(), BriefDetailView, BriefCardView, TodayView refactor, pagination, fallback logic, unit tests, and documentation. Verify spec compliance, Liquid Glass conventions, accessibility labels on interactive elements (\u226544\u00d744 pt tap targets), no hardcoded hex, correct Task cancellation handling, and absence of memory leaks or race conditions in the pagination guard.",
+  "status": "done",
+  "bead_type": "task",
+  "parent_id": "B-b8659d27",
+  "dependencies": [
+    "B-01dcc3df",
+    "B-18a20071",
+    "B-3bd053a2",
+    "B-558540ae",
+    "B-7ff34ecd",
+    "B-b38235ca",
+    "B-c33d46f1",
+    "B-e84f4129"
+  ],
+  "acceptance_criteria": [
+    "All spec-9f85467c acceptance criteria are demonstrably met",
+    "No hardcoded hex colors or non-semantic font styles anywhere in the feature",
+    "Accessibility labels present on BriefCardView NavigationLinks",
+    "Fallback logic is correct and handles 404 without surfacing an error to the user",
+    "isLoadingMore guard prevents race conditions on rapid scroll",
+    "Code review approved with no blocking findings"
+  ],
+  "linked_docs": [
+    "docs/API.md",
+    "docs/openapi.json"
+  ],
+  "feature_root_id": "B-b8659d27",
+  "execution_branch_name": "feature/b-b8659d27",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-b8659d27",
+  "expected_files": [
+    "AggregatorApp/Common/APIClient.swift",
+    "AggregatorApp/Today/BriefCardView.swift",
+    "AggregatorApp/Today/BriefDetailView.swift",
+    "AggregatorApp/Today/TodayView.swift",
+    "AggregatorAppTests/BriefModelTests.swift"
+  ],
+  "expected_globs": [
+    "AggregatorApp/Common/APIClient.swift",
+    "AggregatorApp/Today/**/*.swift",
+    "AggregatorAppTests/**/*.swift",
+    "AggregatorAppTests/*Brief*.swift"
+  ],
+  "touched_files": [
+    "AggregatorApp/Common/APIClient.swift",
+    "AggregatorApp/Today/BriefCardView.swift",
+    "AggregatorApp/Today/BriefDetailView.swift",
+    "AggregatorApp/Today/TodayView.swift",
+    "AggregatorAppTests/BriefModelTests.swift",
+    "docs/API.md"
+  ],
+  "changed_files": [
+    "AggregatorApp/Today/BriefCardView.swift",
+    "AggregatorApp/Today/TodayView.swift"
+  ],
+  "updated_docs": [
+    "docs/API.md"
+  ],
+  "handoff_summary": {
+    "completed": "Reviewed all 6 changed files. Corrective bead fixed the two blocking/minor findings: (1) BriefCardView.swift:33 now has .accessibilityLabel combining headline, dateLine, and topicCountLine \u2014 VoiceOver picks this up through the NavigationLink wrapper; (2) TodayView.swift:38 empty state now reads \"No briefs yet\". All other implementation details from the prior review pass remain correct and unchanged.",
+    "remaining": "Nothing. All acceptance criteria are met.",
+    "risks": "None identified.",
+    "verdict": "approved",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [
+      "AggregatorApp/Today/BriefCardView.swift",
+      "AggregatorApp/Today/TodayView.swift"
+    ],
+    "updated_docs": [
+      "docs/API.md"
+    ],
+    "next_action": "Bead can be marked complete. No further review or corrective work required.",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [
+      "AggregatorApp/Common/APIClient.swift",
+      "AggregatorApp/Today/BriefCardView.swift",
+      "AggregatorApp/Today/BriefDetailView.swift",
+      "AggregatorApp/Today/TodayView.swift",
+      "AggregatorAppTests/BriefModelTests.swift"
+    ],
+    "expected_globs": [
+      "AggregatorApp/Common/APIClient.swift",
+      "AggregatorApp/Today/**/*.swift",
+      "AggregatorAppTests/**/*.swift",
+      "AggregatorAppTests/*Brief*.swift"
+    ],
+    "touched_files": [
+      "AggregatorApp/Common/APIClient.swift",
+      "AggregatorApp/Today/BriefCardView.swift",
+      "AggregatorApp/Today/BriefDetailView.swift",
+      "AggregatorApp/Today/TodayView.swift",
+      "AggregatorAppTests/BriefModelTests.swift",
+      "docs/API.md"
+    ],
+    "conflict_risks": "None. Corrective changes are contained to BriefCardView.swift (.accessibilityLabel modifier) and TodayView.swift (empty state string) with no shared state or type changes.",
+    "design_decisions": "Placing .accessibilityLabel on BriefCardView's root VStack (rather than on the NavigationLink in TodayView) is the correct SwiftUI pattern \u2014 the link inherits the label from its content view, giving VoiceOver a single coherent description of the interactive row without duplicating state into TodayView.",
+    "test_coverage_notes": "No test changes were required for the corrective fixes (accessibility labels are not unit-testable via XCTest; empty state copy is UI-only). Existing BriefModelTests.swift coverage remains sufficient for the changed surface area.",
+    "known_limitations": "BriefDetailView accepts onRefresh but TodayView passes nil \u2014 pull-to-refresh in the detail view is a no-op. Intentional per spec; parameter reserved for future use."
+  },
+  "block_reason": "",
+  "conflict_risks": "None. Corrective changes are contained to BriefCardView.swift (.accessibilityLabel modifier) and TodayView.swift (empty state string) with no shared state or type changes.",
+  "branch_name": "feature/b-b8659d27",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-20T12:30:06.979286+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-20T12:45:05.295872+00:00",
+      "event": "skills_loaded",
+      "agent_type": "review",
+      "summary": "Loaded 6 skill(s) for isolated execution",
+      "details": {
+        "loaded_skills": [
+          "core/base-orchestrator",
+          "role/reviewer-signoff",
+          "capability/code-review",
+          "task/corrective-bead-creation",
+          "task/risk-assessment",
+          "memory"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-06-20T12:45:05.295890+00:00",
+      "event": "started",
+      "agent_type": "review",
+      "summary": "Worker started",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-20T12:45:05.304051+00:00",
+      "event": "guardrails_applied",
+      "agent_type": "review",
+      "summary": "Applied guardrails from .takt/agent-runs/B-4a862cf8/repo/templates/agents/review.md",
+      "details": {
+        "template_path": ".takt/agent-runs/B-4a862cf8/repo/templates/agents/review.md"
+      }
+    },
+    {
+      "timestamp": "2026-06-20T12:48:24.497045+00:00",
+      "event": "blocked",
+      "agent_type": "review",
+      "summary": "Review found 2 findings: 1 blocking (no explicit accessibility labels on NavigationLinks in TodayView, required by acceptance criteria) and 1 minor (empty state copy \"No Brief Today\" should be \"No briefs yet\" per spec). All other criteria \u2014 fallback logic, isLoadingMore race guard, no hex colors, semantic fonts, pagination, tests \u2014 pass.",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-20T12:48:24.554704+00:00",
+      "event": "corrective_planned",
+      "agent_type": "review",
+      "summary": "Created corrective bead B-4a862cf8-corrective for blocked issue",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-20T12:49:42.790099+00:00",
+      "event": "retried",
+      "agent_type": "review",
+      "summary": "Requeued blocked bead after corrective bead B-4a862cf8-corrective completed",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-20T12:49:43.366338+00:00",
+      "event": "skills_loaded",
+      "agent_type": "review",
+      "summary": "Loaded 6 skill(s) for isolated execution",
+      "details": {
+        "loaded_skills": [
+          "core/base-orchestrator",
+          "role/reviewer-signoff",
+          "capability/code-review",
+          "task/corrective-bead-creation",
+          "task/risk-assessment",
+          "memory"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-06-20T12:49:43.366364+00:00",
+      "event": "started",
+      "agent_type": "review",
+      "summary": "Worker started",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-20T12:49:43.372758+00:00",
+      "event": "guardrails_applied",
+      "agent_type": "review",
+      "summary": "Applied guardrails from .takt/agent-runs/B-4a862cf8/repo/templates/agents/review.md",
+      "details": {
+        "template_path": ".takt/agent-runs/B-4a862cf8/repo/templates/agents/review.md"
+      }
+    },
+    {
+      "timestamp": "2026-06-20T12:50:44.607004+00:00",
+      "event": "completed",
+      "agent_type": "review",
+      "summary": "Re-review pass: both prior findings resolved \u2014 accessibility label added to BriefCardView root view (propagates to NavigationLink), empty state copy corrected to \"No briefs yet\". No new findings.",
+      "details": {}
+    }
+  ],
+  "metadata": {
+    "execution_root": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-4a862cf8",
+    "workspace_repo_path": "repo",
+    "loaded_skills": [
+      "core/base-orchestrator",
+      "role/reviewer-signoff",
+      "capability/code-review",
+      "task/corrective-bead-creation",
+      "task/risk-assessment",
+      "memory"
+    ],
+    "skill_bundle_hash": "68ad0ecb7bfe263ceb1ada56efead5a81dac8f9f2173181d0bf030dc0a3f880d",
+    "isolated_home": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-4a862cf8/home",
+    "runner_backend": "claude",
+    "guardrails": {
+      "agent_type": "review",
+      "template_path": ".takt/agent-runs/B-4a862cf8/repo/templates/agents/review.md",
+      "template_text": "# Review Guardrails\n\nPrimary responsibility: Inspect code, tests, docs, and acceptance criteria for correctness, completeness, and risk.\n\nAllowed actions:\n- Review only the changed files listed in the bead's touched_files and changed_files fields. Do not read unrelated files.\n- Validate acceptance criteria against the implementation and handoff state.\n- Block with a clear recommendation when the bead actually requires implementation work.\n\n## Memory\n\n**Read memory at bead start.** Before reviewing any files, run three searches using `$TAKT_CMD` (injected by the orchestrator):\n\n```bash\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace global\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace feature:<feature_root_id>\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace specs\n```\n\nTreat results as ambient context \u2014 apply relevant entries to inform the review; skip entries that don't apply.\n\nDo **not** write to memory \u2014 review agents are read-only.\n\nEfficiency constraints:\n- Do not run the test suite. Testing is the tester agent's responsibility.\n- Focus on correctness, completeness, and risk \u2014 not style or formatting.\n- Keep the review concise. If there are no findings, say so and approve promptly.\n\nDisallowed actions:\n- Implement feature work, tests, or docs instead of reporting findings.\n- Rewrite architecture or silently fix issues discovered during review.\n- Mark incomplete work as accepted without evidence.\n\nExpected outputs:\n- Return JSON with `outcome` set to `completed` (reviews always complete; use `verdict` for pass/fail) and `summary` as a one-line description of the review result.\n- Return JSON with structured verdict fields for every run: `verdict`, `findings_count`, and `requires_followup`.\n- Treat `verdict` as the review signoff decision: `approved` means the bead can complete, while `needs_changes` means the bead must block for follow-up work.\n- Use `verdict=approved`, `findings_count=0`, and `requires_followup=false` when no unresolved findings remain.\n- Use `verdict=needs_changes`, set `findings_count` to the unresolved finding count, set `requires_followup=true` unless there is a stronger explicit reason not to, and always include `block_reason` when any required fix remains.\n- Keep `completed`, `remaining`, and `risks` as free-form narrative context only. They inform operators, but they do not override the structured verdict or control scheduler state.\n- Review findings ordered by severity, or an explicit statement that no findings were discovered.\n- Clear blocked handoff details when the task belongs to another agent type.",
+      "captured_at": "2026-06-20T12:49:43.372745+00:00"
+    },
+    "worker_prompt_context": {
+      "bead_id": "B-4a862cf8",
+      "feature_root_id": "B-b8659d27",
+      "title": "Review: Today Brief History",
+      "agent_type": "review",
+      "description": "Review the complete implementation: APIClient getBriefs(), BriefDetailView, BriefCardView, TodayView refactor, pagination, fallback logic, unit tests, and documentation. Verify spec compliance, Liquid Glass conventions, accessibility labels on interactive elements (\u226544\u00d744 pt tap targets), no hardcoded hex, correct Task cancellation handling, and absence of memory leaks or race conditions in the pagination guard.",
+      "status": "in_progress",
+      "acceptance_criteria": [
+        "All spec-9f85467c acceptance criteria are demonstrably met",
+        "No hardcoded hex colors or non-semantic font styles anywhere in the feature",
+        "Accessibility labels present on BriefCardView NavigationLinks",
+        "Fallback logic is correct and handles 404 without surfacing an error to the user",
+        "isLoadingMore guard prevents race conditions on rapid scroll",
+        "Code review approved with no blocking findings"
+      ],
+      "dependencies": [
+        "B-01dcc3df",
+        "B-18a20071",
+        "B-3bd053a2",
+        "B-558540ae",
+        "B-7ff34ecd",
+        "B-b38235ca",
+        "B-c33d46f1",
+        "B-e84f4129"
+      ],
+      "linked_docs": [
+        "docs/API.md",
+        "docs/openapi.json"
+      ],
+      "execution_branch_name": "feature/b-b8659d27",
+      "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-b8659d27",
+      "expected_files": [
+        "AggregatorApp/Common/APIClient.swift",
+        "AggregatorApp/Today/BriefCardView.swift",
+        "AggregatorApp/Today/BriefDetailView.swift",
+        "AggregatorApp/Today/TodayView.swift",
+        "AggregatorAppTests/BriefModelTests.swift"
+      ],
+      "expected_globs": [
+        "AggregatorApp/Common/APIClient.swift",
+        "AggregatorApp/Today/**/*.swift",
+        "AggregatorAppTests/**/*.swift",
+        "AggregatorAppTests/*Brief*.swift"
+      ],
+      "touched_files": [
+        "AggregatorApp/Common/APIClient.swift",
+        "AggregatorApp/Today/BriefCardView.swift",
+        "AggregatorApp/Today/BriefDetailView.swift",
+        "AggregatorApp/Today/TodayView.swift",
+        "AggregatorAppTests/BriefModelTests.swift",
+        "docs/API.md"
+      ],
+      "conflict_risks": "None. The fix is contained to TodayView.swift and/or BriefCardView.swift with no shared state or type changes.",
+      "handoff_summary": {
+        "completed": "Reviewed all 6 changed files: APIClient.swift (getBriefs method), BriefCardView.swift (new), BriefDetailView.swift (new), TodayView.swift (refactored), BriefModelTests.swift (URL + decoding tests), docs/API.md (iOS Today tab section). Validated against spec-9f85467c acceptance criteria and bead acceptance criteria.",
+        "remaining": "Developer must add an explicit .accessibilityLabel() to the NavigationLink in TodayView.swift:55 (e.g., derived from brief.headline and dateLine). Optionally fix the empty state copy from \"No Brief Today\" to \"No briefs yet\".",
+        "risks": "Missing accessibility label is a CLAUDE.md hard requirement (every interactive element needs an accessibility label) and an explicit bead acceptance criterion. The empty-state copy mismatch is minor but semantically inaccurate for the no-briefs-at-all case.",
+        "verdict": "needs_changes",
+        "findings_count": 2,
+        "requires_followup": true,
+        "changed_files": [
+          "AggregatorApp/Common/APIClient.swift",
+          "AggregatorApp/Today/BriefCardView.swift",
+          "AggregatorApp/Today/BriefDetailView.swift",
+          "AggregatorApp/Today/TodayView.swift",
+          "AggregatorAppTests/BriefModelTests.swift",
+          "docs/API.md"
+        ],
+        "updated_docs": [
+          "docs/API.md"
+        ],
+        "next_action": "Create a defect bead to add .accessibilityLabel() to the NavigationLink in TodayView.swift:55 and fix the empty state copy. Assign to developer agent.",
+        "next_agent": "developer",
+        "block_reason": "Finding 1 (BLOCKING): TodayView.swift:55 NavigationLink wrapping BriefCardView has no .accessibilityLabel() modifier. Bead acceptance criterion explicitly requires accessibility labels on BriefCardView NavigationLinks; CLAUDE.md requires every interactive element to have one. Fix: add .accessibilityLabel(\"\\(brief.headline ?? \"Daily Brief\"), \\(dateLine), \\(topicCountLine)\") \u2014 or equivalent \u2014 on the NavigationLink or BriefCardView's root view.",
+        "expected_files": [
+          "AggregatorApp/Common/APIClient.swift",
+          "AggregatorApp/Today/BriefCardView.swift",
+          "AggregatorApp/Today/BriefDetailView.swift",
+          "AggregatorApp/Today/TodayView.swift",
+          "AggregatorAppTests/BriefModelTests.swift"
+        ],
+        "expected_globs": [
+          "AggregatorApp/Common/APIClient.swift",
+          "AggregatorApp/Today/**/*.swift",
+          "AggregatorAppTests/**/*.swift",
+          "AggregatorAppTests/*Brief*.swift"
+        ],
+        "touched_files": [
+          "AggregatorApp/Common/APIClient.swift",
+          "AggregatorApp/Today/BriefCardView.swift",
+          "AggregatorApp/Today/BriefDetailView.swift",
+          "AggregatorApp/Today/TodayView.swift",
+          "AggregatorAppTests/BriefModelTests.swift",
+          "docs/API.md"
+        ],
+        "conflict_risks": "None. The fix is contained to TodayView.swift and/or BriefCardView.swift with no shared state or type changes.",
+        "design_decisions": "Destination-based NavigationLink (avoids first-tap SwiftUI bug) confirmed correct. isLoadingMore guard is race-condition-free (check+set are synchronous on main actor before first await). isFallback explicit boolean is cleaner than inferring from nextCursor==nil. refreshBriefs() correctly avoids .loading phase flash.",
+        "test_coverage_notes": "BriefModelTests.swift covers: getBriefs URL with/without cursor (percent-encoding verified), PaginatedResponse<Brief> decoding with optional fields and nested topics, BriefRef internal/external variants, DateDisplay.mediumDate with fractional seconds and nil/garbage inputs. Coverage is appropriate for the changed surface area.",
+        "known_limitations": "BriefDetailView accepts onRefresh but TodayView passes nil \u2014 pull-to-refresh in the detail view is a no-op. This is intentional (detail shows a pre-loaded snapshot; spec does not require detail-view refresh) and the parameter remains for future use."
+      }
+    },
+    "last_agent_result": {
+      "outcome": "completed",
+      "summary": "Re-review pass: both prior findings resolved \u2014 accessibility label added to BriefCardView root view (propagates to NavigationLink), empty state copy corrected to \"No briefs yet\". No new findings.",
+      "verdict": "approved",
+      "findings_count": 0,
+      "requires_followup": false,
+      "next_agent": "",
+      "block_reason": ""
+    },
+    "telemetry": {
+      "cost_usd": 0.22221059999999995,
+      "duration_ms": 61228,
+      "duration_api_ms": 57791,
+      "num_turns": 8,
+      "input_tokens": 10,
+      "output_tokens": 2971,
+      "cache_creation_tokens": 20305,
+      "cache_read_tokens": 168642,
+      "stop_reason": "end_turn",
+      "session_id": "6a12b502-755a-44c4-ba5a-e354df35e26a",
+      "permission_denials": [],
+      "prompt_chars": 16461,
+      "prompt_lines": 235,
+      "source": "provider",
+      "attempt": 2
+    },
+    "telemetry_history": [
+      {
+        "cost_usd": 0.5259815999999999,
+        "duration_ms": 199152,
+        "duration_api_ms": 193025,
+        "num_turns": 22,
+        "input_tokens": 17,
+        "output_tokens": 10237,
+        "cache_creation_tokens": 37561,
+        "cache_read_tokens": 475892,
+        "stop_reason": "end_turn",
+        "session_id": "8fa0ebec-06d1-4e52-a1f3-bdecde239996",
+        "permission_denials": [],
+        "prompt_chars": 13320,
+        "prompt_lines": 201,
+        "source": "provider",
+        "attempt": 1
+      },
+      {
+        "cost_usd": 0.22221059999999995,
+        "duration_ms": 61228,
+        "duration_api_ms": 57791,
+        "num_turns": 8,
+        "input_tokens": 10,
+        "output_tokens": 2971,
+        "cache_creation_tokens": 20305,
+        "cache_read_tokens": 168642,
+        "stop_reason": "end_turn",
+        "session_id": "6a12b502-755a-44c4-ba5a-e354df35e26a",
+        "permission_denials": [],
+        "prompt_chars": 16461,
+        "prompt_lines": 235,
+        "source": "provider",
+        "attempt": 2
+      }
+    ],
+    "auto_corrective_bead_id": "B-4a862cf8-corrective",
+    "last_corrective_retry_source": "B-4a862cf8-corrective",
+    "last_corrective_retry_commit": "5826d703b25d6fab7433b133aa5b469e2512d4f5"
+  },
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

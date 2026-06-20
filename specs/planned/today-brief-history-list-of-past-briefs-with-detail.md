@@ -5,7 +5,7 @@ description: Today tab becomes a paginated list of past briefs (newest first) op
 dependencies: null
 priority: medium
 complexity: null
-status: draft
+status: planned
 tags:
 - today
 - brief
@@ -15,7 +15,7 @@ tags:
 scope:
   in: null
   out: null
-feature_root_id: null
+feature_root_id: B-b8659d27
 ---
 # Today brief history: list of past briefs with detail
 

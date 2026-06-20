@@ -16,8 +16,8 @@ struct ArticlePagerView: View {
     @Environment(ArticleReadStore.self) private var readStore
     @State private var selectedIndex: Int
     @State private var savedOverrides: [Int: Bool] = [:]
-    @State private var safariURL: URL?
-    @State private var showSafari = false
+    // Single item-driven Safari sheet for "open original" / "open comments".
+    @State private var safariURL: SafariURL?
     @State private var autoMarked: Set<Int> = []
 
     init(articles: [Article], startIndex: Int) {
@@ -55,10 +55,8 @@ struct ArticlePagerView: View {
         .navigationTitle(current.title ?? "Article")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar { readerToolbar }
-        .sheet(isPresented: $showSafari) {
-            if let safariURL {
-                SafariView(url: safariURL)
-            }
+        .sheet(item: $safariURL) { item in
+            SafariView(url: item.url)
         }
         .task { await autoMarkRead(current) }
         .onChange(of: selectedIndex) { _, _ in
@@ -110,15 +108,11 @@ struct ArticlePagerView: View {
     }
 
     private func openOriginal(_ a: Article) {
-        guard let urlString = a.url, let url = URL(string: urlString) else { return }
-        safariURL = url
-        showSafari = true
+        safariURL = SafariURL(a.url)
     }
 
     private func openComments(_ a: Article) {
-        guard let urlString = a.commentsURL, let url = URL(string: urlString) else { return }
-        safariURL = url
-        showSafari = true
+        safariURL = SafariURL(a.commentsURL)
     }
 
     /// Marks the visible article read on the backend, once, on selection. Only

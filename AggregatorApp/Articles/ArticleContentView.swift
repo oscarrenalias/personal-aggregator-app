@@ -70,10 +70,12 @@ struct ArticleContentView: View {
                             .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 12))
                     }
 
-                    // (7) Full article text or unavailable fallback with Open original
+                    // (7) Full article text or unavailable fallback with Open original.
+                    // SelectableText (UITextView) gives word/range selection + the
+                    // system Look Up / Define / Translate menu, unlike SwiftUI Text.
                     if let cleanText = article.cleanText, !cleanText.isEmpty {
-                        ParagraphText(cleanText)
-                            .font(.body)
+                        SelectableText(cleanText)
+                            .frame(maxWidth: .infinity, alignment: .leading)
                     } else {
                         VStack(spacing: 12) {
                             ContentUnavailableView(

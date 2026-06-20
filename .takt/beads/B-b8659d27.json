@@ -1,0 +1,75 @@
+{
+  "bead_id": "B-b8659d27",
+  "title": "Today Brief History Feature",
+  "agent_type": "planner",
+  "description": "Non-runnable execution root for spec-9f85467c. Coordinates the APIClient addition, new BriefDetailView and BriefCardView components, TodayView refactor with fallback logic, pagination, and unit tests.",
+  "status": "done",
+  "bead_type": "feature",
+  "parent_id": "B-4db3f1e1",
+  "dependencies": [],
+  "acceptance_criteria": [
+    "xcodebuild test exits 0 including all new brief-list tests",
+    "Today tab shows a list of brief cards (date, topic count, headline), newest first; top card identifiable as today's",
+    "Tapping a card opens the full brief detail on the first tap",
+    "When /briefs is unavailable (404), tab still shows today's brief as a single-item list with no regression",
+    "When /briefs is available, scrolling to the end loads older briefs and pull-to-refresh reloads from the first page",
+    "List scroll position is preserved when returning from a brief detail (load-once, not on reappearance)",
+    "Not-configured / loading / empty / error states all render; cancelled fetches do not show an error",
+    "No hardcoded hex colors; Liquid Glass conventions preserved throughout"
+  ],
+  "linked_docs": [
+    "docs/API.md",
+    "docs/openapi.json"
+  ],
+  "feature_root_id": "B-b8659d27",
+  "execution_branch_name": "feature/b-b8659d27",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-b8659d27",
+  "expected_files": [],
+  "expected_globs": [
+    "AggregatorApp/Today/**/*.swift",
+    "AggregatorApp/Common/APIClient.swift",
+    "AggregatorAppTests/**/*.swift"
+  ],
+  "touched_files": [],
+  "changed_files": [],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "",
+    "remaining": "",
+    "risks": "",
+    "verdict": "",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [],
+    "updated_docs": [],
+    "next_action": "",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [],
+    "expected_globs": [],
+    "touched_files": [],
+    "conflict_risks": "",
+    "design_decisions": "",
+    "test_coverage_notes": "",
+    "known_limitations": ""
+  },
+  "block_reason": "",
+  "conflict_risks": "",
+  "branch_name": "",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-20T12:30:06.967560+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    }
+  ],
+  "metadata": {},
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}
