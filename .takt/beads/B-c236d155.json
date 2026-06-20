@@ -1,0 +1,62 @@
+{
+  "bead_id": "B-c236d155",
+  "title": "Categories: Browse Articles by Category in Sources Tab",
+  "agent_type": "planner",
+  "description": "Add a Categories section to the Sources tab listing backend categories ordered by sort_order. Tapping a category opens the existing article-list/reader/pager stack filtered to that category via a new ArticleFeed.category case. Includes dormant freshness subtitle support (activates when the backend ships last_activity/has_priority fields). Reuses ArticleFeed, ArticleListView, ArticleRowView, ArticlePagerView, APIClient, and ListPreferences from the merged Sources feature.",
+  "status": "done",
+  "bead_type": "epic",
+  "parent_id": null,
+  "dependencies": [],
+  "acceptance_criteria": [],
+  "linked_docs": [
+    "specs/drafts/spec-ac336102.md",
+    "docs/API.md"
+  ],
+  "feature_root_id": null,
+  "execution_branch_name": "",
+  "execution_worktree_path": "",
+  "expected_files": [],
+  "expected_globs": [],
+  "touched_files": [],
+  "changed_files": [],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "",
+    "remaining": "",
+    "risks": "",
+    "verdict": "",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [],
+    "updated_docs": [],
+    "next_action": "",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [],
+    "expected_globs": [],
+    "touched_files": [],
+    "conflict_risks": "",
+    "design_decisions": "",
+    "test_coverage_notes": "",
+    "known_limitations": ""
+  },
+  "block_reason": "",
+  "conflict_risks": "",
+  "branch_name": "",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-20T16:24:46.131942+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    }
+  ],
+  "metadata": {},
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

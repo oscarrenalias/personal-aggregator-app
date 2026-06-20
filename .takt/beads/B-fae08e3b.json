@@ -1,0 +1,273 @@
+{
+  "bead_id": "B-fae08e3b",
+  "title": "Shared documentation",
+  "agent_type": "documentation",
+  "description": "Update docs to reflect the new categories feature: document the ArticleFeed.category case and its query-param behaviour; note the freshness subtitle dormancy (fields absent today, activates when backend ships last_activity/has_priority); document the Categories section placement and load-isolation behaviour (failure does not blank the tab). Update any API or architecture notes that reference ArticleFeed or SourcesView.",
+  "status": "done",
+  "bead_type": "task",
+  "parent_id": "B-85a6280d",
+  "dependencies": [
+    "B-e8775825",
+    "B-26710038",
+    "B-e72471a7",
+    "B-da4bc339",
+    "B-7a6a5114",
+    "B-19ecc87a",
+    "B-edd22114"
+  ],
+  "acceptance_criteria": [
+    "ArticleFeed.category case documented",
+    "Freshness subtitle dormancy and activation path documented",
+    "Categories load-isolation behaviour documented"
+  ],
+  "linked_docs": [
+    "specs/drafts/spec-ac336102.md",
+    "docs/API.md"
+  ],
+  "feature_root_id": "B-85a6280d",
+  "execution_branch_name": "feature/b-85a6280d",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-85a6280d",
+  "expected_files": [
+    "AggregatorApp/Articles/ArticleFeed.swift",
+    "AggregatorApp/Common/APIClient.swift",
+    "AggregatorApp/Models/Category.swift",
+    "AggregatorApp/Sources/SourcesView.swift"
+  ],
+  "expected_globs": [
+    "docs/**/*.md"
+  ],
+  "touched_files": [
+    "AggregatorApp/Common/APIClient.swift",
+    "docs/API.md"
+  ],
+  "changed_files": [
+    "AggregatorApp/Common/APIClient.swift",
+    "docs/API.md"
+  ],
+  "updated_docs": [
+    "docs/API.md"
+  ],
+  "handoff_summary": {
+    "completed": "Added \"iOS client: Sources tab\" section to docs/API.md covering ArticleFeed enum cases (including new .category case and category= query param), freshness subtitle dormancy and activation path, and load-isolation behaviour. Updated getArticles() doc comment in APIClient.swift to document the .category(name:) \u2192 category=<name> mapping.",
+    "remaining": "None. All three acceptance criteria are met: ArticleFeed.category case documented, freshness subtitle dormancy/activation documented, Categories load-isolation behaviour documented.",
+    "risks": "None. Documentation-only changes; no runtime behavior altered.",
+    "verdict": "approved",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [
+      "AggregatorApp/Common/APIClient.swift",
+      "docs/API.md"
+    ],
+    "updated_docs": [
+      "docs/API.md"
+    ],
+    "next_action": "None required. Documentation is complete and aligned with the implemented code.",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [
+      "AggregatorApp/Articles/ArticleFeed.swift",
+      "AggregatorApp/Common/APIClient.swift",
+      "AggregatorApp/Models/Category.swift",
+      "AggregatorApp/Sources/SourcesView.swift"
+    ],
+    "expected_globs": [
+      "docs/**/*.md"
+    ],
+    "touched_files": [
+      "AggregatorApp/Common/APIClient.swift",
+      "docs/API.md"
+    ],
+    "conflict_risks": "None. docs/API.md and the APIClient.swift doc comment are not touched by any other in-flight bead.",
+    "design_decisions": "Placed Sources tab documentation immediately before the OpenAPI spec section for structural consistency with the existing Today tab section. Documented freshness subtitle as dormant-by-design (not a limitation) to set clear expectations for API consumers.",
+    "test_coverage_notes": "No test changes made; this bead is documentation only.",
+    "known_limitations": "The freshness subtitle section will need updating once the backend ships last_activity/has_priority \u2014 specifically to remove the \"dormant\" language and update the activation path note."
+  },
+  "block_reason": "",
+  "conflict_risks": "None. docs/API.md and the APIClient.swift doc comment are not touched by any other in-flight bead.",
+  "branch_name": "feature/b-85a6280d",
+  "worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-85a6280d",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-20T16:24:46.184069+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-20T16:39:11.152464+00:00",
+      "event": "skills_loaded",
+      "agent_type": "documentation",
+      "summary": "Loaded 6 skill(s) for isolated execution",
+      "details": {
+        "loaded_skills": [
+          "core/base-orchestrator",
+          "role/docs-agent",
+          "capability/docs-edit",
+          "task/release-notes",
+          "task/spec-sync",
+          "memory"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-06-20T16:39:11.152486+00:00",
+      "event": "started",
+      "agent_type": "documentation",
+      "summary": "Worker started",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-20T16:39:11.596131+00:00",
+      "event": "guardrails_applied",
+      "agent_type": "documentation",
+      "summary": "Applied guardrails from .takt/agent-runs/B-fae08e3b/repo/templates/agents/documentation.md",
+      "details": {
+        "template_path": ".takt/agent-runs/B-fae08e3b/repo/templates/agents/documentation.md"
+      }
+    },
+    {
+      "timestamp": "2026-06-20T16:41:06.894917+00:00",
+      "event": "completed",
+      "agent_type": "documentation",
+      "summary": "Documented ArticleFeed.category case, freshness subtitle dormancy/activation, and Categories section load-isolation in docs/API.md; updated getArticles doc comment in APIClient.swift.",
+      "details": {}
+    }
+  ],
+  "metadata": {
+    "execution_root": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-fae08e3b",
+    "workspace_repo_path": "repo",
+    "loaded_skills": [
+      "core/base-orchestrator",
+      "role/docs-agent",
+      "capability/docs-edit",
+      "task/release-notes",
+      "task/spec-sync",
+      "memory"
+    ],
+    "skill_bundle_hash": "191f95261a4d31e4f4a691e9c39926c722504f21a3c370b6975facad92e3c1f0",
+    "isolated_home": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-fae08e3b/home",
+    "runner_backend": "claude",
+    "guardrails": {
+      "agent_type": "documentation",
+      "template_path": ".takt/agent-runs/B-fae08e3b/repo/templates/agents/documentation.md",
+      "template_text": "# Documentation Guardrails\n\nPrimary responsibility: Update documentation and examples that explain the assigned behavior without changing runtime feature behavior.\n\nAllowed actions:\n- Edit docs, examples, and explanatory text tied to the assigned bead.\n- Focus only on files listed in the bead's touched_files and changed_files fields. Do not read or modify unrelated documentation.\n- Align documentation with existing code and validated behavior.\n- Identify when implementation or tests must land first and block with a handoff.\n\nDisallowed actions:\n- Change runtime behavior, production code paths, or feature logic.\n- Invent undocumented behavior that is not present in the codebase.\n- Approve code quality or test completeness as a substitute for review.\n- Do not run the test suite. Testing is the tester agent's responsibility.\n\n## Memory\n\n**Read memory at bead start.** Before writing any documentation, run three searches using `$TAKT_CMD` (injected by the orchestrator):\n\n```bash\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace global\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace feature:<feature_root_id>\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace specs\n```\n\nTreat results as ambient context \u2014 apply relevant entries to inform documentation; skip entries that don't apply.\n\nDo **not** write to memory \u2014 documentation agents are read-only.\n\nEfficiency constraints:\n- Do not read the full codebase for context. Focus on the changed files and their immediate surroundings.\n- Keep documentation updates concise and proportional to the change.\n\nExpected outputs:\n- Return JSON with `outcome` set to `completed` (documentation beads always complete; use `verdict` for pass/fail) and `summary` as a one-line description of what was documented.\n- Return JSON with structured verdict fields for every run: `verdict`, `findings_count`, and `requires_followup`.\n- Use `verdict=approved`, `findings_count=0`, and `requires_followup=false` when documentation is complete with no gaps.\n- Use `verdict=needs_changes`, set `findings_count` to the number of unresolved documentation gaps, set `requires_followup=true`, and include `block_reason` when implementation must land first or documentation cannot be completed.\n- Keep `completed`, `remaining`, and `risks` as concise narrative context only; they do not override the structured verdict fields.\n- Accurate updated docs and clear next-agent recommendations when code changes are required first.",
+      "captured_at": "2026-06-20T16:39:11.596123+00:00"
+    },
+    "worker_prompt_context": {
+      "bead_id": "B-fae08e3b",
+      "feature_root_id": "B-85a6280d",
+      "title": "Shared documentation",
+      "agent_type": "documentation",
+      "description": "Update docs to reflect the new categories feature: document the ArticleFeed.category case and its query-param behaviour; note the freshness subtitle dormancy (fields absent today, activates when backend ships last_activity/has_priority); document the Categories section placement and load-isolation behaviour (failure does not blank the tab). Update any API or architecture notes that reference ArticleFeed or SourcesView.",
+      "status": "in_progress",
+      "acceptance_criteria": [
+        "ArticleFeed.category case documented",
+        "Freshness subtitle dormancy and activation path documented",
+        "Categories load-isolation behaviour documented"
+      ],
+      "dependencies": [
+        "B-e8775825",
+        "B-26710038",
+        "B-e72471a7",
+        "B-da4bc339",
+        "B-7a6a5114",
+        "B-19ecc87a",
+        "B-edd22114"
+      ],
+      "linked_docs": [
+        "specs/drafts/spec-ac336102.md",
+        "docs/API.md"
+      ],
+      "execution_branch_name": "feature/b-85a6280d",
+      "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-85a6280d",
+      "expected_files": [
+        "AggregatorApp/Articles/ArticleFeed.swift",
+        "AggregatorApp/Common/APIClient.swift",
+        "AggregatorApp/Models/Category.swift",
+        "AggregatorApp/Sources/SourcesView.swift"
+      ],
+      "expected_globs": [
+        "docs/**/*.md"
+      ],
+      "touched_files": [
+        "AggregatorApp/Articles/ArticleFeed.swift",
+        "AggregatorApp/Common/APIClient.swift",
+        "AggregatorApp/Models/Category.swift",
+        "AggregatorApp/Sources/SourcesView.swift"
+      ],
+      "conflict_risks": "None. Category.swift is a new file with no overlap with existing models.\nNone \u2014 single file, no overlap with other in-flight beads.\nAny sibling bead that also touches `APIClient.swift` around the `getArticles` switch will conflict.\nA sibling bead had already modified `APIClient.swift` to add `.category` feed support to `getArticles()`. This bead's insertion was applied after re-reading the updated file, so there is no conflict.\nNone. File was read-only during this bead; no changes were made.\nNo conflicts expected. Only SourcesView.swift was touched; no new files added; xcodegen regeneration not required.\nNone \u2014 only SourcesView.swift was modified, within the already-claimed Categories section.",
+      "handoff_summary": {
+        "completed": "",
+        "remaining": "",
+        "risks": "",
+        "verdict": "",
+        "findings_count": 0,
+        "requires_followup": false,
+        "changed_files": [],
+        "updated_docs": [],
+        "next_action": "",
+        "next_agent": "",
+        "block_reason": "",
+        "expected_files": [],
+        "expected_globs": [],
+        "touched_files": [],
+        "conflict_risks": "",
+        "design_decisions": "",
+        "test_coverage_notes": "",
+        "known_limitations": ""
+      }
+    },
+    "last_agent_result": {
+      "outcome": "completed",
+      "summary": "Documented ArticleFeed.category case, freshness subtitle dormancy/activation, and Categories section load-isolation in docs/API.md; updated getArticles doc comment in APIClient.swift.",
+      "verdict": "approved",
+      "findings_count": 0,
+      "requires_followup": false,
+      "next_agent": "",
+      "block_reason": ""
+    },
+    "telemetry": {
+      "cost_usd": 0.4077829,
+      "duration_ms": 114604,
+      "duration_api_ms": 112689,
+      "num_turns": 15,
+      "input_tokens": 15,
+      "output_tokens": 6143,
+      "cache_creation_tokens": 34085,
+      "cache_read_tokens": 360533,
+      "stop_reason": "end_turn",
+      "session_id": "22c18d9a-4519-4504-806e-2a59df867ae6",
+      "permission_denials": [],
+      "prompt_chars": 8234,
+      "prompt_lines": 173,
+      "source": "provider",
+      "attempt": 1
+    },
+    "telemetry_history": [
+      {
+        "cost_usd": 0.4077829,
+        "duration_ms": 114604,
+        "duration_api_ms": 112689,
+        "num_turns": 15,
+        "input_tokens": 15,
+        "output_tokens": 6143,
+        "cache_creation_tokens": 34085,
+        "cache_read_tokens": 360533,
+        "stop_reason": "end_turn",
+        "session_id": "22c18d9a-4519-4504-806e-2a59df867ae6",
+        "permission_denials": [],
+        "prompt_chars": 8234,
+        "prompt_lines": 173,
+        "source": "provider",
+        "attempt": 1
+      }
+    ],
+    "last_commit": "15a57117112ea813e38373e7812396157de6e14e"
+  },
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

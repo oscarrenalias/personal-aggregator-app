@@ -94,8 +94,10 @@ struct ThreadDetailView: View {
     private func heroSection(_ thread: Thread) -> some View {
         if let imageURLString = thread.imageURL, let imageURL = URL(string: imageURLString) {
             // Fixed-size container + clipped image overlay so scaledToFill cannot
-            // overflow and force the content column wider than the screen.
-            Color.secondary.opacity(0.15)
+            // overflow and force the content column wider than the screen. Rectangle
+            // (not Color) so the hero respects the safe area (Color slides under the bar).
+            Rectangle()
+                .fill(Color.secondary.opacity(0.15))
                 .frame(maxWidth: .infinity)
                 .frame(height: 220)
                 .overlay {

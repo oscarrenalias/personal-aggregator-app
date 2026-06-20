@@ -5,7 +5,7 @@ description: "Add a Categories section to the Sources tab (GET /categories, orde
 dependencies: null
 priority: medium
 complexity: null
-status: draft
+status: planned
 tags:
 - categories
 - sources
@@ -14,7 +14,7 @@ tags:
 scope:
   in: null
   out: null
-feature_root_id: null
+feature_root_id: B-85a6280d
 ---
 # Categories: browse articles by category in the Sources tab
 

@@ -1,0 +1,306 @@
+{
+  "bead_id": "B-40f58c3c",
+  "title": "Shared review",
+  "agent_type": "review",
+  "description": "Review all changes against spec acceptance criteria and project conventions. Verify: defensive decoding (absent last_activity/has_priority decode cleanly), load-isolation (categories failure does not blank tab), load-once scroll preservation, URL encoding of category param, Liquid Glass and semantic color conventions, SF Symbols usage, accessibility labels present, 44pt tap targets, no hardcoded hex, ListPreferences respected for sort/unread in category feeds. Confirm xcodebuild test exits 0.",
+  "status": "done",
+  "bead_type": "task",
+  "parent_id": "B-85a6280d",
+  "dependencies": [
+    "B-19ecc87a",
+    "B-26710038",
+    "B-7a6a5114",
+    "B-975f9d19",
+    "B-da4bc339",
+    "B-e72471a7",
+    "B-e8775825",
+    "B-edd22114",
+    "B-fae08e3b"
+  ],
+  "acceptance_criteria": [
+    "All spec acceptance criteria verified",
+    "Defensive decoding confirmed for missing API fields",
+    "Load-isolation and load-once behaviours confirmed",
+    "UI conventions upheld (Liquid Glass, semantic colors, SF Symbols, accessibility, 44pt targets)",
+    "URL encoding of category name confirmed",
+    "xcodebuild test exit 0 confirmed"
+  ],
+  "linked_docs": [
+    "specs/drafts/spec-ac336102.md"
+  ],
+  "feature_root_id": "B-85a6280d",
+  "execution_branch_name": "feature/b-85a6280d",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-85a6280d",
+  "expected_files": [
+    "AggregatorApp/Articles/ArticleFeed.swift",
+    "AggregatorApp/Common/APIClient.swift",
+    "AggregatorApp/Models/Category.swift",
+    "AggregatorApp/Sources/SourcesView.swift"
+  ],
+  "expected_globs": [
+    "AggregatorApp/**/*.swift",
+    "AggregatorAppTests/**/*.swift"
+  ],
+  "touched_files": [
+    "AggregatorApp/Articles/ArticleFeed.swift",
+    "AggregatorApp/Common/APIClient.swift",
+    "AggregatorApp/Models/Category.swift",
+    "AggregatorApp/Sources/SourcesView.swift",
+    "AggregatorAppTests/ArticleFeedTests.swift",
+    "AggregatorAppTests/CategoryTests.swift",
+    "docs/API.md"
+  ],
+  "changed_files": [
+    "AggregatorApp/Articles/ArticleFeed.swift",
+    "AggregatorApp/Common/APIClient.swift",
+    "AggregatorApp/Models/Category.swift",
+    "AggregatorApp/Sources/SourcesView.swift",
+    "AggregatorAppTests/ArticleFeedTests.swift",
+    "AggregatorAppTests/CategoryTests.swift",
+    "docs/API.md"
+  ],
+  "updated_docs": [
+    "docs/API.md"
+  ],
+  "handoff_summary": {
+    "completed": "Reviewed all 7 changed files (Category.swift, ArticleFeed.swift, APIClient.swift, SourcesView.swift, CategoryTests.swift, ArticleFeedTests.swift, docs/API.md) against all acceptance criteria. Confirmed tester bead B-975f9d19 approved with 23/23 tests passing.",
+    "remaining": "",
+    "risks": "None identified.",
+    "verdict": "approved",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [
+      "AggregatorApp/Articles/ArticleFeed.swift",
+      "AggregatorApp/Common/APIClient.swift",
+      "AggregatorApp/Models/Category.swift",
+      "AggregatorApp/Sources/SourcesView.swift",
+      "AggregatorAppTests/ArticleFeedTests.swift",
+      "AggregatorAppTests/CategoryTests.swift",
+      "docs/API.md"
+    ],
+    "updated_docs": [
+      "docs/API.md"
+    ],
+    "next_action": "Feature tree is complete; all beads done. Ready for takt merge.",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [
+      "AggregatorApp/Articles/ArticleFeed.swift",
+      "AggregatorApp/Common/APIClient.swift",
+      "AggregatorApp/Models/Category.swift",
+      "AggregatorApp/Sources/SourcesView.swift"
+    ],
+    "expected_globs": [
+      "AggregatorApp/**/*.swift",
+      "AggregatorAppTests/**/*.swift"
+    ],
+    "touched_files": [
+      "AggregatorApp/Articles/ArticleFeed.swift",
+      "AggregatorApp/Common/APIClient.swift",
+      "AggregatorApp/Models/Category.swift",
+      "AggregatorApp/Sources/SourcesView.swift",
+      "AggregatorAppTests/ArticleFeedTests.swift",
+      "AggregatorAppTests/CategoryTests.swift",
+      "docs/API.md"
+    ],
+    "conflict_risks": "None. All sibling beads are done; no active overlapping file claims.",
+    "design_decisions": "Reviewed and confirmed: async let concurrency for two concurrent fetches; categories=[]/not nil for failure+not-loaded cases; categoriesError stored but not surfaced in UI (available for downstream bead); URLQueryItem/URLComponents for percent-encoding; custom init(from:) decoder with decodeIfPresent for optional API fields; VStack(alignment:.leading,spacing:2) for category rows.",
+    "test_coverage_notes": "23 tests pass (14 CategoryTests + 9 ArticleFeedTests including 5 new category feed cases). Covers: all decoding variants (absent/present/default fields), all freshnessPhrase branches, URL composition with percent-encoding, allowsUnreadFilter for all feed cases, regression that existing feeds are unaffected.",
+    "known_limitations": "Freshness subtitle is dormant until backend ships last_activity/has_priority fields on GET /categories. Documented in API.md as intentional design."
+  },
+  "block_reason": "",
+  "conflict_risks": "None. All sibling beads are done; no active overlapping file claims.",
+  "branch_name": "feature/b-85a6280d",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-20T16:24:46.185222+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-20T16:41:07.202525+00:00",
+      "event": "skills_loaded",
+      "agent_type": "review",
+      "summary": "Loaded 6 skill(s) for isolated execution",
+      "details": {
+        "loaded_skills": [
+          "core/base-orchestrator",
+          "role/reviewer-signoff",
+          "capability/code-review",
+          "task/corrective-bead-creation",
+          "task/risk-assessment",
+          "memory"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-06-20T16:41:07.202548+00:00",
+      "event": "started",
+      "agent_type": "review",
+      "summary": "Worker started",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-20T16:41:07.771028+00:00",
+      "event": "guardrails_applied",
+      "agent_type": "review",
+      "summary": "Applied guardrails from .takt/agent-runs/B-40f58c3c/repo/templates/agents/review.md",
+      "details": {
+        "template_path": ".takt/agent-runs/B-40f58c3c/repo/templates/agents/review.md"
+      }
+    },
+    {
+      "timestamp": "2026-06-20T16:44:29.488988+00:00",
+      "event": "completed",
+      "agent_type": "review",
+      "summary": "All acceptance criteria verified: defensive decoding, load-isolation, load-once, Liquid Glass/semantic colors/SF Symbols/accessibility/44pt targets, URL encoding, ListPreferences composability, and xcodebuild test exit 0 \u2014 no findings.",
+      "details": {}
+    }
+  ],
+  "metadata": {
+    "execution_root": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-40f58c3c",
+    "workspace_repo_path": "repo",
+    "loaded_skills": [
+      "core/base-orchestrator",
+      "role/reviewer-signoff",
+      "capability/code-review",
+      "task/corrective-bead-creation",
+      "task/risk-assessment",
+      "memory"
+    ],
+    "skill_bundle_hash": "68ad0ecb7bfe263ceb1ada56efead5a81dac8f9f2173181d0bf030dc0a3f880d",
+    "isolated_home": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-40f58c3c/home",
+    "runner_backend": "claude",
+    "guardrails": {
+      "agent_type": "review",
+      "template_path": ".takt/agent-runs/B-40f58c3c/repo/templates/agents/review.md",
+      "template_text": "# Review Guardrails\n\nPrimary responsibility: Inspect code, tests, docs, and acceptance criteria for correctness, completeness, and risk.\n\nAllowed actions:\n- Review only the changed files listed in the bead's touched_files and changed_files fields. Do not read unrelated files.\n- Validate acceptance criteria against the implementation and handoff state.\n- Block with a clear recommendation when the bead actually requires implementation work.\n\n## Memory\n\n**Read memory at bead start.** Before reviewing any files, run three searches using `$TAKT_CMD` (injected by the orchestrator):\n\n```bash\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace global\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace feature:<feature_root_id>\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace specs\n```\n\nTreat results as ambient context \u2014 apply relevant entries to inform the review; skip entries that don't apply.\n\nDo **not** write to memory \u2014 review agents are read-only.\n\nEfficiency constraints:\n- Do not run the test suite. Testing is the tester agent's responsibility.\n- Focus on correctness, completeness, and risk \u2014 not style or formatting.\n- Keep the review concise. If there are no findings, say so and approve promptly.\n\nDisallowed actions:\n- Implement feature work, tests, or docs instead of reporting findings.\n- Rewrite architecture or silently fix issues discovered during review.\n- Mark incomplete work as accepted without evidence.\n\nExpected outputs:\n- Return JSON with `outcome` set to `completed` (reviews always complete; use `verdict` for pass/fail) and `summary` as a one-line description of the review result.\n- Return JSON with structured verdict fields for every run: `verdict`, `findings_count`, and `requires_followup`.\n- Treat `verdict` as the review signoff decision: `approved` means the bead can complete, while `needs_changes` means the bead must block for follow-up work.\n- Use `verdict=approved`, `findings_count=0`, and `requires_followup=false` when no unresolved findings remain.\n- Use `verdict=needs_changes`, set `findings_count` to the unresolved finding count, set `requires_followup=true` unless there is a stronger explicit reason not to, and always include `block_reason` when any required fix remains.\n- Keep `completed`, `remaining`, and `risks` as free-form narrative context only. They inform operators, but they do not override the structured verdict or control scheduler state.\n- Review findings ordered by severity, or an explicit statement that no findings were discovered.\n- Clear blocked handoff details when the task belongs to another agent type.",
+      "captured_at": "2026-06-20T16:41:07.771014+00:00"
+    },
+    "worker_prompt_context": {
+      "bead_id": "B-40f58c3c",
+      "feature_root_id": "B-85a6280d",
+      "title": "Shared review",
+      "agent_type": "review",
+      "description": "Review all changes against spec acceptance criteria and project conventions. Verify: defensive decoding (absent last_activity/has_priority decode cleanly), load-isolation (categories failure does not blank tab), load-once scroll preservation, URL encoding of category param, Liquid Glass and semantic color conventions, SF Symbols usage, accessibility labels present, 44pt tap targets, no hardcoded hex, ListPreferences respected for sort/unread in category feeds. Confirm xcodebuild test exits 0.",
+      "status": "in_progress",
+      "acceptance_criteria": [
+        "All spec acceptance criteria verified",
+        "Defensive decoding confirmed for missing API fields",
+        "Load-isolation and load-once behaviours confirmed",
+        "UI conventions upheld (Liquid Glass, semantic colors, SF Symbols, accessibility, 44pt targets)",
+        "URL encoding of category name confirmed",
+        "xcodebuild test exit 0 confirmed"
+      ],
+      "dependencies": [
+        "B-19ecc87a",
+        "B-26710038",
+        "B-7a6a5114",
+        "B-975f9d19",
+        "B-da4bc339",
+        "B-e72471a7",
+        "B-e8775825",
+        "B-edd22114",
+        "B-fae08e3b"
+      ],
+      "linked_docs": [
+        "specs/drafts/spec-ac336102.md"
+      ],
+      "execution_branch_name": "feature/b-85a6280d",
+      "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-85a6280d",
+      "expected_files": [
+        "AggregatorApp/Articles/ArticleFeed.swift",
+        "AggregatorApp/Common/APIClient.swift",
+        "AggregatorApp/Models/Category.swift",
+        "AggregatorApp/Sources/SourcesView.swift"
+      ],
+      "expected_globs": [
+        "AggregatorApp/**/*.swift",
+        "AggregatorAppTests/**/*.swift"
+      ],
+      "touched_files": [
+        "AggregatorApp/Articles/ArticleFeed.swift",
+        "AggregatorApp/Common/APIClient.swift",
+        "AggregatorApp/Models/Category.swift",
+        "AggregatorApp/Sources/SourcesView.swift",
+        "AggregatorAppTests/ArticleFeedTests.swift",
+        "AggregatorAppTests/CategoryTests.swift",
+        "docs/API.md"
+      ],
+      "conflict_risks": "None. Category.swift is a new file with no overlap with existing models.\nNone \u2014 single file, no overlap with other in-flight beads.\nAny sibling bead that also touches `APIClient.swift` around the `getArticles` switch will conflict.\nA sibling bead had already modified `APIClient.swift` to add `.category` feed support to `getArticles()`. This bead's insertion was applied after re-reading the updated file, so there is no conflict.\nNone. File was read-only during this bead; no changes were made.\nNo conflicts expected. Only SourcesView.swift was touched; no new files added; xcodegen regeneration not required.\nNone \u2014 only SourcesView.swift was modified, within the already-claimed Categories section.",
+      "handoff_summary": {
+        "completed": "",
+        "remaining": "",
+        "risks": "",
+        "verdict": "",
+        "findings_count": 0,
+        "requires_followup": false,
+        "changed_files": [],
+        "updated_docs": [],
+        "next_action": "",
+        "next_agent": "",
+        "block_reason": "",
+        "expected_files": [],
+        "expected_globs": [],
+        "touched_files": [],
+        "conflict_risks": "",
+        "design_decisions": "",
+        "test_coverage_notes": "",
+        "known_limitations": ""
+      }
+    },
+    "last_agent_result": {
+      "outcome": "completed",
+      "summary": "All acceptance criteria verified: defensive decoding, load-isolation, load-once, Liquid Glass/semantic colors/SF Symbols/accessibility/44pt targets, URL encoding, ListPreferences composability, and xcodebuild test exit 0 \u2014 no findings.",
+      "verdict": "approved",
+      "findings_count": 0,
+      "requires_followup": false,
+      "next_agent": "",
+      "block_reason": ""
+    },
+    "telemetry": {
+      "cost_usd": 0.5849324,
+      "duration_ms": 201708,
+      "duration_api_ms": 194058,
+      "num_turns": 20,
+      "input_tokens": 16,
+      "output_tokens": 10226,
+      "cache_creation_tokens": 43992,
+      "cache_read_tokens": 544638,
+      "stop_reason": "end_turn",
+      "session_id": "458cd752-74ce-449a-9eec-968f41c5cec8",
+      "permission_denials": [],
+      "prompt_chars": 13246,
+      "prompt_lines": 200,
+      "source": "provider",
+      "attempt": 1
+    },
+    "telemetry_history": [
+      {
+        "cost_usd": 0.5849324,
+        "duration_ms": 201708,
+        "duration_api_ms": 194058,
+        "num_turns": 20,
+        "input_tokens": 16,
+        "output_tokens": 10226,
+        "cache_creation_tokens": 43992,
+        "cache_read_tokens": 544638,
+        "stop_reason": "end_turn",
+        "session_id": "458cd752-74ce-449a-9eec-968f41c5cec8",
+        "permission_denials": [],
+        "prompt_chars": 13246,
+        "prompt_lines": 200,
+        "source": "provider",
+        "attempt": 1
+      }
+    ]
+  },
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}
