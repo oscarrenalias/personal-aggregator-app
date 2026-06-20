@@ -1,0 +1,227 @@
+{
+  "bead_id": "B-b8568537-subtask-review",
+  "title": "Review Fix missing showCommentsSafari sheet in ArticleDetailView",
+  "agent_type": "review",
+  "description": "Review implementation for B-b8568537-subtask",
+  "status": "done",
+  "bead_type": "task",
+  "parent_id": "B-b8568537-subtask",
+  "dependencies": [
+    "B-b8568537-subtask",
+    "B-b8568537-subtask-test",
+    "B-b8568537-subtask-docs"
+  ],
+  "acceptance_criteria": [],
+  "linked_docs": [
+    "specs/planned/reader-enhancements-share-sheet-selectable-text-and-comments-link.md"
+  ],
+  "feature_root_id": "B-5bd93857",
+  "execution_branch_name": "feature/b-5bd93857",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-5bd93857",
+  "expected_files": [
+    "AggregatorApp/Articles/ArticleDetailView.swift"
+  ],
+  "expected_globs": [],
+  "touched_files": [
+    "AggregatorApp/Articles/ArticleDetailView.swift",
+    "AggregatorAppTests/ArticleDecodingTests.swift"
+  ],
+  "changed_files": [],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "Reviewed ArticleDetailView.swift and ArticleDecodingTests.swift. The showCommentsSafari @State variable, toolbar button, disabled guard, and .sheet modifier are all present and correctly implemented, matching the conditional URL pattern used for the showSafari sheet. The forward-compatibility comment is appropriate. ArticleDecodingTests.swift (from B-9f9e6562) covers the model-layer decoding. B-b8568537-subtask itself made no code changes because B-ae4e703e had already shipped the fix.",
+    "remaining": "Nothing \u2014 all acceptance criteria are satisfied.",
+    "risks": "None identified. The button is always visible but disabled when commentsURL is nil, which is the correct forward-compatibility posture.",
+    "verdict": "approved",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [],
+    "updated_docs": [],
+    "next_action": "None \u2014 bead is complete and approved.",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [
+      "AggregatorApp/Articles/ArticleDetailView.swift"
+    ],
+    "expected_globs": [],
+    "touched_files": [
+      "AggregatorApp/Articles/ArticleDetailView.swift",
+      "AggregatorAppTests/ArticleDecodingTests.swift"
+    ],
+    "conflict_risks": "None \u2014 this review bead made no file changes.",
+    "design_decisions": "The conditional sheet pattern (.sheet(isPresented:) { if let url = ... { SafariView(url:) } }) is consistent with the existing showSafari sheet. The button is disabled when commentsURL is nil, kept in the toolbar for forward compatibility once the backend ships the field.",
+    "test_coverage_notes": "ArticleDecodingTests.swift covers commentsURL present and absent decoding cases. View-layer state is not covered (XCTest-only setup, no UI testing infrastructure).",
+    "known_limitations": "No UI-level tests for the sheet presentation flow; this is a known project-wide constraint (XCTest-only)."
+  },
+  "block_reason": "",
+  "conflict_risks": "None \u2014 this review bead made no file changes.",
+  "branch_name": "feature/b-5bd93857",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-20T07:25:20.386533+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-20T07:31:35.505758+00:00",
+      "event": "skills_loaded",
+      "agent_type": "review",
+      "summary": "Loaded 6 skill(s) for isolated execution",
+      "details": {
+        "loaded_skills": [
+          "core/base-orchestrator",
+          "role/reviewer-signoff",
+          "capability/code-review",
+          "task/corrective-bead-creation",
+          "task/risk-assessment",
+          "memory"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-06-20T07:31:35.505778+00:00",
+      "event": "started",
+      "agent_type": "review",
+      "summary": "Worker started",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-20T07:31:35.509702+00:00",
+      "event": "guardrails_applied",
+      "agent_type": "review",
+      "summary": "Applied guardrails from .takt/agent-runs/B-b8568537-subtask-review/repo/templates/agents/review.md",
+      "details": {
+        "template_path": ".takt/agent-runs/B-b8568537-subtask-review/repo/templates/agents/review.md"
+      }
+    },
+    {
+      "timestamp": "2026-06-20T07:33:43.559666+00:00",
+      "event": "completed",
+      "agent_type": "review",
+      "summary": "Review approved: showCommentsSafari sheet is correctly implemented in ArticleDetailView; fix was already applied by B-ae4e703e; no unresolved findings.",
+      "details": {}
+    }
+  ],
+  "metadata": {
+    "execution_root": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-b8568537-subtask-review",
+    "workspace_repo_path": "repo",
+    "loaded_skills": [
+      "core/base-orchestrator",
+      "role/reviewer-signoff",
+      "capability/code-review",
+      "task/corrective-bead-creation",
+      "task/risk-assessment",
+      "memory"
+    ],
+    "skill_bundle_hash": "68ad0ecb7bfe263ceb1ada56efead5a81dac8f9f2173181d0bf030dc0a3f880d",
+    "isolated_home": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-b8568537-subtask-review/home",
+    "runner_backend": "claude",
+    "guardrails": {
+      "agent_type": "review",
+      "template_path": ".takt/agent-runs/B-b8568537-subtask-review/repo/templates/agents/review.md",
+      "template_text": "# Review Guardrails\n\nPrimary responsibility: Inspect code, tests, docs, and acceptance criteria for correctness, completeness, and risk.\n\nAllowed actions:\n- Review only the changed files listed in the bead's touched_files and changed_files fields. Do not read unrelated files.\n- Validate acceptance criteria against the implementation and handoff state.\n- Block with a clear recommendation when the bead actually requires implementation work.\n\n## Memory\n\n**Read memory at bead start.** Before reviewing any files, run three searches using `$TAKT_CMD` (injected by the orchestrator):\n\n```bash\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace global\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace feature:<feature_root_id>\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace specs\n```\n\nTreat results as ambient context \u2014 apply relevant entries to inform the review; skip entries that don't apply.\n\nDo **not** write to memory \u2014 review agents are read-only.\n\nEfficiency constraints:\n- Do not run the test suite. Testing is the tester agent's responsibility.\n- Focus on correctness, completeness, and risk \u2014 not style or formatting.\n- Keep the review concise. If there are no findings, say so and approve promptly.\n\nDisallowed actions:\n- Implement feature work, tests, or docs instead of reporting findings.\n- Rewrite architecture or silently fix issues discovered during review.\n- Mark incomplete work as accepted without evidence.\n\nExpected outputs:\n- Return JSON with `outcome` set to `completed` (reviews always complete; use `verdict` for pass/fail) and `summary` as a one-line description of the review result.\n- Return JSON with structured verdict fields for every run: `verdict`, `findings_count`, and `requires_followup`.\n- Treat `verdict` as the review signoff decision: `approved` means the bead can complete, while `needs_changes` means the bead must block for follow-up work.\n- Use `verdict=approved`, `findings_count=0`, and `requires_followup=false` when no unresolved findings remain.\n- Use `verdict=needs_changes`, set `findings_count` to the unresolved finding count, set `requires_followup=true` unless there is a stronger explicit reason not to, and always include `block_reason` when any required fix remains.\n- Keep `completed`, `remaining`, and `risks` as free-form narrative context only. They inform operators, but they do not override the structured verdict or control scheduler state.\n- Review findings ordered by severity, or an explicit statement that no findings were discovered.\n- Clear blocked handoff details when the task belongs to another agent type.",
+      "captured_at": "2026-06-20T07:31:35.509694+00:00"
+    },
+    "worker_prompt_context": {
+      "bead_id": "B-b8568537-subtask-review",
+      "feature_root_id": "B-5bd93857",
+      "title": "Review Fix missing showCommentsSafari sheet in ArticleDetailView",
+      "agent_type": "review",
+      "description": "Review implementation for B-b8568537-subtask",
+      "status": "in_progress",
+      "acceptance_criteria": [],
+      "dependencies": [
+        "B-b8568537-subtask",
+        "B-b8568537-subtask-test",
+        "B-b8568537-subtask-docs"
+      ],
+      "linked_docs": [
+        "specs/planned/reader-enhancements-share-sheet-selectable-text-and-comments-link.md"
+      ],
+      "execution_branch_name": "feature/b-5bd93857",
+      "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-5bd93857",
+      "expected_files": [
+        "AggregatorApp/Articles/ArticleDetailView.swift"
+      ],
+      "expected_globs": [],
+      "touched_files": [
+        "AggregatorApp/Articles/ArticleDetailView.swift",
+        "AggregatorAppTests/ArticleDecodingTests.swift"
+      ],
+      "conflict_risks": "None \u2014 this bead made no changes to any files.",
+      "handoff_summary": {
+        "completed": "",
+        "remaining": "",
+        "risks": "",
+        "verdict": "",
+        "findings_count": 0,
+        "requires_followup": false,
+        "changed_files": [],
+        "updated_docs": [],
+        "next_action": "",
+        "next_agent": "",
+        "block_reason": "",
+        "expected_files": [],
+        "expected_globs": [],
+        "touched_files": [],
+        "conflict_risks": "",
+        "design_decisions": "",
+        "test_coverage_notes": "",
+        "known_limitations": ""
+      }
+    },
+    "last_agent_result": {
+      "outcome": "completed",
+      "summary": "Review approved: showCommentsSafari sheet is correctly implemented in ArticleDetailView; fix was already applied by B-ae4e703e; no unresolved findings.",
+      "verdict": "approved",
+      "findings_count": 0,
+      "requires_followup": false,
+      "next_agent": "",
+      "block_reason": ""
+    },
+    "telemetry": {
+      "cost_usd": 0.3198578,
+      "duration_ms": 128044,
+      "duration_api_ms": 123593,
+      "num_turns": 18,
+      "input_tokens": 13,
+      "output_tokens": 6090,
+      "cache_creation_tokens": 22388,
+      "cache_read_tokens": 304316,
+      "stop_reason": "end_turn",
+      "session_id": "3a22182c-6c42-4135-b5fa-b93b982507aa",
+      "permission_denials": [],
+      "prompt_chars": 8066,
+      "prompt_lines": 165,
+      "source": "provider",
+      "attempt": 1
+    },
+    "telemetry_history": [
+      {
+        "cost_usd": 0.3198578,
+        "duration_ms": 128044,
+        "duration_api_ms": 123593,
+        "num_turns": 18,
+        "input_tokens": 13,
+        "output_tokens": 6090,
+        "cache_creation_tokens": 22388,
+        "cache_read_tokens": 304316,
+        "stop_reason": "end_turn",
+        "session_id": "3a22182c-6c42-4135-b5fa-b93b982507aa",
+        "permission_denials": [],
+        "prompt_chars": 8066,
+        "prompt_lines": 165,
+        "source": "provider",
+        "attempt": 1
+      }
+    ]
+  },
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

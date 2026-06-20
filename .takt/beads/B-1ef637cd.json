@@ -1,0 +1,273 @@
+{
+  "bead_id": "B-1ef637cd",
+  "title": "Document reader enhancements",
+  "agent_type": "documentation",
+  "description": "Update inline code comments where non-obvious: note in ArticleDetailView and ArticlePagerView that the comments button is intentionally always-present but disabled pending the backend shipping comments_url. Note in Article.swift that commentsURL is a forward-compatible field decoded defensively. Keep comments minimal per project convention \u2014 one short line max.",
+  "status": "done",
+  "bead_type": "task",
+  "parent_id": "B-5bd93857",
+  "dependencies": [
+    "B-8209fdc1",
+    "B-572c0c73",
+    "B-9f9e6562",
+    "B-b9c256d7",
+    "B-ae4e703e",
+    "B-b8568537",
+    "B-b12d787d"
+  ],
+  "acceptance_criteria": [
+    "A brief comment in Article.swift near commentsURL explains it is forward-compatible (absent from current API, decoded defensively)",
+    "A brief comment near the comments toolbar button in both ArticleDetailView and ArticlePagerView notes it is disabled until the backend ships comments_url",
+    "No multi-line comment blocks; no task/PR references in code"
+  ],
+  "linked_docs": [
+    "specs/planned/reader-enhancements-share-sheet-selectable-text-and-comments-link.md"
+  ],
+  "feature_root_id": "B-5bd93857",
+  "execution_branch_name": "feature/b-5bd93857",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-5bd93857",
+  "expected_files": [
+    "AggregatorApp.xcodeproj/project.pbxproj",
+    "AggregatorApp/Articles/ArticleDetailView.swift",
+    "AggregatorApp/Articles/ArticlePagerView.swift",
+    "AggregatorApp/Common/ParagraphText.swift",
+    "AggregatorApp/Models/Article.swift",
+    "AggregatorAppTests/ArticleDecodingTests.swift"
+  ],
+  "expected_globs": [],
+  "touched_files": [
+    "AggregatorApp/Articles/ArticleDetailView.swift",
+    "AggregatorApp/Articles/ArticlePagerView.swift",
+    "AggregatorApp/Models/Article.swift"
+  ],
+  "changed_files": [
+    "AggregatorApp/Articles/ArticleDetailView.swift",
+    "AggregatorApp/Articles/ArticlePagerView.swift",
+    "AggregatorApp/Models/Article.swift"
+  ],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "Added one-line comments to Article.swift (commentsURL decode), ArticleDetailView.swift (comments button), and ArticlePagerView.swift (comments button). All comments are single-line, contain no task/PR references, and explain the non-obvious WHY.",
+    "remaining": "Nothing remaining for this bead.",
+    "risks": "None. Only comments added; no runtime behavior changed.",
+    "verdict": "approved",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [
+      "AggregatorApp/Articles/ArticleDetailView.swift",
+      "AggregatorApp/Articles/ArticlePagerView.swift",
+      "AggregatorApp/Models/Article.swift"
+    ],
+    "updated_docs": [],
+    "next_action": "None. All acceptance criteria met.",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [
+      "AggregatorApp.xcodeproj/project.pbxproj",
+      "AggregatorApp/Articles/ArticleDetailView.swift",
+      "AggregatorApp/Articles/ArticlePagerView.swift",
+      "AggregatorApp/Common/ParagraphText.swift",
+      "AggregatorApp/Models/Article.swift",
+      "AggregatorAppTests/ArticleDecodingTests.swift"
+    ],
+    "expected_globs": [],
+    "touched_files": [
+      "AggregatorApp/Articles/ArticleDetailView.swift",
+      "AggregatorApp/Articles/ArticlePagerView.swift",
+      "AggregatorApp/Models/Article.swift"
+    ],
+    "conflict_risks": "None. Only inline comments added to three files; no structural or runtime changes.",
+    "design_decisions": "Followed existing comment style in Article.swift (one-line, explains WHY not WHAT). Placed comments immediately above the relevant code block for maximum locality.",
+    "test_coverage_notes": "No tests required for inline comments.",
+    "known_limitations": "Comments will become stale once the backend ships comments_url \u2014 they should be removed at that point."
+  },
+  "block_reason": "",
+  "conflict_risks": "None. Only inline comments added to three files; no structural or runtime changes.",
+  "branch_name": "feature/b-5bd93857",
+  "worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-5bd93857",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-20T07:12:41.873800+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-20T07:23:31.320653+00:00",
+      "event": "skills_loaded",
+      "agent_type": "documentation",
+      "summary": "Loaded 6 skill(s) for isolated execution",
+      "details": {
+        "loaded_skills": [
+          "core/base-orchestrator",
+          "role/docs-agent",
+          "capability/docs-edit",
+          "task/release-notes",
+          "task/spec-sync",
+          "memory"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-06-20T07:23:31.320670+00:00",
+      "event": "started",
+      "agent_type": "documentation",
+      "summary": "Worker started",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-20T07:23:31.323972+00:00",
+      "event": "guardrails_applied",
+      "agent_type": "documentation",
+      "summary": "Applied guardrails from .takt/agent-runs/B-1ef637cd/repo/templates/agents/documentation.md",
+      "details": {
+        "template_path": ".takt/agent-runs/B-1ef637cd/repo/templates/agents/documentation.md"
+      }
+    },
+    {
+      "timestamp": "2026-06-20T07:24:24.138429+00:00",
+      "event": "completed",
+      "agent_type": "documentation",
+      "summary": "Added three minimal inline comments: commentsURL in Article.swift flagged as forward-compatible/not yet in API; comments toolbar button in ArticleDetailView and ArticlePagerView noted as disabled pending backend shipping comments_url.",
+      "details": {}
+    }
+  ],
+  "metadata": {
+    "execution_root": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-1ef637cd",
+    "workspace_repo_path": "repo",
+    "loaded_skills": [
+      "core/base-orchestrator",
+      "role/docs-agent",
+      "capability/docs-edit",
+      "task/release-notes",
+      "task/spec-sync",
+      "memory"
+    ],
+    "skill_bundle_hash": "191f95261a4d31e4f4a691e9c39926c722504f21a3c370b6975facad92e3c1f0",
+    "isolated_home": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-1ef637cd/home",
+    "runner_backend": "claude",
+    "guardrails": {
+      "agent_type": "documentation",
+      "template_path": ".takt/agent-runs/B-1ef637cd/repo/templates/agents/documentation.md",
+      "template_text": "# Documentation Guardrails\n\nPrimary responsibility: Update documentation and examples that explain the assigned behavior without changing runtime feature behavior.\n\nAllowed actions:\n- Edit docs, examples, and explanatory text tied to the assigned bead.\n- Focus only on files listed in the bead's touched_files and changed_files fields. Do not read or modify unrelated documentation.\n- Align documentation with existing code and validated behavior.\n- Identify when implementation or tests must land first and block with a handoff.\n\nDisallowed actions:\n- Change runtime behavior, production code paths, or feature logic.\n- Invent undocumented behavior that is not present in the codebase.\n- Approve code quality or test completeness as a substitute for review.\n- Do not run the test suite. Testing is the tester agent's responsibility.\n\n## Memory\n\n**Read memory at bead start.** Before writing any documentation, run three searches using `$TAKT_CMD` (injected by the orchestrator):\n\n```bash\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace global\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace feature:<feature_root_id>\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace specs\n```\n\nTreat results as ambient context \u2014 apply relevant entries to inform documentation; skip entries that don't apply.\n\nDo **not** write to memory \u2014 documentation agents are read-only.\n\nEfficiency constraints:\n- Do not read the full codebase for context. Focus on the changed files and their immediate surroundings.\n- Keep documentation updates concise and proportional to the change.\n\nExpected outputs:\n- Return JSON with `outcome` set to `completed` (documentation beads always complete; use `verdict` for pass/fail) and `summary` as a one-line description of what was documented.\n- Return JSON with structured verdict fields for every run: `verdict`, `findings_count`, and `requires_followup`.\n- Use `verdict=approved`, `findings_count=0`, and `requires_followup=false` when documentation is complete with no gaps.\n- Use `verdict=needs_changes`, set `findings_count` to the number of unresolved documentation gaps, set `requires_followup=true`, and include `block_reason` when implementation must land first or documentation cannot be completed.\n- Keep `completed`, `remaining`, and `risks` as concise narrative context only; they do not override the structured verdict fields.\n- Accurate updated docs and clear next-agent recommendations when code changes are required first.",
+      "captured_at": "2026-06-20T07:23:31.323963+00:00"
+    },
+    "worker_prompt_context": {
+      "bead_id": "B-1ef637cd",
+      "feature_root_id": "B-5bd93857",
+      "title": "Document reader enhancements",
+      "agent_type": "documentation",
+      "description": "Update inline code comments where non-obvious: note in ArticleDetailView and ArticlePagerView that the comments button is intentionally always-present but disabled pending the backend shipping comments_url. Note in Article.swift that commentsURL is a forward-compatible field decoded defensively. Keep comments minimal per project convention \u2014 one short line max.",
+      "status": "in_progress",
+      "acceptance_criteria": [
+        "A brief comment in Article.swift near commentsURL explains it is forward-compatible (absent from current API, decoded defensively)",
+        "A brief comment near the comments toolbar button in both ArticleDetailView and ArticlePagerView notes it is disabled until the backend ships comments_url",
+        "No multi-line comment blocks; no task/PR references in code"
+      ],
+      "dependencies": [
+        "B-8209fdc1",
+        "B-572c0c73",
+        "B-9f9e6562",
+        "B-b9c256d7",
+        "B-ae4e703e",
+        "B-b8568537",
+        "B-b12d787d"
+      ],
+      "linked_docs": [
+        "specs/planned/reader-enhancements-share-sheet-selectable-text-and-comments-link.md"
+      ],
+      "execution_branch_name": "feature/b-5bd93857",
+      "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-5bd93857",
+      "expected_files": [
+        "AggregatorApp.xcodeproj/project.pbxproj",
+        "AggregatorApp/Articles/ArticleDetailView.swift",
+        "AggregatorApp/Articles/ArticlePagerView.swift",
+        "AggregatorApp/Common/ParagraphText.swift",
+        "AggregatorApp/Models/Article.swift",
+        "AggregatorAppTests/ArticleDecodingTests.swift"
+      ],
+      "expected_globs": [],
+      "touched_files": [
+        "AggregatorApp.xcodeproj/project.pbxproj",
+        "AggregatorApp/Articles/ArticleDetailView.swift",
+        "AggregatorApp/Articles/ArticlePagerView.swift",
+        "AggregatorApp/Common/ParagraphText.swift",
+        "AggregatorApp/Models/Article.swift",
+        "AggregatorAppTests/ArticleDecodingTests.swift"
+      ],
+      "conflict_risks": "None. Only one line added; no imports, no structural changes. No risk of conflicting with sibling beads.\nNone \u2014 this bead touches only the Article model property list. Any downstream bead that reads `article.commentsURL` will now find the field available.\nNone \u2014 change is isolated to ArticleDetailView.swift with no shared state mutations.\nNone \u2014 this bead only adds a new test file and regenerates the Xcode project. No existing files were modified.\nLow. The only file changed is ArticlePagerView.swift. Any sibling bead touching ArticleDetailView.swift operates on a separate file and will not conflict.\nNone \u2014 this bead exclusively modified ArticleDetailView.swift and no sibling beads are expected to touch the same file.\nNo conflicts expected. Only ArticlePagerView.swift was modified; no other beads are known to be editing this file.",
+      "handoff_summary": {
+        "completed": "",
+        "remaining": "",
+        "risks": "",
+        "verdict": "",
+        "findings_count": 0,
+        "requires_followup": false,
+        "changed_files": [],
+        "updated_docs": [],
+        "next_action": "",
+        "next_agent": "",
+        "block_reason": "",
+        "expected_files": [],
+        "expected_globs": [],
+        "touched_files": [],
+        "conflict_risks": "",
+        "design_decisions": "",
+        "test_coverage_notes": "",
+        "known_limitations": ""
+      }
+    },
+    "last_agent_result": {
+      "outcome": "completed",
+      "summary": "Added three minimal inline comments: commentsURL in Article.swift flagged as forward-compatible/not yet in API; comments toolbar button in ArticleDetailView and ArticlePagerView noted as disabled pending backend shipping comments_url.",
+      "verdict": "approved",
+      "findings_count": 0,
+      "requires_followup": false,
+      "next_agent": "",
+      "block_reason": ""
+    },
+    "telemetry": {
+      "cost_usd": 0.21078939999999996,
+      "duration_ms": 52148,
+      "duration_api_ms": 50888,
+      "num_turns": 8,
+      "input_tokens": 8,
+      "output_tokens": 2645,
+      "cache_creation_tokens": 19754,
+      "cache_read_tokens": 164818,
+      "stop_reason": "end_turn",
+      "session_id": "00c877b6-5749-4434-9367-96a747cbb801",
+      "permission_denials": [],
+      "prompt_chars": 8958,
+      "prompt_lines": 176,
+      "source": "provider",
+      "attempt": 1
+    },
+    "telemetry_history": [
+      {
+        "cost_usd": 0.21078939999999996,
+        "duration_ms": 52148,
+        "duration_api_ms": 50888,
+        "num_turns": 8,
+        "input_tokens": 8,
+        "output_tokens": 2645,
+        "cache_creation_tokens": 19754,
+        "cache_read_tokens": 164818,
+        "stop_reason": "end_turn",
+        "session_id": "00c877b6-5749-4434-9367-96a747cbb801",
+        "permission_denials": [],
+        "prompt_chars": 8958,
+        "prompt_lines": 176,
+        "source": "provider",
+        "attempt": 1
+      }
+    ],
+    "last_commit": "f25643efc81b1405ebc16566e2973d066105e871"
+  },
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

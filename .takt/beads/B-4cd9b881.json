@@ -1,0 +1,61 @@
+{
+  "bead_id": "B-4cd9b881",
+  "title": "Reader Enhancements: Share Sheet, Selectable Text, and Comments Link",
+  "agent_type": "planner",
+  "description": "Adds three improvements to the article reader: a native iOS share sheet (title + URL) via ShareLink in both reader toolbars, selectable/copyable body and summary text via .textSelection(.enabled), and a dormant comments-link toolbar action that activates automatically when the backend begins returning comments_url. The Article model is extended with commentsURL decoded defensively, and new unit tests cover the decoding path.",
+  "status": "done",
+  "bead_type": "epic",
+  "parent_id": null,
+  "dependencies": [],
+  "acceptance_criteria": [],
+  "linked_docs": [
+    "specs/planned/reader-enhancements-share-sheet-selectable-text-and-comments-link.md"
+  ],
+  "feature_root_id": null,
+  "execution_branch_name": "",
+  "execution_worktree_path": "",
+  "expected_files": [],
+  "expected_globs": [],
+  "touched_files": [],
+  "changed_files": [],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "",
+    "remaining": "",
+    "risks": "",
+    "verdict": "",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [],
+    "updated_docs": [],
+    "next_action": "",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [],
+    "expected_globs": [],
+    "touched_files": [],
+    "conflict_risks": "",
+    "design_decisions": "",
+    "test_coverage_notes": "",
+    "known_limitations": ""
+  },
+  "block_reason": "",
+  "conflict_risks": "",
+  "branch_name": "",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-20T07:12:41.830777+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    }
+  ],
+  "metadata": {},
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

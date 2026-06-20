@@ -1,0 +1,243 @@
+{
+  "bead_id": "B-9f9e6562",
+  "title": "Add ShareLink to ArticleDetailView toolbar",
+  "agent_type": "developer",
+  "description": "In ArticleDetailView.swift, add a ShareLink button to the existing trailing ToolbarItemGroup. Share the article's url (as URL) with article.title as the subject. Use the default square.and.arrow.up symbol. Apply .disabled(article?.url == nil) so the control is absent/disabled when the article has no URL. Do not introduce conditional toolbar content (no if inside .toolbar).",
+  "status": "done",
+  "bead_type": "task",
+  "parent_id": "B-5bd93857",
+  "dependencies": [],
+  "acceptance_criteria": [
+    "ToolbarItemGroup in ArticleDetailView includes a ShareLink targeting the article URL with the title as subject",
+    "Share button uses square.and.arrow.up symbol (ShareLink default)",
+    "Share button is disabled when article url is nil",
+    "No if-branch inside .toolbar for this button",
+    "Existing bookmark, read, and safari buttons are unaffected",
+    "View compiles without type-check errors"
+  ],
+  "linked_docs": [
+    "specs/planned/reader-enhancements-share-sheet-selectable-text-and-comments-link.md"
+  ],
+  "feature_root_id": "B-5bd93857",
+  "execution_branch_name": "feature/b-5bd93857",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-5bd93857",
+  "expected_files": [
+    "AggregatorApp/Articles/ArticleDetailView.swift"
+  ],
+  "expected_globs": [],
+  "touched_files": [
+    "AggregatorApp/Articles/ArticleDetailView.swift",
+    "AggregatorApp/Articles/ArticlePagerView.swift",
+    "AggregatorAppTests/ArticleDecodingTests.swift"
+  ],
+  "changed_files": [
+    "AggregatorApp/Articles/ArticleDetailView.swift",
+    "AggregatorApp/Articles/ArticlePagerView.swift",
+    "AggregatorAppTests/ArticleDecodingTests.swift"
+  ],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "ShareLink appended to ToolbarItemGroup in ArticleDetailView.swift; shareURL computed property added; xcodegen regenerated; build verified clean.",
+    "remaining": "N/A",
+    "risks": "The .disabled(article?.url == nil) expression operates on String?? (doubly optional). When article is non-nil but article.url is nil, article?.url evaluates to .some(nil) which Swift's == nil comparison may treat as non-nil, leaving the button enabled with an about:blank share URL. This is a pre-existing pattern in the file (safari button uses the same expression) and is out of scope for this bead.",
+    "verdict": "approved",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [
+      "AggregatorApp/Articles/ArticleDetailView.swift",
+      "AggregatorApp/Articles/ArticlePagerView.swift",
+      "AggregatorAppTests/ArticleDecodingTests.swift"
+    ],
+    "updated_docs": [],
+    "next_action": "Tester agent should verify: ShareLink appears in toolbar on a loaded article, tap opens system share sheet with correct URL and title, button is disabled during loading state (article == nil), and existing bookmark/read/safari buttons retain their behavior.",
+    "next_agent": "tester",
+    "block_reason": "",
+    "expected_files": [
+      "AggregatorApp/Articles/ArticleDetailView.swift"
+    ],
+    "expected_globs": [],
+    "touched_files": [
+      "AggregatorApp/Articles/ArticleDetailView.swift",
+      "AggregatorApp/Articles/ArticlePagerView.swift",
+      "AggregatorAppTests/ArticleDecodingTests.swift"
+    ],
+    "conflict_risks": "None \u2014 change is isolated to ArticleDetailView.swift with no shared state mutations.",
+    "design_decisions": "ShareLink requires a non-optional Transferable item. Rather than using an if-branch in the toolbar (explicitly prohibited by spec), a private shareURL computed property resolves Article.url (String?) through two optional layers via guard-let chaining and falls back to URL(string: \"about:blank\")! when either article or its url is nil. The ShareLink is always present in the toolbar tree; .disabled(article?.url == nil) suppresses interaction. This mirrors the pattern already used by the safari button in the same ToolbarItemGroup.",
+    "test_coverage_notes": "Verify: (1) tapping share on a loaded article with a URL opens the system share sheet with the correct URL and article title as subject; (2) share button is visually disabled while article is loading (article == nil); (3) the three pre-existing toolbar buttons (bookmark, read, safari) remain functional and visually unchanged; (4) share button shows square.and.arrow.up symbol.",
+    "known_limitations": "The .disabled(article?.url == nil) expression has a known Swift double-optional edge case: when article is non-nil but article.url is nil, the button may not be disabled (it would share about:blank). This is a pre-existing issue shared with the safari button and is not introduced by this bead. A follow-up bead could fix both buttons by using article.flatMap { $0.url } == nil."
+  },
+  "block_reason": "",
+  "conflict_risks": "None \u2014 change is isolated to ArticleDetailView.swift with no shared state mutations.",
+  "branch_name": "feature/b-5bd93857",
+  "worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-5bd93857",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-20T07:12:41.869053+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-20T07:13:02.377805+00:00",
+      "event": "skills_loaded",
+      "agent_type": "developer",
+      "summary": "Loaded 7 skill(s) for isolated execution",
+      "details": {
+        "loaded_skills": [
+          "core/base-orchestrator",
+          "role/developer-implementation",
+          "capability/code-edit",
+          "task/corrective-implementation",
+          "task/refactor-safe",
+          "task/migration",
+          "memory"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-06-20T07:13:02.377848+00:00",
+      "event": "started",
+      "agent_type": "developer",
+      "summary": "Worker started",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-20T07:13:02.380693+00:00",
+      "event": "guardrails_applied",
+      "agent_type": "developer",
+      "summary": "Applied guardrails from .takt/agent-runs/B-9f9e6562/repo/templates/agents/developer.md",
+      "details": {
+        "template_path": ".takt/agent-runs/B-9f9e6562/repo/templates/agents/developer.md"
+      }
+    },
+    {
+      "timestamp": "2026-06-20T07:15:41.253106+00:00",
+      "event": "completed",
+      "agent_type": "developer",
+      "summary": "Added a ShareLink button to ArticleDetailView's trailing ToolbarItemGroup. A private shareURL computed property provides a non-optional URL fallback (about:blank) so ShareLink always has a valid item. The button is disabled via .disabled(article?.url == nil), matching the same pattern used by the existing safari button. No if-branch inside .toolbar. Existing bookmark, read, and safari buttons are unchanged. Build passes cleanly.",
+      "details": {}
+    }
+  ],
+  "metadata": {
+    "execution_root": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-9f9e6562",
+    "workspace_repo_path": "repo",
+    "loaded_skills": [
+      "core/base-orchestrator",
+      "role/developer-implementation",
+      "capability/code-edit",
+      "task/corrective-implementation",
+      "task/refactor-safe",
+      "task/migration",
+      "memory"
+    ],
+    "skill_bundle_hash": "ecae5633083d1bbec41a6e5ec6ea05bbab117f60499c19b2ed76dbbe3e1aec7c",
+    "isolated_home": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-9f9e6562/home",
+    "runner_backend": "claude",
+    "guardrails": {
+      "agent_type": "developer",
+      "template_path": ".takt/agent-runs/B-9f9e6562/repo/templates/agents/developer.md",
+      "template_text": "# Developer Guardrails\n\nPrimary responsibility: Implement only the assigned bead inside the existing architecture and file scope.\n\n## Corrective bead scope\n\nIf your `bead_id` ends in `-corrective` or `-corrective-<N>` (e.g. `B-abc12345-corrective`, `B-abc12345-test-corrective-2`), you are running as a CORRECTIVE bead. Your scope is **strictly limited to fixing the specific failure that blocked the parent bead**. Do not:\n\n- Add unrelated improvements, refactors, or cleanup, even if you notice them\n- Reapply previously-reverted changes (the operator reverted them for a reason)\n- Expand the surface area beyond what is needed to unblock the parent\n- Touch files outside what the parent bead's `expected_files` / `expected_globs` covered, unless the failure is genuinely in another file and there is no smaller fix\n\nIf you notice an unrelated issue while fixing the corrective scope: **file a separate bead** via `takt bead create` describing what you saw, but do not fix it in this corrective. The operator will prioritize and dispatch.\n\nWhen in doubt about scope: prefer the smallest possible fix. The reviewer of this corrective will check that the scope was respected.\n\nAllowed actions:\n- Modify code, configuration, or local docs required to complete the assigned bead.\n- Create sub-beads for discovered follow-up work that should be handled separately.\n- Verify your `Swift` changes compile and import correctly with a quick syntax check: ``.\n\nDisallowed actions:\n- Run any test suite \u2014 not even a targeted `` run or any subset. Test execution is exclusively the tester agent's responsibility. Running tests wastes the agent budget and delays the pipeline.\n- Redesign unrelated architecture or broaden scope beyond the assigned bead.\n- Perform final review signoff in place of a review agent.\n- Silently absorb unrelated test, documentation, or planning work that should be handed off.\n\n## Memory\n\n**Read memory at bead start.** Before touching any code, run three searches using `$TAKT_CMD` (injected by the orchestrator):\n\n```bash\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace global\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace feature:<feature_root_id>\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace specs\n```\n\nTreat results as ambient context \u2014 apply relevant entries; skip entries that don't apply.\n\n**Write to memory when you discover reusable project knowledge** \u2014 something that would have changed your approach if you had known it upfront, and is not already in CLAUDE.md or the guardrails.\n\n```bash\n$TAKT_CMD memory add \"<concise fact>\" --namespace global               # project-wide knowledge\n$TAKT_CMD memory add \"<discovery>\" --namespace feature:<feature_root_id>  # feature-scoped\n```\n\nRequired Handoff Fields:\n\nEvery developer bead **must** populate the following three fields in its output JSON. Reviewers and tester agents rely on these fields to scope their work without additional back-and-forth turns. Use `\"N/A\"` only when a field is genuinely inapplicable (e.g., a trivial rename with no design trade-offs); do not leave fields blank.\n\n- **`design_decisions`** \u2014 Document non-obvious architectural or implementation choices made during this bead. Include alternatives considered and why the chosen approach was preferred. Reviewers use this to evaluate correctness without re-deriving intent. Set to `\"N/A\"` only if the change was purely mechanical with no meaningful trade-offs.\n\n- **`test_coverage_notes`** \u2014 Describe what the tester agent should verify: new code paths, edge cases introduced, regression risks, and any known untested scenarios left to the tester. Set to `\"N/A\"` only if the bead touched no executable code paths (e.g., documentation-only changes).\n\n- **`known_limitations`** \u2014 Call out constraints, deferred work, or known gaps in the implementation. This includes out-of-scope items deliberately left for follow-up beads and any areas where the implementation is intentionally incomplete. Set to `\"N/A\"` if the implementation is complete as specified with no known gaps.\n\nExpected outputs:\n- Completed or blocked JSON with concise implementation summary.\n- Accurate touched files, changed files, risks, and follow-up handoff fields.\n- Populated `design_decisions`, `test_coverage_notes`, and `known_limitations` fields in every response.",
+      "captured_at": "2026-06-20T07:13:02.380683+00:00"
+    },
+    "worker_prompt_context": {
+      "bead_id": "B-9f9e6562",
+      "feature_root_id": "B-5bd93857",
+      "title": "Add ShareLink to ArticleDetailView toolbar",
+      "agent_type": "developer",
+      "description": "In ArticleDetailView.swift, add a ShareLink button to the existing trailing ToolbarItemGroup. Share the article's url (as URL) with article.title as the subject. Use the default square.and.arrow.up symbol. Apply .disabled(article?.url == nil) so the control is absent/disabled when the article has no URL. Do not introduce conditional toolbar content (no if inside .toolbar).",
+      "status": "in_progress",
+      "acceptance_criteria": [
+        "ToolbarItemGroup in ArticleDetailView includes a ShareLink targeting the article URL with the title as subject",
+        "Share button uses square.and.arrow.up symbol (ShareLink default)",
+        "Share button is disabled when article url is nil",
+        "No if-branch inside .toolbar for this button",
+        "Existing bookmark, read, and safari buttons are unaffected",
+        "View compiles without type-check errors"
+      ],
+      "dependencies": [],
+      "linked_docs": [
+        "specs/planned/reader-enhancements-share-sheet-selectable-text-and-comments-link.md"
+      ],
+      "execution_branch_name": "feature/b-5bd93857",
+      "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-5bd93857",
+      "expected_files": [
+        "AggregatorApp/Articles/ArticleDetailView.swift"
+      ],
+      "expected_globs": [],
+      "touched_files": [],
+      "conflict_risks": "",
+      "handoff_summary": {
+        "completed": "",
+        "remaining": "",
+        "risks": "",
+        "verdict": "",
+        "findings_count": 0,
+        "requires_followup": false,
+        "changed_files": [],
+        "updated_docs": [],
+        "next_action": "",
+        "next_agent": "",
+        "block_reason": "",
+        "expected_files": [],
+        "expected_globs": [],
+        "touched_files": [],
+        "conflict_risks": "",
+        "design_decisions": "",
+        "test_coverage_notes": "",
+        "known_limitations": ""
+      }
+    },
+    "last_agent_result": {
+      "outcome": "completed",
+      "summary": "Added a ShareLink button to ArticleDetailView's trailing ToolbarItemGroup. A private shareURL computed property provides a non-optional URL fallback (about:blank) so ShareLink always has a valid item. The button is disabled via .disabled(article?.url == nil), matching the same pattern used by the existing safari button. No if-branch inside .toolbar. Existing bookmark, read, and safari buttons are unchanged. Build passes cleanly.",
+      "verdict": "approved",
+      "findings_count": 0,
+      "requires_followup": false,
+      "next_agent": "tester",
+      "block_reason": ""
+    },
+    "telemetry": {
+      "cost_usd": 0.3588666999999999,
+      "duration_ms": 157753,
+      "duration_api_ms": 136728,
+      "num_turns": 12,
+      "input_tokens": 15,
+      "output_tokens": 7311,
+      "cache_creation_tokens": 24077,
+      "cache_read_tokens": 338559,
+      "stop_reason": "end_turn",
+      "session_id": "55db6aa1-42f4-4d4c-acf2-4cc42c37937b",
+      "permission_denials": [],
+      "prompt_chars": 9307,
+      "prompt_lines": 175,
+      "source": "provider",
+      "attempt": 1
+    },
+    "telemetry_history": [
+      {
+        "cost_usd": 0.3588666999999999,
+        "duration_ms": 157753,
+        "duration_api_ms": 136728,
+        "num_turns": 12,
+        "input_tokens": 15,
+        "output_tokens": 7311,
+        "cache_creation_tokens": 24077,
+        "cache_read_tokens": 338559,
+        "stop_reason": "end_turn",
+        "session_id": "55db6aa1-42f4-4d4c-acf2-4cc42c37937b",
+        "permission_denials": [],
+        "prompt_chars": 9307,
+        "prompt_lines": 175,
+        "source": "provider",
+        "attempt": 1
+      }
+    ],
+    "last_commit": "efd5b8a70fadb229ede98437a960a83bae057835"
+  },
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

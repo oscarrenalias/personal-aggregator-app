@@ -1,0 +1,73 @@
+{
+  "bead_id": "B-5bd93857",
+  "title": "Reader Enhancements: Share Sheet, Selectable Text, and Comments Link",
+  "agent_type": "planner",
+  "description": "Non-runnable feature container. All implementation, testing, documentation, and review work lives in children. Covers: commentsURL on the Article model, .textSelection(.enabled) on body/summary text, ShareLink in both reader toolbars, a disabled-until-backend-ships comments toolbar button in both readers, and Article decoding unit tests.",
+  "status": "done",
+  "bead_type": "feature",
+  "parent_id": "B-4cd9b881",
+  "dependencies": [],
+  "acceptance_criteria": [
+    "xcodebuild test exits 0 including new Article decoding tests",
+    "Reader toolbar has a Share action in both ArticleDetailView and ArticlePagerView; tapping it presents the iOS share sheet with article title + URL",
+    "Share shares the currently-visible article in both standalone and paged reader contexts",
+    "Article body and summary text are selectable and copyable via long-press",
+    "Text selection does not break vertical scrolling or horizontal page-swipe gestures",
+    "Comments toolbar button is present in both reader toolbars; it is disabled when the article has no commentsURL and enabled (opening in-app SafariView) when commentsURL is non-nil",
+    "No conditional content (if) inside .toolbar \u2014 buttons use .disabled, not conditional inclusion",
+    "No hardcoded hex colors; Liquid Glass conventions preserved"
+  ],
+  "linked_docs": [
+    "specs/planned/reader-enhancements-share-sheet-selectable-text-and-comments-link.md"
+  ],
+  "feature_root_id": "B-5bd93857",
+  "execution_branch_name": "feature/b-5bd93857",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-5bd93857",
+  "expected_files": [],
+  "expected_globs": [
+    "AggregatorApp/**/*.swift",
+    "AggregatorAppTests/**/*.swift"
+  ],
+  "touched_files": [],
+  "changed_files": [],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "",
+    "remaining": "",
+    "risks": "",
+    "verdict": "",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [],
+    "updated_docs": [],
+    "next_action": "",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [],
+    "expected_globs": [],
+    "touched_files": [],
+    "conflict_risks": "",
+    "design_decisions": "",
+    "test_coverage_notes": "",
+    "known_limitations": ""
+  },
+  "block_reason": "",
+  "conflict_risks": "",
+  "branch_name": "",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-20T07:12:41.859569+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    }
+  ],
+  "metadata": {},
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

@@ -1,0 +1,227 @@
+{
+  "bead_id": "B-d7975c04",
+  "title": "Article/Thread lists reload and scroll to top when returning from detail",
+  "agent_type": "defect",
+  "description": "DEFECT: Returning from an article reader (or thread detail) to its list scrolls\nback to the top instead of preserving the user's scroll position. Cause: both\n`ArticleListView` and `ThreadsView` call `loadFirstPage()` from `.task`, which\nre-runs when the view reappears after the pushed detail is popped \u2014 reloading\nthe list (replacing the items array) and resetting scroll. The list should only\nload on first appearance; user-initiated pull-to-refresh and sort/filter changes\nstill reload.\n\nFIX (apply to BOTH AggregatorApp/Articles/ArticleListView.swift and\nAggregatorApp/Threads/ThreadsView.swift):\n- Guard the initial load so it runs only once. Add a load-once seam, e.g. a\n  `@State private var hasLoaded = false` and a `loadFirstPageIfNeeded()` that\n  returns early when `hasLoaded` is true (set it true after the first successful\n  load). Call `loadFirstPageIfNeeded()` from `.task` instead of `loadFirstPage()`.\n- Keep the explicit reloads intact: the `.onChange(of:)` handlers for sort and\n  read/unread filter must still call `loadFirstPage()` (forced reload), and\n  `.refreshable` pull-to-refresh must still reload. Only the passive `.task`\n  reappearance path becomes a no-op once loaded.\n- Net effect: navigating into a detail and back preserves the list and scroll\n  position; the user refreshes by pulling down (as intended).\n\nREGRESSION TEST (AggregatorAppTests): make the load-once decision testable \u2014\ne.g. extract a small pure helper or expose the `hasLoaded` gate so a test can\nassert that the \"load if needed\" path performs the load when not yet loaded and\nis a no-op once loaded (fails before the fix, passes after). If the gate cannot\nbe unit-tested without UI, add the most focused test possible around the\nextracted decision and note the limitation in the handoff.\n\nRun only the focused test, not the full suite (that runs at merge time).",
+  "status": "done",
+  "bead_type": "defect",
+  "parent_id": null,
+  "dependencies": [],
+  "acceptance_criteria": [],
+  "linked_docs": [],
+  "feature_root_id": "B-d7975c04",
+  "execution_branch_name": "feature/b-d7975c04",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-d7975c04",
+  "expected_files": [
+    "AggregatorApp/Common/LoadOnceGate.swift",
+    "AggregatorAppTests/LoadOnceGateTests.swift"
+  ],
+  "expected_globs": [],
+  "touched_files": [
+    "AggregatorApp/Articles/ArticleListView.swift",
+    "AggregatorApp/Common/LoadOnceGate.swift",
+    "AggregatorApp/Threads/ThreadsView.swift",
+    "AggregatorAppTests/LoadOnceGateTests.swift"
+  ],
+  "changed_files": [
+    "AggregatorApp/Articles/ArticleListView.swift",
+    "AggregatorApp/Common/LoadOnceGate.swift",
+    "AggregatorApp/Threads/ThreadsView.swift",
+    "AggregatorAppTests/LoadOnceGateTests.swift"
+  ],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "Created AggregatorApp/Common/LoadOnceGate.swift \u2014 a minimal struct with shouldLoad() returning true on the first call and false thereafter. Guarded .task in ArticleListView and ThreadsView with loadGate.shouldLoad(), leaving all explicit reload paths (pull-to-refresh, .onChange for sort/filter, Retry button) untouched. Added AggregatorAppTests/LoadOnceGateTests.swift with three focused tests. Ran xcodegen generate; build succeeded; all three new tests pass.",
+    "remaining": "N/A \u2014 fix is complete as scoped.",
+    "risks": "Low. The fix is additive (a new guard) and does not change any explicit reload path. The only behavioral change is that .task is now a no-op after the first load, which is the intended regression fix.",
+    "verdict": "approved",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [
+      "AggregatorApp/Articles/ArticleListView.swift",
+      "AggregatorApp/Common/LoadOnceGate.swift",
+      "AggregatorApp/Threads/ThreadsView.swift",
+      "AggregatorAppTests/LoadOnceGateTests.swift"
+    ],
+    "updated_docs": [],
+    "next_action": "Review bead for correctness and scope compliance",
+    "next_agent": "review",
+    "block_reason": "",
+    "expected_files": [
+      "AggregatorApp/Common/LoadOnceGate.swift",
+      "AggregatorAppTests/LoadOnceGateTests.swift"
+    ],
+    "expected_globs": [],
+    "touched_files": [
+      "AggregatorApp/Articles/ArticleListView.swift",
+      "AggregatorApp/Common/LoadOnceGate.swift",
+      "AggregatorApp/Threads/ThreadsView.swift",
+      "AggregatorAppTests/LoadOnceGateTests.swift"
+    ],
+    "conflict_risks": "None \u2014 new file LoadOnceGate.swift has no overlap with other in-flight beads. The two modified view files (ArticleListView.swift, ThreadsView.swift) are not known to be touched by sibling beads.",
+    "design_decisions": "Root cause: SwiftUI's .task modifier re-runs its closure every time the view reappears (e.g. after popping a NavigationLink detail). Both views were calling loadFirstPage() unconditionally from .task, which cleared the items array and reset the list, discarding scroll state. Fix: extracted LoadOnceGate (a plain struct with a mutating shouldLoad() method) so the decision is trivially unit-testable. Considered keeping @State private var hasLoaded = false inline without extraction, but the extracted type makes the test explicit about the invariant and is reusable across both views. The .onChange and .refreshable paths intentionally bypass the gate \u2014 they call loadFirstPage() directly \u2014 so user-initiated reloads are unaffected. Build verification: xcodebuild build \u2014 BUILD SUCCEEDED.",
+    "test_coverage_notes": "Three unit tests in LoadOnceGateTests: (1) testFirstCallReturnsTrue \u2014 asserts shouldLoad() returns true and sets hasLoaded on first invocation; (2) testSubsequentCallsReturnFalse \u2014 asserts second and third calls return false, directly modeling the reappear-no-op scenario; (3) testGatePermitsExactlyOneLoad \u2014 calls shouldLoad() five times and asserts exactly one load occurs. Before the fix, LoadOnceGate did not exist so these tests would not compile (type-not-found error), demonstrating the pre-fix failure. The SwiftUI view wiring itself (that .task calls the gate) is not covered by automated unit tests \u2014 that would require ViewInspector or UI testing; the gate's decision logic is fully covered at the unit level.",
+    "known_limitations": "The fix guards against scroll-position loss but does not restore an exact scroll offset after re-appearing \u2014 SwiftUI's List handles scroll position preservation natively as long as the items array is not replaced (which this fix achieves). If credentials change (e.g. the user reconfigures the app) the gate keeps hasLoaded=true and the list will not auto-reload; the user must pull-to-refresh. This is acceptable for the personal-use scope."
+  },
+  "block_reason": "",
+  "conflict_risks": "None \u2014 new file LoadOnceGate.swift has no overlap with other in-flight beads. The two modified view files (ArticleListView.swift, ThreadsView.swift) are not known to be touched by sibling beads.",
+  "branch_name": "feature/b-d7975c04",
+  "worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-d7975c04",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-20T07:03:34.007650+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-20T07:13:02.362301+00:00",
+      "event": "skills_loaded",
+      "agent_type": "defect",
+      "summary": "Loaded 6 skill(s) for isolated execution",
+      "details": {
+        "loaded_skills": [
+          "core/base-orchestrator",
+          "role/defect-fix",
+          "capability/code-edit",
+          "capability/test-execution",
+          "task/corrective-implementation",
+          "memory"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-06-20T07:13:02.362318+00:00",
+      "event": "started",
+      "agent_type": "defect",
+      "summary": "Worker started",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-20T07:13:02.365368+00:00",
+      "event": "guardrails_applied",
+      "agent_type": "defect",
+      "summary": "Applied guardrails from .takt/agent-runs/B-d7975c04/repo/templates/agents/defect.md",
+      "details": {
+        "template_path": ".takt/agent-runs/B-d7975c04/repo/templates/agents/defect.md"
+      }
+    },
+    {
+      "timestamp": "2026-06-20T07:20:06.808519+00:00",
+      "event": "completed",
+      "agent_type": "defect",
+      "summary": "Added LoadOnceGate helper and guarded the .task initial-load in both ArticleListView and ThreadsView so that navigating back from a detail view no longer reloads the list or resets scroll position. Three regression tests added, all passing.",
+      "details": {}
+    }
+  ],
+  "metadata": {
+    "execution_root": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-d7975c04",
+    "workspace_repo_path": "repo",
+    "loaded_skills": [
+      "core/base-orchestrator",
+      "role/defect-fix",
+      "capability/code-edit",
+      "capability/test-execution",
+      "task/corrective-implementation",
+      "memory"
+    ],
+    "skill_bundle_hash": "1ce020489b102314f2c9c90bb5e29ff81b9b1b791eb626c3d9884ff48af8a294",
+    "isolated_home": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-d7975c04/home",
+    "runner_backend": "claude",
+    "guardrails": {
+      "agent_type": "defect",
+      "template_path": ".takt/agent-runs/B-d7975c04/repo/templates/agents/defect.md",
+      "template_text": "# Defect Guardrails\n\nPrimary responsibility: Fix the specific bug described in the bead, add a regression test, and verify the fix with focused tests and a build sanity step. Do not exceed this scope.\n\n## Scope\n\nA defect bead is operator-filed for a bug discovered **after** the originating feature has merged to main. It is standalone \u2014 there is no parent bead. Fix only the issue named in the bead description. If you discover an unrelated problem while working, file a separate bead via `takt bead create` and do not fix it here.\n\nA defect bead is **not** the same as a corrective bead:\n- **Corrective** \u2014 scheduler-created, always has a parent bead, retries a transient failure of the parent's work.\n- **Defect** \u2014 operator-filed, standalone, fixes a real bug that escaped to main.\n\n## Permit: Focused test runs\n\nYou **may** run tests scoped to the affected module or file. Defer command mechanics (runner, flags, discovery) to `templates/skills/capability/test-execution/SKILL.md`. Examples:\n\n```bash\npytest tests/test_affected_module.py -v\nnpm test -- tests/affected.test.ts\ncargo test affected_module\n```\n\nRun only the narrowest scope that verifies the fix. Do not broaden to unrelated test files.\n\n## Permit: Build sanity\n\nYou **may** run a build sanity step using heuristic detection:\n\n| File found at worktree root | Action |\n|---|---|\n| `package.json` with a `build` script | `npm run build` (or `yarn build` / `pnpm build` as appropriate) |\n| `pyproject.toml` | No build step needed; `python -m py_compile <changed_file>` is sufficient |\n| `Cargo.toml` | `cargo check` |\n| None of the above | Note `build_verification: skipped \u2014 <rationale>` in the `design_decisions` output field |\n\nWhen no build target is detected, the agent **must** note the outcome in `design_decisions` (e.g. `\"build_verification: skipped \u2014 no build target detected\"`). Do not silently omit the step \u2014 the omission must be auditable.\n\n## Mandate: Regression test\n\nYou **must** add or update an automated test that:\n\n1. **Fails** without the fix (demonstrate the bug is real and reproducible).\n2. **Passes** with the fix (demonstrate the bug is resolved).\n\nIf the bug is genuinely untestable by automated means (e.g. pixel-level CSS rendering, hardware-specific timing, third-party service absence), you **must** explicitly document this in the `test_coverage_notes` field of the structured output (see Structured Output Fields below). Do not silently omit the test.\n\n## Forbid: Full-suite runs\n\n**Do not run the full test suite.** Full-suite verification belongs to the `-review` followup or to the `takt merge` test gate. Running the full suite wastes agent budget, often exceeds the agent timeout, and delays the pipeline. Run only targeted, focused commands scoped to the affected module.\n\n## Forbid: Scope creep\n\n**Strictly limit changes to what is needed to fix the described bug.** Do not:\n\n- Add unrelated improvements, refactors, or cleanup, even if you notice them.\n- Touch files outside what is needed for the specific fix, unless the bug genuinely lives in another file and there is no smaller fix.\n- Reapply previously-reverted changes.\n- Expand the surface area beyond the defect's stated scope.\n\nIf you notice an unrelated issue: **file a separate bead** via `takt bead create` describing what you saw. Do not fix it here.\n\nWhen in doubt about scope: prefer the smallest possible fix. The reviewer checks that scope was respected.\n\n## Forbid: Review signoff\n\nDo not perform review signoff. The scheduler auto-creates a `-review` followup when this defect bead completes. Let the review agent do its job.\n\n## Memory\n\n**Read memory at bead start.** Before touching any code, run three searches using `$TAKT_CMD` (injected by the orchestrator):\n\n```bash\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace global\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace feature:<feature_root_id>\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace specs\n```\n\nTreat results as ambient context \u2014 apply relevant entries; skip entries that don't apply.\n\n**Write to memory when you discover reusable project knowledge** \u2014 something that would have changed your approach if you had known it upfront, and is not already in CLAUDE.md or the guardrails.\n\n```bash\n$TAKT_CMD memory add \"<concise fact>\" --namespace global               # project-wide knowledge\n$TAKT_CMD memory add \"<discovery>\" --namespace feature:<feature_root_id>  # feature-scoped\n```\n\n## Structured Output Fields\n\nEvery defect bead **must** populate the following fields. Reviewers rely on them to scope their work without additional back-and-forth turns. Use `\"N/A\"` only when a field is genuinely inapplicable; do not leave fields blank.\n\n- **`design_decisions`** \u2014 Non-obvious implementation choices: root cause identified, alternatives considered, why the chosen fix was preferred. Also include the build verification outcome here (e.g. `\"build: python -m py_compile \u2014 OK\"` or `\"build_verification: skipped \u2014 no build target detected\"`). Reviewers use this field to evaluate correctness without re-deriving intent. Set to `\"N/A\"` only for purely mechanical changes with no meaningful trade-offs.\n\n- **`test_coverage_notes`** \u2014 Describe the regression test added: what it exercises, what the pre-fix failure looked like, and any edge cases left to the reviewer. **If the bug is genuinely untestable by automated means**, explain why here rather than silently omitting a test. The reviewer checks this field to verify that automated coverage exists or that the omission is justified.\n\n- **`known_limitations`** \u2014 Constraints, deferred work, or known gaps. Includes out-of-scope issues deliberately left for follow-up beads and any areas where the fix is intentionally incomplete. Set to `\"N/A\"` if the fix is complete as specified.\n\nExpected outputs:\n- Completed or blocked JSON with concise fix summary.\n- Accurate touched files, changed files, risks, and follow-up handoff fields.\n- Populated `design_decisions` (including build verification outcome), `test_coverage_notes`, and `known_limitations` fields in every response.",
+      "captured_at": "2026-06-20T07:13:02.365359+00:00"
+    },
+    "worker_prompt_context": {
+      "bead_id": "B-d7975c04",
+      "feature_root_id": "B-d7975c04",
+      "title": "Article/Thread lists reload and scroll to top when returning from detail",
+      "agent_type": "defect",
+      "description": "DEFECT: Returning from an article reader (or thread detail) to its list scrolls\nback to the top instead of preserving the user's scroll position. Cause: both\n`ArticleListView` and `ThreadsView` call `loadFirstPage()` from `.task`, which\nre-runs when the view reappears after the pushed detail is popped \u2014 reloading\nthe list (replacing the items array) and resetting scroll. The list should only\nload on first appearance; user-initiated pull-to-refresh and sort/filter changes\nstill reload.\n\nFIX (apply to BOTH AggregatorApp/Articles/ArticleListView.swift and\nAggregatorApp/Threads/ThreadsView.swift):\n- Guard the initial load so it runs only once. Add a load-once seam, e.g. a\n  `@State private var hasLoaded = false` and a `loadFirstPageIfNeeded()` that\n  returns early when `hasLoaded` is true (set it true after the first successful\n  load). Call `loadFirstPageIfNeeded()` from `.task` instead of `loadFirstPage()`.\n- Keep the explicit reloads intact: the `.onChange(of:)` handlers for sort and\n  read/unread filter must still call `loadFirstPage()` (forced reload), and\n  `.refreshable` pull-to-refresh must still reload. Only the passive `.task`\n  reappearance path becomes a no-op once loaded.\n- Net effect: navigating into a detail and back preserves the list and scroll\n  position; the user refreshes by pulling down (as intended).\n\nREGRESSION TEST (AggregatorAppTests): make the load-once decision testable \u2014\ne.g. extract a small pure helper or expose the `hasLoaded` gate so a test can\nassert that the \"load if needed\" path performs the load when not yet loaded and\nis a no-op once loaded (fails before the fix, passes after). If the gate cannot\nbe unit-tested without UI, add the most focused test possible around the\nextracted decision and note the limitation in the handoff.\n\nRun only the focused test, not the full suite (that runs at merge time).",
+      "status": "in_progress",
+      "acceptance_criteria": [],
+      "dependencies": [],
+      "linked_docs": [],
+      "execution_branch_name": "feature/b-d7975c04",
+      "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-d7975c04",
+      "expected_files": [],
+      "expected_globs": [],
+      "touched_files": [],
+      "conflict_risks": "",
+      "handoff_summary": {
+        "completed": "",
+        "remaining": "",
+        "risks": "",
+        "verdict": "",
+        "findings_count": 0,
+        "requires_followup": false,
+        "changed_files": [],
+        "updated_docs": [],
+        "next_action": "",
+        "next_agent": "",
+        "block_reason": "",
+        "expected_files": [],
+        "expected_globs": [],
+        "touched_files": [],
+        "conflict_risks": "",
+        "design_decisions": "",
+        "test_coverage_notes": "",
+        "known_limitations": ""
+      }
+    },
+    "last_agent_result": {
+      "outcome": "completed",
+      "summary": "Added LoadOnceGate helper and guarded the .task initial-load in both ArticleListView and ThreadsView so that navigating back from a detail view no longer reloads the list or resets scroll position. Three regression tests added, all passing.",
+      "verdict": "approved",
+      "findings_count": 0,
+      "requires_followup": false,
+      "next_agent": "review",
+      "block_reason": ""
+    },
+    "telemetry": {
+      "cost_usd": 0.6961309999999997,
+      "duration_ms": 419493,
+      "duration_api_ms": 238344,
+      "num_turns": 28,
+      "input_tokens": 29,
+      "output_tokens": 13109,
+      "cache_creation_tokens": 36562,
+      "cache_read_tokens": 920620,
+      "stop_reason": "end_turn",
+      "session_id": "6556c217-cc0b-4030-9c69-f23de2ea1916",
+      "permission_denials": [],
+      "prompt_chars": 11742,
+      "prompt_lines": 200,
+      "source": "provider",
+      "attempt": 1
+    },
+    "telemetry_history": [
+      {
+        "cost_usd": 0.6961309999999997,
+        "duration_ms": 419493,
+        "duration_api_ms": 238344,
+        "num_turns": 28,
+        "input_tokens": 29,
+        "output_tokens": 13109,
+        "cache_creation_tokens": 36562,
+        "cache_read_tokens": 920620,
+        "stop_reason": "end_turn",
+        "session_id": "6556c217-cc0b-4030-9c69-f23de2ea1916",
+        "permission_denials": [],
+        "prompt_chars": 11742,
+        "prompt_lines": 200,
+        "source": "provider",
+        "attempt": 1
+      }
+    ],
+    "last_commit": "e5d68244af8194283c4c59eec8777b9efd43cb17"
+  },
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}
