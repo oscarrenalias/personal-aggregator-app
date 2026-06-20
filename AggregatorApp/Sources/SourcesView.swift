@@ -50,8 +50,15 @@ struct SourcesView: View {
                                 Section("Categories") {
                                     ForEach(categories) { category in
                                         NavigationLink(destination: ArticleListView(feed: .category(name: category.name))) {
-                                            Text(category.name)
-                                                .font(.body)
+                                            VStack(alignment: .leading, spacing: 2) {
+                                                Label(category.name, systemImage: "tag")
+                                                    .font(.body)
+                                                if let phrase = category.freshnessPhrase() {
+                                                    Text(phrase)
+                                                        .font(.caption)
+                                                        .foregroundStyle(.secondary)
+                                                }
+                                            }
                                         }
                                         .accessibilityLabel(category.name)
                                         .listRowBackground(Color.clear)
