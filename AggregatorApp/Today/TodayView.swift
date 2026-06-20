@@ -3,7 +3,6 @@ import SwiftUI
 struct TodayView: View {
     @Environment(CredentialsStore.self) private var credentialsStore
     @State private var phase: Phase = .loading
-    @State private var safariURL: URL? = nil
 
     private enum Phase {
         case loading
@@ -47,65 +46,19 @@ struct TodayView: View {
                         }
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                     case .loaded(let brief):
-                        briefContent(brief)
+                        BriefDetailView(brief: brief) {
+                            await fetchBrief()
+                        }
                     }
                 }
             }
             .navigationTitle("Today")
-        }
-        .sheet(isPresented: Binding(
-            get: { safariURL != nil },
-            set: { if !$0 { safariURL = nil } }
-        )) {
-            if let url = safariURL {
-                SafariView(url: url)
-            }
         }
         .task {
             if credentialsStore.isConfigured {
                 await fetchBrief()
             }
         }
-    }
-
-    @ViewBuilder
-    private func briefContent(_ brief: Brief) -> some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
-                Text(brief.headline ?? "Daily Brief")
-                    .font(.title2)
-                    .bold()
-                    .frame(maxWidth: .infinity, alignment: .leading)
-
-                Text(captionString(brief))
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-
-                if let intro = brief.intro, !intro.isEmpty {
-                    ParagraphText(intro)
-                        .font(.body)
-                }
-
-                ForEach(brief.topics.sorted { $0.position < $1.position }) { topic in
-                    BriefTopicView(topic: topic) { url in
-                        safariURL = url
-                    }
-                }
-            }
-            .padding(.horizontal, ReaderLayout.hPadding)
-            .padding(.vertical, 16)
-        }
-        .refreshable {
-            await fetchBrief()
-        }
-    }
-
-    private func captionString(_ brief: Brief) -> String {
-        var parts = [DateDisplay.mediumDate(brief.periodStart)]
-        if let model = brief.model {
-            parts.append(model)
-        }
-        return parts.joined(separator: " · ")
     }
 
     private func fetchBrief() async {
