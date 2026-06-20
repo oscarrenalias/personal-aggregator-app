@@ -81,6 +81,7 @@ struct ArticlePagerView: View {
                 .accessibilityLabel("Open original in browser")
                 .disabled(current.url == nil)
 
+                // Disabled until backend ships comments_url; kept in toolbar for forward compatibility.
                 Button {
                     openComments(current)
                 } label: {

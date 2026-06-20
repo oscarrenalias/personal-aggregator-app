@@ -69,6 +69,7 @@ struct ArticleDetailView: View {
                 .accessibilityLabel("Share article")
                 .disabled(article?.url == nil)
 
+                // Disabled until backend ships comments_url; kept in toolbar for forward compatibility.
                 Button {
                     showCommentsSafari = true
                 } label: {

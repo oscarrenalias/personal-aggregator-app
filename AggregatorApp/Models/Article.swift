@@ -59,6 +59,7 @@ struct Article: Decodable, Identifiable {
         language = try container.decodeIfPresent(String.self, forKey: .language)
         // imageURL: backend field is absent today; try? future-proofs against type changes without breaking decode.
         imageURL = (try? container.decodeIfPresent(String.self, forKey: .imageURL)).flatMap { $0 }
+        // commentsURL: not yet in the API response; decodeIfPresent treats a missing key as nil without failing decode.
         commentsURL = try container.decodeIfPresent(String.self, forKey: .commentsURL)
     }
 }
