@@ -1,0 +1,257 @@
+{
+  "bead_id": "B-9050cf1a",
+  "title": "Tests: Source decoding and favicon URL derivation",
+  "agent_type": "tester",
+  "description": "Add unit tests covering: (1) Source decoding \u2014 current JSON shape {id,name,feed_url} produces hasNew=false and hasPriority=false; future shape with has_new/has_priority fields populates them correctly. (2) FaviconLoader.iconURL(forFeedURL:) \u2014 valid feed URL https://feeds.bbci.co.uk/news/rss.xml yields https://icons.duckduckgo.com/ip3/feeds.bbci.co.uk.ico; invalid/empty URL yields nil. Run the full test gate (bash scripts/run-tests.sh or xcodebuild test) to verify exit 0.",
+  "status": "done",
+  "bead_type": "task",
+  "parent_id": "B-059d7a6e",
+  "dependencies": [
+    "B-f0c77156",
+    "B-b941a27f",
+    "B-00671626",
+    "B-3602229f",
+    "B-e385c092"
+  ],
+  "acceptance_criteria": [
+    "New SourceDecodingTests.swift covers current and future JSON shapes for hasNew/hasPriority",
+    "New FaviconLoaderTests.swift covers iconURL derivation for valid and invalid feed URLs",
+    "xcodebuild test exits 0 with all existing and new tests passing"
+  ],
+  "linked_docs": [
+    "specs/planned/source-rows-favicons-and-activity-dots.md"
+  ],
+  "feature_root_id": "B-059d7a6e",
+  "execution_branch_name": "feature/b-059d7a6e",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-059d7a6e",
+  "expected_files": [
+    "AggregatorAppTests/SourceDecodingTests.swift",
+    "AggregatorAppTests/FaviconLoaderTests.swift"
+  ],
+  "expected_globs": [],
+  "touched_files": [
+    "AggregatorAppTests/FaviconLoaderTests.swift",
+    "AggregatorAppTests/SourceDecodingTests.swift"
+  ],
+  "changed_files": [
+    "AggregatorAppTests/FaviconLoaderTests.swift",
+    "AggregatorAppTests/SourceDecodingTests.swift"
+  ],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "Wrote AggregatorAppTests/SourceDecodingTests.swift with 6 cases covering: minimal JSON yields hasNew=false/hasPriority=false; explicit has_new=true populates correctly; explicit has_priority=true populates correctly; both flags true; required fields (id, name, feedURL) decode correctly. Wrote AggregatorAppTests/FaviconLoaderTests.swift with 5 cases covering: HTTPS feed URL yields correct DuckDuckGo ico URL; HTTP feed URL yields correct ico URL; empty string yields nil; non-URL string yields nil; file:// URL with no host yields nil. Ran xcodegen generate and targeted xcodebuild test with -only-testing for both new classes \u2014 11/11 passed.",
+    "remaining": "Full test gate (bash scripts/run-tests.sh) runs automatically at takt merge time and will validate all existing tests alongside the new ones.",
+    "risks": "None. Both test files are purely additive with no changes to production code.",
+    "verdict": "approved",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [
+      "AggregatorAppTests/FaviconLoaderTests.swift",
+      "AggregatorAppTests/SourceDecodingTests.swift"
+    ],
+    "updated_docs": [],
+    "next_action": "Ready for takt merge \u2014 run bash scripts/run-tests.sh as the full gate before merging feature/b-059d7a6e to main.",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [
+      "AggregatorAppTests/SourceDecodingTests.swift",
+      "AggregatorAppTests/FaviconLoaderTests.swift"
+    ],
+    "expected_globs": [],
+    "touched_files": [
+      "AggregatorAppTests/FaviconLoaderTests.swift",
+      "AggregatorAppTests/SourceDecodingTests.swift"
+    ],
+    "conflict_risks": "None. Both files are new additions with no overlap with any existing test or production file.",
+    "design_decisions": "FaviconLoaderTests covers only the static iconURL(forFeedURL:) method \u2014 no actor isolation or URLSession mocking needed. The file:///local/path case exercises the empty-host guard branch (URLComponents parses the host as an empty string for file:// URLs with three slashes). SourceDecodingTests uses a helper that produces the minimal JSON shape to avoid repetition across the fallback-to-false assertions.",
+    "test_coverage_notes": "FaviconLoaderTests: 5 cases \u2014 HTTPS URL (happy path), HTTP URL, empty string, non-parseable string, file:// with no host. SourceDecodingTests: 6 cases \u2014 minimal JSON (hasNew=false, hasPriority=false), hasNew=true only, hasPriority=true only, both true, required field values. icon(forFeedURL:) async/actor method and disk-cache path not covered by unit tests (require URLSession mocking and filesystem setup); these are called out in the dependency handoff as integration-level and acceptable to defer.",
+    "known_limitations": "icon(forFeedURL:) async method, in-flight deduplication, and disk-cache read path are not unit-tested \u2014 they require actor-level harness or URLSession mocking beyond the scope of this bead. The dependency handoff notes identified these as integration-level concerns acceptable to defer."
+  },
+  "block_reason": "",
+  "conflict_risks": "None. Both files are new additions with no overlap with any existing test or production file.",
+  "branch_name": "feature/b-059d7a6e",
+  "worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-059d7a6e",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-20T17:04:29.028148+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-20T17:10:48.934905+00:00",
+      "event": "skills_loaded",
+      "agent_type": "tester",
+      "summary": "Loaded 6 skill(s) for isolated execution",
+      "details": {
+        "loaded_skills": [
+          "core/base-orchestrator",
+          "role/tester-validation",
+          "capability/test-execution",
+          "task/defect-bead-creation",
+          "task/regression-triage",
+          "memory"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-06-20T17:10:48.934921+00:00",
+      "event": "started",
+      "agent_type": "tester",
+      "summary": "Worker started",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-20T17:10:48.937763+00:00",
+      "event": "guardrails_applied",
+      "agent_type": "tester",
+      "summary": "Applied guardrails from .takt/agent-runs/B-9050cf1a/repo/templates/agents/tester.md",
+      "details": {
+        "template_path": ".takt/agent-runs/B-9050cf1a/repo/templates/agents/tester.md"
+      }
+    },
+    {
+      "timestamp": "2026-06-20T17:14:18.015657+00:00",
+      "event": "completed",
+      "agent_type": "tester",
+      "summary": "Created SourceDecodingTests.swift (6 tests) and FaviconLoaderTests.swift (5 tests). All 11 targeted tests pass with 0 failures. Source.decodeIfPresent fallback to false is verified; FaviconLoader.iconURL(forFeedURL:) host-extraction and DuckDuckGo URL construction are verified for HTTPS, HTTP, empty string, non-URL, and no-host inputs.",
+      "details": {}
+    }
+  ],
+  "metadata": {
+    "execution_root": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-9050cf1a",
+    "workspace_repo_path": "repo",
+    "loaded_skills": [
+      "core/base-orchestrator",
+      "role/tester-validation",
+      "capability/test-execution",
+      "task/defect-bead-creation",
+      "task/regression-triage",
+      "memory"
+    ],
+    "skill_bundle_hash": "c2bb19865add8770ba493957f3775e07d50168d42fe585583dcff9d82dc76d86",
+    "isolated_home": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-9050cf1a/home",
+    "runner_backend": "claude",
+    "guardrails": {
+      "agent_type": "tester",
+      "template_path": ".takt/agent-runs/B-9050cf1a/repo/templates/agents/tester.md",
+      "template_text": "# Tester Guardrails\n\n**CRITICAL \u2014 read before any tool use:**\n- **Never use `run_in_background: true`** on any Bash command. All test commands must run synchronously so their output is captured before the structured verdict is emitted. Background tasks cause the structured output to be lost, resulting in a failed bead.\n- **If a task-notification appears in your context**, that means a previous Bash command ran in the background in violation of this rule. Do not treat the notification as a sign that work is done. Re-run the test command synchronously (without `run_in_background`) and emit the JSON verdict block as your final response.\n- **The JSON verdict block must be the absolute last output of your response.** Never end with prose, a status summary, or a notification acknowledgement. The orchestrator parses your final message as JSON and will fail if it is not valid JSON.\n\n---\n\nPrimary responsibility: Add or update automated tests, run validation, and report defects or missing coverage.\n\nAllowed actions:\n- Write or update tests relevant to the assigned bead.\n- Run only the test files related to the bead's changed files, not the full test suite. Target individual test files or modules. If unsure which tests are relevant, use the bead's expected_files and touched_files fields as a guide. Defer command mechanics (how to run, which runner, which flags) to `templates/skills/capability/test-execution/SKILL.md`.\n- Make minimal test-enablement fixes (e.g. import corrections, fixture setup) only when strictly necessary to run the relevant tests. Do not refactor production code under the guise of test enablement.\n\nDisallowed actions:\n- Run the full test suite instead of targeting specific tests. Always run targeted, scoped commands. Running the full suite wastes time and often exceeds the agent timeout.\n- Use `run_in_background` for any Bash commands. (See CRITICAL section above.)\n- Implement feature logic beyond minimal test-enablement work.\n- Reframe a feature implementation task as testing work to bypass handoff.\n- Perform review signoff or broad documentation rewrites.\n\n## Memory\n\n**Read memory at bead start.** Before writing or running any tests, run three searches using `$TAKT_CMD` (injected by the orchestrator):\n\n```bash\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace global\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace feature:<feature_root_id>\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace specs\n```\n\nTreat results as ambient context \u2014 apply relevant entries; skip entries that don't apply.\n\n**Write to memory when you discover reusable testing knowledge** \u2014 patterns, pitfalls, or edge cases that would benefit future testers of this codebase.\n\n```bash\n$TAKT_CMD memory add \"<concise fact>\" --namespace global               # project-wide knowledge\n$TAKT_CMD memory add \"<discovery>\" --namespace feature:<feature_root_id>  # feature-scoped\n```\n\nExpected outputs:\n- Return JSON with structured verdict fields for every run: `verdict`, `findings_count`, and `requires_followup`.\n- Treat `verdict` as the tester signoff decision: `approved` means testing can complete, while `needs_changes` means the bead must block for follow-up work.\n- Use `verdict=approved`, `findings_count=0`, and `requires_followup=false` when testing is complete with no unresolved tester-scope findings.\n- Use `verdict=needs_changes`, set `findings_count` to the unresolved defect or coverage gap count, set `requires_followup=true` unless there is a stronger explicit reason not to, and always include `block_reason` when follow-up work is required.\n- Keep `completed`, `remaining`, and `risks` as free-form narrative context only. They inform operators, but they do not override the structured verdict or control scheduler state.\n- Completed or blocked JSON describing test coverage, validation status, and follow-up needs.\n- Precise defect or coverage notes when the bead cannot be completed within tester scope.\n\n**FINAL REMINDER: The JSON verdict block must be the last thing you output. Do not add any text, prose, or acknowledgement after it.**",
+      "captured_at": "2026-06-20T17:10:48.937756+00:00"
+    },
+    "worker_prompt_context": {
+      "bead_id": "B-9050cf1a",
+      "feature_root_id": "B-059d7a6e",
+      "title": "Tests: Source decoding and favicon URL derivation",
+      "agent_type": "tester",
+      "description": "Add unit tests covering: (1) Source decoding \u2014 current JSON shape {id,name,feed_url} produces hasNew=false and hasPriority=false; future shape with has_new/has_priority fields populates them correctly. (2) FaviconLoader.iconURL(forFeedURL:) \u2014 valid feed URL https://feeds.bbci.co.uk/news/rss.xml yields https://icons.duckduckgo.com/ip3/feeds.bbci.co.uk.ico; invalid/empty URL yields nil. Run the full test gate (bash scripts/run-tests.sh or xcodebuild test) to verify exit 0.",
+      "status": "in_progress",
+      "acceptance_criteria": [
+        "New SourceDecodingTests.swift covers current and future JSON shapes for hasNew/hasPriority",
+        "New FaviconLoaderTests.swift covers iconURL derivation for valid and invalid feed URLs",
+        "xcodebuild test exits 0 with all existing and new tests passing"
+      ],
+      "dependencies": [
+        "B-f0c77156",
+        "B-b941a27f",
+        "B-00671626",
+        "B-3602229f",
+        "B-e385c092"
+      ],
+      "linked_docs": [
+        "specs/planned/source-rows-favicons-and-activity-dots.md"
+      ],
+      "execution_branch_name": "feature/b-059d7a6e",
+      "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-059d7a6e",
+      "expected_files": [
+        "AggregatorApp/Common/FaviconLoader.swift",
+        "AggregatorApp/Common/SourceFaviconView.swift",
+        "AggregatorApp/Models/Source.swift",
+        "AggregatorApp/Sources/SourceActivityDot.swift",
+        "AggregatorApp/Sources/SourcesView.swift",
+        "AggregatorAppTests/FaviconLoaderTests.swift",
+        "AggregatorAppTests/SourceDecodingTests.swift"
+      ],
+      "expected_globs": [],
+      "touched_files": [
+        "AggregatorApp/Common/FaviconLoader.swift",
+        "AggregatorApp/Common/SourceFaviconView.swift",
+        "AggregatorApp/Models/Source.swift",
+        "AggregatorApp/Sources/SourceActivityDot.swift",
+        "AggregatorApp/Sources/SourcesView.swift"
+      ],
+      "conflict_risks": "Low. Source.swift has no sibling beads modifying it concurrently.\nNone \u2014 new file with no overlap with existing Common/ files.\nNo conflicts expected. SourceActivityDot.swift is a new file. The only modification to an existing file is adding a memberwise init to Source.swift \u2014 a purely additive change that doesn't alter any existing init.\nNone \u2014 new file, no modifications to existing files.\nNo conflicts expected \u2014 only SourcesView.swift was modified within its Sources section ForEach.",
+      "handoff_summary": {
+        "completed": "",
+        "remaining": "",
+        "risks": "",
+        "verdict": "",
+        "findings_count": 0,
+        "requires_followup": false,
+        "changed_files": [],
+        "updated_docs": [],
+        "next_action": "",
+        "next_agent": "",
+        "block_reason": "",
+        "expected_files": [],
+        "expected_globs": [],
+        "touched_files": [],
+        "conflict_risks": "",
+        "design_decisions": "",
+        "test_coverage_notes": "",
+        "known_limitations": ""
+      }
+    },
+    "last_agent_result": {
+      "outcome": "completed",
+      "summary": "Created SourceDecodingTests.swift (6 tests) and FaviconLoaderTests.swift (5 tests). All 11 targeted tests pass with 0 failures. Source.decodeIfPresent fallback to false is verified; FaviconLoader.iconURL(forFeedURL:) host-extraction and DuckDuckGo URL construction are verified for HTTPS, HTTP, empty string, non-URL, and no-host inputs.",
+      "verdict": "approved",
+      "findings_count": 0,
+      "requires_followup": false,
+      "next_agent": "",
+      "block_reason": ""
+    },
+    "telemetry": {
+      "cost_usd": 0.40257010000000004,
+      "duration_ms": 208128,
+      "duration_api_ms": 118345,
+      "num_turns": 18,
+      "input_tokens": 18,
+      "output_tokens": 6679,
+      "cache_creation_tokens": 27998,
+      "cache_read_tokens": 432987,
+      "stop_reason": "end_turn",
+      "session_id": "72fa086e-41c7-4e1c-8161-8b6712743f2b",
+      "permission_denials": [],
+      "prompt_chars": 13867,
+      "prompt_lines": 201,
+      "source": "provider",
+      "attempt": 1
+    },
+    "telemetry_history": [
+      {
+        "cost_usd": 0.40257010000000004,
+        "duration_ms": 208128,
+        "duration_api_ms": 118345,
+        "num_turns": 18,
+        "input_tokens": 18,
+        "output_tokens": 6679,
+        "cache_creation_tokens": 27998,
+        "cache_read_tokens": 432987,
+        "stop_reason": "end_turn",
+        "session_id": "72fa086e-41c7-4e1c-8161-8b6712743f2b",
+        "permission_denials": [],
+        "prompt_chars": 13867,
+        "prompt_lines": 201,
+        "source": "provider",
+        "attempt": 1
+      }
+    ],
+    "last_commit": "78a8426480848d5cc32ab0f4cefee1e5e3c4cdf9"
+  },
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

@@ -1,0 +1,331 @@
+{
+  "bead_id": "B-9e7eeb2e",
+  "title": "Review: Source rows favicons and activity dots",
+  "agent_type": "review",
+  "description": "Final review of all changes: Source model defensive decoding, FaviconLoader actor safety and cache correctness, SourceFaviconView placeholder behavior, SourceActivityDot accessibility and color-blind safety, SourcesView row layout and unchanged sections, test coverage completeness, and documentation accuracy. Verify Liquid Glass conventions are preserved and no hex colors introduced.",
+  "status": "done",
+  "bead_type": "task",
+  "parent_id": "B-059d7a6e",
+  "dependencies": [
+    "B-00671626",
+    "B-0820e9de",
+    "B-3602229f",
+    "B-9050cf1a",
+    "B-b941a27f",
+    "B-e385c092",
+    "B-f0c77156"
+  ],
+  "acceptance_criteria": [
+    "No hardcoded hex colors; semantic colors only",
+    "FaviconLoader actor isolation is correct (no data races)",
+    "Disk cache path is in Caches directory (not Documents or app container root)",
+    "Source model still compiles and decodes correctly from current API responses",
+    "Accessibility labels are present and meaningful on all new interactive/informational elements",
+    "All acceptance criteria from the spec are met"
+  ],
+  "linked_docs": [
+    "specs/planned/source-rows-favicons-and-activity-dots.md"
+  ],
+  "feature_root_id": "B-059d7a6e",
+  "execution_branch_name": "feature/b-059d7a6e",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-059d7a6e",
+  "expected_files": [
+    "AggregatorApp/Common/FaviconLoader.swift",
+    "AggregatorApp/Common/SourceFaviconView.swift",
+    "AggregatorApp/Models/Source.swift",
+    "AggregatorApp/Sources/SourceActivityDot.swift",
+    "AggregatorApp/Sources/SourcesView.swift",
+    "AggregatorAppTests/FaviconLoaderTests.swift",
+    "AggregatorAppTests/SourceDecodingTests.swift",
+    "docs/API.md"
+  ],
+  "expected_globs": [
+    "AggregatorApp/Common/FaviconLoader.swift",
+    "AggregatorApp/Common/SourceFaviconView.swift",
+    "AggregatorApp/Models/Source.swift",
+    "AggregatorApp/Sources/SourceActivityDot.swift",
+    "AggregatorApp/Sources/SourcesView.swift",
+    "AggregatorAppTests/FaviconLoaderTests.swift",
+    "AggregatorAppTests/SourceDecodingTests.swift"
+  ],
+  "touched_files": [
+    "AggregatorApp/Common/FaviconLoader.swift",
+    "AggregatorApp/Common/SourceFaviconView.swift",
+    "AggregatorApp/Models/Source.swift",
+    "AggregatorApp/Sources/SourceActivityDot.swift",
+    "AggregatorApp/Sources/SourcesView.swift",
+    "AggregatorAppTests/FaviconLoaderTests.swift",
+    "AggregatorAppTests/SourceDecodingTests.swift",
+    "docs/API.md"
+  ],
+  "changed_files": [
+    "AggregatorApp/Common/FaviconLoader.swift",
+    "AggregatorApp/Common/SourceFaviconView.swift",
+    "AggregatorApp/Models/Source.swift",
+    "AggregatorApp/Sources/SourceActivityDot.swift",
+    "AggregatorApp/Sources/SourcesView.swift",
+    "AggregatorAppTests/FaviconLoaderTests.swift",
+    "AggregatorAppTests/SourceDecodingTests.swift",
+    "docs/API.md"
+  ],
+  "updated_docs": [
+    "docs/API.md"
+  ],
+  "handoff_summary": {
+    "completed": "Reviewed FaviconLoader.swift (actor isolation, cache path, deduplication), SourceFaviconView.swift (layout stability, load guard), Source.swift (defensive decode), SourceActivityDot.swift (semantic colors, accessibility labels), SourcesView.swift (row layout, unchanged sections, empty/loading/error states), FaviconLoaderTests.swift and SourceDecodingTests.swift (test coverage), and docs/API.md (documentation accuracy).",
+    "remaining": "None. All acceptance criteria are satisfied.",
+    "risks": "Low: SourceFaviconView's globe placeholder Image(systemName:) has an implicit VoiceOver label but no .accessibilityHidden(true). In practice suppressed by the NavigationLink row-level label, but not following strict decorative-element accessibility conventions.",
+    "verdict": "approved",
+    "findings_count": 1,
+    "requires_followup": false,
+    "changed_files": [
+      "AggregatorApp/Common/FaviconLoader.swift",
+      "AggregatorApp/Common/SourceFaviconView.swift",
+      "AggregatorApp/Models/Source.swift",
+      "AggregatorApp/Sources/SourceActivityDot.swift",
+      "AggregatorApp/Sources/SourcesView.swift",
+      "AggregatorAppTests/FaviconLoaderTests.swift",
+      "AggregatorAppTests/SourceDecodingTests.swift",
+      "docs/API.md"
+    ],
+    "updated_docs": [
+      "docs/API.md"
+    ],
+    "next_action": "Merge bead to main via takt merge.",
+    "next_agent": "scheduler",
+    "block_reason": "",
+    "expected_files": [
+      "AggregatorApp/Common/FaviconLoader.swift",
+      "AggregatorApp/Common/SourceFaviconView.swift",
+      "AggregatorApp/Models/Source.swift",
+      "AggregatorApp/Sources/SourceActivityDot.swift",
+      "AggregatorApp/Sources/SourcesView.swift",
+      "AggregatorAppTests/FaviconLoaderTests.swift",
+      "AggregatorAppTests/SourceDecodingTests.swift",
+      "docs/API.md"
+    ],
+    "expected_globs": [
+      "AggregatorApp/Common/FaviconLoader.swift",
+      "AggregatorApp/Common/SourceFaviconView.swift",
+      "AggregatorApp/Models/Source.swift",
+      "AggregatorApp/Sources/SourceActivityDot.swift",
+      "AggregatorApp/Sources/SourcesView.swift",
+      "AggregatorAppTests/FaviconLoaderTests.swift",
+      "AggregatorAppTests/SourceDecodingTests.swift"
+    ],
+    "touched_files": [
+      "AggregatorApp/Common/FaviconLoader.swift",
+      "AggregatorApp/Common/SourceFaviconView.swift",
+      "AggregatorApp/Models/Source.swift",
+      "AggregatorApp/Sources/SourceActivityDot.swift",
+      "AggregatorApp/Sources/SourcesView.swift",
+      "AggregatorAppTests/FaviconLoaderTests.swift",
+      "AggregatorAppTests/SourceDecodingTests.swift",
+      "docs/API.md"
+    ],
+    "conflict_risks": "Low. All changed files are new or additive modifications to SourcesView.swift and Source.swift. No concurrent sibling beads are modifying the same files.",
+    "design_decisions": "Color.accentColor used instead of .tint for Circle.fill() \u2014 .tint is a view modifier, not a concrete ShapeStyle. Equivalent to accent color per iOS conventions. defer { inFlightTasks.removeValue } inside actor-isolated Task body is synchronous and safe \u2014 no data race. .onAppear guard prevents redundant FaviconLoader calls on re-render without view destruction. decodeIfPresent ?? false keeps hasNew/hasPriority as non-optional Bool while tolerating absent JSON fields.",
+    "test_coverage_notes": "FaviconLoaderTests covers the static iconURL(forFeedURL:) method for five URL shapes (HTTPS, HTTP, empty, invalid, file://). SourceDecodingTests covers five JSON shapes: minimal (absent flags \u2192 false), hasNew true, hasPriority true, both true. Actor internals (network fetch, disk cache) are not unit-tested \u2014 consistent with design decision to keep tests on pure/static methods only.",
+    "known_limitations": "SourceFaviconView lacks .accessibilityHidden(true) on its contents. In practice benign because NavigationLink row-level accessibilityLabel suppresses individual child VoiceOver focus, but deviates from strict decorative-element accessibility convention. Activity dots are dormant until backend ships has_new/has_priority on SourceResponse \u2014 intentional per spec."
+  },
+  "block_reason": "",
+  "conflict_risks": "Low. All changed files are new or additive modifications to SourcesView.swift and Source.swift. No concurrent sibling beads are modifying the same files.",
+  "branch_name": "feature/b-059d7a6e",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-20T17:04:29.029868+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-20T17:15:43.287219+00:00",
+      "event": "skills_loaded",
+      "agent_type": "review",
+      "summary": "Loaded 6 skill(s) for isolated execution",
+      "details": {
+        "loaded_skills": [
+          "core/base-orchestrator",
+          "role/reviewer-signoff",
+          "capability/code-review",
+          "task/corrective-bead-creation",
+          "task/risk-assessment",
+          "memory"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-06-20T17:15:43.287241+00:00",
+      "event": "started",
+      "agent_type": "review",
+      "summary": "Worker started",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-20T17:15:43.291882+00:00",
+      "event": "guardrails_applied",
+      "agent_type": "review",
+      "summary": "Applied guardrails from .takt/agent-runs/B-9e7eeb2e/repo/templates/agents/review.md",
+      "details": {
+        "template_path": ".takt/agent-runs/B-9e7eeb2e/repo/templates/agents/review.md"
+      }
+    },
+    {
+      "timestamp": "2026-06-20T17:19:25.472653+00:00",
+      "event": "completed",
+      "agent_type": "review",
+      "summary": "Review approved with 1 low-severity finding (favicon placeholder lacks .accessibilityHidden); all acceptance criteria met.",
+      "details": {}
+    }
+  ],
+  "metadata": {
+    "execution_root": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-9e7eeb2e",
+    "workspace_repo_path": "repo",
+    "loaded_skills": [
+      "core/base-orchestrator",
+      "role/reviewer-signoff",
+      "capability/code-review",
+      "task/corrective-bead-creation",
+      "task/risk-assessment",
+      "memory"
+    ],
+    "skill_bundle_hash": "68ad0ecb7bfe263ceb1ada56efead5a81dac8f9f2173181d0bf030dc0a3f880d",
+    "isolated_home": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-9e7eeb2e/home",
+    "runner_backend": "claude",
+    "guardrails": {
+      "agent_type": "review",
+      "template_path": ".takt/agent-runs/B-9e7eeb2e/repo/templates/agents/review.md",
+      "template_text": "# Review Guardrails\n\nPrimary responsibility: Inspect code, tests, docs, and acceptance criteria for correctness, completeness, and risk.\n\nAllowed actions:\n- Review only the changed files listed in the bead's touched_files and changed_files fields. Do not read unrelated files.\n- Validate acceptance criteria against the implementation and handoff state.\n- Block with a clear recommendation when the bead actually requires implementation work.\n\n## Memory\n\n**Read memory at bead start.** Before reviewing any files, run three searches using `$TAKT_CMD` (injected by the orchestrator):\n\n```bash\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace global\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace feature:<feature_root_id>\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace specs\n```\n\nTreat results as ambient context \u2014 apply relevant entries to inform the review; skip entries that don't apply.\n\nDo **not** write to memory \u2014 review agents are read-only.\n\nEfficiency constraints:\n- Do not run the test suite. Testing is the tester agent's responsibility.\n- Focus on correctness, completeness, and risk \u2014 not style or formatting.\n- Keep the review concise. If there are no findings, say so and approve promptly.\n\nDisallowed actions:\n- Implement feature work, tests, or docs instead of reporting findings.\n- Rewrite architecture or silently fix issues discovered during review.\n- Mark incomplete work as accepted without evidence.\n\nExpected outputs:\n- Return JSON with `outcome` set to `completed` (reviews always complete; use `verdict` for pass/fail) and `summary` as a one-line description of the review result.\n- Return JSON with structured verdict fields for every run: `verdict`, `findings_count`, and `requires_followup`.\n- Treat `verdict` as the review signoff decision: `approved` means the bead can complete, while `needs_changes` means the bead must block for follow-up work.\n- Use `verdict=approved`, `findings_count=0`, and `requires_followup=false` when no unresolved findings remain.\n- Use `verdict=needs_changes`, set `findings_count` to the unresolved finding count, set `requires_followup=true` unless there is a stronger explicit reason not to, and always include `block_reason` when any required fix remains.\n- Keep `completed`, `remaining`, and `risks` as free-form narrative context only. They inform operators, but they do not override the structured verdict or control scheduler state.\n- Review findings ordered by severity, or an explicit statement that no findings were discovered.\n- Clear blocked handoff details when the task belongs to another agent type.",
+      "captured_at": "2026-06-20T17:15:43.291875+00:00"
+    },
+    "worker_prompt_context": {
+      "bead_id": "B-9e7eeb2e",
+      "feature_root_id": "B-059d7a6e",
+      "title": "Review: Source rows favicons and activity dots",
+      "agent_type": "review",
+      "description": "Final review of all changes: Source model defensive decoding, FaviconLoader actor safety and cache correctness, SourceFaviconView placeholder behavior, SourceActivityDot accessibility and color-blind safety, SourcesView row layout and unchanged sections, test coverage completeness, and documentation accuracy. Verify Liquid Glass conventions are preserved and no hex colors introduced.",
+      "status": "in_progress",
+      "acceptance_criteria": [
+        "No hardcoded hex colors; semantic colors only",
+        "FaviconLoader actor isolation is correct (no data races)",
+        "Disk cache path is in Caches directory (not Documents or app container root)",
+        "Source model still compiles and decodes correctly from current API responses",
+        "Accessibility labels are present and meaningful on all new interactive/informational elements",
+        "All acceptance criteria from the spec are met"
+      ],
+      "dependencies": [
+        "B-00671626",
+        "B-0820e9de",
+        "B-3602229f",
+        "B-9050cf1a",
+        "B-b941a27f",
+        "B-e385c092",
+        "B-f0c77156"
+      ],
+      "linked_docs": [
+        "specs/planned/source-rows-favicons-and-activity-dots.md"
+      ],
+      "execution_branch_name": "feature/b-059d7a6e",
+      "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-059d7a6e",
+      "expected_files": [
+        "AggregatorApp/Common/FaviconLoader.swift",
+        "AggregatorApp/Common/SourceFaviconView.swift",
+        "AggregatorApp/Models/Source.swift",
+        "AggregatorApp/Sources/SourceActivityDot.swift",
+        "AggregatorApp/Sources/SourcesView.swift"
+      ],
+      "expected_globs": [
+        "AggregatorApp/Common/FaviconLoader.swift",
+        "AggregatorApp/Common/SourceFaviconView.swift",
+        "AggregatorApp/Models/Source.swift",
+        "AggregatorApp/Sources/SourceActivityDot.swift",
+        "AggregatorApp/Sources/SourcesView.swift",
+        "AggregatorAppTests/FaviconLoaderTests.swift",
+        "AggregatorAppTests/SourceDecodingTests.swift"
+      ],
+      "touched_files": [
+        "AggregatorApp/Common/FaviconLoader.swift",
+        "AggregatorApp/Common/SourceFaviconView.swift",
+        "AggregatorApp/Models/Source.swift",
+        "AggregatorApp/Sources/SourceActivityDot.swift",
+        "AggregatorApp/Sources/SourcesView.swift",
+        "AggregatorAppTests/FaviconLoaderTests.swift",
+        "AggregatorAppTests/SourceDecodingTests.swift",
+        "docs/API.md"
+      ],
+      "conflict_risks": "Low. Source.swift has no sibling beads modifying it concurrently.\nNone \u2014 new file with no overlap with existing Common/ files.\nNo conflicts expected. SourceActivityDot.swift is a new file. The only modification to an existing file is adding a memberwise init to Source.swift \u2014 a purely additive change that doesn't alter any existing init.\nNone \u2014 new file, no modifications to existing files.\nNo conflicts expected \u2014 only SourcesView.swift was modified within its Sources section ForEach.",
+      "handoff_summary": {
+        "completed": "",
+        "remaining": "",
+        "risks": "",
+        "verdict": "",
+        "findings_count": 0,
+        "requires_followup": false,
+        "changed_files": [],
+        "updated_docs": [],
+        "next_action": "",
+        "next_agent": "",
+        "block_reason": "",
+        "expected_files": [],
+        "expected_globs": [],
+        "touched_files": [],
+        "conflict_risks": "",
+        "design_decisions": "",
+        "test_coverage_notes": "",
+        "known_limitations": ""
+      }
+    },
+    "last_agent_result": {
+      "outcome": "completed",
+      "summary": "Review approved with 1 low-severity finding (favicon placeholder lacks .accessibilityHidden); all acceptance criteria met.",
+      "verdict": "approved",
+      "findings_count": 1,
+      "requires_followup": false,
+      "next_agent": "scheduler",
+      "block_reason": ""
+    },
+    "telemetry": {
+      "cost_usd": 0.5026899,
+      "duration_ms": 222174,
+      "duration_api_ms": 214614,
+      "num_turns": 19,
+      "input_tokens": 16,
+      "output_tokens": 11685,
+      "cache_creation_tokens": 33279,
+      "cache_read_tokens": 411503,
+      "stop_reason": "end_turn",
+      "session_id": "7bba0eb2-bc8d-421f-a841-c1d9171fd388",
+      "permission_denials": [],
+      "prompt_chars": 13135,
+      "prompt_lines": 204,
+      "source": "provider",
+      "attempt": 1
+    },
+    "telemetry_history": [
+      {
+        "cost_usd": 0.5026899,
+        "duration_ms": 222174,
+        "duration_api_ms": 214614,
+        "num_turns": 19,
+        "input_tokens": 16,
+        "output_tokens": 11685,
+        "cache_creation_tokens": 33279,
+        "cache_read_tokens": 411503,
+        "stop_reason": "end_turn",
+        "session_id": "7bba0eb2-bc8d-421f-a841-c1d9171fd388",
+        "permission_denials": [],
+        "prompt_chars": 13135,
+        "prompt_lines": 204,
+        "source": "provider",
+        "attempt": 1
+      }
+    ]
+  },
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

@@ -1,0 +1,230 @@
+{
+  "bead_id": "B-b941a27f",
+  "title": "Implement FaviconLoader",
+  "agent_type": "developer",
+  "description": "Create AggregatorApp/Common/FaviconLoader.swift as a Swift actor (or serial-queue class) with a shared singleton. Exposes func icon(forFeedURL: String) async -> UIImage?. Internally: (1) derives host from feedURL via URLComponents; (2) builds icon URL https://icons.duckduckgo.com/ip3/<host>.ico; (3) lookup order: in-memory NSCache<NSString,UIImage> \u2192 on-disk Caches/favicons/<sanitized-host>.png \u2192 network via URLSession.shared; (4) on network success writes to disk then memory; (5) swallows all failures, returning nil. Also expose a static func iconURL(forFeedURL:) -> URL? as a pure testable helper for the URL-derivation logic.",
+  "status": "done",
+  "bead_type": "task",
+  "parent_id": "B-059d7a6e",
+  "dependencies": [],
+  "acceptance_criteria": [
+    "FaviconLoader.shared.icon(forFeedURL:) returns UIImage on success and nil on any failure without throwing",
+    "iconURL(forFeedURL:) returns the correct DuckDuckGo URL for a valid feed URL and nil for an invalid URL",
+    "Concurrent calls for the same host deduplicate (actor isolation or serial queue)",
+    "No CF/Cloudflare auth headers injected \u2014 plain URLSession.shared"
+  ],
+  "linked_docs": [
+    "specs/planned/source-rows-favicons-and-activity-dots.md"
+  ],
+  "feature_root_id": "B-059d7a6e",
+  "execution_branch_name": "feature/b-059d7a6e",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-059d7a6e",
+  "expected_files": [
+    "AggregatorApp/Common/FaviconLoader.swift"
+  ],
+  "expected_globs": [],
+  "touched_files": [
+    "AggregatorApp/Common/FaviconLoader.swift"
+  ],
+  "changed_files": [
+    "AggregatorApp/Common/FaviconLoader.swift"
+  ],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "FaviconLoader.swift created and confirmed compiling. Implements: (1) actor isolation for thread safety, (2) in-flight Task deduplication so parallel callers for the same host share one network round-trip, (3) NSCache memory layer, (4) on-disk Caches/favicons/<host>.png layer with sanitized filenames, (5) URLSession.shared network fetch with no CF headers, (6) all failures silently return nil, (7) static iconURL(forFeedURL:) pure helper for testability.",
+    "remaining": "N/A",
+    "risks": "The UIKit SourceKit diagnostic (\"No such module 'UIKit'\") is a false positive from the non-iOS LSP environment \u2014 the xcodebuild compile confirms it is not a real issue.",
+    "verdict": "approved",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [
+      "AggregatorApp/Common/FaviconLoader.swift"
+    ],
+    "updated_docs": [],
+    "next_action": "Tester agent should verify: iconURL(forFeedURL:) round-trips, nil on bad URL, icon(forFeedURL:) returns UIImage on success and nil on failure, concurrent calls deduplicate.",
+    "next_agent": "tester",
+    "block_reason": "",
+    "expected_files": [
+      "AggregatorApp/Common/FaviconLoader.swift"
+    ],
+    "expected_globs": [],
+    "touched_files": [
+      "AggregatorApp/Common/FaviconLoader.swift"
+    ],
+    "conflict_risks": "None \u2014 new file with no overlap with existing Common/ files.",
+    "design_decisions": "Used Swift actor (not DispatchQueue+class) for natural async/await integration and actor-isolated state. In-flight deduplication uses a [String: Task&lt;UIImage?,Never&gt;] dictionary: a second caller for the same host during a network fetch `await`s the existing Task's value instead of launching a parallel request. The Task body inherits actor isolation (created inside an actor method), so the defer { inFlightTasks.removeValue } executes actor-safely after the value is produced. Alternative considered: AsyncStream or continuation-based fan-out \u2014 rejected as unnecessary complexity for this use case. Static iconURL(forFeedURL:) is intentionally non-isolated (no actor hop needed) for cheap, synchronous testability.",
+    "test_coverage_notes": "Key paths to verify: (1) iconURL(forFeedURL:) returns correct DuckDuckGo URL for http/https feed URLs and nil for empty string or non-URL; (2) icon(forFeedURL:) returns UIImage when the network mock returns valid PNG data; (3) icon(forFeedURL:) returns nil when URLSession fails or returns non-200; (4) a second call with the same host while the first is in-flight hits the in-flight task path (integration-level concurrent test); (5) disk read path (pre-seed a file in Caches/favicons/ and confirm it is returned without a network call).",
+    "known_limitations": "No cache eviction policy beyond NSCache's internal memory pressure handling. Disk files are never expired or pruned \u2014 callers relying on fresh favicons would need manual cache clearing. These are acceptable for the initial spec scope."
+  },
+  "block_reason": "",
+  "conflict_risks": "None \u2014 new file with no overlap with existing Common/ files.",
+  "branch_name": "feature/b-059d7a6e",
+  "worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-059d7a6e",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-20T17:04:29.025265+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-20T17:04:48.049134+00:00",
+      "event": "skills_loaded",
+      "agent_type": "developer",
+      "summary": "Loaded 7 skill(s) for isolated execution",
+      "details": {
+        "loaded_skills": [
+          "core/base-orchestrator",
+          "role/developer-implementation",
+          "capability/code-edit",
+          "task/corrective-implementation",
+          "task/refactor-safe",
+          "task/migration",
+          "memory"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-06-20T17:04:48.049171+00:00",
+      "event": "started",
+      "agent_type": "developer",
+      "summary": "Worker started",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-20T17:04:48.054309+00:00",
+      "event": "guardrails_applied",
+      "agent_type": "developer",
+      "summary": "Applied guardrails from .takt/agent-runs/B-b941a27f/repo/templates/agents/developer.md",
+      "details": {
+        "template_path": ".takt/agent-runs/B-b941a27f/repo/templates/agents/developer.md"
+      }
+    },
+    {
+      "timestamp": "2026-06-20T17:06:58.096908+00:00",
+      "event": "completed",
+      "agent_type": "developer",
+      "summary": "Created AggregatorApp/Common/FaviconLoader.swift as a Swift actor with shared singleton. Implements the three-tier lookup (in-memory NSCache \u2192 on-disk Caches/favicons/ \u2192 network via URLSession.shared), deduplicates concurrent requests for the same host via in-flight Task tracking, and exposes the static iconURL(forFeedURL:) pure helper. Build passes cleanly.",
+      "details": {}
+    }
+  ],
+  "metadata": {
+    "execution_root": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-b941a27f",
+    "workspace_repo_path": "repo",
+    "loaded_skills": [
+      "core/base-orchestrator",
+      "role/developer-implementation",
+      "capability/code-edit",
+      "task/corrective-implementation",
+      "task/refactor-safe",
+      "task/migration",
+      "memory"
+    ],
+    "skill_bundle_hash": "ecae5633083d1bbec41a6e5ec6ea05bbab117f60499c19b2ed76dbbe3e1aec7c",
+    "isolated_home": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-b941a27f/home",
+    "runner_backend": "claude",
+    "guardrails": {
+      "agent_type": "developer",
+      "template_path": ".takt/agent-runs/B-b941a27f/repo/templates/agents/developer.md",
+      "template_text": "# Developer Guardrails\n\nPrimary responsibility: Implement only the assigned bead inside the existing architecture and file scope.\n\n## Corrective bead scope\n\nIf your `bead_id` ends in `-corrective` or `-corrective-<N>` (e.g. `B-abc12345-corrective`, `B-abc12345-test-corrective-2`), you are running as a CORRECTIVE bead. Your scope is **strictly limited to fixing the specific failure that blocked the parent bead**. Do not:\n\n- Add unrelated improvements, refactors, or cleanup, even if you notice them\n- Reapply previously-reverted changes (the operator reverted them for a reason)\n- Expand the surface area beyond what is needed to unblock the parent\n- Touch files outside what the parent bead's `expected_files` / `expected_globs` covered, unless the failure is genuinely in another file and there is no smaller fix\n\nIf you notice an unrelated issue while fixing the corrective scope: **file a separate bead** via `takt bead create` describing what you saw, but do not fix it in this corrective. The operator will prioritize and dispatch.\n\nWhen in doubt about scope: prefer the smallest possible fix. The reviewer of this corrective will check that the scope was respected.\n\nAllowed actions:\n- Modify code, configuration, or local docs required to complete the assigned bead.\n- Create sub-beads for discovered follow-up work that should be handled separately.\n- Verify your `Swift` changes compile and import correctly with a quick syntax check: ``.\n\nDisallowed actions:\n- Run any test suite \u2014 not even a targeted `` run or any subset. Test execution is exclusively the tester agent's responsibility. Running tests wastes the agent budget and delays the pipeline.\n- Redesign unrelated architecture or broaden scope beyond the assigned bead.\n- Perform final review signoff in place of a review agent.\n- Silently absorb unrelated test, documentation, or planning work that should be handed off.\n\n## Memory\n\n**Read memory at bead start.** Before touching any code, run three searches using `$TAKT_CMD` (injected by the orchestrator):\n\n```bash\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace global\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace feature:<feature_root_id>\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace specs\n```\n\nTreat results as ambient context \u2014 apply relevant entries; skip entries that don't apply.\n\n**Write to memory when you discover reusable project knowledge** \u2014 something that would have changed your approach if you had known it upfront, and is not already in CLAUDE.md or the guardrails.\n\n```bash\n$TAKT_CMD memory add \"<concise fact>\" --namespace global               # project-wide knowledge\n$TAKT_CMD memory add \"<discovery>\" --namespace feature:<feature_root_id>  # feature-scoped\n```\n\nRequired Handoff Fields:\n\nEvery developer bead **must** populate the following three fields in its output JSON. Reviewers and tester agents rely on these fields to scope their work without additional back-and-forth turns. Use `\"N/A\"` only when a field is genuinely inapplicable (e.g., a trivial rename with no design trade-offs); do not leave fields blank.\n\n- **`design_decisions`** \u2014 Document non-obvious architectural or implementation choices made during this bead. Include alternatives considered and why the chosen approach was preferred. Reviewers use this to evaluate correctness without re-deriving intent. Set to `\"N/A\"` only if the change was purely mechanical with no meaningful trade-offs.\n\n- **`test_coverage_notes`** \u2014 Describe what the tester agent should verify: new code paths, edge cases introduced, regression risks, and any known untested scenarios left to the tester. Set to `\"N/A\"` only if the bead touched no executable code paths (e.g., documentation-only changes).\n\n- **`known_limitations`** \u2014 Call out constraints, deferred work, or known gaps in the implementation. This includes out-of-scope items deliberately left for follow-up beads and any areas where the implementation is intentionally incomplete. Set to `\"N/A\"` if the implementation is complete as specified with no known gaps.\n\nExpected outputs:\n- Completed or blocked JSON with concise implementation summary.\n- Accurate touched files, changed files, risks, and follow-up handoff fields.\n- Populated `design_decisions`, `test_coverage_notes`, and `known_limitations` fields in every response.",
+      "captured_at": "2026-06-20T17:04:48.054301+00:00"
+    },
+    "worker_prompt_context": {
+      "bead_id": "B-b941a27f",
+      "feature_root_id": "B-059d7a6e",
+      "title": "Implement FaviconLoader",
+      "agent_type": "developer",
+      "description": "Create AggregatorApp/Common/FaviconLoader.swift as a Swift actor (or serial-queue class) with a shared singleton. Exposes func icon(forFeedURL: String) async -> UIImage?. Internally: (1) derives host from feedURL via URLComponents; (2) builds icon URL https://icons.duckduckgo.com/ip3/<host>.ico; (3) lookup order: in-memory NSCache<NSString,UIImage> \u2192 on-disk Caches/favicons/<sanitized-host>.png \u2192 network via URLSession.shared; (4) on network success writes to disk then memory; (5) swallows all failures, returning nil. Also expose a static func iconURL(forFeedURL:) -> URL? as a pure testable helper for the URL-derivation logic.",
+      "status": "in_progress",
+      "acceptance_criteria": [
+        "FaviconLoader.shared.icon(forFeedURL:) returns UIImage on success and nil on any failure without throwing",
+        "iconURL(forFeedURL:) returns the correct DuckDuckGo URL for a valid feed URL and nil for an invalid URL",
+        "Concurrent calls for the same host deduplicate (actor isolation or serial queue)",
+        "No CF/Cloudflare auth headers injected \u2014 plain URLSession.shared"
+      ],
+      "dependencies": [],
+      "linked_docs": [
+        "specs/planned/source-rows-favicons-and-activity-dots.md"
+      ],
+      "execution_branch_name": "feature/b-059d7a6e",
+      "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-059d7a6e",
+      "expected_files": [
+        "AggregatorApp/Common/FaviconLoader.swift"
+      ],
+      "expected_globs": [],
+      "touched_files": [],
+      "conflict_risks": "",
+      "handoff_summary": {
+        "completed": "",
+        "remaining": "",
+        "risks": "",
+        "verdict": "",
+        "findings_count": 0,
+        "requires_followup": false,
+        "changed_files": [],
+        "updated_docs": [],
+        "next_action": "",
+        "next_agent": "",
+        "block_reason": "",
+        "expected_files": [],
+        "expected_globs": [],
+        "touched_files": [],
+        "conflict_risks": "",
+        "design_decisions": "",
+        "test_coverage_notes": "",
+        "known_limitations": ""
+      }
+    },
+    "last_agent_result": {
+      "outcome": "completed",
+      "summary": "Created AggregatorApp/Common/FaviconLoader.swift as a Swift actor with shared singleton. Implements the three-tier lookup (in-memory NSCache \u2192 on-disk Caches/favicons/ \u2192 network via URLSession.shared), deduplicates concurrent requests for the same host via in-flight Task tracking, and exposes the static iconURL(forFeedURL:) pure helper. Build passes cleanly.",
+      "verdict": "approved",
+      "findings_count": 0,
+      "requires_followup": false,
+      "next_agent": "tester",
+      "block_reason": ""
+    },
+    "telemetry": {
+      "cost_usd": 0.32596759999999997,
+      "duration_ms": 129685,
+      "duration_api_ms": 115974,
+      "num_turns": 15,
+      "input_tokens": 14,
+      "output_tokens": 6528,
+      "cache_creation_tokens": 20700,
+      "cache_read_tokens": 335242,
+      "stop_reason": "end_turn",
+      "session_id": "47522feb-e181-4b5e-a627-7de520105a1a",
+      "permission_denials": [],
+      "prompt_chars": 9475,
+      "prompt_lines": 173,
+      "source": "provider",
+      "attempt": 1
+    },
+    "telemetry_history": [
+      {
+        "cost_usd": 0.32596759999999997,
+        "duration_ms": 129685,
+        "duration_api_ms": 115974,
+        "num_turns": 15,
+        "input_tokens": 14,
+        "output_tokens": 6528,
+        "cache_creation_tokens": 20700,
+        "cache_read_tokens": 335242,
+        "stop_reason": "end_turn",
+        "session_id": "47522feb-e181-4b5e-a627-7de520105a1a",
+        "permission_denials": [],
+        "prompt_chars": 9475,
+        "prompt_lines": 173,
+        "source": "provider",
+        "attempt": 1
+      }
+    ]
+  },
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

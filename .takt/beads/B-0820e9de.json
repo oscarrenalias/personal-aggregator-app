@@ -1,0 +1,269 @@
+{
+  "bead_id": "B-0820e9de",
+  "title": "Documentation: favicon caching and activity-dot dormancy",
+  "agent_type": "documentation",
+  "description": "Update docs/API.md or the relevant inline documentation to note: (1) FaviconLoader derives icons from DuckDuckGo (icons.duckduckgo.com/ip3/<host>.ico) using feed_url \u2014 source hostnames are sent to that service; (2) has_new and has_priority are decoded defensively and default to false until the backend ships them; (3) activity dots are for source rows only (not article rows, article detail, or source-detail header).",
+  "status": "done",
+  "bead_type": "task",
+  "parent_id": "B-059d7a6e",
+  "dependencies": [
+    "B-f0c77156",
+    "B-b941a27f",
+    "B-00671626",
+    "B-3602229f",
+    "B-e385c092"
+  ],
+  "acceptance_criteria": [
+    "FaviconLoader source and caching strategy documented",
+    "Dormancy pattern for has_new/has_priority noted so future developers understand why fields default to false",
+    "Scope note (source list rows only) is recorded"
+  ],
+  "linked_docs": [
+    "specs/planned/source-rows-favicons-and-activity-dots.md",
+    "docs/API.md"
+  ],
+  "feature_root_id": "B-059d7a6e",
+  "execution_branch_name": "feature/b-059d7a6e",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-059d7a6e",
+  "expected_files": [
+    "AggregatorApp/Common/FaviconLoader.swift",
+    "AggregatorApp/Common/SourceFaviconView.swift",
+    "AggregatorApp/Models/Source.swift",
+    "AggregatorApp/Sources/SourceActivityDot.swift",
+    "AggregatorApp/Sources/SourcesView.swift"
+  ],
+  "expected_globs": [
+    "docs/*.md"
+  ],
+  "touched_files": [
+    "docs/API.md"
+  ],
+  "changed_files": [
+    "docs/API.md"
+  ],
+  "updated_docs": [
+    "docs/API.md"
+  ],
+  "handoff_summary": {
+    "completed": "All three acceptance criteria met: FaviconLoader caching strategy documented; has_new/has_priority dormancy pattern noted with activation path; scope restricted to source list rows stated explicitly.",
+    "remaining": "None \u2014 documentation is complete and consistent with the implemented code.",
+    "risks": "None. Documentation-only change to docs/API.md; no runtime code modified.",
+    "verdict": "approved",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [
+      "docs/API.md"
+    ],
+    "updated_docs": [
+      "docs/API.md"
+    ],
+    "next_action": "None \u2014 bead complete.",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [
+      "AggregatorApp/Common/FaviconLoader.swift",
+      "AggregatorApp/Common/SourceFaviconView.swift",
+      "AggregatorApp/Models/Source.swift",
+      "AggregatorApp/Sources/SourceActivityDot.swift",
+      "AggregatorApp/Sources/SourcesView.swift"
+    ],
+    "expected_globs": [
+      "docs/*.md"
+    ],
+    "touched_files": [
+      "docs/API.md"
+    ],
+    "conflict_risks": "Low. docs/API.md is a standalone documentation file with no sibling beads modifying it concurrently.",
+    "design_decisions": "Placed the new subsections at the end of the 'iOS client: Sources tab' section, after getCategories, to keep all Sources-tab client documentation grouped together. Cross-referenced the activity-dot dormancy pattern to the existing Category freshness dormancy section to make the pattern recognizable to future developers.",
+    "test_coverage_notes": "Not applicable \u2014 documentation bead only.",
+    "known_limitations": "The spec file referenced in linked_docs (specs/planned/source-rows-favicons-and-activity-dots.md) does not exist in the worktree; it may not have been created yet or may have already been moved to done/. This does not affect the documentation completeness."
+  },
+  "block_reason": "",
+  "conflict_risks": "Low. docs/API.md is a standalone documentation file with no sibling beads modifying it concurrently.",
+  "branch_name": "feature/b-059d7a6e",
+  "worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-059d7a6e",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-20T17:04:29.028879+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-20T17:14:18.285088+00:00",
+      "event": "skills_loaded",
+      "agent_type": "documentation",
+      "summary": "Loaded 6 skill(s) for isolated execution",
+      "details": {
+        "loaded_skills": [
+          "core/base-orchestrator",
+          "role/docs-agent",
+          "capability/docs-edit",
+          "task/release-notes",
+          "task/spec-sync",
+          "memory"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-06-20T17:14:18.285109+00:00",
+      "event": "started",
+      "agent_type": "documentation",
+      "summary": "Worker started",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-20T17:14:18.289810+00:00",
+      "event": "guardrails_applied",
+      "agent_type": "documentation",
+      "summary": "Applied guardrails from .takt/agent-runs/B-0820e9de/repo/templates/agents/documentation.md",
+      "details": {
+        "template_path": ".takt/agent-runs/B-0820e9de/repo/templates/agents/documentation.md"
+      }
+    },
+    {
+      "timestamp": "2026-06-20T17:15:42.999427+00:00",
+      "event": "completed",
+      "agent_type": "documentation",
+      "summary": "Added two new subsections to docs/API.md under 'iOS client: Sources tab': 'Source favicons \u2014 FaviconLoader' documenting DuckDuckGo icon derivation, three-level caching, failure swallowing, and concurrent deduplication; 'Source activity dots \u2014 dormant until backend ships fields' documenting has_new/has_priority dot rendering, source-list-rows-only scope, and the decodeIfPresent dormancy pattern with activation path.",
+      "details": {}
+    }
+  ],
+  "metadata": {
+    "execution_root": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-0820e9de",
+    "workspace_repo_path": "repo",
+    "loaded_skills": [
+      "core/base-orchestrator",
+      "role/docs-agent",
+      "capability/docs-edit",
+      "task/release-notes",
+      "task/spec-sync",
+      "memory"
+    ],
+    "skill_bundle_hash": "191f95261a4d31e4f4a691e9c39926c722504f21a3c370b6975facad92e3c1f0",
+    "isolated_home": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-0820e9de/home",
+    "runner_backend": "claude",
+    "guardrails": {
+      "agent_type": "documentation",
+      "template_path": ".takt/agent-runs/B-0820e9de/repo/templates/agents/documentation.md",
+      "template_text": "# Documentation Guardrails\n\nPrimary responsibility: Update documentation and examples that explain the assigned behavior without changing runtime feature behavior.\n\nAllowed actions:\n- Edit docs, examples, and explanatory text tied to the assigned bead.\n- Focus only on files listed in the bead's touched_files and changed_files fields. Do not read or modify unrelated documentation.\n- Align documentation with existing code and validated behavior.\n- Identify when implementation or tests must land first and block with a handoff.\n\nDisallowed actions:\n- Change runtime behavior, production code paths, or feature logic.\n- Invent undocumented behavior that is not present in the codebase.\n- Approve code quality or test completeness as a substitute for review.\n- Do not run the test suite. Testing is the tester agent's responsibility.\n\n## Memory\n\n**Read memory at bead start.** Before writing any documentation, run three searches using `$TAKT_CMD` (injected by the orchestrator):\n\n```bash\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace global\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace feature:<feature_root_id>\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace specs\n```\n\nTreat results as ambient context \u2014 apply relevant entries to inform documentation; skip entries that don't apply.\n\nDo **not** write to memory \u2014 documentation agents are read-only.\n\nEfficiency constraints:\n- Do not read the full codebase for context. Focus on the changed files and their immediate surroundings.\n- Keep documentation updates concise and proportional to the change.\n\nExpected outputs:\n- Return JSON with `outcome` set to `completed` (documentation beads always complete; use `verdict` for pass/fail) and `summary` as a one-line description of what was documented.\n- Return JSON with structured verdict fields for every run: `verdict`, `findings_count`, and `requires_followup`.\n- Use `verdict=approved`, `findings_count=0`, and `requires_followup=false` when documentation is complete with no gaps.\n- Use `verdict=needs_changes`, set `findings_count` to the number of unresolved documentation gaps, set `requires_followup=true`, and include `block_reason` when implementation must land first or documentation cannot be completed.\n- Keep `completed`, `remaining`, and `risks` as concise narrative context only; they do not override the structured verdict fields.\n- Accurate updated docs and clear next-agent recommendations when code changes are required first.",
+      "captured_at": "2026-06-20T17:14:18.289801+00:00"
+    },
+    "worker_prompt_context": {
+      "bead_id": "B-0820e9de",
+      "feature_root_id": "B-059d7a6e",
+      "title": "Documentation: favicon caching and activity-dot dormancy",
+      "agent_type": "documentation",
+      "description": "Update docs/API.md or the relevant inline documentation to note: (1) FaviconLoader derives icons from DuckDuckGo (icons.duckduckgo.com/ip3/<host>.ico) using feed_url \u2014 source hostnames are sent to that service; (2) has_new and has_priority are decoded defensively and default to false until the backend ships them; (3) activity dots are for source rows only (not article rows, article detail, or source-detail header).",
+      "status": "in_progress",
+      "acceptance_criteria": [
+        "FaviconLoader source and caching strategy documented",
+        "Dormancy pattern for has_new/has_priority noted so future developers understand why fields default to false",
+        "Scope note (source list rows only) is recorded"
+      ],
+      "dependencies": [
+        "B-f0c77156",
+        "B-b941a27f",
+        "B-00671626",
+        "B-3602229f",
+        "B-e385c092"
+      ],
+      "linked_docs": [
+        "specs/planned/source-rows-favicons-and-activity-dots.md",
+        "docs/API.md"
+      ],
+      "execution_branch_name": "feature/b-059d7a6e",
+      "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-059d7a6e",
+      "expected_files": [
+        "AggregatorApp/Common/FaviconLoader.swift",
+        "AggregatorApp/Common/SourceFaviconView.swift",
+        "AggregatorApp/Models/Source.swift",
+        "AggregatorApp/Sources/SourceActivityDot.swift",
+        "AggregatorApp/Sources/SourcesView.swift"
+      ],
+      "expected_globs": [
+        "docs/*.md"
+      ],
+      "touched_files": [
+        "AggregatorApp/Common/FaviconLoader.swift",
+        "AggregatorApp/Common/SourceFaviconView.swift",
+        "AggregatorApp/Models/Source.swift",
+        "AggregatorApp/Sources/SourceActivityDot.swift",
+        "AggregatorApp/Sources/SourcesView.swift"
+      ],
+      "conflict_risks": "Low. Source.swift has no sibling beads modifying it concurrently.\nNone \u2014 new file with no overlap with existing Common/ files.\nNo conflicts expected. SourceActivityDot.swift is a new file. The only modification to an existing file is adding a memberwise init to Source.swift \u2014 a purely additive change that doesn't alter any existing init.\nNone \u2014 new file, no modifications to existing files.\nNo conflicts expected \u2014 only SourcesView.swift was modified within its Sources section ForEach.",
+      "handoff_summary": {
+        "completed": "",
+        "remaining": "",
+        "risks": "",
+        "verdict": "",
+        "findings_count": 0,
+        "requires_followup": false,
+        "changed_files": [],
+        "updated_docs": [],
+        "next_action": "",
+        "next_agent": "",
+        "block_reason": "",
+        "expected_files": [],
+        "expected_globs": [],
+        "touched_files": [],
+        "conflict_risks": "",
+        "design_decisions": "",
+        "test_coverage_notes": "",
+        "known_limitations": ""
+      }
+    },
+    "last_agent_result": {
+      "outcome": "completed",
+      "summary": "Added two new subsections to docs/API.md under 'iOS client: Sources tab': 'Source favicons \u2014 FaviconLoader' documenting DuckDuckGo icon derivation, three-level caching, failure swallowing, and concurrent deduplication; 'Source activity dots \u2014 dormant until backend ships fields' documenting has_new/has_priority dot rendering, source-list-rows-only scope, and the decodeIfPresent dormancy pattern with activation path.",
+      "verdict": "approved",
+      "findings_count": 0,
+      "requires_followup": false,
+      "next_agent": "",
+      "block_reason": ""
+    },
+    "telemetry": {
+      "cost_usd": 0.2952027,
+      "duration_ms": 84167,
+      "duration_api_ms": 82821,
+      "num_turns": 12,
+      "input_tokens": 12,
+      "output_tokens": 4667,
+      "cache_creation_tokens": 24805,
+      "cache_read_tokens": 244409,
+      "stop_reason": "end_turn",
+      "session_id": "8949218a-b0e6-4ac7-80e4-c436a6058d3c",
+      "permission_denials": [],
+      "prompt_chars": 8338,
+      "prompt_lines": 175,
+      "source": "provider",
+      "attempt": 1
+    },
+    "telemetry_history": [
+      {
+        "cost_usd": 0.2952027,
+        "duration_ms": 84167,
+        "duration_api_ms": 82821,
+        "num_turns": 12,
+        "input_tokens": 12,
+        "output_tokens": 4667,
+        "cache_creation_tokens": 24805,
+        "cache_read_tokens": 244409,
+        "stop_reason": "end_turn",
+        "session_id": "8949218a-b0e6-4ac7-80e4-c436a6058d3c",
+        "permission_denials": [],
+        "prompt_chars": 8338,
+        "prompt_lines": 175,
+        "source": "provider",
+        "attempt": 1
+      }
+    ],
+    "last_commit": "976252d34f7ffd8cef90c7abe646fe0bd2ccedd6"
+  },
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

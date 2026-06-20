@@ -1,0 +1,78 @@
+{
+  "bead_id": "B-059d7a6e",
+  "title": "Source rows: favicons and activity dots",
+  "agent_type": "planner",
+  "description": "Non-runnable feature container. Coordinates all child beads for adding favicons and activity dots to Sources-tab source rows. Favicons are fetched from DuckDuckGo (icons.duckduckgo.com/ip3/<host>.ico) derived from feed_url, with two-level memory+disk cache. Activity dots mirror the web sidebar macro: blue dot for has_priority, gray dot for has_new, nothing otherwise. The dot fields are decoded defensively so existing API responses (fields absent) show no dots and gain them automatically when the backend ships the fields.",
+  "status": "done",
+  "bead_type": "feature",
+  "parent_id": "B-57abd757",
+  "dependencies": [],
+  "acceptance_criteria": [
+    "xcodebuild test exits 0 including new Source decoding and favicon URL tests",
+    "Each source row shows its favicon leading with a neutral SF Symbol globe placeholder when unavailable \u2014 no layout jump",
+    "Favicons are cached on disk; scrolling away and back does not re-fetch for the same host",
+    "Blue dot shown for has_priority=true, gray dot for has_new=true (not priority), no dot otherwise",
+    "On current API (has_new/has_priority absent) no dots appear and no decoding error",
+    "Dots carry distinct accessibility labels (not color-only distinction)",
+    "Feeds and Categories sections are unchanged",
+    "No hardcoded hex colors; Liquid Glass conventions preserved"
+  ],
+  "linked_docs": [
+    "specs/planned/source-rows-favicons-and-activity-dots.md"
+  ],
+  "feature_root_id": "B-059d7a6e",
+  "execution_branch_name": "feature/b-059d7a6e",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-059d7a6e",
+  "expected_files": [],
+  "expected_globs": [
+    "AggregatorApp/Models/Source.swift",
+    "AggregatorApp/Common/FaviconLoader.swift",
+    "AggregatorApp/Common/SourceFaviconView.swift",
+    "AggregatorApp/Sources/SourceActivityDot.swift",
+    "AggregatorApp/Sources/SourcesView.swift",
+    "AggregatorAppTests/SourceDecodingTests.swift",
+    "AggregatorAppTests/FaviconLoaderTests.swift"
+  ],
+  "touched_files": [],
+  "changed_files": [],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "",
+    "remaining": "",
+    "risks": "",
+    "verdict": "",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [],
+    "updated_docs": [],
+    "next_action": "",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [],
+    "expected_globs": [],
+    "touched_files": [],
+    "conflict_risks": "",
+    "design_decisions": "",
+    "test_coverage_notes": "",
+    "known_limitations": ""
+  },
+  "block_reason": "",
+  "conflict_risks": "",
+  "branch_name": "",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-20T17:04:29.019265+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    }
+  ],
+  "metadata": {},
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

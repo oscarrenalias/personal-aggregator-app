@@ -1,0 +1,233 @@
+{
+  "bead_id": "B-f0c77156",
+  "title": "Extend Source model with activity flags",
+  "agent_type": "developer",
+  "description": "Add hasNew: Bool and hasPriority: Bool to Source.swift using decodeIfPresent ?? false so the existing API (fields absent) still decodes successfully. Fields map to has_new and has_priority JSON keys. Keep id, name, feedURL unchanged. The two new fields default to false when the backend has not yet shipped them.",
+  "status": "done",
+  "bead_type": "task",
+  "parent_id": "B-059d7a6e",
+  "dependencies": [],
+  "acceptance_criteria": [
+    "Source decodes from current JSON shape {id, name, feed_url} with hasNew=false and hasPriority=false",
+    "Source decodes has_new and has_priority when present in JSON",
+    "No existing callers of Source are broken (no compilation errors)"
+  ],
+  "linked_docs": [
+    "specs/planned/source-rows-favicons-and-activity-dots.md"
+  ],
+  "feature_root_id": "B-059d7a6e",
+  "execution_branch_name": "feature/b-059d7a6e",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-059d7a6e",
+  "expected_files": [
+    "AggregatorApp/Models/Source.swift"
+  ],
+  "expected_globs": [],
+  "touched_files": [
+    "AggregatorApp/Common/FaviconLoader.swift",
+    "AggregatorApp/Models/Source.swift"
+  ],
+  "changed_files": [
+    "AggregatorApp/Common/FaviconLoader.swift",
+    "AggregatorApp/Models/Source.swift"
+  ],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "Source.swift extended with hasNew and hasPriority fields mapping to has_new and has_priority JSON keys. Custom init(from:) uses decodeIfPresent so current backend JSON without these fields decodes with defaults of false. Build verified clean.",
+    "remaining": "N/A",
+    "risks": "None. No direct callers construct Source \u2014 it is only decoded from JSON and used as a read-only value type.",
+    "verdict": "approved",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [
+      "AggregatorApp/Common/FaviconLoader.swift",
+      "AggregatorApp/Models/Source.swift"
+    ],
+    "updated_docs": [],
+    "next_action": "Tester agent should verify decoding with and without has_new/has_priority fields in JSON payload.",
+    "next_agent": "tester",
+    "block_reason": "",
+    "expected_files": [
+      "AggregatorApp/Models/Source.swift"
+    ],
+    "expected_globs": [],
+    "touched_files": [
+      "AggregatorApp/Common/FaviconLoader.swift",
+      "AggregatorApp/Models/Source.swift"
+    ],
+    "conflict_risks": "Low. Source.swift has no sibling beads modifying it concurrently.",
+    "design_decisions": "Used a custom init(from:) rather than making the properties Optional (Bool?) because the acceptance criteria require defaulting to false when absent \u2014 not nil. This keeps call sites simple (no optional chaining on hasNew/hasPriority) and matches the spec intent. decodeIfPresent ?? false is the canonical Swift pattern for optional JSON fields with a non-optional Swift type.",
+    "test_coverage_notes": "Tester should verify: (1) decoding JSON with only {id, name, feed_url} yields hasNew=false, hasPriority=false; (2) decoding JSON with has_new: true, has_priority: true yields correct true values; (3) SourcesView and APIClient.getSources() compile and function normally \u2014 no regression from the model change.",
+    "known_limitations": "N/A \u2014 implementation is complete as specified."
+  },
+  "block_reason": "",
+  "conflict_risks": "Low. Source.swift has no sibling beads modifying it concurrently.",
+  "branch_name": "feature/b-059d7a6e",
+  "worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-059d7a6e",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-20T17:04:29.024397+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-20T17:04:48.116178+00:00",
+      "event": "skills_loaded",
+      "agent_type": "developer",
+      "summary": "Loaded 7 skill(s) for isolated execution",
+      "details": {
+        "loaded_skills": [
+          "core/base-orchestrator",
+          "role/developer-implementation",
+          "capability/code-edit",
+          "task/corrective-implementation",
+          "task/refactor-safe",
+          "task/migration",
+          "memory"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-06-20T17:04:48.116208+00:00",
+      "event": "started",
+      "agent_type": "developer",
+      "summary": "Worker started",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-20T17:04:48.118679+00:00",
+      "event": "guardrails_applied",
+      "agent_type": "developer",
+      "summary": "Applied guardrails from .takt/agent-runs/B-f0c77156/repo/templates/agents/developer.md",
+      "details": {
+        "template_path": ".takt/agent-runs/B-f0c77156/repo/templates/agents/developer.md"
+      }
+    },
+    {
+      "timestamp": "2026-06-20T17:06:22.152771+00:00",
+      "event": "completed",
+      "agent_type": "developer",
+      "summary": "Added hasNew: Bool and hasPriority: Bool to Source.swift with a custom Decodable init that uses decodeIfPresent ?? false so existing JSON (fields absent) still decodes successfully. Build is clean.",
+      "details": {}
+    }
+  ],
+  "metadata": {
+    "execution_root": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-f0c77156",
+    "workspace_repo_path": "repo",
+    "loaded_skills": [
+      "core/base-orchestrator",
+      "role/developer-implementation",
+      "capability/code-edit",
+      "task/corrective-implementation",
+      "task/refactor-safe",
+      "task/migration",
+      "memory"
+    ],
+    "skill_bundle_hash": "ecae5633083d1bbec41a6e5ec6ea05bbab117f60499c19b2ed76dbbe3e1aec7c",
+    "isolated_home": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-f0c77156/home",
+    "runner_backend": "claude",
+    "guardrails": {
+      "agent_type": "developer",
+      "template_path": ".takt/agent-runs/B-f0c77156/repo/templates/agents/developer.md",
+      "template_text": "# Developer Guardrails\n\nPrimary responsibility: Implement only the assigned bead inside the existing architecture and file scope.\n\n## Corrective bead scope\n\nIf your `bead_id` ends in `-corrective` or `-corrective-<N>` (e.g. `B-abc12345-corrective`, `B-abc12345-test-corrective-2`), you are running as a CORRECTIVE bead. Your scope is **strictly limited to fixing the specific failure that blocked the parent bead**. Do not:\n\n- Add unrelated improvements, refactors, or cleanup, even if you notice them\n- Reapply previously-reverted changes (the operator reverted them for a reason)\n- Expand the surface area beyond what is needed to unblock the parent\n- Touch files outside what the parent bead's `expected_files` / `expected_globs` covered, unless the failure is genuinely in another file and there is no smaller fix\n\nIf you notice an unrelated issue while fixing the corrective scope: **file a separate bead** via `takt bead create` describing what you saw, but do not fix it in this corrective. The operator will prioritize and dispatch.\n\nWhen in doubt about scope: prefer the smallest possible fix. The reviewer of this corrective will check that the scope was respected.\n\nAllowed actions:\n- Modify code, configuration, or local docs required to complete the assigned bead.\n- Create sub-beads for discovered follow-up work that should be handled separately.\n- Verify your `Swift` changes compile and import correctly with a quick syntax check: ``.\n\nDisallowed actions:\n- Run any test suite \u2014 not even a targeted `` run or any subset. Test execution is exclusively the tester agent's responsibility. Running tests wastes the agent budget and delays the pipeline.\n- Redesign unrelated architecture or broaden scope beyond the assigned bead.\n- Perform final review signoff in place of a review agent.\n- Silently absorb unrelated test, documentation, or planning work that should be handed off.\n\n## Memory\n\n**Read memory at bead start.** Before touching any code, run three searches using `$TAKT_CMD` (injected by the orchestrator):\n\n```bash\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace global\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace feature:<feature_root_id>\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace specs\n```\n\nTreat results as ambient context \u2014 apply relevant entries; skip entries that don't apply.\n\n**Write to memory when you discover reusable project knowledge** \u2014 something that would have changed your approach if you had known it upfront, and is not already in CLAUDE.md or the guardrails.\n\n```bash\n$TAKT_CMD memory add \"<concise fact>\" --namespace global               # project-wide knowledge\n$TAKT_CMD memory add \"<discovery>\" --namespace feature:<feature_root_id>  # feature-scoped\n```\n\nRequired Handoff Fields:\n\nEvery developer bead **must** populate the following three fields in its output JSON. Reviewers and tester agents rely on these fields to scope their work without additional back-and-forth turns. Use `\"N/A\"` only when a field is genuinely inapplicable (e.g., a trivial rename with no design trade-offs); do not leave fields blank.\n\n- **`design_decisions`** \u2014 Document non-obvious architectural or implementation choices made during this bead. Include alternatives considered and why the chosen approach was preferred. Reviewers use this to evaluate correctness without re-deriving intent. Set to `\"N/A\"` only if the change was purely mechanical with no meaningful trade-offs.\n\n- **`test_coverage_notes`** \u2014 Describe what the tester agent should verify: new code paths, edge cases introduced, regression risks, and any known untested scenarios left to the tester. Set to `\"N/A\"` only if the bead touched no executable code paths (e.g., documentation-only changes).\n\n- **`known_limitations`** \u2014 Call out constraints, deferred work, or known gaps in the implementation. This includes out-of-scope items deliberately left for follow-up beads and any areas where the implementation is intentionally incomplete. Set to `\"N/A\"` if the implementation is complete as specified with no known gaps.\n\nExpected outputs:\n- Completed or blocked JSON with concise implementation summary.\n- Accurate touched files, changed files, risks, and follow-up handoff fields.\n- Populated `design_decisions`, `test_coverage_notes`, and `known_limitations` fields in every response.",
+      "captured_at": "2026-06-20T17:04:48.118672+00:00"
+    },
+    "worker_prompt_context": {
+      "bead_id": "B-f0c77156",
+      "feature_root_id": "B-059d7a6e",
+      "title": "Extend Source model with activity flags",
+      "agent_type": "developer",
+      "description": "Add hasNew: Bool and hasPriority: Bool to Source.swift using decodeIfPresent ?? false so the existing API (fields absent) still decodes successfully. Fields map to has_new and has_priority JSON keys. Keep id, name, feedURL unchanged. The two new fields default to false when the backend has not yet shipped them.",
+      "status": "in_progress",
+      "acceptance_criteria": [
+        "Source decodes from current JSON shape {id, name, feed_url} with hasNew=false and hasPriority=false",
+        "Source decodes has_new and has_priority when present in JSON",
+        "No existing callers of Source are broken (no compilation errors)"
+      ],
+      "dependencies": [],
+      "linked_docs": [
+        "specs/planned/source-rows-favicons-and-activity-dots.md"
+      ],
+      "execution_branch_name": "feature/b-059d7a6e",
+      "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-059d7a6e",
+      "expected_files": [
+        "AggregatorApp/Models/Source.swift"
+      ],
+      "expected_globs": [],
+      "touched_files": [],
+      "conflict_risks": "",
+      "handoff_summary": {
+        "completed": "",
+        "remaining": "",
+        "risks": "",
+        "verdict": "",
+        "findings_count": 0,
+        "requires_followup": false,
+        "changed_files": [],
+        "updated_docs": [],
+        "next_action": "",
+        "next_agent": "",
+        "block_reason": "",
+        "expected_files": [],
+        "expected_globs": [],
+        "touched_files": [],
+        "conflict_risks": "",
+        "design_decisions": "",
+        "test_coverage_notes": "",
+        "known_limitations": ""
+      }
+    },
+    "last_agent_result": {
+      "outcome": "completed",
+      "summary": "Added hasNew: Bool and hasPriority: Bool to Source.swift with a custom Decodable init that uses decodeIfPresent ?? false so existing JSON (fields absent) still decodes successfully. Build is clean.",
+      "verdict": "approved",
+      "findings_count": 0,
+      "requires_followup": false,
+      "next_agent": "tester",
+      "block_reason": ""
+    },
+    "telemetry": {
+      "cost_usd": 0.2130303,
+      "duration_ms": 93225,
+      "duration_api_ms": 51896,
+      "num_turns": 12,
+      "input_tokens": 15,
+      "output_tokens": 2581,
+      "cache_creation_tokens": 14581,
+      "cache_read_tokens": 279141,
+      "stop_reason": "end_turn",
+      "session_id": "949fff6a-e821-4afb-b6e0-2841f55e3f63",
+      "permission_denials": [],
+      "prompt_chars": 9010,
+      "prompt_lines": 172,
+      "source": "provider",
+      "attempt": 1
+    },
+    "telemetry_history": [
+      {
+        "cost_usd": 0.2130303,
+        "duration_ms": 93225,
+        "duration_api_ms": 51896,
+        "num_turns": 12,
+        "input_tokens": 15,
+        "output_tokens": 2581,
+        "cache_creation_tokens": 14581,
+        "cache_read_tokens": 279141,
+        "stop_reason": "end_turn",
+        "session_id": "949fff6a-e821-4afb-b6e0-2841f55e3f63",
+        "permission_denials": [],
+        "prompt_chars": 9010,
+        "prompt_lines": 172,
+        "source": "provider",
+        "attempt": 1
+      }
+    ],
+    "last_commit": "cf9292551339e9c5749fa838b4f4988abec6586a"
+  },
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}
