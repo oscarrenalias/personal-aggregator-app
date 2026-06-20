@@ -1,0 +1,267 @@
+{
+  "bead_id": "B-975f9d19",
+  "title": "Shared tester",
+  "agent_type": "tester",
+  "description": "Write unit tests in AggregatorAppTests covering: (1) Category decoding with current API shape \u2014 assert name, sortOrder (from sort_order), nil description case, lastActivity == nil, hasPriority == false; (2) Category decoding with future API shape including last_activity and has_priority populated; (3) freshnessPhrase with injected fixed now \u2014 hasPriority true \u2192 'New notable stories'; same-day lastActivity \u2192 'Updated today'; previous-day \u2192 'Updated yesterday'; older \u2192 'Quiet'; nil+!priority \u2192 nil; (4) ArticleFeed.category param \u2014 assert .category(name: 'Game Reviews') produces category=Game%20Reviews URL-encoded, composes with sort and unread_only, allowsUnreadFilter == true. Run xcodebuild test and confirm exit 0.",
+  "status": "done",
+  "bead_type": "task",
+  "parent_id": "B-85a6280d",
+  "dependencies": [
+    "B-e8775825",
+    "B-26710038",
+    "B-e72471a7",
+    "B-da4bc339",
+    "B-7a6a5114",
+    "B-19ecc87a",
+    "B-edd22114"
+  ],
+  "acceptance_criteria": [
+    "xcodebuild test exits 0",
+    "Category decoding tests pass for current and future API shapes",
+    "All five freshnessPhrase branches covered and passing",
+    "ArticleFeed.category URL-encoding and param-composition test passes",
+    "allowsUnreadFilter == true asserted"
+  ],
+  "linked_docs": [
+    "specs/drafts/spec-ac336102.md"
+  ],
+  "feature_root_id": "B-85a6280d",
+  "execution_branch_name": "feature/b-85a6280d",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-85a6280d",
+  "expected_files": [
+    "AggregatorAppTests/CategoryTests.swift",
+    "AggregatorAppTests/ArticleFeedTests.swift"
+  ],
+  "expected_globs": [
+    "AggregatorAppTests/**/*.swift"
+  ],
+  "touched_files": [
+    "AggregatorAppTests/ArticleFeedTests.swift",
+    "AggregatorAppTests/CategoryTests.swift"
+  ],
+  "changed_files": [
+    "AggregatorAppTests/ArticleFeedTests.swift",
+    "AggregatorAppTests/CategoryTests.swift"
+  ],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "Created AggregatorAppTests/CategoryTests.swift with 14 tests: 6 decoding tests (current API shape, future shape, optional fields, defaults), 1 Identifiable test, and 7 freshnessPhrase tests (hasPriority true with nil/non-nil lastActivity, updated today, updated yesterday, quiet, nil+no-priority, unparseable string). Updated AggregatorAppTests/ArticleFeedTests.swift: fixed non-exhaustive switch statements in feedQueryItems/articlesQuery helpers, added allowsUnreadFilter assertion for .category, and 5 new category feed tests. Regenerated Xcode project via xcodegen generate. All 23 tests pass.",
+    "remaining": "None within tester scope.",
+    "risks": "None. All tests pass; no production code was modified.",
+    "verdict": "approved",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [
+      "AggregatorAppTests/ArticleFeedTests.swift",
+      "AggregatorAppTests/CategoryTests.swift"
+    ],
+    "updated_docs": [],
+    "next_action": "None \u2014 bead complete.",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [
+      "AggregatorAppTests/CategoryTests.swift",
+      "AggregatorAppTests/ArticleFeedTests.swift"
+    ],
+    "expected_globs": [
+      "AggregatorAppTests/**/*.swift"
+    ],
+    "touched_files": [
+      "AggregatorAppTests/ArticleFeedTests.swift",
+      "AggregatorAppTests/CategoryTests.swift"
+    ],
+    "conflict_risks": "None. New CategoryTests.swift has no overlap with other test files. ArticleFeedTests.swift additions are additive only; no sibling bead touches this file.",
+    "design_decisions": "freshnessPhrase tests use noon UTC for both lastActivity and now in same-day tests to avoid timezone edge cases \u2014 Calendar.current compares calendar days in the local timezone, so using equal timestamps guarantees same-day regardless of TZ offset. Yesterday/older tests use 24-hour intervals at noon UTC for the same reason.",
+    "test_coverage_notes": "All acceptance criteria covered: Category decoding for current API shape (id, name, sortOrder, nil description, nil lastActivity, hasPriority=false); Category decoding for future API shape (last_activity and has_priority populated); all five freshnessPhrase branches (hasPriority true with nil/non-nil lastActivity, same-day, previous-day, older); .category URL encoding (Game%20Reviews), param composition with sort and unread_only, allowsUnreadFilter==true, systemImage==\\\"tag\\\", regression on .source/.important/.unread.",
+    "known_limitations": "freshnessPhrase uses Calendar.current so tests are sensitive to simulator timezone; mitigated by using noon UTC timestamps with sufficient day separation. Tests do not cover APIClient network integration (getCategories error propagation) as that requires a live URLSession mock \u2014 out of scope for this unit-test bead."
+  },
+  "block_reason": "",
+  "conflict_risks": "None. New CategoryTests.swift has no overlap with other test files. ArticleFeedTests.swift additions are additive only; no sibling bead touches this file.",
+  "branch_name": "feature/b-85a6280d",
+  "worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-85a6280d",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-20T16:24:46.183099+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-20T16:32:50.149127+00:00",
+      "event": "skills_loaded",
+      "agent_type": "tester",
+      "summary": "Loaded 6 skill(s) for isolated execution",
+      "details": {
+        "loaded_skills": [
+          "core/base-orchestrator",
+          "role/tester-validation",
+          "capability/test-execution",
+          "task/defect-bead-creation",
+          "task/regression-triage",
+          "memory"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-06-20T16:32:50.149146+00:00",
+      "event": "started",
+      "agent_type": "tester",
+      "summary": "Worker started",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-20T16:32:50.621662+00:00",
+      "event": "guardrails_applied",
+      "agent_type": "tester",
+      "summary": "Applied guardrails from .takt/agent-runs/B-975f9d19/repo/templates/agents/tester.md",
+      "details": {
+        "template_path": ".takt/agent-runs/B-975f9d19/repo/templates/agents/tester.md"
+      }
+    },
+    {
+      "timestamp": "2026-06-20T16:39:10.866745+00:00",
+      "event": "completed",
+      "agent_type": "tester",
+      "summary": "Created CategoryTests.swift (14 tests) covering Category decoding (current and future API shapes), Identifiable conformance, and all five freshnessPhrase branches. Updated ArticleFeedTests.swift (9 tests) to add .category case to switch helpers, plus new tests for URL encoding, param composition, regression on existing feeds, allowsUnreadFilter, and systemImage. xcodebuild test exits 0 with 23 tests passing and 0 failures.",
+      "details": {}
+    }
+  ],
+  "metadata": {
+    "execution_root": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-975f9d19",
+    "workspace_repo_path": "repo",
+    "loaded_skills": [
+      "core/base-orchestrator",
+      "role/tester-validation",
+      "capability/test-execution",
+      "task/defect-bead-creation",
+      "task/regression-triage",
+      "memory"
+    ],
+    "skill_bundle_hash": "c2bb19865add8770ba493957f3775e07d50168d42fe585583dcff9d82dc76d86",
+    "isolated_home": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-975f9d19/home",
+    "runner_backend": "claude",
+    "guardrails": {
+      "agent_type": "tester",
+      "template_path": ".takt/agent-runs/B-975f9d19/repo/templates/agents/tester.md",
+      "template_text": "# Tester Guardrails\n\n**CRITICAL \u2014 read before any tool use:**\n- **Never use `run_in_background: true`** on any Bash command. All test commands must run synchronously so their output is captured before the structured verdict is emitted. Background tasks cause the structured output to be lost, resulting in a failed bead.\n- **If a task-notification appears in your context**, that means a previous Bash command ran in the background in violation of this rule. Do not treat the notification as a sign that work is done. Re-run the test command synchronously (without `run_in_background`) and emit the JSON verdict block as your final response.\n- **The JSON verdict block must be the absolute last output of your response.** Never end with prose, a status summary, or a notification acknowledgement. The orchestrator parses your final message as JSON and will fail if it is not valid JSON.\n\n---\n\nPrimary responsibility: Add or update automated tests, run validation, and report defects or missing coverage.\n\nAllowed actions:\n- Write or update tests relevant to the assigned bead.\n- Run only the test files related to the bead's changed files, not the full test suite. Target individual test files or modules. If unsure which tests are relevant, use the bead's expected_files and touched_files fields as a guide. Defer command mechanics (how to run, which runner, which flags) to `templates/skills/capability/test-execution/SKILL.md`.\n- Make minimal test-enablement fixes (e.g. import corrections, fixture setup) only when strictly necessary to run the relevant tests. Do not refactor production code under the guise of test enablement.\n\nDisallowed actions:\n- Run the full test suite instead of targeting specific tests. Always run targeted, scoped commands. Running the full suite wastes time and often exceeds the agent timeout.\n- Use `run_in_background` for any Bash commands. (See CRITICAL section above.)\n- Implement feature logic beyond minimal test-enablement work.\n- Reframe a feature implementation task as testing work to bypass handoff.\n- Perform review signoff or broad documentation rewrites.\n\n## Memory\n\n**Read memory at bead start.** Before writing or running any tests, run three searches using `$TAKT_CMD` (injected by the orchestrator):\n\n```bash\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace global\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace feature:<feature_root_id>\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace specs\n```\n\nTreat results as ambient context \u2014 apply relevant entries; skip entries that don't apply.\n\n**Write to memory when you discover reusable testing knowledge** \u2014 patterns, pitfalls, or edge cases that would benefit future testers of this codebase.\n\n```bash\n$TAKT_CMD memory add \"<concise fact>\" --namespace global               # project-wide knowledge\n$TAKT_CMD memory add \"<discovery>\" --namespace feature:<feature_root_id>  # feature-scoped\n```\n\nExpected outputs:\n- Return JSON with structured verdict fields for every run: `verdict`, `findings_count`, and `requires_followup`.\n- Treat `verdict` as the tester signoff decision: `approved` means testing can complete, while `needs_changes` means the bead must block for follow-up work.\n- Use `verdict=approved`, `findings_count=0`, and `requires_followup=false` when testing is complete with no unresolved tester-scope findings.\n- Use `verdict=needs_changes`, set `findings_count` to the unresolved defect or coverage gap count, set `requires_followup=true` unless there is a stronger explicit reason not to, and always include `block_reason` when follow-up work is required.\n- Keep `completed`, `remaining`, and `risks` as free-form narrative context only. They inform operators, but they do not override the structured verdict or control scheduler state.\n- Completed or blocked JSON describing test coverage, validation status, and follow-up needs.\n- Precise defect or coverage notes when the bead cannot be completed within tester scope.\n\n**FINAL REMINDER: The JSON verdict block must be the last thing you output. Do not add any text, prose, or acknowledgement after it.**",
+      "captured_at": "2026-06-20T16:32:50.621652+00:00"
+    },
+    "worker_prompt_context": {
+      "bead_id": "B-975f9d19",
+      "feature_root_id": "B-85a6280d",
+      "title": "Shared tester",
+      "agent_type": "tester",
+      "description": "Write unit tests in AggregatorAppTests covering: (1) Category decoding with current API shape \u2014 assert name, sortOrder (from sort_order), nil description case, lastActivity == nil, hasPriority == false; (2) Category decoding with future API shape including last_activity and has_priority populated; (3) freshnessPhrase with injected fixed now \u2014 hasPriority true \u2192 'New notable stories'; same-day lastActivity \u2192 'Updated today'; previous-day \u2192 'Updated yesterday'; older \u2192 'Quiet'; nil+!priority \u2192 nil; (4) ArticleFeed.category param \u2014 assert .category(name: 'Game Reviews') produces category=Game%20Reviews URL-encoded, composes with sort and unread_only, allowsUnreadFilter == true. Run xcodebuild test and confirm exit 0.",
+      "status": "in_progress",
+      "acceptance_criteria": [
+        "xcodebuild test exits 0",
+        "Category decoding tests pass for current and future API shapes",
+        "All five freshnessPhrase branches covered and passing",
+        "ArticleFeed.category URL-encoding and param-composition test passes",
+        "allowsUnreadFilter == true asserted"
+      ],
+      "dependencies": [
+        "B-e8775825",
+        "B-26710038",
+        "B-e72471a7",
+        "B-da4bc339",
+        "B-7a6a5114",
+        "B-19ecc87a",
+        "B-edd22114"
+      ],
+      "linked_docs": [
+        "specs/drafts/spec-ac336102.md"
+      ],
+      "execution_branch_name": "feature/b-85a6280d",
+      "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-85a6280d",
+      "expected_files": [
+        "AggregatorApp/Articles/ArticleFeed.swift",
+        "AggregatorApp/Common/APIClient.swift",
+        "AggregatorApp/Models/Category.swift",
+        "AggregatorApp/Sources/SourcesView.swift"
+      ],
+      "expected_globs": [
+        "AggregatorAppTests/**/*.swift"
+      ],
+      "touched_files": [
+        "AggregatorApp/Articles/ArticleFeed.swift",
+        "AggregatorApp/Common/APIClient.swift",
+        "AggregatorApp/Models/Category.swift",
+        "AggregatorApp/Sources/SourcesView.swift"
+      ],
+      "conflict_risks": "None. Category.swift is a new file with no overlap with existing models.\nNone \u2014 single file, no overlap with other in-flight beads.\nAny sibling bead that also touches `APIClient.swift` around the `getArticles` switch will conflict.\nA sibling bead had already modified `APIClient.swift` to add `.category` feed support to `getArticles()`. This bead's insertion was applied after re-reading the updated file, so there is no conflict.\nNone. File was read-only during this bead; no changes were made.\nNo conflicts expected. Only SourcesView.swift was touched; no new files added; xcodegen regeneration not required.\nNone \u2014 only SourcesView.swift was modified, within the already-claimed Categories section.",
+      "handoff_summary": {
+        "completed": "",
+        "remaining": "",
+        "risks": "",
+        "verdict": "",
+        "findings_count": 0,
+        "requires_followup": false,
+        "changed_files": [],
+        "updated_docs": [],
+        "next_action": "",
+        "next_agent": "",
+        "block_reason": "",
+        "expected_files": [],
+        "expected_globs": [],
+        "touched_files": [],
+        "conflict_risks": "",
+        "design_decisions": "",
+        "test_coverage_notes": "",
+        "known_limitations": ""
+      }
+    },
+    "last_agent_result": {
+      "outcome": "completed",
+      "summary": "Created CategoryTests.swift (14 tests) covering Category decoding (current and future API shapes), Identifiable conformance, and all five freshnessPhrase branches. Updated ArticleFeedTests.swift (9 tests) to add .category case to switch helpers, plus new tests for URL encoding, param composition, regression on existing feeds, allowsUnreadFilter, and systemImage. xcodebuild test exits 0 with 23 tests passing and 0 failures.",
+      "verdict": "approved",
+      "findings_count": 0,
+      "requires_followup": false,
+      "next_agent": "",
+      "block_reason": ""
+    },
+    "telemetry": {
+      "cost_usd": 0.6900058000000001,
+      "duration_ms": 379445,
+      "duration_api_ms": 215500,
+      "num_turns": 21,
+      "input_tokens": 22,
+      "output_tokens": 14750,
+      "cache_creation_tokens": 42338,
+      "cache_read_tokens": 699686,
+      "stop_reason": "end_turn",
+      "session_id": "e1995273-95d5-416b-b59a-ab4da36f2129",
+      "permission_denials": [],
+      "prompt_chars": 15002,
+      "prompt_lines": 206,
+      "source": "provider",
+      "attempt": 1
+    },
+    "telemetry_history": [
+      {
+        "cost_usd": 0.6900058000000001,
+        "duration_ms": 379445,
+        "duration_api_ms": 215500,
+        "num_turns": 21,
+        "input_tokens": 22,
+        "output_tokens": 14750,
+        "cache_creation_tokens": 42338,
+        "cache_read_tokens": 699686,
+        "stop_reason": "end_turn",
+        "session_id": "e1995273-95d5-416b-b59a-ab4da36f2129",
+        "permission_denials": [],
+        "prompt_chars": 15002,
+        "prompt_lines": 206,
+        "source": "provider",
+        "attempt": 1
+      }
+    ],
+    "last_commit": "95b2c764e3409479bf5114e9db11b9e34e8eff85"
+  },
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}
