@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 struct SourceFaviconView: View {
     let feedURL: String
