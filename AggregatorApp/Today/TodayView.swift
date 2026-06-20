@@ -2,11 +2,14 @@ import SwiftUI
 
 struct TodayView: View {
     @Environment(CredentialsStore.self) private var credentialsStore
+    @State private var briefs: [Brief] = []
+    @State private var nextCursor: String? = nil
     @State private var phase: Phase = .loading
+    @State private var isLoadingMore: Bool = false
 
     private enum Phase {
         case loading
-        case loaded(Brief)
+        case loaded
         case error(Error)
         case empty
     }
@@ -41,13 +44,17 @@ struct TodayView: View {
                                 .foregroundStyle(.secondary)
                                 .multilineTextAlignment(.center)
                             Button("Retry") {
-                                Task { await fetchBrief() }
+                                Task { await loadBriefs() }
                             }
                         }
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    case .loaded(let brief):
-                        BriefDetailView(brief: brief) {
-                            await fetchBrief()
+                    case .loaded:
+                        List {
+                            ForEach(briefs) { brief in
+                                NavigationLink(destination: BriefDetailView(brief: brief)) {
+                                    BriefCardView(brief: brief, isLatest: brief.id == briefs.first?.id)
+                                }
+                            }
                         }
                     }
                 }
@@ -56,16 +63,32 @@ struct TodayView: View {
         }
         .task {
             if credentialsStore.isConfigured {
-                await fetchBrief()
+                await loadBriefs()
             }
         }
     }
 
-    private func fetchBrief() async {
+    private func loadBriefs() async {
         phase = .loading
         do {
+            let response = try await apiClient.getBriefs(limit: 20)
+            briefs = response.items
+            nextCursor = response.nextCursor
+            phase = briefs.isEmpty ? .empty : .loaded
+        } catch APIError.http(status: 404) {
+            await loadTodayBriefFallback()
+        } catch {
+            if isCancellation(error) { return }
+            phase = .error(error)
+        }
+    }
+
+    private func loadTodayBriefFallback() async {
+        do {
             let brief = try await apiClient.getTodayBrief()
-            phase = .loaded(brief)
+            briefs = [brief]
+            nextCursor = nil
+            phase = .loaded
         } catch APIError.http(status: 404) {
             phase = .empty
         } catch {
