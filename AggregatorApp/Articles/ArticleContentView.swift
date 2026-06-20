@@ -21,7 +21,10 @@ struct ArticleContentView: View {
                 // a clipped overlay, so `scaledToFill` cannot overflow and force
                 // the content column wider than the screen (which would crop text).
                 if let imageURLString = article.imageURL, let imageURL = URL(string: imageURLString) {
-                    Color.secondary.opacity(0.15)
+                    // Rectangle (not Color) for the base: Color ignores the safe
+                    // area and would push the hero up under the nav bar.
+                    Rectangle()
+                        .fill(Color.secondary.opacity(0.15))
                         .frame(maxWidth: .infinity)
                         .frame(height: 240)
                         .overlay {
