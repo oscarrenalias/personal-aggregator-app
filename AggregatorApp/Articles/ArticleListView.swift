@@ -16,6 +16,7 @@ struct ArticleListView: View {
     @State private var nextCursor: String? = nil
     @State private var phase: LoadPhase = .loading
     @State private var isLoadingMore: Bool = false
+    @State private var loadGate = LoadOnceGate()
 
     private var apiClient: APIClient {
         APIClient(store: credentialsStore)
@@ -67,6 +68,7 @@ struct ArticleListView: View {
             }
         }
         .task {
+            guard loadGate.shouldLoad() else { return }
             await loadFirstPage()
         }
         .onChange(of: listPreferences.articlesSort) {
