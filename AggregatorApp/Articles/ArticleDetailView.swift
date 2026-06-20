@@ -10,9 +10,17 @@ struct ArticleDetailView: View {
     @State private var isRead = false
     @State private var isSaved = false
     @State private var showSafari = false
+    @State private var showCommentsSafari = false
 
     private var apiClient: APIClient {
         APIClient(store: credentialsStore)
+    }
+
+    private var shareURL: URL {
+        guard let a = article, let urlString = a.url, let url = URL(string: urlString) else {
+            return URL(string: "about:blank")!
+        }
+        return url
     }
 
     var body: some View {
@@ -51,10 +59,33 @@ struct ArticleDetailView: View {
                 }
                 .accessibilityLabel("Open original in browser")
                 .disabled(article?.url == nil)
+
+                ShareLink(
+                    item: shareURL,
+                    subject: Text(article?.title ?? "")
+                ) {
+                    Image(systemName: "square.and.arrow.up")
+                }
+                .accessibilityLabel("Share article")
+                .disabled(article?.url == nil)
+
+                // Disabled until backend ships comments_url; kept in toolbar for forward compatibility.
+                Button {
+                    showCommentsSafari = true
+                } label: {
+                    Image(systemName: "bubble.left.and.bubble.right")
+                }
+                .accessibilityLabel("Open comments")
+                .disabled(article?.commentsURL == nil)
             }
         }
         .sheet(isPresented: $showSafari) {
             if let urlString = article?.url, let url = URL(string: urlString) {
+                SafariView(url: url)
+            }
+        }
+        .sheet(isPresented: $showCommentsSafari) {
+            if let urlString = article?.commentsURL, let url = URL(string: urlString) {
                 SafariView(url: url)
             }
         }

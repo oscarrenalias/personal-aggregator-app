@@ -35,6 +35,12 @@ struct ArticlePagerView: View {
         return articles[i]
     }
 
+    // ShareLink requires a non-optional URL; this placeholder is only used when the button is disabled.
+    private var currentShareURL: URL {
+        guard let s = current.url, let url = URL(string: s) else { return URL(string: "https://example.com")! }
+        return url
+    }
+
     private func isRead(_ a: Article) -> Bool { readStore.isRead(id: a.id, fetched: a.isRead) }
     private func isSaved(_ a: Article) -> Bool { savedOverrides[a.id] ?? a.isSaved }
 
@@ -64,6 +70,9 @@ struct ArticlePagerView: View {
                 }
                 .accessibilityLabel(isRead(current) ? "Mark as unread" : "Mark as read")
 
+                ShareLink(item: currentShareURL, subject: Text(current.title ?? ""))
+                    .disabled(current.url == nil)
+
                 Button {
                     openOriginal(current)
                 } label: {
@@ -71,6 +80,15 @@ struct ArticlePagerView: View {
                 }
                 .accessibilityLabel("Open original in browser")
                 .disabled(current.url == nil)
+
+                // Disabled until backend ships comments_url; kept in toolbar for forward compatibility.
+                Button {
+                    openComments(current)
+                } label: {
+                    Image(systemName: "bubble.left.and.bubble.right")
+                }
+                .accessibilityLabel("Open comments")
+                .disabled(current.commentsURL == nil)
             }
         }
         .sheet(isPresented: $showSafari) {
@@ -86,6 +104,12 @@ struct ArticlePagerView: View {
 
     private func openOriginal(_ a: Article) {
         guard let urlString = a.url, let url = URL(string: urlString) else { return }
+        safariURL = url
+        showSafari = true
+    }
+
+    private func openComments(_ a: Article) {
+        guard let urlString = a.commentsURL, let url = URL(string: urlString) else { return }
         safariURL = url
         showSafari = true
     }
