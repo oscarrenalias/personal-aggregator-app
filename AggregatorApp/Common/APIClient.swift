@@ -173,6 +173,20 @@ struct APIClient {
         return try await get("/brief/today")
     }
 
+    /// Fetches a paginated list of briefs.
+    /// - Parameters:
+    ///   - cursor: Opaque pagination cursor from the previous page; `nil` fetches the first page.
+    ///   - limit: Page size.
+    func getBriefs(cursor: String? = nil, limit: Int) async throws -> PaginatedResponse<Brief> {
+        var query: [URLQueryItem] = [
+            URLQueryItem(name: "limit", value: "\(limit)"),
+        ]
+        if let cursor {
+            query.append(URLQueryItem(name: "cursor", value: cursor))
+        }
+        return try await get("/briefs", query: query)
+    }
+
     // MARK: - Write endpoints
 
     /// Dismisses a thread so it no longer appears in the default (non-dismissed) listing.

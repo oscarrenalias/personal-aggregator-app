@@ -86,6 +86,7 @@ middleware so every request carries them.
 | `GET /threads/{id}` | Single thread (passive) | — |
 | `GET /threads/{id}/members` | Articles in a thread | — |
 | `GET /brief/today` | Today's generated brief | — |
+| `GET /briefs` | Paginated list of generated briefs (newest first) | `limit`, `cursor` |
 | `GET /sources` | All feed sources | — |
 | `GET /categories` | All categories | — |
 | `GET /interest-profile` | Current interest-profile text | — |
@@ -148,10 +149,80 @@ curl -sS "${H[@]}" "$BASE/threads?sort=recent&limit=10"
 curl -sS "${H[@]}" "$BASE/threads/42"
 curl -sS "${H[@]}" "$BASE/threads/42/members"
 
+# Paginated list of briefs (newest first)
+curl -sS "${H[@]}" "$BASE/briefs?limit=20"
+
+# Next page of briefs
+curl -sS "${H[@]}" "$BASE/briefs?limit=20&cursor=<next_cursor>"
+
+# Today's brief (single-object endpoint, returns 404 if not yet generated)
+curl -sS "${H[@]}" "$BASE/brief/today"
+
 # Mark an article read / save it
 curl -sS -X POST "${H[@]}" "$BASE/articles/14522/read"
 curl -sS -X POST "${H[@]}" "$BASE/articles/14522/save"
 ```
+
+## iOS client: Today tab
+
+The **Today** tab displays a scrollable list of generated briefs using three
+components that map onto the two brief endpoints:
+
+| Component | File | Role |
+|---|---|---|
+| `TodayView` | `AggregatorApp/Today/TodayView.swift` | Root view; owns loading state, list, pagination |
+| `BriefCardView` | `AggregatorApp/Today/BriefCardView.swift` | List row: date label, headline, topic count |
+| `BriefDetailView` | `AggregatorApp/Today/BriefDetailView.swift` | Full brief: intro, ordered topics, source links via `SafariView` |
+
+### Load sequence and graceful degradation
+
+`TodayView` calls `APIClient.getBriefs(limit:cursor:)` (`GET /briefs`) on
+appear and on pull-to-refresh. If the backend returns **404** (endpoint not
+yet deployed), it automatically falls back to `APIClient.getTodayBrief()`
+(`GET /brief/today`) and marks itself as `isFallback = true`. In fallback
+mode the list contains only the current day's brief and infinite-scroll is
+disabled (no cursor, no further pages).
+
+Once the backend ships `GET /briefs`, full history appears automatically
+without any app change — the app always attempts the paginated endpoint first.
+
+```
+getTodayBrief()  ← fallback, single brief, no pagination
+     ↑ 404
+getBriefs()      ← primary, newest-first, cursor-paginated
+```
+
+### `BriefCardView`
+
+Renders a brief as a list row:
+
+- **Date label** (`caption`): `"Today · <medium date>"` for the most-recent
+  brief, bare `<medium date>` for older ones. Determined by comparing
+  `brief.id` against the first item in the list.
+- **Headline** (`headline`): `brief.headline ?? "Daily Brief"`.
+- **Topic count** (`caption`): e.g. `"3 topics"`.
+
+### `BriefDetailView`
+
+Renders full brief content in a `ScrollView`:
+
+- Headline (`title2 bold`), date + model caption, optional intro paragraph.
+- Topics sorted by `position` ascending, each rendered by `BriefTopicView`.
+- Source links open in `SafariView` (in-app sheet).
+- Accepts an optional `onRefresh` closure wired to the list's pull-to-refresh
+  in parent views.
+
+### `getBriefs` — `APIClient` method
+
+```swift
+func getBriefs(cursor: String? = nil, limit: Int) async throws -> PaginatedResponse<Brief>
+```
+
+Calls `GET /briefs` with `limit` and, when non-nil, a percent-encoded
+`cursor` query parameter. Returns the standard paginated envelope
+(`PaginatedResponse<Brief>`). Throws `APIError.http(status: 404)` when the
+endpoint does not exist on the backend; callers are expected to catch that
+and fall back to `getTodayBrief()`.
 
 ## The OpenAPI spec
 

@@ -2,12 +2,15 @@ import SwiftUI
 
 struct TodayView: View {
     @Environment(CredentialsStore.self) private var credentialsStore
+    @State private var briefs: [Brief] = []
+    @State private var nextCursor: String? = nil
     @State private var phase: Phase = .loading
-    @State private var safariURL: URL? = nil
+    @State private var isLoadingMore: Bool = false
+    @State private var isFallback: Bool = false
 
     private enum Phase {
         case loading
-        case loaded(Brief)
+        case loaded
         case error(Error)
         case empty
     }
@@ -32,7 +35,7 @@ struct TodayView: View {
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
                     case .empty:
                         ContentUnavailableView(
-                            "No Brief Today",
+                            "No briefs yet",
                             systemImage: "sparkles",
                             description: Text("Today's brief hasn't been generated yet.")
                         )
@@ -42,77 +45,90 @@ struct TodayView: View {
                                 .foregroundStyle(.secondary)
                                 .multilineTextAlignment(.center)
                             Button("Retry") {
-                                Task { await fetchBrief() }
+                                Task { await loadBriefs() }
                             }
                         }
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    case .loaded(let brief):
-                        briefContent(brief)
+                    case .loaded:
+                        List {
+                            ForEach(briefs) { brief in
+                                NavigationLink(destination: BriefDetailView(brief: brief)) {
+                                    BriefCardView(brief: brief, isLatest: brief.id == briefs.first?.id)
+                                }
+                                .onAppear {
+                                    if !isFallback && brief.id == briefs.last?.id {
+                                        Task { await loadMoreBriefs() }
+                                    }
+                                }
+                            }
+                        }
+                        .refreshable {
+                            await refreshBriefs()
+                        }
                     }
                 }
             }
             .navigationTitle("Today")
         }
-        .sheet(isPresented: Binding(
-            get: { safariURL != nil },
-            set: { if !$0 { safariURL = nil } }
-        )) {
-            if let url = safariURL {
-                SafariView(url: url)
-            }
-        }
         .task {
             if credentialsStore.isConfigured {
-                await fetchBrief()
+                await loadBriefs()
             }
         }
     }
 
-    @ViewBuilder
-    private func briefContent(_ brief: Brief) -> some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
-                Text(brief.headline ?? "Daily Brief")
-                    .font(.title2)
-                    .bold()
-                    .frame(maxWidth: .infinity, alignment: .leading)
-
-                Text(captionString(brief))
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-
-                if let intro = brief.intro, !intro.isEmpty {
-                    ParagraphText(intro)
-                        .font(.body)
-                }
-
-                ForEach(brief.topics.sorted { $0.position < $1.position }) { topic in
-                    BriefTopicView(topic: topic) { url in
-                        safariURL = url
-                    }
-                }
-            }
-            .padding(.horizontal, ReaderLayout.hPadding)
-            .padding(.vertical, 16)
-        }
-        .refreshable {
-            await fetchBrief()
-        }
-    }
-
-    private func captionString(_ brief: Brief) -> String {
-        var parts = [DateDisplay.mediumDate(brief.periodStart)]
-        if let model = brief.model {
-            parts.append(model)
-        }
-        return parts.joined(separator: " · ")
-    }
-
-    private func fetchBrief() async {
+    private func loadBriefs() async {
         phase = .loading
+        isFallback = false
+        do {
+            let response = try await apiClient.getBriefs(limit: 20)
+            briefs = response.items
+            nextCursor = response.nextCursor
+            phase = briefs.isEmpty ? .empty : .loaded
+        } catch APIError.http(status: 404) {
+            await loadTodayBriefFallback()
+        } catch {
+            if isCancellation(error) { return }
+            phase = .error(error)
+        }
+    }
+
+    private func refreshBriefs() async {
+        isFallback = false
+        nextCursor = nil
+        do {
+            let response = try await apiClient.getBriefs(limit: 20)
+            briefs = response.items
+            nextCursor = response.nextCursor
+            phase = briefs.isEmpty ? .empty : .loaded
+        } catch APIError.http(status: 404) {
+            await loadTodayBriefFallback()
+        } catch {
+            if isCancellation(error) { return }
+            phase = .error(error)
+        }
+    }
+
+    private func loadMoreBriefs() async {
+        guard let cursor = nextCursor, !isLoadingMore else { return }
+        isLoadingMore = true
+        defer { isLoadingMore = false }
+        do {
+            let response = try await apiClient.getBriefs(cursor: cursor, limit: 20)
+            briefs.append(contentsOf: response.items)
+            nextCursor = response.nextCursor
+        } catch {
+            if isCancellation(error) { return }
+        }
+    }
+
+    private func loadTodayBriefFallback() async {
         do {
             let brief = try await apiClient.getTodayBrief()
-            phase = .loaded(brief)
+            briefs = [brief]
+            nextCursor = nil
+            isFallback = true
+            phase = .loaded
         } catch APIError.http(status: 404) {
             phase = .empty
         } catch {
