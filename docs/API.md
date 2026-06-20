@@ -306,6 +306,53 @@ Calls `GET /categories` and decodes the response as `[Category]`. Non-paginated
 `APIError.cloudflareRejected` or `APIError.http` on failure; `SourcesView`
 treats any error as "show no Categories section."
 
+### Source favicons — `FaviconLoader`
+
+Each source row in the **Sources** section shows a 20×20 favicon resolved by
+`FaviconLoader` (`AggregatorApp/Common/FaviconLoader.swift`), a Swift `actor`
+with three-level caching:
+
+```
+NSCache (in-memory) → Caches/favicons/<host>.png (on-disk) → network
+```
+
+**Icon derivation.** `FaviconLoader.iconURL(forFeedURL:)` extracts the `host`
+component of `Source.feedURL` and queries
+`https://icons.duckduckgo.com/ip3/<host>.ico`. Each source's hostname is sent
+to DuckDuckGo's public icon service on first load.
+
+**Failure behaviour.** All errors — network failures, non-200 responses, bad
+image data — are swallowed. `SourceFaviconView` falls back to the `globe` SF
+Symbol when `FaviconLoader` returns `nil`.
+
+**Concurrent deduplication.** In-flight tasks are keyed by host. Multiple
+`SourceFaviconView` instances requesting the same host trigger exactly one
+network request; subsequent callers await the same `Task`.
+
+### Source activity dots — dormant until backend ships fields
+
+`SourceActivityDot` (`AggregatorApp/Sources/SourceActivityDot.swift`) renders
+an 8×8 dot to the trailing edge of each source name in the Sources list:
+
+| `Source` field | Value | Dot |
+|---|---|---|
+| `has_priority` | `true` | accent-colour filled circle |
+| `has_new` | `true` (and `has_priority` false) | secondary-colour filled circle |
+| both false | — | *(no dot)* |
+
+**Scope.** Activity dots appear on **source list rows only** — they are not
+shown on article rows, article detail views, or any source-detail header.
+
+**Dormancy pattern.** `GET /sources` does not yet include `has_new` or
+`has_priority`. `Source` decodes both fields with `decodeIfPresent` and
+defaults them to `false`, so rows show no dot and no error on the current API.
+This mirrors the dormancy pattern used for `Category.has_priority` and
+`last_activity` (see Freshness subtitle — dormant until backend ships fields).
+
+**Activation path.** When the backend adds `has_new` (bool) and `has_priority`
+(bool) to the `SourceResponse` schema, the iOS decoder picks them up and dots
+appear automatically — no app change required.
+
 ## The OpenAPI spec
 
 - **In this repo:** [`docs/openapi.json`](./openapi.json) — a committed snapshot,
