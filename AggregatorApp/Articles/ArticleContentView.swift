@@ -17,18 +17,21 @@ struct ArticleContentView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 0) {
                 // (1) Hero image — renders when imageURL is present.
+                // The size is dictated by a fixed-size container and the image is
+                // a clipped overlay, so `scaledToFill` cannot overflow and force
+                // the content column wider than the screen (which would crop text).
                 if let imageURLString = article.imageURL, let imageURL = URL(string: imageURLString) {
-                    AsyncImage(url: imageURL) { phase in
-                        switch phase {
-                        case .success(let image):
-                            image.resizable().scaledToFill()
-                        default:
-                            Color.secondary.opacity(0.15)
+                    Color.secondary.opacity(0.15)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 240)
+                        .overlay {
+                            AsyncImage(url: imageURL) { phase in
+                                if case .success(let image) = phase {
+                                    image.resizable().scaledToFill()
+                                }
+                            }
                         }
-                    }
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 240)
-                    .clipped()
+                        .clipped()
                 }
 
                 VStack(alignment: .leading, spacing: 14) {

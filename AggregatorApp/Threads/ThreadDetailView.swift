@@ -93,18 +93,20 @@ struct ThreadDetailView: View {
     @ViewBuilder
     private func heroSection(_ thread: Thread) -> some View {
         if let imageURLString = thread.imageURL, let imageURL = URL(string: imageURLString) {
-            AsyncImage(url: imageURL) { phase in
-                switch phase {
-                case .success(let image):
-                    image.resizable().scaledToFill()
-                default:
-                    Color.secondary.opacity(0.15)
+            // Fixed-size container + clipped image overlay so scaledToFill cannot
+            // overflow and force the content column wider than the screen.
+            Color.secondary.opacity(0.15)
+                .frame(maxWidth: .infinity)
+                .frame(height: 220)
+                .overlay {
+                    AsyncImage(url: imageURL) { phase in
+                        if case .success(let image) = phase {
+                            image.resizable().scaledToFill()
+                        }
+                    }
                 }
-            }
-            .frame(maxWidth: .infinity)
-            .frame(height: 220)
-            .clipped()
-            .accessibilityHidden(true)
+                .clipped()
+                .accessibilityHidden(true)
         }
     }
 

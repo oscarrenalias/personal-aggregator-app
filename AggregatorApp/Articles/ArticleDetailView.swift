@@ -36,49 +36,7 @@ struct ArticleDetailView: View {
         }
         .navigationTitle(article?.title ?? "Article")
         .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItemGroup(placement: .topBarTrailing) {
-                Button {
-                    Task { await toggleSaved() }
-                } label: {
-                    Image(systemName: isSaved ? "bookmark.fill" : "bookmark")
-                }
-                .accessibilityLabel(isSaved ? "Unsave article" : "Save article")
-
-                Button {
-                    Task { await toggleRead() }
-                } label: {
-                    Image(systemName: effectiveIsRead ? "checkmark.circle.fill" : "circle")
-                }
-                .accessibilityLabel(effectiveIsRead ? "Mark as unread" : "Mark as read")
-
-                Button {
-                    showSafari = true
-                } label: {
-                    Image(systemName: "safari")
-                }
-                .accessibilityLabel("Open original in browser")
-                .disabled(article?.url == nil)
-
-                ShareLink(
-                    item: shareURL,
-                    subject: Text(article?.title ?? "")
-                ) {
-                    Image(systemName: "square.and.arrow.up")
-                }
-                .accessibilityLabel("Share article")
-                .disabled(article?.url == nil)
-
-                // Disabled until backend ships comments_url; kept in toolbar for forward compatibility.
-                Button {
-                    showCommentsSafari = true
-                } label: {
-                    Image(systemName: "bubble.left.and.bubble.right")
-                }
-                .accessibilityLabel("Open comments")
-                .disabled(article?.commentsURL == nil)
-            }
-        }
+        .toolbar { readerToolbar }
         .sheet(isPresented: $showSafari) {
             if let urlString = article?.url, let url = URL(string: urlString) {
                 SafariView(url: url)
@@ -91,6 +49,52 @@ struct ArticleDetailView: View {
         }
         .task {
             await loadArticle()
+        }
+    }
+
+    // Toolbar extracted into its own ToolbarContentBuilder member so the body
+    // expression stays small (keeps the type-checker fast and avoids the
+    // pathological compile/runtime behaviour seen with large inline toolbars).
+    @ToolbarContentBuilder
+    private var readerToolbar: some ToolbarContent {
+        ToolbarItemGroup(placement: .topBarTrailing) {
+            Button {
+                Task { await toggleSaved() }
+            } label: {
+                Image(systemName: isSaved ? "bookmark.fill" : "bookmark")
+            }
+            .accessibilityLabel(isSaved ? "Unsave article" : "Save article")
+
+            Button {
+                Task { await toggleRead() }
+            } label: {
+                Image(systemName: effectiveIsRead ? "checkmark.circle.fill" : "circle")
+            }
+            .accessibilityLabel(effectiveIsRead ? "Mark as unread" : "Mark as read")
+
+            Button {
+                showSafari = true
+            } label: {
+                Image(systemName: "safari")
+            }
+            .accessibilityLabel("Open original in browser")
+            .disabled(article?.url == nil)
+
+            ShareLink(item: shareURL, subject: Text(article?.title ?? "")) {
+                Image(systemName: "square.and.arrow.up")
+            }
+            .accessibilityLabel("Share article")
+            .disabled(article?.url == nil)
+
+            // Shown only when the article has a comments URL (backend comments_url).
+            if article?.commentsURL != nil {
+                Button {
+                    showCommentsSafari = true
+                } label: {
+                    Image(systemName: "bubble.left.and.bubble.right")
+                }
+                .accessibilityLabel("Open comments")
+            }
         }
     }
 

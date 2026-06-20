@@ -54,43 +54,7 @@ struct ArticlePagerView: View {
         .tabViewStyle(.page(indexDisplayMode: .never))
         .navigationTitle(current.title ?? "Article")
         .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItemGroup(placement: .topBarTrailing) {
-                Button {
-                    Task { await toggleSaved(current) }
-                } label: {
-                    Image(systemName: isSaved(current) ? "bookmark.fill" : "bookmark")
-                }
-                .accessibilityLabel(isSaved(current) ? "Unsave article" : "Save article")
-
-                Button {
-                    Task { await toggleRead(current) }
-                } label: {
-                    Image(systemName: isRead(current) ? "checkmark.circle.fill" : "circle")
-                }
-                .accessibilityLabel(isRead(current) ? "Mark as unread" : "Mark as read")
-
-                ShareLink(item: currentShareURL, subject: Text(current.title ?? ""))
-                    .disabled(current.url == nil)
-
-                Button {
-                    openOriginal(current)
-                } label: {
-                    Image(systemName: "safari")
-                }
-                .accessibilityLabel("Open original in browser")
-                .disabled(current.url == nil)
-
-                // Disabled until backend ships comments_url; kept in toolbar for forward compatibility.
-                Button {
-                    openComments(current)
-                } label: {
-                    Image(systemName: "bubble.left.and.bubble.right")
-                }
-                .accessibilityLabel("Open comments")
-                .disabled(current.commentsURL == nil)
-            }
-        }
+        .toolbar { readerToolbar }
         .sheet(isPresented: $showSafari) {
             if let safariURL {
                 SafariView(url: safariURL)
@@ -99,6 +63,49 @@ struct ArticlePagerView: View {
         .task { await autoMarkRead(current) }
         .onChange(of: selectedIndex) { _, _ in
             Task { await autoMarkRead(current) }
+        }
+    }
+
+    // Toolbar extracted into its own ToolbarContentBuilder member so the body
+    // expression stays small (keeps the type-checker fast and avoids the
+    // pathological compile/runtime behaviour seen with large inline toolbars).
+    @ToolbarContentBuilder
+    private var readerToolbar: some ToolbarContent {
+        ToolbarItemGroup(placement: .topBarTrailing) {
+            Button {
+                Task { await toggleSaved(current) }
+            } label: {
+                Image(systemName: isSaved(current) ? "bookmark.fill" : "bookmark")
+            }
+            .accessibilityLabel(isSaved(current) ? "Unsave article" : "Save article")
+
+            Button {
+                Task { await toggleRead(current) }
+            } label: {
+                Image(systemName: isRead(current) ? "checkmark.circle.fill" : "circle")
+            }
+            .accessibilityLabel(isRead(current) ? "Mark as unread" : "Mark as read")
+
+            ShareLink(item: currentShareURL, subject: Text(current.title ?? ""))
+                .disabled(current.url == nil)
+
+            Button {
+                openOriginal(current)
+            } label: {
+                Image(systemName: "safari")
+            }
+            .accessibilityLabel("Open original in browser")
+            .disabled(current.url == nil)
+
+            // Shown only when the article has a comments URL (backend comments_url).
+            if current.commentsURL != nil {
+                Button {
+                    openComments(current)
+                } label: {
+                    Image(systemName: "bubble.left.and.bubble.right")
+                }
+                .accessibilityLabel("Open comments")
+            }
         }
     }
 
