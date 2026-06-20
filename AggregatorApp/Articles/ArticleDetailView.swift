@@ -9,8 +9,9 @@ struct ArticleDetailView: View {
     @State private var loadError: Error? = nil
     @State private var isRead = false
     @State private var isSaved = false
-    @State private var showSafari = false
-    @State private var showCommentsSafari = false
+    // Single item-driven Safari sheet for both "open original" and "open comments"
+    // (avoids the blank-sheet race and unreliable multiple .sheet modifiers).
+    @State private var safariURL: SafariURL?
 
     private var apiClient: APIClient {
         APIClient(store: credentialsStore)
@@ -28,7 +29,7 @@ struct ArticleDetailView: View {
             if let error = loadError {
                 errorView(error)
             } else if let article {
-                ArticleContentView(article: article, onOpenOriginal: { showSafari = true })
+                ArticleContentView(article: article, onOpenOriginal: { safariURL = SafariURL(article.url) })
             } else {
                 ProgressView()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -37,15 +38,8 @@ struct ArticleDetailView: View {
         .navigationTitle(article?.title ?? "Article")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar { readerToolbar }
-        .sheet(isPresented: $showSafari) {
-            if let urlString = article?.url, let url = URL(string: urlString) {
-                SafariView(url: url)
-            }
-        }
-        .sheet(isPresented: $showCommentsSafari) {
-            if let urlString = article?.commentsURL, let url = URL(string: urlString) {
-                SafariView(url: url)
-            }
+        .sheet(item: $safariURL) { item in
+            SafariView(url: item.url)
         }
         .task {
             await loadArticle()
@@ -73,7 +67,7 @@ struct ArticleDetailView: View {
             .accessibilityLabel(effectiveIsRead ? "Mark as unread" : "Mark as read")
 
             Button {
-                showSafari = true
+                safariURL = SafariURL(article?.url)
             } label: {
                 Image(systemName: "safari")
             }
@@ -89,7 +83,7 @@ struct ArticleDetailView: View {
             // Shown only when the article has a comments URL (backend comments_url).
             if article?.commentsURL != nil {
                 Button {
-                    showCommentsSafari = true
+                    safariURL = SafariURL(article?.commentsURL)
                 } label: {
                     Image(systemName: "bubble.left.and.bubble.right")
                 }
