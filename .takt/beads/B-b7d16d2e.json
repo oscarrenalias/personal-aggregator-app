@@ -1,0 +1,277 @@
+{
+  "bead_id": "B-b7d16d2e",
+  "title": "Shared documentation: Today tab daily brief",
+  "agent_type": "documentation",
+  "description": "Update the spec status from draft to done via the skill-spec-management skill. Confirm that the spec acceptance criteria match the implemented behaviour and note any deviations (e.g. any pending decisions that remain open).",
+  "status": "done",
+  "bead_type": "task",
+  "parent_id": "B-5ccdd6d1",
+  "dependencies": [
+    "B-d5246c96",
+    "B-c303b3ed",
+    "B-9dff9b4e",
+    "B-c9b76b66",
+    "B-71e31dd4",
+    "B-edc8c389"
+  ],
+  "acceptance_criteria": [
+    "Spec status updated to done via spec.py set status",
+    "No spec frontmatter hand-edited directly"
+  ],
+  "linked_docs": [
+    "specs/planned/today-tab-daily-brief-with-topics-and-article-references.md"
+  ],
+  "feature_root_id": "B-5ccdd6d1",
+  "execution_branch_name": "feature/b-5ccdd6d1",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-5ccdd6d1",
+  "expected_files": [
+    "AggregatorApp.xcodeproj/project.pbxproj",
+    "AggregatorApp/Common/APIClient.swift",
+    "AggregatorApp/Common/DateDisplay.swift",
+    "AggregatorApp/Models/Brief.swift",
+    "AggregatorApp/Today/BriefTopicView.swift",
+    "AggregatorApp/Today/TodayView.swift",
+    "AggregatorAppTests/BriefModelTests.swift"
+  ],
+  "expected_globs": [
+    "project.yml",
+    "specs/**/*.md"
+  ],
+  "touched_files": [
+    "specs/done/today-tab-daily-brief-with-topics-and-article-references.md"
+  ],
+  "changed_files": [
+    "specs/done/today-tab-daily-brief-with-topics-and-article-references.md"
+  ],
+  "updated_docs": [
+    "specs/done/today-tab-daily-brief-with-topics-and-article-references.md"
+  ],
+  "handoff_summary": {
+    "completed": "Spec status updated to done via python3 spec.py set status done spec-f03dbf5c. All six implementation files reviewed and confirmed to match the spec. One minor cosmetic deviation noted: TodayView empty-state title is \"No Brief Today\" (spec says \"No brief yet\") and omits the \"Pull to refresh.\" suffix in the description \u2014 functional behaviour is correct.",
+    "remaining": "Nothing remaining for this bead. The two open pending decisions (no historical briefs list, no topic images) are intentional design constraints documented in the spec body and left open for future work.",
+    "risks": "Minor cosmetic deviation in empty-state copy (\"No Brief Today\" vs \"No brief yet\") and missing \"Pull to refresh.\" description text. No functional risk.",
+    "verdict": "approved",
+    "findings_count": 1,
+    "requires_followup": false,
+    "changed_files": [
+      "specs/done/today-tab-daily-brief-with-topics-and-article-references.md"
+    ],
+    "updated_docs": [
+      "specs/done/today-tab-daily-brief-with-topics-and-article-references.md"
+    ],
+    "next_action": "No follow-up required. Spec is done and all implementation beads are merged.",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [
+      "AggregatorApp.xcodeproj/project.pbxproj",
+      "AggregatorApp/Common/APIClient.swift",
+      "AggregatorApp/Common/DateDisplay.swift",
+      "AggregatorApp/Models/Brief.swift",
+      "AggregatorApp/Today/BriefTopicView.swift",
+      "AggregatorApp/Today/TodayView.swift",
+      "AggregatorAppTests/BriefModelTests.swift"
+    ],
+    "expected_globs": [
+      "project.yml",
+      "specs/**/*.md"
+    ],
+    "touched_files": [
+      "specs/done/today-tab-daily-brief-with-topics-and-article-references.md"
+    ],
+    "conflict_risks": "None. Spec file move is an isolated operation in the main repo; no worktree file claims overlap.",
+    "design_decisions": "Empty-state title uses \"No Brief Today\" instead of spec's \"No brief yet\"; description omits \"Pull to refresh.\" suffix. Cosmetic only \u2014 no functional gap. Two pending decisions remain open by design: no historical briefs endpoint, no topic images.",
+    "test_coverage_notes": "BriefModelTests.swift covers all three spec-required test groups (Brief decoding, BriefRef internal/external decoding, DateDisplay.mediumDate). Adds one extra fractional-seconds ISO parsing test beyond spec requirements.",
+    "known_limitations": "No historical briefs list and no generation trigger \u2014 intentional given current backend API (GET /brief/today only). Topic images not available \u2014 BriefTopicResponse has no image field."
+  },
+  "block_reason": "",
+  "conflict_risks": "None. Spec file move is an isolated operation in the main repo; no worktree file claims overlap.",
+  "branch_name": "feature/b-5ccdd6d1",
+  "worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-5ccdd6d1",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-19T18:39:12.740655+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-19T18:54:18.765840+00:00",
+      "event": "skills_loaded",
+      "agent_type": "documentation",
+      "summary": "Loaded 6 skill(s) for isolated execution",
+      "details": {
+        "loaded_skills": [
+          "core/base-orchestrator",
+          "role/docs-agent",
+          "capability/docs-edit",
+          "task/release-notes",
+          "task/spec-sync",
+          "memory"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-06-19T18:54:18.765863+00:00",
+      "event": "started",
+      "agent_type": "documentation",
+      "summary": "Worker started",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-19T18:54:18.769371+00:00",
+      "event": "guardrails_applied",
+      "agent_type": "documentation",
+      "summary": "Applied guardrails from .takt/agent-runs/B-b7d16d2e/repo/templates/agents/documentation.md",
+      "details": {
+        "template_path": ".takt/agent-runs/B-b7d16d2e/repo/templates/agents/documentation.md"
+      }
+    },
+    {
+      "timestamp": "2026-06-19T18:56:08.403482+00:00",
+      "event": "completed",
+      "agent_type": "documentation",
+      "summary": "Spec spec-f03dbf5c transitioned from planned to done via spec.py; implementation verified against all acceptance criteria with one minor cosmetic deviation in the empty-state title.",
+      "details": {}
+    }
+  ],
+  "metadata": {
+    "execution_root": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-b7d16d2e",
+    "workspace_repo_path": "repo",
+    "loaded_skills": [
+      "core/base-orchestrator",
+      "role/docs-agent",
+      "capability/docs-edit",
+      "task/release-notes",
+      "task/spec-sync",
+      "memory"
+    ],
+    "skill_bundle_hash": "191f95261a4d31e4f4a691e9c39926c722504f21a3c370b6975facad92e3c1f0",
+    "isolated_home": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-b7d16d2e/home",
+    "runner_backend": "claude",
+    "guardrails": {
+      "agent_type": "documentation",
+      "template_path": ".takt/agent-runs/B-b7d16d2e/repo/templates/agents/documentation.md",
+      "template_text": "# Documentation Guardrails\n\nPrimary responsibility: Update documentation and examples that explain the assigned behavior without changing runtime feature behavior.\n\nAllowed actions:\n- Edit docs, examples, and explanatory text tied to the assigned bead.\n- Focus only on files listed in the bead's touched_files and changed_files fields. Do not read or modify unrelated documentation.\n- Align documentation with existing code and validated behavior.\n- Identify when implementation or tests must land first and block with a handoff.\n\nDisallowed actions:\n- Change runtime behavior, production code paths, or feature logic.\n- Invent undocumented behavior that is not present in the codebase.\n- Approve code quality or test completeness as a substitute for review.\n- Do not run the test suite. Testing is the tester agent's responsibility.\n\n## Memory\n\n**Read memory at bead start.** Before writing any documentation, run three searches using `$TAKT_CMD` (injected by the orchestrator):\n\n```bash\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace global\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace feature:<feature_root_id>\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace specs\n```\n\nTreat results as ambient context \u2014 apply relevant entries to inform documentation; skip entries that don't apply.\n\nDo **not** write to memory \u2014 documentation agents are read-only.\n\nEfficiency constraints:\n- Do not read the full codebase for context. Focus on the changed files and their immediate surroundings.\n- Keep documentation updates concise and proportional to the change.\n\nExpected outputs:\n- Return JSON with `outcome` set to `completed` (documentation beads always complete; use `verdict` for pass/fail) and `summary` as a one-line description of what was documented.\n- Return JSON with structured verdict fields for every run: `verdict`, `findings_count`, and `requires_followup`.\n- Use `verdict=approved`, `findings_count=0`, and `requires_followup=false` when documentation is complete with no gaps.\n- Use `verdict=needs_changes`, set `findings_count` to the number of unresolved documentation gaps, set `requires_followup=true`, and include `block_reason` when implementation must land first or documentation cannot be completed.\n- Keep `completed`, `remaining`, and `risks` as concise narrative context only; they do not override the structured verdict fields.\n- Accurate updated docs and clear next-agent recommendations when code changes are required first.",
+      "captured_at": "2026-06-19T18:54:18.769364+00:00"
+    },
+    "worker_prompt_context": {
+      "bead_id": "B-b7d16d2e",
+      "feature_root_id": "B-5ccdd6d1",
+      "title": "Shared documentation: Today tab daily brief",
+      "agent_type": "documentation",
+      "description": "Update the spec status from draft to done via the skill-spec-management skill. Confirm that the spec acceptance criteria match the implemented behaviour and note any deviations (e.g. any pending decisions that remain open).",
+      "status": "in_progress",
+      "acceptance_criteria": [
+        "Spec status updated to done via spec.py set status",
+        "No spec frontmatter hand-edited directly"
+      ],
+      "dependencies": [
+        "B-d5246c96",
+        "B-c303b3ed",
+        "B-9dff9b4e",
+        "B-c9b76b66",
+        "B-71e31dd4",
+        "B-edc8c389"
+      ],
+      "linked_docs": [
+        "specs/planned/today-tab-daily-brief-with-topics-and-article-references.md"
+      ],
+      "execution_branch_name": "feature/b-5ccdd6d1",
+      "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-5ccdd6d1",
+      "expected_files": [
+        "AggregatorApp.xcodeproj/project.pbxproj",
+        "AggregatorApp/Common/APIClient.swift",
+        "AggregatorApp/Common/DateDisplay.swift",
+        "AggregatorApp/Models/Brief.swift",
+        "AggregatorApp/Today/BriefTopicView.swift",
+        "AggregatorApp/Today/TodayView.swift",
+        "AggregatorAppTests/BriefModelTests.swift"
+      ],
+      "expected_globs": [
+        "project.yml",
+        "specs/**/*.md"
+      ],
+      "touched_files": [
+        "AggregatorApp.xcodeproj/project.pbxproj",
+        "AggregatorApp/Common/APIClient.swift",
+        "AggregatorApp/Common/DateDisplay.swift",
+        "AggregatorApp/Models/Brief.swift",
+        "AggregatorApp/Today/BriefTopicView.swift",
+        "AggregatorApp/Today/TodayView.swift",
+        "AggregatorAppTests/BriefModelTests.swift"
+      ],
+      "conflict_risks": "None. Only one file modified; no overlapping file claims with sibling beads expected.\nNone. This bead only adds a new file; no existing files were modified.\nNone \u2014 single additive method, no overlapping file edits expected from sibling beads.\nNone. BriefTopicView.swift is a new file with no overlap with sibling beads. project.yml was not modified (xcodegen directory scan covers the new file automatically).\nAggregatorApp.xcodeproj is generated by xcodegen; any sibling bead that also touches project.yml must re-run xcodegen after merging to avoid stale pbxproj.\nNo conflicts \u2014 TodayView.swift was the only file modified and had no concurrent bead activity.",
+      "handoff_summary": {
+        "completed": "",
+        "remaining": "",
+        "risks": "",
+        "verdict": "",
+        "findings_count": 0,
+        "requires_followup": false,
+        "changed_files": [],
+        "updated_docs": [],
+        "next_action": "",
+        "next_agent": "",
+        "block_reason": "",
+        "expected_files": [],
+        "expected_globs": [],
+        "touched_files": [],
+        "conflict_risks": "",
+        "design_decisions": "",
+        "test_coverage_notes": "",
+        "known_limitations": ""
+      }
+    },
+    "last_agent_result": {
+      "outcome": "completed",
+      "summary": "Spec spec-f03dbf5c transitioned from planned to done via spec.py; implementation verified against all acceptance criteria with one minor cosmetic deviation in the empty-state title.",
+      "verdict": "approved",
+      "findings_count": 1,
+      "requires_followup": false,
+      "next_agent": "",
+      "block_reason": ""
+    },
+    "telemetry": {
+      "cost_usd": 0.4049916999999999,
+      "duration_ms": 109349,
+      "duration_api_ms": 103111,
+      "num_turns": 21,
+      "input_tokens": 22,
+      "output_tokens": 5210,
+      "cache_creation_tokens": 28451,
+      "cache_read_tokens": 509959,
+      "stop_reason": "end_turn",
+      "session_id": "c8c1272e-0fdb-4808-bd7f-3a6cad0cedb3",
+      "permission_denials": [],
+      "prompt_chars": 8439,
+      "prompt_lines": 180,
+      "source": "provider",
+      "attempt": 1
+    },
+    "telemetry_history": [
+      {
+        "cost_usd": 0.4049916999999999,
+        "duration_ms": 109349,
+        "duration_api_ms": 103111,
+        "num_turns": 21,
+        "input_tokens": 22,
+        "output_tokens": 5210,
+        "cache_creation_tokens": 28451,
+        "cache_read_tokens": 509959,
+        "stop_reason": "end_turn",
+        "session_id": "c8c1272e-0fdb-4808-bd7f-3a6cad0cedb3",
+        "permission_denials": [],
+        "prompt_chars": 8439,
+        "prompt_lines": 180,
+        "source": "provider",
+        "attempt": 1
+      }
+    ]
+  },
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

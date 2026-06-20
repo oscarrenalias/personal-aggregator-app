@@ -1,0 +1,64 @@
+{
+  "bead_id": "B-5ccdd6d1",
+  "title": "Today tab: daily brief with topics and article references",
+  "agent_type": "planner",
+  "description": "Feature container for the Today tab daily brief reader. All concrete work is delegated to child beads. No runnable implementation here.",
+  "status": "done",
+  "bead_type": "feature",
+  "parent_id": "B-bcd7633f",
+  "dependencies": [],
+  "acceptance_criteria": [
+    "All child beads complete successfully",
+    "xcodegen generate succeeds and xcodebuild test exits 0 including new brief tests"
+  ],
+  "linked_docs": [
+    "specs/planned/today-tab-daily-brief-with-topics-and-article-references.md"
+  ],
+  "feature_root_id": "B-5ccdd6d1",
+  "execution_branch_name": "feature/b-5ccdd6d1",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-5ccdd6d1",
+  "expected_files": [],
+  "expected_globs": [],
+  "touched_files": [],
+  "changed_files": [],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "",
+    "remaining": "",
+    "risks": "",
+    "verdict": "",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [],
+    "updated_docs": [],
+    "next_action": "",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [],
+    "expected_globs": [],
+    "touched_files": [],
+    "conflict_risks": "",
+    "design_decisions": "",
+    "test_coverage_notes": "",
+    "known_limitations": ""
+  },
+  "block_reason": "",
+  "conflict_risks": "",
+  "branch_name": "",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-19T18:39:12.730689+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    }
+  ],
+  "metadata": {},
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

@@ -1,0 +1,298 @@
+{
+  "bead_id": "B-83022dff",
+  "title": "Shared tester: Today tab daily brief",
+  "agent_type": "tester",
+  "description": "Run xcodegen generate then xcodebuild test. Verify all new brief tests pass. Manually review (via code inspection or simulator) that the Today tab renders the brief reader with correct states: loading, loaded (headline/intro/topics), empty (no brief yet), error (retry button), and not-configured. Confirm internal refs resolve to ArticleDetailView and external refs open SafariView.",
+  "status": "done",
+  "bead_type": "task",
+  "parent_id": "B-5ccdd6d1",
+  "dependencies": [
+    "B-d5246c96",
+    "B-c303b3ed",
+    "B-9dff9b4e",
+    "B-c9b76b66",
+    "B-71e31dd4",
+    "B-edc8c389"
+  ],
+  "acceptance_criteria": [
+    "xcodegen generate succeeds without errors",
+    "xcodebuild test exits 0 including BriefModelTests",
+    "No pre-existing tests regressed",
+    "All Today tab states (loading, loaded, empty, error, not-configured) verified"
+  ],
+  "linked_docs": [
+    "specs/planned/today-tab-daily-brief-with-topics-and-article-references.md"
+  ],
+  "feature_root_id": "B-5ccdd6d1",
+  "execution_branch_name": "feature/b-5ccdd6d1",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-5ccdd6d1",
+  "expected_files": [
+    "AggregatorApp.xcodeproj/project.pbxproj",
+    "AggregatorApp/Common/APIClient.swift",
+    "AggregatorApp/Common/DateDisplay.swift",
+    "AggregatorApp/Models/Brief.swift",
+    "AggregatorApp/Today/BriefTopicView.swift",
+    "AggregatorApp/Today/TodayView.swift",
+    "AggregatorAppTests/BriefModelTests.swift"
+  ],
+  "expected_globs": [
+    "project.yml"
+  ],
+  "touched_files": [
+    "AggregatorApp.xcodeproj/project.pbxproj",
+    "AggregatorApp/Common/APIClient.swift",
+    "AggregatorApp/Common/DateDisplay.swift",
+    "AggregatorApp/Models/Brief.swift",
+    "AggregatorApp/Today/BriefTopicView.swift",
+    "AggregatorApp/Today/TodayView.swift",
+    "AggregatorAppTests/BriefModelTests.swift"
+  ],
+  "changed_files": [
+    "AggregatorApp.xcodeproj/project.pbxproj",
+    "AggregatorApp/Common/APIClient.swift",
+    "AggregatorApp/Common/DateDisplay.swift",
+    "AggregatorApp/Models/Brief.swift",
+    "AggregatorApp/Today/BriefTopicView.swift",
+    "AggregatorApp/Today/TodayView.swift",
+    "AggregatorAppTests/BriefModelTests.swift"
+  ],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "1. xcodegen generate: succeeded, project written to AggregatorApp.xcodeproj. 2. BriefModelTests (7 cases): testBriefDecodesTopicsAndFields, testBriefRefInternalDecoding, testBriefRefExternalDecoding, testMediumDateFormatsKnownDate, testMediumDateWithFractionalSeconds, testMediumDateNilReturnsEmpty, testMediumDateGarbageReturnsEmpty \u2014 all passed. 3. Full suite (24 tests): all passed, no regressions in ListPreferencesTests, ThreadSeenStoreTests, or ThreadsModelTests. 4. Code inspection confirmed all Today tab states: not-configured (gearshape ContentUnavailableView), loading (ProgressView), empty/404 (sparkles ContentUnavailableView), error (localizedDescription + Retry button), loaded (headline fallback, mediumDate caption, model suffix, intro guard, topics sorted by position). 5. BriefTopicView: internal ref \u2192 NavigationLink to ArticleDetailView; external ref \u2192 Button + onExternalRef(url); fallback \u2192 plain Text; accessibility labels present on both interactive rows. 6. Cancelled task returns early and does not flip phase to .error.",
+    "remaining": "None. All acceptance criteria satisfied.",
+    "risks": "None identified. BriefRef.id UUID fallback is non-deterministic when all identifying fields are absent (known limitation from dependency bead, deferred by design).",
+    "verdict": "approved",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [
+      "AggregatorApp.xcodeproj/project.pbxproj",
+      "AggregatorApp/Common/APIClient.swift",
+      "AggregatorApp/Common/DateDisplay.swift",
+      "AggregatorApp/Models/Brief.swift",
+      "AggregatorApp/Today/BriefTopicView.swift",
+      "AggregatorApp/Today/TodayView.swift",
+      "AggregatorAppTests/BriefModelTests.swift"
+    ],
+    "updated_docs": [],
+    "next_action": "Proceed to merge or documentation bead as scheduled.",
+    "next_agent": "review",
+    "block_reason": "",
+    "expected_files": [
+      "AggregatorApp.xcodeproj/project.pbxproj",
+      "AggregatorApp/Common/APIClient.swift",
+      "AggregatorApp/Common/DateDisplay.swift",
+      "AggregatorApp/Models/Brief.swift",
+      "AggregatorApp/Today/BriefTopicView.swift",
+      "AggregatorApp/Today/TodayView.swift",
+      "AggregatorAppTests/BriefModelTests.swift"
+    ],
+    "expected_globs": [
+      "project.yml"
+    ],
+    "touched_files": [
+      "AggregatorApp.xcodeproj/project.pbxproj",
+      "AggregatorApp/Common/APIClient.swift",
+      "AggregatorApp/Common/DateDisplay.swift",
+      "AggregatorApp/Models/Brief.swift",
+      "AggregatorApp/Today/BriefTopicView.swift",
+      "AggregatorApp/Today/TodayView.swift",
+      "AggregatorAppTests/BriefModelTests.swift"
+    ],
+    "conflict_risks": "AggregatorApp.xcodeproj is generated by xcodegen; any downstream bead touching project.yml must re-run xcodegen after merging to avoid stale pbxproj.",
+    "design_decisions": "Tests use self-derived expected values (same formatter logic) for DateDisplay.mediumDate to avoid locale coupling rather than hardcoding locale-specific strings \u2014 pattern already baked into BriefModelTests.",
+    "test_coverage_notes": "BriefModelTests covers: Full BriefResponse JSON \u2192 Brief with correct topic count and field mapping; BriefTopic absent refs field decodes to refs=[]; BriefRef internal (null url, articleId=42) and external (url set, null articleId) shapes; DateDisplay.mediumDate for fractional-second ISO-8601, whole-second ISO-8601, nil input, and garbage input. TodayView and BriefTopicView UI states verified via code inspection only (no simulator run); UI integration tests deferred per spec.",
+    "known_limitations": "BriefRef.id UUID fallback is non-deterministic when title/url/articleId are all absent \u2014 spec-compliant, deferred to follow-up bead if UI jank surfaces. TodayView/BriefTopicView UI state coverage is code-inspection only; live simulator integration tests are out of scope for this bead."
+  },
+  "block_reason": "",
+  "conflict_risks": "AggregatorApp.xcodeproj is generated by xcodegen; any downstream bead touching project.yml must re-run xcodegen after merging to avoid stale pbxproj.",
+  "branch_name": "feature/b-5ccdd6d1",
+  "worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-5ccdd6d1",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-19T18:39:12.739917+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-19T18:48:29.994606+00:00",
+      "event": "skills_loaded",
+      "agent_type": "tester",
+      "summary": "Loaded 6 skill(s) for isolated execution",
+      "details": {
+        "loaded_skills": [
+          "core/base-orchestrator",
+          "role/tester-validation",
+          "capability/test-execution",
+          "task/defect-bead-creation",
+          "task/regression-triage",
+          "memory"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-06-19T18:48:29.994627+00:00",
+      "event": "started",
+      "agent_type": "tester",
+      "summary": "Worker started",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-19T18:48:29.998654+00:00",
+      "event": "guardrails_applied",
+      "agent_type": "tester",
+      "summary": "Applied guardrails from .takt/agent-runs/B-83022dff/repo/templates/agents/tester.md",
+      "details": {
+        "template_path": ".takt/agent-runs/B-83022dff/repo/templates/agents/tester.md"
+      }
+    },
+    {
+      "timestamp": "2026-06-19T18:54:18.484415+00:00",
+      "event": "completed",
+      "agent_type": "tester",
+      "summary": "xcodegen generate succeeded. All 7 BriefModelTests pass. Full test suite (24 tests across BriefModelTests, ListPreferencesTests, ThreadSeenStoreTests, ThreadsModelTests) passes with zero regressions. All Today tab states and BriefTopicView ref behaviors verified via code inspection.",
+      "details": {}
+    }
+  ],
+  "metadata": {
+    "execution_root": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-83022dff",
+    "workspace_repo_path": "repo",
+    "loaded_skills": [
+      "core/base-orchestrator",
+      "role/tester-validation",
+      "capability/test-execution",
+      "task/defect-bead-creation",
+      "task/regression-triage",
+      "memory"
+    ],
+    "skill_bundle_hash": "c2bb19865add8770ba493957f3775e07d50168d42fe585583dcff9d82dc76d86",
+    "isolated_home": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-83022dff/home",
+    "runner_backend": "claude",
+    "guardrails": {
+      "agent_type": "tester",
+      "template_path": ".takt/agent-runs/B-83022dff/repo/templates/agents/tester.md",
+      "template_text": "# Tester Guardrails\n\n**CRITICAL \u2014 read before any tool use:**\n- **Never use `run_in_background: true`** on any Bash command. All test commands must run synchronously so their output is captured before the structured verdict is emitted. Background tasks cause the structured output to be lost, resulting in a failed bead.\n- **If a task-notification appears in your context**, that means a previous Bash command ran in the background in violation of this rule. Do not treat the notification as a sign that work is done. Re-run the test command synchronously (without `run_in_background`) and emit the JSON verdict block as your final response.\n- **The JSON verdict block must be the absolute last output of your response.** Never end with prose, a status summary, or a notification acknowledgement. The orchestrator parses your final message as JSON and will fail if it is not valid JSON.\n\n---\n\nPrimary responsibility: Add or update automated tests, run validation, and report defects or missing coverage.\n\nAllowed actions:\n- Write or update tests relevant to the assigned bead.\n- Run only the test files related to the bead's changed files, not the full test suite. Target individual test files or modules. If unsure which tests are relevant, use the bead's expected_files and touched_files fields as a guide. Defer command mechanics (how to run, which runner, which flags) to `templates/skills/capability/test-execution/SKILL.md`.\n- Make minimal test-enablement fixes (e.g. import corrections, fixture setup) only when strictly necessary to run the relevant tests. Do not refactor production code under the guise of test enablement.\n\nDisallowed actions:\n- Run the full test suite instead of targeting specific tests. Always run targeted, scoped commands. Running the full suite wastes time and often exceeds the agent timeout.\n- Use `run_in_background` for any Bash commands. (See CRITICAL section above.)\n- Implement feature logic beyond minimal test-enablement work.\n- Reframe a feature implementation task as testing work to bypass handoff.\n- Perform review signoff or broad documentation rewrites.\n\n## Memory\n\n**Read memory at bead start.** Before writing or running any tests, run three searches using `$TAKT_CMD` (injected by the orchestrator):\n\n```bash\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace global\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace feature:<feature_root_id>\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace specs\n```\n\nTreat results as ambient context \u2014 apply relevant entries; skip entries that don't apply.\n\n**Write to memory when you discover reusable testing knowledge** \u2014 patterns, pitfalls, or edge cases that would benefit future testers of this codebase.\n\n```bash\n$TAKT_CMD memory add \"<concise fact>\" --namespace global               # project-wide knowledge\n$TAKT_CMD memory add \"<discovery>\" --namespace feature:<feature_root_id>  # feature-scoped\n```\n\nExpected outputs:\n- Return JSON with structured verdict fields for every run: `verdict`, `findings_count`, and `requires_followup`.\n- Treat `verdict` as the tester signoff decision: `approved` means testing can complete, while `needs_changes` means the bead must block for follow-up work.\n- Use `verdict=approved`, `findings_count=0`, and `requires_followup=false` when testing is complete with no unresolved tester-scope findings.\n- Use `verdict=needs_changes`, set `findings_count` to the unresolved defect or coverage gap count, set `requires_followup=true` unless there is a stronger explicit reason not to, and always include `block_reason` when follow-up work is required.\n- Keep `completed`, `remaining`, and `risks` as free-form narrative context only. They inform operators, but they do not override the structured verdict or control scheduler state.\n- Completed or blocked JSON describing test coverage, validation status, and follow-up needs.\n- Precise defect or coverage notes when the bead cannot be completed within tester scope.\n\n**FINAL REMINDER: The JSON verdict block must be the last thing you output. Do not add any text, prose, or acknowledgement after it.**",
+      "captured_at": "2026-06-19T18:48:29.998646+00:00"
+    },
+    "worker_prompt_context": {
+      "bead_id": "B-83022dff",
+      "feature_root_id": "B-5ccdd6d1",
+      "title": "Shared tester: Today tab daily brief",
+      "agent_type": "tester",
+      "description": "Run xcodegen generate then xcodebuild test. Verify all new brief tests pass. Manually review (via code inspection or simulator) that the Today tab renders the brief reader with correct states: loading, loaded (headline/intro/topics), empty (no brief yet), error (retry button), and not-configured. Confirm internal refs resolve to ArticleDetailView and external refs open SafariView.",
+      "status": "in_progress",
+      "acceptance_criteria": [
+        "xcodegen generate succeeds without errors",
+        "xcodebuild test exits 0 including BriefModelTests",
+        "No pre-existing tests regressed",
+        "All Today tab states (loading, loaded, empty, error, not-configured) verified"
+      ],
+      "dependencies": [
+        "B-d5246c96",
+        "B-c303b3ed",
+        "B-9dff9b4e",
+        "B-c9b76b66",
+        "B-71e31dd4",
+        "B-edc8c389"
+      ],
+      "linked_docs": [
+        "specs/planned/today-tab-daily-brief-with-topics-and-article-references.md"
+      ],
+      "execution_branch_name": "feature/b-5ccdd6d1",
+      "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-5ccdd6d1",
+      "expected_files": [
+        "AggregatorApp.xcodeproj/project.pbxproj",
+        "AggregatorApp/Common/APIClient.swift",
+        "AggregatorApp/Common/DateDisplay.swift",
+        "AggregatorApp/Models/Brief.swift",
+        "AggregatorApp/Today/BriefTopicView.swift",
+        "AggregatorApp/Today/TodayView.swift",
+        "AggregatorAppTests/BriefModelTests.swift"
+      ],
+      "expected_globs": [
+        "project.yml"
+      ],
+      "touched_files": [
+        "AggregatorApp.xcodeproj/project.pbxproj",
+        "AggregatorApp/Common/APIClient.swift",
+        "AggregatorApp/Common/DateDisplay.swift",
+        "AggregatorApp/Models/Brief.swift",
+        "AggregatorApp/Today/BriefTopicView.swift",
+        "AggregatorApp/Today/TodayView.swift",
+        "AggregatorAppTests/BriefModelTests.swift"
+      ],
+      "conflict_risks": "None. Only one file modified; no overlapping file claims with sibling beads expected.\nNone. This bead only adds a new file; no existing files were modified.\nNone \u2014 single additive method, no overlapping file edits expected from sibling beads.\nNone. BriefTopicView.swift is a new file with no overlap with sibling beads. project.yml was not modified (xcodegen directory scan covers the new file automatically).\nAggregatorApp.xcodeproj is generated by xcodegen; any sibling bead that also touches project.yml must re-run xcodegen after merging to avoid stale pbxproj.\nNo conflicts \u2014 TodayView.swift was the only file modified and had no concurrent bead activity.",
+      "handoff_summary": {
+        "completed": "",
+        "remaining": "",
+        "risks": "",
+        "verdict": "",
+        "findings_count": 0,
+        "requires_followup": false,
+        "changed_files": [],
+        "updated_docs": [],
+        "next_action": "",
+        "next_agent": "",
+        "block_reason": "",
+        "expected_files": [],
+        "expected_globs": [],
+        "touched_files": [],
+        "conflict_risks": "",
+        "design_decisions": "",
+        "test_coverage_notes": "",
+        "known_limitations": ""
+      }
+    },
+    "last_agent_result": {
+      "outcome": "completed",
+      "summary": "xcodegen generate succeeded. All 7 BriefModelTests pass. Full test suite (24 tests across BriefModelTests, ListPreferencesTests, ThreadSeenStoreTests, ThreadsModelTests) passes with zero regressions. All Today tab states and BriefTopicView ref behaviors verified via code inspection.",
+      "verdict": "approved",
+      "findings_count": 0,
+      "requires_followup": false,
+      "next_agent": "review",
+      "block_reason": ""
+    },
+    "telemetry": {
+      "cost_usd": 0.4300373000000001,
+      "duration_ms": 348275,
+      "duration_api_ms": 105203,
+      "num_turns": 21,
+      "input_tokens": 20,
+      "output_tokens": 5379,
+      "cache_creation_tokens": 30638,
+      "cache_read_tokens": 535661,
+      "stop_reason": "end_turn",
+      "session_id": "8a48c268-1b8d-4aee-802c-62ae883ed040",
+      "permission_denials": [],
+      "prompt_chars": 14840,
+      "prompt_lines": 211,
+      "source": "provider",
+      "attempt": 1
+    },
+    "telemetry_history": [
+      {
+        "cost_usd": 0.4300373000000001,
+        "duration_ms": 348275,
+        "duration_api_ms": 105203,
+        "num_turns": 21,
+        "input_tokens": 20,
+        "output_tokens": 5379,
+        "cache_creation_tokens": 30638,
+        "cache_read_tokens": 535661,
+        "stop_reason": "end_turn",
+        "session_id": "8a48c268-1b8d-4aee-802c-62ae883ed040",
+        "permission_denials": [],
+        "prompt_chars": 14840,
+        "prompt_lines": 211,
+        "source": "provider",
+        "attempt": 1
+      }
+    ]
+  },
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

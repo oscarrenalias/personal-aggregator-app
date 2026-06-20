@@ -1,0 +1,239 @@
+{
+  "bead_id": "B-d5246c96",
+  "title": "Brief models",
+  "agent_type": "developer",
+  "description": "Create AggregatorApp/Models/Brief.swift with three Decodable structs: Brief, BriefTopic, and BriefRef. Use CodingKeys for snake_case mapping. Decode refs with decodeIfPresent defaulting to []; default internal to false and articleId to nil when absent. BriefRef.id is a computed String property derived from articleId, url, or title with UUID fallback.",
+  "status": "done",
+  "bead_type": "task",
+  "parent_id": "B-5ccdd6d1",
+  "dependencies": [],
+  "acceptance_criteria": [
+    "Brief, BriefTopic, BriefRef compile without errors",
+    "CodingKeys correctly map snake_case fields (generated_at, period_start, period_end, what_happened, why_it_matters, historical_context, article_id)",
+    "BriefRef decodes missing refs field as empty array",
+    "BriefRef.internal defaults to false and articleId defaults to nil when absent in JSON",
+    "File added to project.yml so xcodegen picks it up"
+  ],
+  "linked_docs": [
+    "specs/planned/today-tab-daily-brief-with-topics-and-article-references.md"
+  ],
+  "feature_root_id": "B-5ccdd6d1",
+  "execution_branch_name": "feature/b-5ccdd6d1",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-5ccdd6d1",
+  "expected_files": [
+    "AggregatorApp/Models/Brief.swift"
+  ],
+  "expected_globs": [
+    "project.yml"
+  ],
+  "touched_files": [
+    "AggregatorApp/Models/Brief.swift"
+  ],
+  "changed_files": [
+    "AggregatorApp/Models/Brief.swift"
+  ],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "Created Brief.swift with all three structs. Brief maps generated_at/period_start/period_end via CodingKeys and decodes topics defensively with decodeIfPresent defaulting to []. BriefTopic computes id from position, maps what_happened/why_it_matters/historical_context, and decodes refs with decodeIfPresent defaulting to []. BriefRef maps article_id via CodingKeys, defaults internal to false and articleId to nil when absent, and exposes a computed id property deriving a String from articleId\u2192url\u2192title with UUID fallback. project.yml needed no change \u2014 its directory-level source reference (path: AggregatorApp) already picks up all .swift files.",
+    "remaining": "Downstream beads: APIClient getTodayBrief() method, TodayView brief reader, BriefTopicView, DateDisplay.mediumDate helper, and BriefModelTests unit tests.",
+    "risks": "BriefRef.id uses a computed UUID fallback when title/url/articleId are all nil \u2014 each call returns a different UUID, making identity unstable for SwiftUI diffing in that edge case. This matches the spec exactly but is a known limitation for refs with no identifying data.",
+    "verdict": "approved",
+    "findings_count": 0,
+    "requires_followup": true,
+    "changed_files": [
+      "AggregatorApp/Models/Brief.swift"
+    ],
+    "updated_docs": [],
+    "next_action": "Hand off to downstream beads for APIClient, TodayView, BriefTopicView, and unit tests.",
+    "next_agent": "developer",
+    "block_reason": "",
+    "expected_files": [
+      "AggregatorApp/Models/Brief.swift"
+    ],
+    "expected_globs": [
+      "project.yml"
+    ],
+    "touched_files": [
+      "AggregatorApp/Models/Brief.swift"
+    ],
+    "conflict_risks": "None. This bead only adds a new file; no existing files were modified.",
+    "design_decisions": "1. Explicit init(from:) for all three structs rather than synthesized decoding \u2014 consistent with the project's Article.swift pattern and necessary for BriefTopic (refs default) and BriefRef (internal/articleId defaults). 2. Brief.topics also uses decodeIfPresent defaulting to [] even though the API marks it required \u2014 defensive against a missing/null topics field without breaking valid responses. 3. BriefTopic.id is a computed property (not stored) returning position, matching the spec exactly. Synthesized Hashable on BriefRef relies on all stored properties (String?, Bool, Int?) being Hashable \u2014 no custom hash needed.",
+    "test_coverage_notes": "Tester should verify: (1) Full BriefResponse JSON decodes to Brief with correct topic count and field mapping; (2) BriefTopic with absent refs field decodes to refs=[]; (3) Internal BriefRef {\"url\":null,\"title\":\"X\",\"internal\":true,\"article_id\":42} \u2192 internal==true, articleId==42, url==nil; (4) External BriefRef {\"url\":\"https://e.com\",\"title\":\"Y\",\"internal\":false,\"article_id\":null} \u2192 internal==false, url==\"https://e.com\", articleId==nil; (5) BriefRef with no identifying fields produces a non-empty id string (UUID fallback). These match the unit tests prescribed in spec section 6.",
+    "known_limitations": "BriefRef.id UUID fallback is non-deterministic when title/url/articleId are all absent \u2014 each property access returns a fresh UUID. This is spec-compliant but means two distinct property reads on the same BriefRef instance return different ids in that edge case. If SwiftUI ever needs stable identity for such refs, a stored UUID computed once at decode time would fix it \u2014 deferred to a follow-up bead if it causes UI jank."
+  },
+  "block_reason": "",
+  "conflict_risks": "None. This bead only adds a new file; no existing files were modified.",
+  "branch_name": "feature/b-5ccdd6d1",
+  "worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-5ccdd6d1",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-19T18:39:12.735543+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-19T18:39:32.034258+00:00",
+      "event": "skills_loaded",
+      "agent_type": "developer",
+      "summary": "Loaded 7 skill(s) for isolated execution",
+      "details": {
+        "loaded_skills": [
+          "core/base-orchestrator",
+          "role/developer-implementation",
+          "capability/code-edit",
+          "task/corrective-implementation",
+          "task/refactor-safe",
+          "task/migration",
+          "memory"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-06-19T18:39:32.034277+00:00",
+      "event": "started",
+      "agent_type": "developer",
+      "summary": "Worker started",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-19T18:39:32.036215+00:00",
+      "event": "guardrails_applied",
+      "agent_type": "developer",
+      "summary": "Applied guardrails from .takt/agent-runs/B-d5246c96/repo/templates/agents/developer.md",
+      "details": {
+        "template_path": ".takt/agent-runs/B-d5246c96/repo/templates/agents/developer.md"
+      }
+    },
+    {
+      "timestamp": "2026-06-19T18:42:04.010819+00:00",
+      "event": "completed",
+      "agent_type": "developer",
+      "summary": "Created AggregatorApp/Models/Brief.swift with Brief, BriefTopic, and BriefRef Decodable structs. All three compile cleanly; xcodegen and xcodebuild both succeed.",
+      "details": {}
+    }
+  ],
+  "metadata": {
+    "execution_root": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-d5246c96",
+    "workspace_repo_path": "repo",
+    "loaded_skills": [
+      "core/base-orchestrator",
+      "role/developer-implementation",
+      "capability/code-edit",
+      "task/corrective-implementation",
+      "task/refactor-safe",
+      "task/migration",
+      "memory"
+    ],
+    "skill_bundle_hash": "ecae5633083d1bbec41a6e5ec6ea05bbab117f60499c19b2ed76dbbe3e1aec7c",
+    "isolated_home": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-d5246c96/home",
+    "runner_backend": "claude",
+    "guardrails": {
+      "agent_type": "developer",
+      "template_path": ".takt/agent-runs/B-d5246c96/repo/templates/agents/developer.md",
+      "template_text": "# Developer Guardrails\n\nPrimary responsibility: Implement only the assigned bead inside the existing architecture and file scope.\n\n## Corrective bead scope\n\nIf your `bead_id` ends in `-corrective` or `-corrective-<N>` (e.g. `B-abc12345-corrective`, `B-abc12345-test-corrective-2`), you are running as a CORRECTIVE bead. Your scope is **strictly limited to fixing the specific failure that blocked the parent bead**. Do not:\n\n- Add unrelated improvements, refactors, or cleanup, even if you notice them\n- Reapply previously-reverted changes (the operator reverted them for a reason)\n- Expand the surface area beyond what is needed to unblock the parent\n- Touch files outside what the parent bead's `expected_files` / `expected_globs` covered, unless the failure is genuinely in another file and there is no smaller fix\n\nIf you notice an unrelated issue while fixing the corrective scope: **file a separate bead** via `takt bead create` describing what you saw, but do not fix it in this corrective. The operator will prioritize and dispatch.\n\nWhen in doubt about scope: prefer the smallest possible fix. The reviewer of this corrective will check that the scope was respected.\n\nAllowed actions:\n- Modify code, configuration, or local docs required to complete the assigned bead.\n- Create sub-beads for discovered follow-up work that should be handled separately.\n- Verify your `Swift` changes compile and import correctly with a quick syntax check: ``.\n\nDisallowed actions:\n- Run any test suite \u2014 not even a targeted `` run or any subset. Test execution is exclusively the tester agent's responsibility. Running tests wastes the agent budget and delays the pipeline.\n- Redesign unrelated architecture or broaden scope beyond the assigned bead.\n- Perform final review signoff in place of a review agent.\n- Silently absorb unrelated test, documentation, or planning work that should be handed off.\n\n## Memory\n\n**Read memory at bead start.** Before touching any code, run three searches using `$TAKT_CMD` (injected by the orchestrator):\n\n```bash\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace global\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace feature:<feature_root_id>\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace specs\n```\n\nTreat results as ambient context \u2014 apply relevant entries; skip entries that don't apply.\n\n**Write to memory when you discover reusable project knowledge** \u2014 something that would have changed your approach if you had known it upfront, and is not already in CLAUDE.md or the guardrails.\n\n```bash\n$TAKT_CMD memory add \"<concise fact>\" --namespace global               # project-wide knowledge\n$TAKT_CMD memory add \"<discovery>\" --namespace feature:<feature_root_id>  # feature-scoped\n```\n\nRequired Handoff Fields:\n\nEvery developer bead **must** populate the following three fields in its output JSON. Reviewers and tester agents rely on these fields to scope their work without additional back-and-forth turns. Use `\"N/A\"` only when a field is genuinely inapplicable (e.g., a trivial rename with no design trade-offs); do not leave fields blank.\n\n- **`design_decisions`** \u2014 Document non-obvious architectural or implementation choices made during this bead. Include alternatives considered and why the chosen approach was preferred. Reviewers use this to evaluate correctness without re-deriving intent. Set to `\"N/A\"` only if the change was purely mechanical with no meaningful trade-offs.\n\n- **`test_coverage_notes`** \u2014 Describe what the tester agent should verify: new code paths, edge cases introduced, regression risks, and any known untested scenarios left to the tester. Set to `\"N/A\"` only if the bead touched no executable code paths (e.g., documentation-only changes).\n\n- **`known_limitations`** \u2014 Call out constraints, deferred work, or known gaps in the implementation. This includes out-of-scope items deliberately left for follow-up beads and any areas where the implementation is intentionally incomplete. Set to `\"N/A\"` if the implementation is complete as specified with no known gaps.\n\nExpected outputs:\n- Completed or blocked JSON with concise implementation summary.\n- Accurate touched files, changed files, risks, and follow-up handoff fields.\n- Populated `design_decisions`, `test_coverage_notes`, and `known_limitations` fields in every response.",
+      "captured_at": "2026-06-19T18:39:32.036208+00:00"
+    },
+    "worker_prompt_context": {
+      "bead_id": "B-d5246c96",
+      "feature_root_id": "B-5ccdd6d1",
+      "title": "Brief models",
+      "agent_type": "developer",
+      "description": "Create AggregatorApp/Models/Brief.swift with three Decodable structs: Brief, BriefTopic, and BriefRef. Use CodingKeys for snake_case mapping. Decode refs with decodeIfPresent defaulting to []; default internal to false and articleId to nil when absent. BriefRef.id is a computed String property derived from articleId, url, or title with UUID fallback.",
+      "status": "in_progress",
+      "acceptance_criteria": [
+        "Brief, BriefTopic, BriefRef compile without errors",
+        "CodingKeys correctly map snake_case fields (generated_at, period_start, period_end, what_happened, why_it_matters, historical_context, article_id)",
+        "BriefRef decodes missing refs field as empty array",
+        "BriefRef.internal defaults to false and articleId defaults to nil when absent in JSON",
+        "File added to project.yml so xcodegen picks it up"
+      ],
+      "dependencies": [],
+      "linked_docs": [
+        "specs/planned/today-tab-daily-brief-with-topics-and-article-references.md"
+      ],
+      "execution_branch_name": "feature/b-5ccdd6d1",
+      "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-5ccdd6d1",
+      "expected_files": [
+        "AggregatorApp/Models/Brief.swift"
+      ],
+      "expected_globs": [
+        "project.yml"
+      ],
+      "touched_files": [],
+      "conflict_risks": "",
+      "handoff_summary": {
+        "completed": "",
+        "remaining": "",
+        "risks": "",
+        "verdict": "",
+        "findings_count": 0,
+        "requires_followup": false,
+        "changed_files": [],
+        "updated_docs": [],
+        "next_action": "",
+        "next_agent": "",
+        "block_reason": "",
+        "expected_files": [],
+        "expected_globs": [],
+        "touched_files": [],
+        "conflict_risks": "",
+        "design_decisions": "",
+        "test_coverage_notes": "",
+        "known_limitations": ""
+      }
+    },
+    "last_agent_result": {
+      "outcome": "completed",
+      "summary": "Created AggregatorApp/Models/Brief.swift with Brief, BriefTopic, and BriefRef Decodable structs. All three compile cleanly; xcodegen and xcodebuild both succeed.",
+      "verdict": "approved",
+      "findings_count": 0,
+      "requires_followup": true,
+      "next_agent": "developer",
+      "block_reason": ""
+    },
+    "telemetry": {
+      "cost_usd": 0.47824009999999995,
+      "duration_ms": 151047,
+      "duration_api_ms": 132216,
+      "num_turns": 17,
+      "input_tokens": 15,
+      "output_tokens": 7996,
+      "cache_creation_tokens": 40452,
+      "cache_read_tokens": 374687,
+      "stop_reason": "end_turn",
+      "session_id": "fe2920a4-55ac-4996-bc64-809a6ce5ac3b",
+      "permission_denials": [],
+      "prompt_chars": 9252,
+      "prompt_lines": 176,
+      "source": "provider",
+      "attempt": 1
+    },
+    "telemetry_history": [
+      {
+        "cost_usd": 0.47824009999999995,
+        "duration_ms": 151047,
+        "duration_api_ms": 132216,
+        "num_turns": 17,
+        "input_tokens": 15,
+        "output_tokens": 7996,
+        "cache_creation_tokens": 40452,
+        "cache_read_tokens": 374687,
+        "stop_reason": "end_turn",
+        "session_id": "fe2920a4-55ac-4996-bc64-809a6ce5ac3b",
+        "permission_denials": [],
+        "prompt_chars": 9252,
+        "prompt_lines": 176,
+        "source": "provider",
+        "attempt": 1
+      }
+    ],
+    "last_commit": "2adaa50a5bcc10e47f4ca879b3ee3d1cfc46644b"
+  },
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

@@ -1,0 +1,253 @@
+{
+  "bead_id": "B-c9b76b66",
+  "title": "BriefTopicView",
+  "agent_type": "developer",
+  "description": "Create AggregatorApp/Today/BriefTopicView.swift. Initialised with topic: BriefTopic and onExternalRef: (URL) -> Void closure. Render as a glass-card section (.glassEffect rounded container matching the reader summary callout style): headline (.headline), What happened section (subheadline label + ParagraphText), Why it matters section (same), Background section (only when historicalContext non-nil/non-empty), and a Read references list when refs non-empty. Each ref: internal+articleId \u2192 NavigationLink to ArticleDetailView(articleId:) with doc.text SF Symbol; external URL \u2192 Button calling onExternalRef with safari SF Symbol; else plain Text. Include accessibility labels on all interactive elements. Add to project.yml.",
+  "status": "done",
+  "bead_type": "task",
+  "parent_id": "B-5ccdd6d1",
+  "dependencies": [
+    "B-d5246c96"
+  ],
+  "acceptance_criteria": [
+    "BriefTopicView.swift compiles without errors",
+    "Background section is absent when historicalContext is nil or empty",
+    "Internal refs render as NavigationLink using destination-based (not value-based) navigation to ArticleDetailView",
+    "External refs render as Button invoking onExternalRef closure",
+    "Non-interactive refs (no articleId, no valid URL) render as plain Text",
+    "SF Symbols doc.text and safari used for internal and external refs respectively",
+    "Accessibility labels present on NavigationLink and Button elements",
+    "File added to project.yml"
+  ],
+  "linked_docs": [
+    "specs/planned/today-tab-daily-brief-with-topics-and-article-references.md"
+  ],
+  "feature_root_id": "B-5ccdd6d1",
+  "execution_branch_name": "feature/b-5ccdd6d1",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-5ccdd6d1",
+  "expected_files": [
+    "AggregatorApp/Today/BriefTopicView.swift"
+  ],
+  "expected_globs": [
+    "project.yml"
+  ],
+  "touched_files": [
+    "AggregatorApp/Today/BriefTopicView.swift",
+    "AggregatorAppTests/BriefModelTests.swift"
+  ],
+  "changed_files": [
+    "AggregatorApp/Today/BriefTopicView.swift",
+    "AggregatorAppTests/BriefModelTests.swift"
+  ],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "BriefTopicView.swift created and compiling cleanly. All acceptance criteria met: glass card layout, conditional Background section, destination-based NavigationLink for internal refs, Button for external refs, plain Text fallback, SF Symbols, accessibility labels.",
+    "remaining": "N/A",
+    "risks": "BriefTopicView hosts a NavigationLink to ArticleDetailView, which requires CredentialsStore and ArticleReadStore environments. These must be injected at the NavigationStack level in the parent Today hierarchy before this view can be used at runtime.",
+    "verdict": "approved",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [
+      "AggregatorApp/Today/BriefTopicView.swift",
+      "AggregatorAppTests/BriefModelTests.swift"
+    ],
+    "updated_docs": [],
+    "next_action": "Tester agent should verify: conditional Background section (nil/empty historicalContext), all three ref rendering paths (internal NavigationLink, external Button, plain Text fallback), accessibility labels, and glass card appearance.",
+    "next_agent": "tester",
+    "block_reason": "",
+    "expected_files": [
+      "AggregatorApp/Today/BriefTopicView.swift"
+    ],
+    "expected_globs": [
+      "project.yml"
+    ],
+    "touched_files": [
+      "AggregatorApp/Today/BriefTopicView.swift",
+      "AggregatorAppTests/BriefModelTests.swift"
+    ],
+    "conflict_risks": "None. BriefTopicView.swift is a new file with no overlap with sibling beads. project.yml was not modified (xcodegen directory scan covers the new file automatically).",
+    "design_decisions": "1. Destination-based NavigationLink (not value-based) per acceptance criteria \u2014 avoids needing a navigationDestination registration in the parent stack. 2. Ref routing priority: internal+articleId first, then any valid URL (external), then plain Text \u2014 this matches the spec's intent and handles edge cases where internal refs lack an articleId. 3. Glass card wraps the entire VStack (same .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 12)) pattern as the reader summary callout in ArticleDetailView). 4. project.yml unchanged \u2014 xcodegen's `path: AggregatorApp` directory scan already covers AggregatorApp/Today/.",
+    "test_coverage_notes": "1. Background section: test with nil historicalContext, empty string, and non-empty string \u2014 only the last should render the section. 2. Ref rows: test internal ref with articleId (NavigationLink), external ref with valid URL (Button + onExternalRef called), ref with neither (plain Text). 3. Accessibility: verify accessibilityLabel on NavigationLink and Button are non-empty. 4. Regression: ensure TodayView still compiles (no shared state mutation).",
+    "known_limitations": "ArticleDetailView requires CredentialsStore and ArticleReadStore environment objects; the parent TodayView (or NavigationStack ancestor) must inject these before BriefTopicView can navigate to article detail at runtime. This is a runtime wiring concern outside BriefTopicView's scope."
+  },
+  "block_reason": "",
+  "conflict_risks": "None. BriefTopicView.swift is a new file with no overlap with sibling beads. project.yml was not modified (xcodegen directory scan covers the new file automatically).",
+  "branch_name": "feature/b-5ccdd6d1",
+  "worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-5ccdd6d1",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-19T18:39:12.737883+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-19T18:42:04.697602+00:00",
+      "event": "skills_loaded",
+      "agent_type": "developer",
+      "summary": "Loaded 7 skill(s) for isolated execution",
+      "details": {
+        "loaded_skills": [
+          "core/base-orchestrator",
+          "role/developer-implementation",
+          "capability/code-edit",
+          "task/corrective-implementation",
+          "task/refactor-safe",
+          "task/migration",
+          "memory"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-06-19T18:42:04.697620+00:00",
+      "event": "started",
+      "agent_type": "developer",
+      "summary": "Worker started",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-19T18:42:04.699383+00:00",
+      "event": "guardrails_applied",
+      "agent_type": "developer",
+      "summary": "Applied guardrails from .takt/agent-runs/B-c9b76b66/repo/templates/agents/developer.md",
+      "details": {
+        "template_path": ".takt/agent-runs/B-c9b76b66/repo/templates/agents/developer.md"
+      }
+    },
+    {
+      "timestamp": "2026-06-19T18:45:48.262768+00:00",
+      "event": "completed",
+      "agent_type": "developer",
+      "summary": "Created AggregatorApp/Today/BriefTopicView.swift. Glass-card topic view with headline, What happened, Why it matters, conditional Background, and a Read references list. Internal refs \u2192 NavigationLink to ArticleDetailView; external refs \u2192 Button invoking onExternalRef; non-interactive refs \u2192 plain Text. SF Symbols doc.text and safari used. Accessibility labels on all interactive elements. Build passes.",
+      "details": {}
+    }
+  ],
+  "metadata": {
+    "execution_root": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-c9b76b66",
+    "workspace_repo_path": "repo",
+    "loaded_skills": [
+      "core/base-orchestrator",
+      "role/developer-implementation",
+      "capability/code-edit",
+      "task/corrective-implementation",
+      "task/refactor-safe",
+      "task/migration",
+      "memory"
+    ],
+    "skill_bundle_hash": "ecae5633083d1bbec41a6e5ec6ea05bbab117f60499c19b2ed76dbbe3e1aec7c",
+    "isolated_home": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-c9b76b66/home",
+    "runner_backend": "claude",
+    "guardrails": {
+      "agent_type": "developer",
+      "template_path": ".takt/agent-runs/B-c9b76b66/repo/templates/agents/developer.md",
+      "template_text": "# Developer Guardrails\n\nPrimary responsibility: Implement only the assigned bead inside the existing architecture and file scope.\n\n## Corrective bead scope\n\nIf your `bead_id` ends in `-corrective` or `-corrective-<N>` (e.g. `B-abc12345-corrective`, `B-abc12345-test-corrective-2`), you are running as a CORRECTIVE bead. Your scope is **strictly limited to fixing the specific failure that blocked the parent bead**. Do not:\n\n- Add unrelated improvements, refactors, or cleanup, even if you notice them\n- Reapply previously-reverted changes (the operator reverted them for a reason)\n- Expand the surface area beyond what is needed to unblock the parent\n- Touch files outside what the parent bead's `expected_files` / `expected_globs` covered, unless the failure is genuinely in another file and there is no smaller fix\n\nIf you notice an unrelated issue while fixing the corrective scope: **file a separate bead** via `takt bead create` describing what you saw, but do not fix it in this corrective. The operator will prioritize and dispatch.\n\nWhen in doubt about scope: prefer the smallest possible fix. The reviewer of this corrective will check that the scope was respected.\n\nAllowed actions:\n- Modify code, configuration, or local docs required to complete the assigned bead.\n- Create sub-beads for discovered follow-up work that should be handled separately.\n- Verify your `Swift` changes compile and import correctly with a quick syntax check: ``.\n\nDisallowed actions:\n- Run any test suite \u2014 not even a targeted `` run or any subset. Test execution is exclusively the tester agent's responsibility. Running tests wastes the agent budget and delays the pipeline.\n- Redesign unrelated architecture or broaden scope beyond the assigned bead.\n- Perform final review signoff in place of a review agent.\n- Silently absorb unrelated test, documentation, or planning work that should be handed off.\n\n## Memory\n\n**Read memory at bead start.** Before touching any code, run three searches using `$TAKT_CMD` (injected by the orchestrator):\n\n```bash\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace global\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace feature:<feature_root_id>\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace specs\n```\n\nTreat results as ambient context \u2014 apply relevant entries; skip entries that don't apply.\n\n**Write to memory when you discover reusable project knowledge** \u2014 something that would have changed your approach if you had known it upfront, and is not already in CLAUDE.md or the guardrails.\n\n```bash\n$TAKT_CMD memory add \"<concise fact>\" --namespace global               # project-wide knowledge\n$TAKT_CMD memory add \"<discovery>\" --namespace feature:<feature_root_id>  # feature-scoped\n```\n\nRequired Handoff Fields:\n\nEvery developer bead **must** populate the following three fields in its output JSON. Reviewers and tester agents rely on these fields to scope their work without additional back-and-forth turns. Use `\"N/A\"` only when a field is genuinely inapplicable (e.g., a trivial rename with no design trade-offs); do not leave fields blank.\n\n- **`design_decisions`** \u2014 Document non-obvious architectural or implementation choices made during this bead. Include alternatives considered and why the chosen approach was preferred. Reviewers use this to evaluate correctness without re-deriving intent. Set to `\"N/A\"` only if the change was purely mechanical with no meaningful trade-offs.\n\n- **`test_coverage_notes`** \u2014 Describe what the tester agent should verify: new code paths, edge cases introduced, regression risks, and any known untested scenarios left to the tester. Set to `\"N/A\"` only if the bead touched no executable code paths (e.g., documentation-only changes).\n\n- **`known_limitations`** \u2014 Call out constraints, deferred work, or known gaps in the implementation. This includes out-of-scope items deliberately left for follow-up beads and any areas where the implementation is intentionally incomplete. Set to `\"N/A\"` if the implementation is complete as specified with no known gaps.\n\nExpected outputs:\n- Completed or blocked JSON with concise implementation summary.\n- Accurate touched files, changed files, risks, and follow-up handoff fields.\n- Populated `design_decisions`, `test_coverage_notes`, and `known_limitations` fields in every response.",
+      "captured_at": "2026-06-19T18:42:04.699375+00:00"
+    },
+    "worker_prompt_context": {
+      "bead_id": "B-c9b76b66",
+      "feature_root_id": "B-5ccdd6d1",
+      "title": "BriefTopicView",
+      "agent_type": "developer",
+      "description": "Create AggregatorApp/Today/BriefTopicView.swift. Initialised with topic: BriefTopic and onExternalRef: (URL) -> Void closure. Render as a glass-card section (.glassEffect rounded container matching the reader summary callout style): headline (.headline), What happened section (subheadline label + ParagraphText), Why it matters section (same), Background section (only when historicalContext non-nil/non-empty), and a Read references list when refs non-empty. Each ref: internal+articleId \u2192 NavigationLink to ArticleDetailView(articleId:) with doc.text SF Symbol; external URL \u2192 Button calling onExternalRef with safari SF Symbol; else plain Text. Include accessibility labels on all interactive elements. Add to project.yml.",
+      "status": "in_progress",
+      "acceptance_criteria": [
+        "BriefTopicView.swift compiles without errors",
+        "Background section is absent when historicalContext is nil or empty",
+        "Internal refs render as NavigationLink using destination-based (not value-based) navigation to ArticleDetailView",
+        "External refs render as Button invoking onExternalRef closure",
+        "Non-interactive refs (no articleId, no valid URL) render as plain Text",
+        "SF Symbols doc.text and safari used for internal and external refs respectively",
+        "Accessibility labels present on NavigationLink and Button elements",
+        "File added to project.yml"
+      ],
+      "dependencies": [
+        "B-d5246c96"
+      ],
+      "linked_docs": [
+        "specs/planned/today-tab-daily-brief-with-topics-and-article-references.md"
+      ],
+      "execution_branch_name": "feature/b-5ccdd6d1",
+      "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-5ccdd6d1",
+      "expected_files": [
+        "AggregatorApp/Today/BriefTopicView.swift"
+      ],
+      "expected_globs": [
+        "project.yml"
+      ],
+      "touched_files": [],
+      "conflict_risks": "",
+      "handoff_summary": {
+        "completed": "",
+        "remaining": "",
+        "risks": "",
+        "verdict": "",
+        "findings_count": 0,
+        "requires_followup": false,
+        "changed_files": [],
+        "updated_docs": [],
+        "next_action": "",
+        "next_agent": "",
+        "block_reason": "",
+        "expected_files": [],
+        "expected_globs": [],
+        "touched_files": [],
+        "conflict_risks": "",
+        "design_decisions": "",
+        "test_coverage_notes": "",
+        "known_limitations": ""
+      }
+    },
+    "last_agent_result": {
+      "outcome": "completed",
+      "summary": "Created AggregatorApp/Today/BriefTopicView.swift. Glass-card topic view with headline, What happened, Why it matters, conditional Background, and a Read references list. Internal refs \u2192 NavigationLink to ArticleDetailView; external refs \u2192 Button invoking onExternalRef; non-interactive refs \u2192 plain Text. SF Symbols doc.text and safari used. Accessibility labels on all interactive elements. Build passes.",
+      "verdict": "approved",
+      "findings_count": 0,
+      "requires_followup": false,
+      "next_agent": "tester",
+      "block_reason": ""
+    },
+    "telemetry": {
+      "cost_usd": 0.3776529,
+      "duration_ms": 222791,
+      "duration_api_ms": 200206,
+      "num_turns": 18,
+      "input_tokens": 16,
+      "output_tokens": 3121,
+      "cache_creation_tokens": 27014,
+      "cache_read_tokens": 357795,
+      "stop_reason": "end_turn",
+      "session_id": "9e3a5894-b846-48f0-9eb2-41eaa8c788e8",
+      "permission_denials": [],
+      "prompt_chars": 9834,
+      "prompt_lines": 181,
+      "source": "provider",
+      "attempt": 1
+    },
+    "telemetry_history": [
+      {
+        "cost_usd": 0.3776529,
+        "duration_ms": 222791,
+        "duration_api_ms": 200206,
+        "num_turns": 18,
+        "input_tokens": 16,
+        "output_tokens": 3121,
+        "cache_creation_tokens": 27014,
+        "cache_read_tokens": 357795,
+        "stop_reason": "end_turn",
+        "session_id": "9e3a5894-b846-48f0-9eb2-41eaa8c788e8",
+        "permission_denials": [],
+        "prompt_chars": 9834,
+        "prompt_lines": 181,
+        "source": "provider",
+        "attempt": 1
+      }
+    ],
+    "last_commit": "79055b50582ee8424450811cc17e07554fb2522c"
+  },
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

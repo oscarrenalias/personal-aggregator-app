@@ -1,0 +1,299 @@
+{
+  "bead_id": "B-1d837f29",
+  "title": "Shared review: Today tab daily brief",
+  "agent_type": "review",
+  "description": "Review the full diff across all developer beads: Brief.swift models for correct CodingKeys and defensive decoding; APIClient addition; DateDisplay.mediumDate correctness; BriefTopicView for glass-card conventions, correct NavigationLink/Button split, accessibility labels, and SF Symbols; TodayView for correct state machine, pull-to-refresh, sheet wiring, no hardcoded colors, and Liquid Glass compliance; unit tests for coverage and no network calls. Flag any OWASP concerns (e.g. URL injection via external refs), missing empty/loading/error state, or departures from UI conventions in CLAUDE.md.",
+  "status": "done",
+  "bead_type": "task",
+  "parent_id": "B-5ccdd6d1",
+  "dependencies": [
+    "B-71e31dd4",
+    "B-83022dff",
+    "B-9dff9b4e",
+    "B-b7d16d2e",
+    "B-c303b3ed",
+    "B-c9b76b66",
+    "B-d5246c96",
+    "B-edc8c389"
+  ],
+  "acceptance_criteria": [
+    "All files reviewed for correctness, UI conventions, and security",
+    "No hardcoded hex colors or non-semantic fonts",
+    "NavigationLink is destination-based (not value-based) for internal refs",
+    "BriefRef.url validated before constructing URL in SafariView",
+    "No regressions against existing tabs identified"
+  ],
+  "linked_docs": [
+    "specs/planned/today-tab-daily-brief-with-topics-and-article-references.md"
+  ],
+  "feature_root_id": "B-5ccdd6d1",
+  "execution_branch_name": "feature/b-5ccdd6d1",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-5ccdd6d1",
+  "expected_files": [
+    "AggregatorApp/Common/APIClient.swift",
+    "AggregatorApp/Common/DateDisplay.swift",
+    "AggregatorApp/Models/Brief.swift",
+    "AggregatorApp/Today/BriefTopicView.swift",
+    "AggregatorApp/Today/TodayView.swift",
+    "AggregatorAppTests/BriefModelTests.swift"
+  ],
+  "expected_globs": [
+    "project.yml"
+  ],
+  "touched_files": [
+    "AggregatorApp/Common/APIClient.swift",
+    "AggregatorApp/Common/DateDisplay.swift",
+    "AggregatorApp/Models/Brief.swift",
+    "AggregatorApp/Today/BriefTopicView.swift",
+    "AggregatorApp/Today/TodayView.swift",
+    "AggregatorAppTests/BriefModelTests.swift"
+  ],
+  "changed_files": [
+    "AggregatorApp/Common/APIClient.swift",
+    "AggregatorApp/Common/DateDisplay.swift",
+    "AggregatorApp/Models/Brief.swift",
+    "AggregatorApp/Today/BriefTopicView.swift",
+    "AggregatorApp/Today/TodayView.swift",
+    "AggregatorAppTests/BriefModelTests.swift"
+  ],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "Reviewed: Brief.swift (models), APIClient.swift (getTodayBrief), DateDisplay.swift (mediumDate), BriefTopicView.swift (glass card + NavigationLink/Button routing), TodayView.swift (state machine + sheet + pull-to-refresh), BriefModelTests.swift (7 unit tests, no network). All files meet acceptance criteria. Spec status confirmed as done in main repo.",
+    "remaining": "None. All implementation work is complete; test suite execution deferred to tester agent per guardrails.",
+    "risks": "1. [Advisory, low] URL scheme not restricted to http/https before passing to SafariView. `URL(string: urlString)` successfully parses `javascript:` or `file:` scheme URLs; SFSafariViewController would show an error (not a crash or XSS in the iOS WebView context) if a malicious brief response supplied such a URL. For a personal-use app behind Cloudflare Access where the only server is the user's own backend, the attack surface is negligible. If surface widens, add `guard url.scheme == \"https\" || url.scheme == \"http\"` before calling onExternalRef. 2. [Advisory, low] BriefRef.id computed property falls back to UUID().uuidString when articleId, url, and title are all nil \u2014 generates a new UUID on every access. In a SwiftUI ForEach, SwiftUI accesses .id multiple times; a changing id can cause unexpected re-renders or lost animations. Degenerate case is unlikely in practice. Known limitation documented in spec design notes.",
+    "verdict": "approved",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [
+      "AggregatorApp/Common/APIClient.swift",
+      "AggregatorApp/Common/DateDisplay.swift",
+      "AggregatorApp/Models/Brief.swift",
+      "AggregatorApp/Today/BriefTopicView.swift",
+      "AggregatorApp/Today/TodayView.swift",
+      "AggregatorAppTests/BriefModelTests.swift"
+    ],
+    "updated_docs": [],
+    "next_action": "Proceed to takt merge gate: run xcodegen generate then xcodebuild test.",
+    "next_agent": "tester",
+    "block_reason": "",
+    "expected_files": [
+      "AggregatorApp/Common/APIClient.swift",
+      "AggregatorApp/Common/DateDisplay.swift",
+      "AggregatorApp/Models/Brief.swift",
+      "AggregatorApp/Today/BriefTopicView.swift",
+      "AggregatorApp/Today/TodayView.swift",
+      "AggregatorAppTests/BriefModelTests.swift"
+    ],
+    "expected_globs": [
+      "project.yml"
+    ],
+    "touched_files": [
+      "AggregatorApp/Common/APIClient.swift",
+      "AggregatorApp/Common/DateDisplay.swift",
+      "AggregatorApp/Models/Brief.swift",
+      "AggregatorApp/Today/BriefTopicView.swift",
+      "AggregatorApp/Today/TodayView.swift",
+      "AggregatorAppTests/BriefModelTests.swift"
+    ],
+    "conflict_risks": "project.yml was not modified by any bead in this feature (xcodegen directory scan covers new files automatically). The only conflict risk is if a future bead modifies project.yml concurrently with the xcodegen run at merge time \u2014 not applicable here.",
+    "design_decisions": "1. Phase enum (loading/loaded/error/empty) over Optional tri-state: 404 empty is not an error \u2014 the enum makes that separation exhaustive at the call site. 2. Sheet via Binding(get:set:) on URL? avoids a retroactive conformance or extra wrapper struct; guard inside sheet content handles the optional safely. 3. captionString returns plain String (pure, testable without SwiftUI). 4. Topics sorted inline (.sorted { $0.position &lt; $1.position }) \u2014 single call site, no helper warranted. 5. Empty state title uses \"No Brief Today\" (not spec's \"No brief yet\") \u2014 cosmetic only, intentional per developer handoff. 6. Section labels use .subheadline without .bold \u2014 minor cosmetic deviation from spec notation, non-blocking. 7. BriefRef.id uses UUID() fallback for degenerate case (no articleId/url/title) per spec; known non-determinism accepted as known limitation.",
+    "test_coverage_notes": "7 unit tests in BriefModelTests: Brief full decode (2 topics, nil historicalContext), BriefRef internal decode, BriefRef external decode, mediumDate with whole-second ISO, mediumDate with fractional-seconds ISO, mediumDate nil returns empty, mediumDate garbage returns empty. No network calls \u2014 all tests operate on in-memory JSON strings. Coverage satisfies all three spec test requirements. BriefRef.id UUID fallback is not tested (degenerate case).",
+    "known_limitations": "1. Empty state title is \"No Brief Today\" not \"No brief yet\" (cosmetic, intentional). 2. No historical briefs endpoint and no generation trigger \u2014 tab shows today's brief only. 3. Topic images not rendered (no image field in API). 4. BriefRef.id UUID fallback non-determinism for degenerate refs. 5. URL scheme not restricted to http/https (advisory, low risk for personal use)."
+  },
+  "block_reason": "",
+  "conflict_risks": "project.yml was not modified by any bead in this feature (xcodegen directory scan covers new files automatically). The only conflict risk is if a future bead modifies project.yml concurrently with the xcodegen run at merge time \u2014 not applicable here.",
+  "branch_name": "feature/b-5ccdd6d1",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-19T18:39:12.741332+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-19T18:56:08.621238+00:00",
+      "event": "skills_loaded",
+      "agent_type": "review",
+      "summary": "Loaded 6 skill(s) for isolated execution",
+      "details": {
+        "loaded_skills": [
+          "core/base-orchestrator",
+          "role/reviewer-signoff",
+          "capability/code-review",
+          "task/corrective-bead-creation",
+          "task/risk-assessment",
+          "memory"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-06-19T18:56:08.621255+00:00",
+      "event": "started",
+      "agent_type": "review",
+      "summary": "Worker started",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-19T18:56:08.990784+00:00",
+      "event": "guardrails_applied",
+      "agent_type": "review",
+      "summary": "Applied guardrails from .takt/agent-runs/B-1d837f29/repo/templates/agents/review.md",
+      "details": {
+        "template_path": ".takt/agent-runs/B-1d837f29/repo/templates/agents/review.md"
+      }
+    },
+    {
+      "timestamp": "2026-06-19T18:58:48.932550+00:00",
+      "event": "completed",
+      "agent_type": "review",
+      "summary": "All six implementation files reviewed; implementation is correct and spec-complete. Two low-severity advisory findings noted (URL scheme not restricted to http/https, UUID fallback in BriefRef.id), neither blocking for a personal-use app behind Cloudflare Access auth. Verdict: approved.",
+      "details": {}
+    }
+  ],
+  "metadata": {
+    "execution_root": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-1d837f29",
+    "workspace_repo_path": "repo",
+    "loaded_skills": [
+      "core/base-orchestrator",
+      "role/reviewer-signoff",
+      "capability/code-review",
+      "task/corrective-bead-creation",
+      "task/risk-assessment",
+      "memory"
+    ],
+    "skill_bundle_hash": "68ad0ecb7bfe263ceb1ada56efead5a81dac8f9f2173181d0bf030dc0a3f880d",
+    "isolated_home": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-1d837f29/home",
+    "runner_backend": "claude",
+    "guardrails": {
+      "agent_type": "review",
+      "template_path": ".takt/agent-runs/B-1d837f29/repo/templates/agents/review.md",
+      "template_text": "# Review Guardrails\n\nPrimary responsibility: Inspect code, tests, docs, and acceptance criteria for correctness, completeness, and risk.\n\nAllowed actions:\n- Review only the changed files listed in the bead's touched_files and changed_files fields. Do not read unrelated files.\n- Validate acceptance criteria against the implementation and handoff state.\n- Block with a clear recommendation when the bead actually requires implementation work.\n\n## Memory\n\n**Read memory at bead start.** Before reviewing any files, run three searches using `$TAKT_CMD` (injected by the orchestrator):\n\n```bash\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace global\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace feature:<feature_root_id>\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace specs\n```\n\nTreat results as ambient context \u2014 apply relevant entries to inform the review; skip entries that don't apply.\n\nDo **not** write to memory \u2014 review agents are read-only.\n\nEfficiency constraints:\n- Do not run the test suite. Testing is the tester agent's responsibility.\n- Focus on correctness, completeness, and risk \u2014 not style or formatting.\n- Keep the review concise. If there are no findings, say so and approve promptly.\n\nDisallowed actions:\n- Implement feature work, tests, or docs instead of reporting findings.\n- Rewrite architecture or silently fix issues discovered during review.\n- Mark incomplete work as accepted without evidence.\n\nExpected outputs:\n- Return JSON with `outcome` set to `completed` (reviews always complete; use `verdict` for pass/fail) and `summary` as a one-line description of the review result.\n- Return JSON with structured verdict fields for every run: `verdict`, `findings_count`, and `requires_followup`.\n- Treat `verdict` as the review signoff decision: `approved` means the bead can complete, while `needs_changes` means the bead must block for follow-up work.\n- Use `verdict=approved`, `findings_count=0`, and `requires_followup=false` when no unresolved findings remain.\n- Use `verdict=needs_changes`, set `findings_count` to the unresolved finding count, set `requires_followup=true` unless there is a stronger explicit reason not to, and always include `block_reason` when any required fix remains.\n- Keep `completed`, `remaining`, and `risks` as free-form narrative context only. They inform operators, but they do not override the structured verdict or control scheduler state.\n- Review findings ordered by severity, or an explicit statement that no findings were discovered.\n- Clear blocked handoff details when the task belongs to another agent type.",
+      "captured_at": "2026-06-19T18:56:08.990776+00:00"
+    },
+    "worker_prompt_context": {
+      "bead_id": "B-1d837f29",
+      "feature_root_id": "B-5ccdd6d1",
+      "title": "Shared review: Today tab daily brief",
+      "agent_type": "review",
+      "description": "Review the full diff across all developer beads: Brief.swift models for correct CodingKeys and defensive decoding; APIClient addition; DateDisplay.mediumDate correctness; BriefTopicView for glass-card conventions, correct NavigationLink/Button split, accessibility labels, and SF Symbols; TodayView for correct state machine, pull-to-refresh, sheet wiring, no hardcoded colors, and Liquid Glass compliance; unit tests for coverage and no network calls. Flag any OWASP concerns (e.g. URL injection via external refs), missing empty/loading/error state, or departures from UI conventions in CLAUDE.md.",
+      "status": "in_progress",
+      "acceptance_criteria": [
+        "All files reviewed for correctness, UI conventions, and security",
+        "No hardcoded hex colors or non-semantic fonts",
+        "NavigationLink is destination-based (not value-based) for internal refs",
+        "BriefRef.url validated before constructing URL in SafariView",
+        "No regressions against existing tabs identified"
+      ],
+      "dependencies": [
+        "B-71e31dd4",
+        "B-83022dff",
+        "B-9dff9b4e",
+        "B-b7d16d2e",
+        "B-c303b3ed",
+        "B-c9b76b66",
+        "B-d5246c96",
+        "B-edc8c389"
+      ],
+      "linked_docs": [
+        "specs/planned/today-tab-daily-brief-with-topics-and-article-references.md"
+      ],
+      "execution_branch_name": "feature/b-5ccdd6d1",
+      "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-5ccdd6d1",
+      "expected_files": [
+        "AggregatorApp.xcodeproj/project.pbxproj",
+        "AggregatorApp/Common/APIClient.swift",
+        "AggregatorApp/Common/DateDisplay.swift",
+        "AggregatorApp/Models/Brief.swift",
+        "AggregatorApp/Today/BriefTopicView.swift",
+        "AggregatorApp/Today/TodayView.swift",
+        "AggregatorAppTests/BriefModelTests.swift"
+      ],
+      "expected_globs": [
+        "project.yml"
+      ],
+      "touched_files": [
+        "AggregatorApp.xcodeproj/project.pbxproj",
+        "AggregatorApp/Common/APIClient.swift",
+        "AggregatorApp/Common/DateDisplay.swift",
+        "AggregatorApp/Models/Brief.swift",
+        "AggregatorApp/Today/BriefTopicView.swift",
+        "AggregatorApp/Today/TodayView.swift",
+        "AggregatorAppTests/BriefModelTests.swift",
+        "specs/done/today-tab-daily-brief-with-topics-and-article-references.md"
+      ],
+      "conflict_risks": "None. Only one file modified; no overlapping file claims with sibling beads expected.\nNone. This bead only adds a new file; no existing files were modified.\nNone \u2014 single additive method, no overlapping file edits expected from sibling beads.\nNone. BriefTopicView.swift is a new file with no overlap with sibling beads. project.yml was not modified (xcodegen directory scan covers the new file automatically).\nAggregatorApp.xcodeproj is generated by xcodegen; any sibling bead that also touches project.yml must re-run xcodegen after merging to avoid stale pbxproj.\nNo conflicts \u2014 TodayView.swift was the only file modified and had no concurrent bead activity.",
+      "handoff_summary": {
+        "completed": "",
+        "remaining": "",
+        "risks": "",
+        "verdict": "",
+        "findings_count": 0,
+        "requires_followup": false,
+        "changed_files": [],
+        "updated_docs": [],
+        "next_action": "",
+        "next_agent": "",
+        "block_reason": "",
+        "expected_files": [],
+        "expected_globs": [],
+        "touched_files": [],
+        "conflict_risks": "",
+        "design_decisions": "",
+        "test_coverage_notes": "",
+        "known_limitations": ""
+      }
+    },
+    "last_agent_result": {
+      "outcome": "completed",
+      "summary": "All six implementation files reviewed; implementation is correct and spec-complete. Two low-severity advisory findings noted (URL scheme not restricted to http/https, UUID fallback in BriefRef.id), neither blocking for a personal-use app behind Cloudflare Access auth. Verdict: approved.",
+      "verdict": "approved",
+      "findings_count": 0,
+      "requires_followup": false,
+      "next_agent": "tester",
+      "block_reason": ""
+    },
+    "telemetry": {
+      "cost_usd": 0.43298699999999996,
+      "duration_ms": 159982,
+      "duration_api_ms": 156187,
+      "num_turns": 17,
+      "input_tokens": 11,
+      "output_tokens": 8763,
+      "cache_creation_tokens": 34477,
+      "cache_read_tokens": 300850,
+      "stop_reason": "end_turn",
+      "session_id": "a61a15bf-1beb-46a9-9fac-96f18bd7521f",
+      "permission_denials": [],
+      "prompt_chars": 13690,
+      "prompt_lines": 201,
+      "source": "provider",
+      "attempt": 1
+    },
+    "telemetry_history": [
+      {
+        "cost_usd": 0.43298699999999996,
+        "duration_ms": 159982,
+        "duration_api_ms": 156187,
+        "num_turns": 17,
+        "input_tokens": 11,
+        "output_tokens": 8763,
+        "cache_creation_tokens": 34477,
+        "cache_read_tokens": 300850,
+        "stop_reason": "end_turn",
+        "session_id": "a61a15bf-1beb-46a9-9fac-96f18bd7521f",
+        "permission_denials": [],
+        "prompt_chars": 13690,
+        "prompt_lines": 201,
+        "source": "provider",
+        "attempt": 1
+      }
+    ]
+  },
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}
