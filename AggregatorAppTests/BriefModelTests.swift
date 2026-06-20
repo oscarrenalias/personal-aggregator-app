@@ -108,4 +108,105 @@ final class BriefModelTests: XCTestCase {
     func testMediumDateGarbageReturnsEmpty() {
         XCTAssertEqual(DateDisplay.mediumDate("not-a-date"), "")
     }
+
+    // MARK: - getBriefs URL construction via APIClient.makeURL
+
+    func testGetBriefsURLWithCursor() {
+        let query = briefsQuery(cursor: "C==", limit: 20)
+        let url = APIClient.makeURL(baseURL: "https://example.com/api/v1", path: "/briefs", query: query)
+
+        XCTAssertNotNil(url)
+        guard let url else { return }
+
+        let components = URLComponents(url: url, resolvingAgainstBaseURL: false)
+        let items = components?.queryItems ?? []
+
+        XCTAssertEqual(items.first(where: { $0.name == "limit" })?.value, "20")
+        // URLComponents decodes the stored value; verify raw percent-encoding in the URL string
+        XCTAssertEqual(items.first(where: { $0.name == "cursor" })?.value, "C==")
+        XCTAssertTrue(url.absoluteString.contains("cursor=C%3D%3D"), "cursor 'C==' must appear percent-encoded as 'C%3D%3D' in URL")
+    }
+
+    func testGetBriefsURLNoCursorItemWhenCursorIsNil() {
+        let query = briefsQuery(cursor: nil, limit: 20)
+        let url = APIClient.makeURL(baseURL: "https://example.com/api/v1", path: "/briefs", query: query)
+
+        XCTAssertNotNil(url)
+        guard let url else { return }
+
+        let components = URLComponents(url: url, resolvingAgainstBaseURL: false)
+        let items = components?.queryItems ?? []
+
+        XCTAssertEqual(items.first(where: { $0.name == "limit" })?.value, "20")
+        XCTAssertNil(items.first(where: { $0.name == "cursor" }), "cursor query item must be absent when cursor is nil")
+    }
+
+    // MARK: - PaginatedResponse<Brief> decoding
+
+    func testPaginatedBriefDecodesEnvelopeWithTwoItems() throws {
+        let json = """
+        {
+            "items": [
+                {
+                    "id": 10,
+                    "headline": "Brief One",
+                    "intro": "Intro one.",
+                    "generated_at": "2026-06-19T06:00:00+00:00",
+                    "period_start": "2026-06-18T00:00:00+00:00",
+                    "period_end": "2026-06-19T00:00:00+00:00",
+                    "model": "gpt-4o",
+                    "topics": [
+                        {
+                            "position": 1,
+                            "headline": "Topic A",
+                            "what_happened": "Something happened.",
+                            "why_it_matters": "It matters because.",
+                            "historical_context": null,
+                            "refs": []
+                        }
+                    ]
+                },
+                {
+                    "id": 11,
+                    "headline": "Brief Two",
+                    "intro": null,
+                    "generated_at": null,
+                    "period_start": "2026-06-17T00:00:00+00:00",
+                    "period_end": "2026-06-18T00:00:00+00:00",
+                    "model": null,
+                    "topics": []
+                }
+            ],
+            "next_cursor": "abc123=="
+        }
+        """
+        let response = try JSONDecoder().decode(PaginatedResponse<Brief>.self, from: Data(json.utf8))
+
+        XCTAssertEqual(response.items.count, 2)
+        XCTAssertEqual(response.nextCursor, "abc123==")
+
+        let first = response.items[0]
+        XCTAssertEqual(first.id, 10)
+        XCTAssertEqual(first.headline, "Brief One")
+        XCTAssertEqual(first.topics.count, 1)
+        XCTAssertEqual(first.topics[0].whatHappened, "Something happened.")
+
+        let second = response.items[1]
+        XCTAssertEqual(second.id, 11)
+        XCTAssertNil(second.intro)
+        XCTAssertEqual(second.topics.count, 0)
+    }
+
+    // MARK: - Private helpers
+
+    /// Mirrors the query-building logic inside APIClient.getBriefs for URL composition tests.
+    private func briefsQuery(cursor: String?, limit: Int) -> [URLQueryItem] {
+        var query: [URLQueryItem] = [
+            URLQueryItem(name: "limit", value: "\(limit)"),
+        ]
+        if let cursor {
+            query.append(URLQueryItem(name: "cursor", value: cursor))
+        }
+        return query
+    }
 }
