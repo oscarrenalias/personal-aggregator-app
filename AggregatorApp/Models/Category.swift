@@ -24,4 +24,16 @@ struct Category: Decodable, Identifiable {
         lastActivity = try container.decodeIfPresent(String.self, forKey: .lastActivity)
         hasPriority = try container.decodeIfPresent(Bool.self, forKey: .hasPriority) ?? false
     }
+
+    func freshnessPhrase(now: Date = Date()) -> String? {
+        if hasPriority { return "New notable stories" }
+        guard let raw = lastActivity,
+              let activityDate = ISO8601DateFormatter().date(from: raw) else { return nil }
+        let cal = Calendar.current
+        if cal.isDate(activityDate, inSameDayAs: now) { return "Updated today" }
+        if cal.isDate(activityDate, inSameDayAs: cal.date(byAdding: .day, value: -1, to: now)!) {
+            return "Updated yesterday"
+        }
+        return "Quiet"
+    }
 }

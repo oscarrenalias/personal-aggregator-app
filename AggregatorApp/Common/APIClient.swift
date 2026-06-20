@@ -91,6 +91,10 @@ struct APIClient {
         return try await get("/sources")
     }
 
+    func getCategories() async throws -> [Category] {
+        return try await get("/categories")
+    }
+
     func healthCheck() async throws -> HealthResponse {
         return try await get("/healthz")
     }
@@ -153,6 +157,8 @@ struct APIClient {
             query.append(URLQueryItem(name: "view", value: "important"))
         case .unread:
             query.append(URLQueryItem(name: "view", value: "unread"))
+        case .category(let name):
+            query.append(URLQueryItem(name: "category", value: name))
         }
         query.append(URLQueryItem(name: "sort", value: sort.rawValue))
         if unreadOnly {
