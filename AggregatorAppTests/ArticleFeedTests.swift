@@ -58,6 +58,55 @@ final class ArticleFeedTests: XCTestCase {
         XCTAssertFalse(ArticleFeed.unread.allowsUnreadFilter)
         XCTAssertTrue(ArticleFeed.source(id: 1, name: "Test").allowsUnreadFilter)
         XCTAssertTrue(ArticleFeed.important.allowsUnreadFilter)
+        XCTAssertTrue(ArticleFeed.category(name: "Tech").allowsUnreadFilter)
+    }
+
+    // MARK: - 4. Category feed — query param, URL encoding, composition, regression
+
+    func testCategoryFeedQueryParamSimpleName() {
+        let query = articlesQuery(feed: .category(name: "Technology"), sort: .importance, unreadOnly: false, cursor: nil)
+        XCTAssertEqual(query.first(where: { $0.name == "category" })?.value, "Technology")
+        XCTAssertNil(query.first(where: { $0.name == "source_id" }))
+        XCTAssertNil(query.first(where: { $0.name == "view" }))
+    }
+
+    func testCategoryFeedSpaceIsPercentEncoded() {
+        let query = articlesQuery(feed: .category(name: "Game Reviews"), sort: .importance, unreadOnly: false, cursor: nil)
+        let url = APIClient.makeURL(baseURL: "https://example.com/api/v1", path: "/articles", query: query)
+        XCTAssertNotNil(url)
+        guard let url else { return }
+        XCTAssertTrue(url.absoluteString.contains("category=Game%20Reviews"),
+                      "space in category name must appear percent-encoded as %20 in URL, got: \(url.absoluteString)")
+    }
+
+    func testCategoryFeedComposesWithSortAndUnreadOnly() {
+        let query = articlesQuery(feed: .category(name: "Tech"), sort: .recent, unreadOnly: true, cursor: nil)
+        XCTAssertEqual(query.first(where: { $0.name == "category" })?.value, "Tech")
+        XCTAssertEqual(query.first(where: { $0.name == "sort" })?.value, "recent")
+        XCTAssertEqual(query.first(where: { $0.name == "unread_only" })?.value, "true")
+        XCTAssertNil(query.first(where: { $0.name == "source_id" }))
+        XCTAssertNil(query.first(where: { $0.name == "view" }))
+    }
+
+    func testCategoryFeedRegressionExistingFeedsUnchanged() {
+        // .source, .important, .unread must be unaffected by the category addition
+        let sourceQuery = articlesQuery(feed: .source(id: 5, name: "X"), sort: .importance, unreadOnly: false, cursor: nil)
+        XCTAssertEqual(sourceQuery.first(where: { $0.name == "source_id" })?.value, "5")
+        XCTAssertNil(sourceQuery.first(where: { $0.name == "category" }))
+
+        let importantQuery = articlesQuery(feed: .important, sort: .importance, unreadOnly: false, cursor: nil)
+        XCTAssertEqual(importantQuery.first(where: { $0.name == "view" })?.value, "important")
+        XCTAssertNil(importantQuery.first(where: { $0.name == "category" }))
+
+        let unreadQuery = articlesQuery(feed: .unread, sort: .importance, unreadOnly: false, cursor: nil)
+        XCTAssertEqual(unreadQuery.first(where: { $0.name == "view" })?.value, "unread")
+        XCTAssertNil(unreadQuery.first(where: { $0.name == "category" }))
+    }
+
+    // MARK: - 5. systemImage
+
+    func testCategorySystemImage() {
+        XCTAssertEqual(ArticleFeed.category(name: "Tech").systemImage, "tag")
     }
 
     // MARK: - Private helpers
@@ -70,6 +119,8 @@ final class ArticleFeedTests: XCTestCase {
             return [URLQueryItem(name: "view", value: "important")]
         case .unread:
             return [URLQueryItem(name: "view", value: "unread")]
+        case .category(let name):
+            return [URLQueryItem(name: "category", value: name)]
         }
     }
 
@@ -83,6 +134,8 @@ final class ArticleFeedTests: XCTestCase {
             query.append(URLQueryItem(name: "view", value: "important"))
         case .unread:
             query.append(URLQueryItem(name: "view", value: "unread"))
+        case .category(let name):
+            query.append(URLQueryItem(name: "category", value: name))
         }
         query.append(URLQueryItem(name: "sort", value: sort.rawValue))
         if unreadOnly {
