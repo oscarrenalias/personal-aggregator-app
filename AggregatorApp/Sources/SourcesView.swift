@@ -5,6 +5,8 @@ struct SourcesView: View {
     // nil = not yet fetched (loading); [] = loaded empty; non-empty = loaded
     @State private var sources: [Source]? = nil
     @State private var loadError: Error? = nil
+    @State private var categories: [Category] = []
+    @State private var categoriesError: Error? = nil
 
     private var apiClient: APIClient {
         APIClient(store: credentialsStore)
@@ -25,7 +27,7 @@ struct SourcesView: View {
                             .foregroundStyle(.secondary)
                             .multilineTextAlignment(.center)
                         Button("Retry") {
-                            Task { await loadSources() }
+                            Task { await loadAll() }
                         }
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -44,6 +46,25 @@ struct SourcesView: View {
                                 .accessibilityLabel("Unread articles")
                                 .listRowBackground(Color.clear)
                             }
+                            if !categories.isEmpty {
+                                Section("Categories") {
+                                    ForEach(categories) { category in
+                                        NavigationLink(destination: ArticleListView(feed: .category(name: category.name))) {
+                                            VStack(alignment: .leading, spacing: 2) {
+                                                Label(category.name, systemImage: "tag")
+                                                    .font(.body)
+                                                if let phrase = category.freshnessPhrase() {
+                                                    Text(phrase)
+                                                        .font(.caption)
+                                                        .foregroundStyle(.secondary)
+                                                }
+                                            }
+                                        }
+                                        .accessibilityLabel(category.name)
+                                        .listRowBackground(Color.clear)
+                                    }
+                                }
+                            }
                             if !loaded.isEmpty {
                                 Section("Sources") {
                                     ForEach(loaded) { source in
@@ -58,7 +79,7 @@ struct SourcesView: View {
                             }
                         }
                         .refreshable {
-                            await loadSources()
+                            await loadAll()
                         }
                     }
                 } else {
@@ -70,16 +91,31 @@ struct SourcesView: View {
         }
         .task {
             if credentialsStore.isConfigured {
-                await loadSources()
+                await loadAll()
             }
         }
     }
 
-    private func loadSources() async {
+    private func loadAll() async {
         sources = nil
         loadError = nil
+        categoriesError = nil
+        categories = []
+
+        async let fetchSources = apiClient.getSources()
+        async let fetchCategories = apiClient.getCategories()
+
+        // Await categories first (non-fatal: failure shows no Categories section)
         do {
-            sources = try await apiClient.getSources()
+            categories = try await fetchCategories
+        } catch {
+            if isCancellation(error) { return }
+            categoriesError = error
+        }
+
+        // Await sources (fatal: failure shows full-tab error view)
+        do {
+            sources = try await fetchSources
         } catch {
             if isCancellation(error) { return }
             loadError = error

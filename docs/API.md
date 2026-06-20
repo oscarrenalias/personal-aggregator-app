@@ -224,6 +224,88 @@ Calls `GET /briefs` with `limit` and, when non-nil, a percent-encoded
 endpoint does not exist on the backend; callers are expected to catch that
 and fall back to `getTodayBrief()`.
 
+## iOS client: Sources tab
+
+The **Sources** tab (`AggregatorApp/Sources/SourcesView.swift`) presents a
+three-section list: **Feeds**, **Categories**, and **Sources**. All three
+sections navigate into `ArticleListView` via an `ArticleFeed` value.
+
+### `ArticleFeed` enum
+
+`ArticleFeed` (`AggregatorApp/Articles/ArticleFeed.swift`) is the discriminated
+union that drives both navigation and query-parameter construction in
+`getArticles`:
+
+| Case | Query parameter sent |
+|---|---|
+| `.source(id:name:)` | `source_id=<id>` |
+| `.important` | `view=important` |
+| `.unread` | `view=unread` |
+| `.category(name:)` | `category=<name>` |
+
+The `category` parameter matches articles by category **name** (not id),
+consistent with `GET /articles?category=<name>`. The value is percent-encoded
+automatically by `URLComponents`/`URLQueryItem`. `allowsUnreadFilter` returns
+`true` for `.category`, so category feeds compose with the unread filter and
+sort order.
+
+### Categories section
+
+`SourcesView` fetches `GET /categories` concurrently with `GET /sources` on
+appear and on pull-to-refresh. The **"Categories"** section appears between
+"Feeds" and "Sources" when the categories array is non-empty. Each row is a
+`NavigationLink` to `ArticleListView(feed: .category(name:))` and shows the
+category name plus an optional freshness subtitle.
+
+### Freshness subtitle — dormant until backend ships fields
+
+Each category row optionally shows a freshness phrase beneath the name
+(`Category.freshnessPhrase(now:)`). The logic mirrors the web sidebar:
+
+| Backend field | Value | Phrase shown |
+|---|---|---|
+| `has_priority` | `true` | "New notable stories" |
+| `last_activity` | today | "Updated today" |
+| `last_activity` | yesterday | "Updated yesterday" |
+| `last_activity` | older | "Quiet" |
+| both absent | — | *(no subtitle)* |
+
+**Current state (dormant):** `GET /categories` does not yet include
+`last_activity` or `has_priority`. The `Category` model decodes both with
+`decodeIfPresent`, so they arrive as `nil`/`false` on the current API — rows
+display just the category name with no subtitle and no error.
+
+**Activation path:** the backend must add `last_activity` (ISO-8601 string) and
+`has_priority` (bool) to the `CategoryResponse` schema. When those fields
+appear, the iOS decoder picks them up and `freshnessPhrase()` returns the
+appropriate phrase automatically with no app change required.
+
+### Load-isolation behaviour
+
+Categories and sources load concurrently. Their error semantics differ
+intentionally:
+
+```
+GET /sources      ← fatal: failure triggers the full-tab error view + Retry
+GET /categories   ← non-fatal: failure hides the Categories section only
+```
+
+A flaky or absent `/categories` endpoint never blanks the whole tab. If
+categories fail but sources succeed, the tab renders "Feeds" and "Sources"
+sections normally. A sources failure replaces the entire tab content with an
+error view.
+
+### `getCategories` — `APIClient` method
+
+```swift
+func getCategories() async throws -> [Category]
+```
+
+Calls `GET /categories` and decodes the response as `[Category]`. Non-paginated
+(the backend returns a flat array ordered by `sort_order`). Throws
+`APIError.cloudflareRejected` or `APIError.http` on failure; `SourcesView`
+treats any error as "show no Categories section."
+
 ## The OpenAPI spec
 
 - **In this repo:** [`docs/openapi.json`](./openapi.json) — a committed snapshot,

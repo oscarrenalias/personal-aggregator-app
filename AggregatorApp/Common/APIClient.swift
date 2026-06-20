@@ -91,6 +91,10 @@ struct APIClient {
         return try await get("/sources")
     }
 
+    func getCategories() async throws -> [Category] {
+        return try await get("/categories")
+    }
+
     func healthCheck() async throws -> HealthResponse {
         return try await get("/healthz")
     }
@@ -139,7 +143,8 @@ struct APIClient {
     /// Fetches a paginated list of articles for the given feed.
     /// - Parameters:
     ///   - feed: The feed to query. `.source(id:name:)` sends `source_id=<id>`;
-    ///     `.important` sends `view=important`; `.unread` sends `view=unread`.
+    ///     `.important` sends `view=important`; `.unread` sends `view=unread`;
+    ///     `.category(name:)` sends `category=<name>` (matched by name, not id).
     ///   - sort: Controls ranking — `.importance` or `.recent`.
     ///   - unreadOnly: When `true`, adds `unread_only=true`; param is omitted when `false`.
     ///   - limit: Page size (default 25).
@@ -153,6 +158,8 @@ struct APIClient {
             query.append(URLQueryItem(name: "view", value: "important"))
         case .unread:
             query.append(URLQueryItem(name: "view", value: "unread"))
+        case .category(let name):
+            query.append(URLQueryItem(name: "category", value: name))
         }
         query.append(URLQueryItem(name: "sort", value: sort.rawValue))
         if unreadOnly {
