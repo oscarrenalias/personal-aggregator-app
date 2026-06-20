@@ -1,0 +1,239 @@
+{
+  "bead_id": "B-b38235ca",
+  "title": "BriefCardView: Brief list row component",
+  "agent_type": "developer",
+  "description": "Create AggregatorApp/Today/BriefCardView.swift. Glass list row for a Brief: date line (.caption, .secondary) using DateDisplay.mediumDate(brief.periodStart) with a 'Today \u00b7 ' prefix for the most-recent card; topic count with correct pluralisation; headline (.headline, up to 2 lines, falls back to 'Daily Brief'). Apply .listRowBackground(Color.clear) and semantic colors only \u2014 no hardcoded hex.",
+  "status": "done",
+  "bead_type": "task",
+  "parent_id": "B-b8659d27",
+  "dependencies": [],
+  "acceptance_criteria": [
+    "BriefCardView.swift exists and compiles",
+    "Shows date line, topic count (pluralised), and headline with 2-line cap",
+    "Most-recent card displays 'Today \u00b7 ' prefix on the date line",
+    "Uses .listRowBackground(Color.clear) and only semantic SwiftUI colors"
+  ],
+  "linked_docs": [],
+  "feature_root_id": "B-b8659d27",
+  "execution_branch_name": "feature/b-b8659d27",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-b8659d27",
+  "expected_files": [
+    "AggregatorApp/Today/BriefCardView.swift"
+  ],
+  "expected_globs": [],
+  "touched_files": [
+    "AggregatorApp/Common/APIClient.swift",
+    "AggregatorApp/Today/BriefCardView.swift",
+    "AggregatorApp/Today/BriefDetailView.swift",
+    "AggregatorApp/Today/TodayView.swift"
+  ],
+  "changed_files": [
+    "AggregatorApp/Common/APIClient.swift",
+    "AggregatorApp/Today/BriefCardView.swift",
+    "AggregatorApp/Today/BriefDetailView.swift",
+    "AggregatorApp/Today/TodayView.swift"
+  ],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "BriefCardView.swift implemented and verified to compile. Shows dateLine (isLatest prefix), headline, topic count \u2014 matching the ThreadCardView pattern.",
+    "remaining": "N/A",
+    "risks": "None \u2014 pure new file, no changes to existing code.",
+    "verdict": "approved",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [
+      "AggregatorApp/Common/APIClient.swift",
+      "AggregatorApp/Today/BriefCardView.swift",
+      "AggregatorApp/Today/BriefDetailView.swift",
+      "AggregatorApp/Today/TodayView.swift"
+    ],
+    "updated_docs": [],
+    "next_action": "Tester should verify BriefCardView renders correctly in a List context: date line, headline with 2-line cap, topic count pluralisation, and \"Today \u00b7 \" prefix on the most-recent card.",
+    "next_agent": "tester",
+    "block_reason": "",
+    "expected_files": [
+      "AggregatorApp/Today/BriefCardView.swift"
+    ],
+    "expected_globs": [],
+    "touched_files": [
+      "AggregatorApp/Common/APIClient.swift",
+      "AggregatorApp/Today/BriefCardView.swift",
+      "AggregatorApp/Today/BriefDetailView.swift",
+      "AggregatorApp/Today/TodayView.swift"
+    ],
+    "conflict_risks": "None. BriefCardView.swift is a new file with no overlap with other in-progress beads.",
+    "design_decisions": "Followed ThreadCardView's established layout pattern: VStack with date/meta line first (caption, secondary), headline second (headline, lineLimit(2)), count line third (caption, secondary). The isLatest: Bool parameter on the call-site lets the parent list flag the most-recent Brief without the card needing to fetch or infer ordering itself \u2014 keeps the component pure/testable. .frame(maxWidth: .infinity) is applied on the VStack (not the row root) to keep alignment clean inside List rows.",
+    "test_coverage_notes": "Tester should verify: (1) isLatest=true prepends \"Today \u00b7 \" to the date string; (2) isLatest=false shows only the mediumDate string; (3) headline falls back to \"Daily Brief\" when brief.headline is nil; (4) topic count pluralises correctly for 0, 1, and N topics; (5) .listRowBackground is Color.clear (no opaque background); (6) lineLimit(2) is enforced on long headlines.",
+    "known_limitations": "topics.count is used directly from the decoded Brief; if a Brief arrives with an empty topics array the count shows \"0 topics\". This is correct behaviour \u2014 no special-casing needed."
+  },
+  "block_reason": "",
+  "conflict_risks": "None. BriefCardView.swift is a new file with no overlap with other in-progress beads.",
+  "branch_name": "feature/b-b8659d27",
+  "worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-b8659d27",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-20T12:30:06.974414+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-20T12:30:29.336301+00:00",
+      "event": "skills_loaded",
+      "agent_type": "developer",
+      "summary": "Loaded 7 skill(s) for isolated execution",
+      "details": {
+        "loaded_skills": [
+          "core/base-orchestrator",
+          "role/developer-implementation",
+          "capability/code-edit",
+          "task/corrective-implementation",
+          "task/refactor-safe",
+          "task/migration",
+          "memory"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-06-20T12:30:29.336319+00:00",
+      "event": "started",
+      "agent_type": "developer",
+      "summary": "Worker started",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-20T12:30:29.337483+00:00",
+      "event": "guardrails_applied",
+      "agent_type": "developer",
+      "summary": "Applied guardrails from .takt/agent-runs/B-b38235ca/repo/templates/agents/developer.md",
+      "details": {
+        "template_path": ".takt/agent-runs/B-b38235ca/repo/templates/agents/developer.md"
+      }
+    },
+    {
+      "timestamp": "2026-06-20T12:32:19.671601+00:00",
+      "event": "completed",
+      "agent_type": "developer",
+      "summary": "Created AggregatorApp/Today/BriefCardView.swift \u2014 a glass list-row component for a Brief. The view shows a date line (caption, secondary) with optional \"Today \u00b7 \" prefix, headline (headline, 2-line cap, fallback \"Daily Brief\"), and pluralised topic count. Uses .listRowBackground(Color.clear) and only semantic SwiftUI colors. Build passes cleanly.",
+      "details": {}
+    }
+  ],
+  "metadata": {
+    "execution_root": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-b38235ca",
+    "workspace_repo_path": "repo",
+    "loaded_skills": [
+      "core/base-orchestrator",
+      "role/developer-implementation",
+      "capability/code-edit",
+      "task/corrective-implementation",
+      "task/refactor-safe",
+      "task/migration",
+      "memory"
+    ],
+    "skill_bundle_hash": "ecae5633083d1bbec41a6e5ec6ea05bbab117f60499c19b2ed76dbbe3e1aec7c",
+    "isolated_home": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-b38235ca/home",
+    "runner_backend": "claude",
+    "guardrails": {
+      "agent_type": "developer",
+      "template_path": ".takt/agent-runs/B-b38235ca/repo/templates/agents/developer.md",
+      "template_text": "# Developer Guardrails\n\nPrimary responsibility: Implement only the assigned bead inside the existing architecture and file scope.\n\n## Corrective bead scope\n\nIf your `bead_id` ends in `-corrective` or `-corrective-<N>` (e.g. `B-abc12345-corrective`, `B-abc12345-test-corrective-2`), you are running as a CORRECTIVE bead. Your scope is **strictly limited to fixing the specific failure that blocked the parent bead**. Do not:\n\n- Add unrelated improvements, refactors, or cleanup, even if you notice them\n- Reapply previously-reverted changes (the operator reverted them for a reason)\n- Expand the surface area beyond what is needed to unblock the parent\n- Touch files outside what the parent bead's `expected_files` / `expected_globs` covered, unless the failure is genuinely in another file and there is no smaller fix\n\nIf you notice an unrelated issue while fixing the corrective scope: **file a separate bead** via `takt bead create` describing what you saw, but do not fix it in this corrective. The operator will prioritize and dispatch.\n\nWhen in doubt about scope: prefer the smallest possible fix. The reviewer of this corrective will check that the scope was respected.\n\nAllowed actions:\n- Modify code, configuration, or local docs required to complete the assigned bead.\n- Create sub-beads for discovered follow-up work that should be handled separately.\n- Verify your `Swift` changes compile and import correctly with a quick syntax check: ``.\n\nDisallowed actions:\n- Run any test suite \u2014 not even a targeted `` run or any subset. Test execution is exclusively the tester agent's responsibility. Running tests wastes the agent budget and delays the pipeline.\n- Redesign unrelated architecture or broaden scope beyond the assigned bead.\n- Perform final review signoff in place of a review agent.\n- Silently absorb unrelated test, documentation, or planning work that should be handed off.\n\n## Memory\n\n**Read memory at bead start.** Before touching any code, run three searches using `$TAKT_CMD` (injected by the orchestrator):\n\n```bash\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace global\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace feature:<feature_root_id>\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace specs\n```\n\nTreat results as ambient context \u2014 apply relevant entries; skip entries that don't apply.\n\n**Write to memory when you discover reusable project knowledge** \u2014 something that would have changed your approach if you had known it upfront, and is not already in CLAUDE.md or the guardrails.\n\n```bash\n$TAKT_CMD memory add \"<concise fact>\" --namespace global               # project-wide knowledge\n$TAKT_CMD memory add \"<discovery>\" --namespace feature:<feature_root_id>  # feature-scoped\n```\n\nRequired Handoff Fields:\n\nEvery developer bead **must** populate the following three fields in its output JSON. Reviewers and tester agents rely on these fields to scope their work without additional back-and-forth turns. Use `\"N/A\"` only when a field is genuinely inapplicable (e.g., a trivial rename with no design trade-offs); do not leave fields blank.\n\n- **`design_decisions`** \u2014 Document non-obvious architectural or implementation choices made during this bead. Include alternatives considered and why the chosen approach was preferred. Reviewers use this to evaluate correctness without re-deriving intent. Set to `\"N/A\"` only if the change was purely mechanical with no meaningful trade-offs.\n\n- **`test_coverage_notes`** \u2014 Describe what the tester agent should verify: new code paths, edge cases introduced, regression risks, and any known untested scenarios left to the tester. Set to `\"N/A\"` only if the bead touched no executable code paths (e.g., documentation-only changes).\n\n- **`known_limitations`** \u2014 Call out constraints, deferred work, or known gaps in the implementation. This includes out-of-scope items deliberately left for follow-up beads and any areas where the implementation is intentionally incomplete. Set to `\"N/A\"` if the implementation is complete as specified with no known gaps.\n\nExpected outputs:\n- Completed or blocked JSON with concise implementation summary.\n- Accurate touched files, changed files, risks, and follow-up handoff fields.\n- Populated `design_decisions`, `test_coverage_notes`, and `known_limitations` fields in every response.",
+      "captured_at": "2026-06-20T12:30:29.337476+00:00"
+    },
+    "worker_prompt_context": {
+      "bead_id": "B-b38235ca",
+      "feature_root_id": "B-b8659d27",
+      "title": "BriefCardView: Brief list row component",
+      "agent_type": "developer",
+      "description": "Create AggregatorApp/Today/BriefCardView.swift. Glass list row for a Brief: date line (.caption, .secondary) using DateDisplay.mediumDate(brief.periodStart) with a 'Today \u00b7 ' prefix for the most-recent card; topic count with correct pluralisation; headline (.headline, up to 2 lines, falls back to 'Daily Brief'). Apply .listRowBackground(Color.clear) and semantic colors only \u2014 no hardcoded hex.",
+      "status": "in_progress",
+      "acceptance_criteria": [
+        "BriefCardView.swift exists and compiles",
+        "Shows date line, topic count (pluralised), and headline with 2-line cap",
+        "Most-recent card displays 'Today \u00b7 ' prefix on the date line",
+        "Uses .listRowBackground(Color.clear) and only semantic SwiftUI colors"
+      ],
+      "dependencies": [],
+      "linked_docs": [],
+      "execution_branch_name": "feature/b-b8659d27",
+      "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-b8659d27",
+      "expected_files": [
+        "AggregatorApp/Today/BriefCardView.swift"
+      ],
+      "expected_globs": [],
+      "touched_files": [],
+      "conflict_risks": "",
+      "handoff_summary": {
+        "completed": "",
+        "remaining": "",
+        "risks": "",
+        "verdict": "",
+        "findings_count": 0,
+        "requires_followup": false,
+        "changed_files": [],
+        "updated_docs": [],
+        "next_action": "",
+        "next_agent": "",
+        "block_reason": "",
+        "expected_files": [],
+        "expected_globs": [],
+        "touched_files": [],
+        "conflict_risks": "",
+        "design_decisions": "",
+        "test_coverage_notes": "",
+        "known_limitations": ""
+      }
+    },
+    "last_agent_result": {
+      "outcome": "completed",
+      "summary": "Created AggregatorApp/Today/BriefCardView.swift \u2014 a glass list-row component for a Brief. The view shows a date line (caption, secondary) with optional \"Today \u00b7 \" prefix, headline (headline, 2-line cap, fallback \"Daily Brief\"), and pluralised topic count. Uses .listRowBackground(Color.clear) and only semantic SwiftUI colors. Build passes cleanly.",
+      "verdict": "approved",
+      "findings_count": 0,
+      "requires_followup": false,
+      "next_agent": "tester",
+      "block_reason": ""
+    },
+    "telemetry": {
+      "cost_usd": 0.28555719999999996,
+      "duration_ms": 108688,
+      "duration_api_ms": 79735,
+      "num_turns": 15,
+      "input_tokens": 12,
+      "output_tokens": 4231,
+      "cache_creation_tokens": 22099,
+      "cache_read_tokens": 287944,
+      "stop_reason": "end_turn",
+      "session_id": "b76912be-aec1-4c62-86cb-432db09bd7b1",
+      "permission_denials": [],
+      "prompt_chars": 9076,
+      "prompt_lines": 171,
+      "source": "provider",
+      "attempt": 1
+    },
+    "telemetry_history": [
+      {
+        "cost_usd": 0.28555719999999996,
+        "duration_ms": 108688,
+        "duration_api_ms": 79735,
+        "num_turns": 15,
+        "input_tokens": 12,
+        "output_tokens": 4231,
+        "cache_creation_tokens": 22099,
+        "cache_read_tokens": 287944,
+        "stop_reason": "end_turn",
+        "session_id": "b76912be-aec1-4c62-86cb-432db09bd7b1",
+        "permission_denials": [],
+        "prompt_chars": 9076,
+        "prompt_lines": 171,
+        "source": "provider",
+        "attempt": 1
+      }
+    ],
+    "last_commit": "3e308c6a78697ab5263c090ff0ec37b617f32ee9"
+  },
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

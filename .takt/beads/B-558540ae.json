@@ -1,0 +1,233 @@
+{
+  "bead_id": "B-558540ae",
+  "title": "BriefDetailView: Extract single-brief reader from TodayView",
+  "agent_type": "developer",
+  "description": "Create AggregatorApp/Today/BriefDetailView.swift by extracting the existing brief-rendering code from TodayView. The view takes a single brief: Brief parameter and is a pure presentation view with no network calls \u2014 header (headline + date/model), intro paragraphs via ParagraphText, topics via BriefTopicView, and the external-ref Safari sheet. Remove the extracted rendering from TodayView so it no longer duplicates the logic.",
+  "status": "done",
+  "bead_type": "task",
+  "parent_id": "B-b8659d27",
+  "dependencies": [],
+  "acceptance_criteria": [
+    "BriefDetailView.swift exists and compiles",
+    "Accepts brief: Brief; renders headline, date/model header, intro, topics, and Safari sheet for refs",
+    "Contains no URLSession or async fetch calls",
+    "TodayView no longer contains the brief-rendering block that was moved"
+  ],
+  "linked_docs": [],
+  "feature_root_id": "B-b8659d27",
+  "execution_branch_name": "feature/b-b8659d27",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-b8659d27",
+  "expected_files": [
+    "AggregatorApp/Today/BriefDetailView.swift",
+    "AggregatorApp/Today/TodayView.swift"
+  ],
+  "expected_globs": [],
+  "touched_files": [
+    "AggregatorApp/Today/BriefDetailView.swift",
+    "AggregatorApp/Today/TodayView.swift"
+  ],
+  "changed_files": [
+    "AggregatorApp/Today/BriefDetailView.swift",
+    "AggregatorApp/Today/TodayView.swift"
+  ],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "Created AggregatorApp/Today/BriefDetailView.swift with: Brief parameter, safariURL state, ScrollView with headline/caption/intro/topics, Safari sheet, and optional onRefresh callback for pull-to-refresh. Removed briefContent ViewBuilder, captionString helper, safariURL state, and the sheet modifier from TodayView. TodayView's .loaded case now renders BriefDetailView(brief: brief) { await fetchBrief() }. Build verified: BUILD SUCCEEDED.",
+    "remaining": "None \u2014 all acceptance criteria met.",
+    "risks": "None identified. The Safari sheet and pull-to-refresh both move into BriefDetailView cleanly via local state and an optional callback respectively.",
+    "verdict": "approved",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [
+      "AggregatorApp/Today/BriefDetailView.swift",
+      "AggregatorApp/Today/TodayView.swift"
+    ],
+    "updated_docs": [],
+    "next_action": "Tester agent can verify: (1) BriefDetailView renders headline, caption, intro, and topics correctly; (2) Safari sheet opens on external ref tap; (3) pull-to-refresh triggers fetchBrief on TodayView; (4) TodayView has no duplicate brief-rendering logic.",
+    "next_agent": "tester",
+    "block_reason": "",
+    "expected_files": [
+      "AggregatorApp/Today/BriefDetailView.swift",
+      "AggregatorApp/Today/TodayView.swift"
+    ],
+    "expected_globs": [],
+    "touched_files": [
+      "AggregatorApp/Today/BriefDetailView.swift",
+      "AggregatorApp/Today/TodayView.swift"
+    ],
+    "conflict_risks": "None \u2014 BriefDetailView.swift is a new file; TodayView changes are self-contained removals with a single delegation call added.",
+    "design_decisions": "Pull-to-refresh callback: BriefDetailView accepts an optional `onRefresh: (() async -> Void)?` parameter rather than having no refresh at all. This keeps BriefDetailView as a pure presentation view (no URLSession) while preserving the existing pull-to-refresh UX. TodayView passes `{ await fetchBrief() }` as the callback. The Safari sheet moved entirely into BriefDetailView with its own `@State private var safariURL` \u2014 this is appropriate since the sheet is triggered by taps within BriefDetailView and requires no communication back to TodayView.",
+    "test_coverage_notes": "Verify: (1) headline displays brief.headline, falls back to \"Daily Brief\" when nil; (2) caption shows mediumDate + model separated by \" \u00b7 \", or just date when model is nil; (3) intro section only renders when brief.intro is non-nil and non-empty; (4) topics render sorted by position; (5) external ref tap opens SafariView sheet; (6) pull-to-refresh on the scroll view calls back to TodayView and triggers a re-fetch (phase transitions to .loading then back to .loaded); (7) TodayView contains no briefContent or captionString methods.",
+    "known_limitations": "N/A"
+  },
+  "block_reason": "",
+  "conflict_risks": "None \u2014 BriefDetailView.swift is a new file; TodayView changes are self-contained removals with a single delegation call added.",
+  "branch_name": "feature/b-b8659d27",
+  "worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-b8659d27",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-20T12:30:06.973721+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-20T12:30:29.413569+00:00",
+      "event": "skills_loaded",
+      "agent_type": "developer",
+      "summary": "Loaded 7 skill(s) for isolated execution",
+      "details": {
+        "loaded_skills": [
+          "core/base-orchestrator",
+          "role/developer-implementation",
+          "capability/code-edit",
+          "task/corrective-implementation",
+          "task/refactor-safe",
+          "task/migration",
+          "memory"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-06-20T12:30:29.413586+00:00",
+      "event": "started",
+      "agent_type": "developer",
+      "summary": "Worker started",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-20T12:30:29.414756+00:00",
+      "event": "guardrails_applied",
+      "agent_type": "developer",
+      "summary": "Applied guardrails from .takt/agent-runs/B-558540ae/repo/templates/agents/developer.md",
+      "details": {
+        "template_path": ".takt/agent-runs/B-558540ae/repo/templates/agents/developer.md"
+      }
+    },
+    {
+      "timestamp": "2026-06-20T12:33:39.978046+00:00",
+      "event": "completed",
+      "agent_type": "developer",
+      "summary": "Extracted brief-rendering code from TodayView into a new BriefDetailView.swift. TodayView now delegates to BriefDetailView for all presentation, retaining only fetch logic and phase management.",
+      "details": {}
+    }
+  ],
+  "metadata": {
+    "execution_root": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-558540ae",
+    "workspace_repo_path": "repo",
+    "loaded_skills": [
+      "core/base-orchestrator",
+      "role/developer-implementation",
+      "capability/code-edit",
+      "task/corrective-implementation",
+      "task/refactor-safe",
+      "task/migration",
+      "memory"
+    ],
+    "skill_bundle_hash": "ecae5633083d1bbec41a6e5ec6ea05bbab117f60499c19b2ed76dbbe3e1aec7c",
+    "isolated_home": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-558540ae/home",
+    "runner_backend": "claude",
+    "guardrails": {
+      "agent_type": "developer",
+      "template_path": ".takt/agent-runs/B-558540ae/repo/templates/agents/developer.md",
+      "template_text": "# Developer Guardrails\n\nPrimary responsibility: Implement only the assigned bead inside the existing architecture and file scope.\n\n## Corrective bead scope\n\nIf your `bead_id` ends in `-corrective` or `-corrective-<N>` (e.g. `B-abc12345-corrective`, `B-abc12345-test-corrective-2`), you are running as a CORRECTIVE bead. Your scope is **strictly limited to fixing the specific failure that blocked the parent bead**. Do not:\n\n- Add unrelated improvements, refactors, or cleanup, even if you notice them\n- Reapply previously-reverted changes (the operator reverted them for a reason)\n- Expand the surface area beyond what is needed to unblock the parent\n- Touch files outside what the parent bead's `expected_files` / `expected_globs` covered, unless the failure is genuinely in another file and there is no smaller fix\n\nIf you notice an unrelated issue while fixing the corrective scope: **file a separate bead** via `takt bead create` describing what you saw, but do not fix it in this corrective. The operator will prioritize and dispatch.\n\nWhen in doubt about scope: prefer the smallest possible fix. The reviewer of this corrective will check that the scope was respected.\n\nAllowed actions:\n- Modify code, configuration, or local docs required to complete the assigned bead.\n- Create sub-beads for discovered follow-up work that should be handled separately.\n- Verify your `Swift` changes compile and import correctly with a quick syntax check: ``.\n\nDisallowed actions:\n- Run any test suite \u2014 not even a targeted `` run or any subset. Test execution is exclusively the tester agent's responsibility. Running tests wastes the agent budget and delays the pipeline.\n- Redesign unrelated architecture or broaden scope beyond the assigned bead.\n- Perform final review signoff in place of a review agent.\n- Silently absorb unrelated test, documentation, or planning work that should be handed off.\n\n## Memory\n\n**Read memory at bead start.** Before touching any code, run three searches using `$TAKT_CMD` (injected by the orchestrator):\n\n```bash\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace global\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace feature:<feature_root_id>\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace specs\n```\n\nTreat results as ambient context \u2014 apply relevant entries; skip entries that don't apply.\n\n**Write to memory when you discover reusable project knowledge** \u2014 something that would have changed your approach if you had known it upfront, and is not already in CLAUDE.md or the guardrails.\n\n```bash\n$TAKT_CMD memory add \"<concise fact>\" --namespace global               # project-wide knowledge\n$TAKT_CMD memory add \"<discovery>\" --namespace feature:<feature_root_id>  # feature-scoped\n```\n\nRequired Handoff Fields:\n\nEvery developer bead **must** populate the following three fields in its output JSON. Reviewers and tester agents rely on these fields to scope their work without additional back-and-forth turns. Use `\"N/A\"` only when a field is genuinely inapplicable (e.g., a trivial rename with no design trade-offs); do not leave fields blank.\n\n- **`design_decisions`** \u2014 Document non-obvious architectural or implementation choices made during this bead. Include alternatives considered and why the chosen approach was preferred. Reviewers use this to evaluate correctness without re-deriving intent. Set to `\"N/A\"` only if the change was purely mechanical with no meaningful trade-offs.\n\n- **`test_coverage_notes`** \u2014 Describe what the tester agent should verify: new code paths, edge cases introduced, regression risks, and any known untested scenarios left to the tester. Set to `\"N/A\"` only if the bead touched no executable code paths (e.g., documentation-only changes).\n\n- **`known_limitations`** \u2014 Call out constraints, deferred work, or known gaps in the implementation. This includes out-of-scope items deliberately left for follow-up beads and any areas where the implementation is intentionally incomplete. Set to `\"N/A\"` if the implementation is complete as specified with no known gaps.\n\nExpected outputs:\n- Completed or blocked JSON with concise implementation summary.\n- Accurate touched files, changed files, risks, and follow-up handoff fields.\n- Populated `design_decisions`, `test_coverage_notes`, and `known_limitations` fields in every response.",
+      "captured_at": "2026-06-20T12:30:29.414750+00:00"
+    },
+    "worker_prompt_context": {
+      "bead_id": "B-558540ae",
+      "feature_root_id": "B-b8659d27",
+      "title": "BriefDetailView: Extract single-brief reader from TodayView",
+      "agent_type": "developer",
+      "description": "Create AggregatorApp/Today/BriefDetailView.swift by extracting the existing brief-rendering code from TodayView. The view takes a single brief: Brief parameter and is a pure presentation view with no network calls \u2014 header (headline + date/model), intro paragraphs via ParagraphText, topics via BriefTopicView, and the external-ref Safari sheet. Remove the extracted rendering from TodayView so it no longer duplicates the logic.",
+      "status": "in_progress",
+      "acceptance_criteria": [
+        "BriefDetailView.swift exists and compiles",
+        "Accepts brief: Brief; renders headline, date/model header, intro, topics, and Safari sheet for refs",
+        "Contains no URLSession or async fetch calls",
+        "TodayView no longer contains the brief-rendering block that was moved"
+      ],
+      "dependencies": [],
+      "linked_docs": [],
+      "execution_branch_name": "feature/b-b8659d27",
+      "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-b8659d27",
+      "expected_files": [
+        "AggregatorApp/Today/BriefDetailView.swift",
+        "AggregatorApp/Today/TodayView.swift"
+      ],
+      "expected_globs": [],
+      "touched_files": [],
+      "conflict_risks": "",
+      "handoff_summary": {
+        "completed": "",
+        "remaining": "",
+        "risks": "",
+        "verdict": "",
+        "findings_count": 0,
+        "requires_followup": false,
+        "changed_files": [],
+        "updated_docs": [],
+        "next_action": "",
+        "next_agent": "",
+        "block_reason": "",
+        "expected_files": [],
+        "expected_globs": [],
+        "touched_files": [],
+        "conflict_risks": "",
+        "design_decisions": "",
+        "test_coverage_notes": "",
+        "known_limitations": ""
+      }
+    },
+    "last_agent_result": {
+      "outcome": "completed",
+      "summary": "Extracted brief-rendering code from TodayView into a new BriefDetailView.swift. TodayView now delegates to BriefDetailView for all presentation, retaining only fetch logic and phase management.",
+      "verdict": "approved",
+      "findings_count": 0,
+      "requires_followup": false,
+      "next_agent": "tester",
+      "block_reason": ""
+    },
+    "telemetry": {
+      "cost_usd": 0.3947258,
+      "duration_ms": 190410,
+      "duration_api_ms": 110733,
+      "num_turns": 19,
+      "input_tokens": 20,
+      "output_tokens": 6240,
+      "cache_creation_tokens": 24403,
+      "cache_read_tokens": 505196,
+      "stop_reason": "end_turn",
+      "session_id": "2e44db35-d4db-4831-a07a-5b40b9440fbe",
+      "permission_denials": [],
+      "prompt_chars": 9177,
+      "prompt_lines": 172,
+      "source": "provider",
+      "attempt": 1
+    },
+    "telemetry_history": [
+      {
+        "cost_usd": 0.3947258,
+        "duration_ms": 190410,
+        "duration_api_ms": 110733,
+        "num_turns": 19,
+        "input_tokens": 20,
+        "output_tokens": 6240,
+        "cache_creation_tokens": 24403,
+        "cache_read_tokens": 505196,
+        "stop_reason": "end_turn",
+        "session_id": "2e44db35-d4db-4831-a07a-5b40b9440fbe",
+        "permission_denials": [],
+        "prompt_chars": 9177,
+        "prompt_lines": 172,
+        "source": "provider",
+        "attempt": 1
+      }
+    ]
+  },
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}
