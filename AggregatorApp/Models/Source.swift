@@ -14,6 +14,14 @@ struct Source: Codable, Identifiable {
         case hasPriority = "has_priority"
     }
 
+    init(id: Int, name: String, feedURL: String, hasNew: Bool, hasPriority: Bool) {
+        self.id = id
+        self.name = name
+        self.feedURL = feedURL
+        self.hasNew = hasNew
+        self.hasPriority = hasPriority
+    }
+
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(Int.self, forKey: .id)
