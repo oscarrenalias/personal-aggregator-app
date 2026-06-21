@@ -13,28 +13,17 @@ struct ArticleContentView: View {
     /// Invoked by the "Open original" fallback shown when there is no reader text.
     var onOpenOriginal: (() -> Void)? = nil
 
+    private var hasHero: Bool {
+        guard let s = article.imageURL else { return false }
+        return URL(string: s) != nil
+    }
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 0) {
                 // (1) Hero image — renders when imageURL is present.
-                // The size is dictated by a fixed-size container and the image is
-                // a clipped overlay, so `scaledToFill` cannot overflow and force
-                // the content column wider than the screen (which would crop text).
-                if let imageURLString = article.imageURL, let imageURL = URL(string: imageURLString) {
-                    // Rectangle (not Color) for the base: Color ignores the safe
-                    // area and would push the hero up under the nav bar.
-                    Rectangle()
-                        .fill(Color.secondary.opacity(0.15))
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 240)
-                        .overlay {
-                            AsyncImage(url: imageURL) { phase in
-                                if case .success(let image) = phase {
-                                    image.resizable().scaledToFill()
-                                }
-                            }
-                        }
-                        .clipped()
+                if hasHero, let imageURLString = article.imageURL {
+                    HeroImageView(urlString: imageURLString, height: 240)
                 }
 
                 VStack(alignment: .leading, spacing: 14) {

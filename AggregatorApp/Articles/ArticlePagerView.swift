@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 /// Horizontally paged reader over an already-loaded slice of articles.
 ///
@@ -8,13 +9,20 @@ import SwiftUI
 /// avoids the duplicate toolbar that appears when each paged view contributes
 /// its own. Read state syncs through the shared `ArticleReadStore`; the visible
 /// article is auto-marked read on the backend when it becomes selected.
+///
+/// Paging uses a horizontal `ScrollView` with `.scrollTargetBehavior(.paging)`
+/// rather than a `.page`-style `TabView`: the TabView (a `UIPageViewController`)
+/// insets its pages below the status bar, which left a strip above the hero. A
+/// plain ScrollView lets each page's hero bleed to the very top like the
+/// standalone reader does.
 struct ArticlePagerView: View {
     let articles: [Article]
     let startIndex: Int
 
     @Environment(CredentialsStore.self) private var credentialsStore
     @Environment(ArticleReadStore.self) private var readStore
-    @State private var selectedIndex: Int
+    // Bound to the scroll position; identifies the currently-centered page.
+    @State private var currentID: Int?
     @State private var savedOverrides: [Int: Bool] = [:]
     // Single item-driven Safari sheet for "open original" / "open comments".
     @State private var safariURL: SafariURL?
@@ -23,7 +31,7 @@ struct ArticlePagerView: View {
     init(articles: [Article], startIndex: Int) {
         self.articles = articles
         self.startIndex = startIndex
-        self._selectedIndex = State(initialValue: startIndex)
+        self._currentID = State(initialValue: startIndex)
     }
 
     private var apiClient: APIClient { APIClient(store: credentialsStore) }
@@ -31,7 +39,7 @@ struct ArticlePagerView: View {
     /// Currently-visible article. `articles` is always non-empty here (the pager
     /// is only pushed from a tapped list row); the index is clamped defensively.
     private var current: Article {
-        let i = min(max(selectedIndex, 0), articles.count - 1)
+        let i = min(max(currentID ?? startIndex, 0), articles.count - 1)
         return articles[i]
     }
 
@@ -44,22 +52,43 @@ struct ArticlePagerView: View {
     private func isRead(_ a: Article) -> Bool { readStore.isRead(id: a.id, fetched: a.isRead) }
     private func isSaved(_ a: Article) -> Bool { savedOverrides[a.id] ?? a.isSaved }
 
+    /// Bleed under the bars only when the page has a hero image; otherwise the
+    /// title would be hidden behind the floating toolbar. Mirrors the standalone
+    /// reader (`ArticleDetailView`) — letting the system inset hero-less content
+    /// below the bar instead of fighting it with a hand-computed spacer.
+    private func bleedRegions(_ a: Article) -> SafeAreaRegions {
+        (a.imageURL.flatMap { URL(string: $0) } != nil) ? .all : []
+    }
+
     var body: some View {
-        TabView(selection: $selectedIndex) {
-            ForEach(Array(articles.enumerated()), id: \.offset) { index, article in
-                ArticleContentView(article: article, onOpenOriginal: { openOriginal(article) })
-                    .tag(index)
+        ScrollView(.horizontal) {
+            LazyHStack(spacing: 0) {
+                ForEach(Array(articles.enumerated()), id: \.offset) { index, article in
+                    ArticleContentView(
+                        article: article,
+                        onOpenOriginal: { openOriginal(article) }
+                    )
+                    .ignoresSafeArea(bleedRegions(article), edges: .top)
+                    // Size only the paging axis. Forcing `.vertical` too pins each
+                    // page to the scroll view's full (bleeding) height, which
+                    // collapses the page's top safe-area inset and clips the title.
+                    .containerRelativeFrame(.horizontal)
+                }
             }
+            .scrollTargetLayout()
         }
-        .tabViewStyle(.page(indexDisplayMode: .never))
-        .navigationTitle(current.title ?? "Article")
+        .scrollTargetBehavior(.paging)
+        .scrollPosition(id: $currentID)
+        .scrollIndicators(.hidden)
+        // No navigationTitle: the title is shown once, below the hero in the
+        // content, rather than duplicated as an inline title over the image.
         .navigationBarTitleDisplayMode(.inline)
         .toolbar { readerToolbar }
         .sheet(item: $safariURL) { item in
             SafariView(url: item.url)
         }
         .task { await autoMarkRead(current) }
-        .onChange(of: selectedIndex) { _, _ in
+        .onChange(of: currentID) { _, _ in
             Task { await autoMarkRead(current) }
         }
     }

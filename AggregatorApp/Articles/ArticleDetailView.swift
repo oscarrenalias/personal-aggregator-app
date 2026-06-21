@@ -17,6 +17,12 @@ struct ArticleDetailView: View {
         APIClient(store: credentialsStore)
     }
 
+    /// Bleed under the bars only when the article has a hero image; otherwise the
+    /// title would be hidden behind the bar.
+    private func bleedRegions(_ a: Article) -> SafeAreaRegions {
+        (a.imageURL.flatMap { URL(string: $0) } != nil) ? .all : []
+    }
+
     private var shareURL: URL {
         guard let a = article, let urlString = a.url, let url = URL(string: urlString) else {
             return URL(string: "about:blank")!
@@ -30,12 +36,16 @@ struct ArticleDetailView: View {
                 errorView(error)
             } else if let article {
                 ArticleContentView(article: article, onOpenOriginal: { safariURL = SafariURL(article.url) })
+                    // Bleed the hero under the bars; with no hero, ignore nothing
+                    // so the title keeps its normal inset below the bar.
+                    .ignoresSafeArea(bleedRegions(article), edges: .top)
             } else {
                 ProgressView()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
         }
-        .navigationTitle(article?.title ?? "Article")
+        // No navigationTitle: the title is shown once, below the hero in the
+        // content, rather than duplicated as an inline title over the image.
         .navigationBarTitleDisplayMode(.inline)
         .toolbar { readerToolbar }
         .sheet(item: $safariURL) { item in

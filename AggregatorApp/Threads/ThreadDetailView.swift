@@ -26,6 +26,11 @@ struct ThreadDetailView: View {
         members.filter { $0.suppressed }
     }
 
+    private func hasHero(_ thread: Thread) -> Bool {
+        guard let s = thread.imageURL else { return false }
+        return URL(string: s) != nil
+    }
+
     var body: some View {
         Group {
             if let error = loadError {
@@ -42,7 +47,9 @@ struct ThreadDetailView: View {
                 )
             }
         }
-        .navigationTitle(thread?.representativeTitle ?? "Thread")
+        // No navigationTitle: the title is shown once, prominently, below the
+        // hero in the content. A redundant inline title would also render black
+        // over the hero image, which reads poorly.
         .navigationBarTitleDisplayMode(.inline)
         .task {
             await loadInitial()
@@ -86,28 +93,17 @@ struct ThreadDetailView: View {
                 .padding(.vertical)
             }
         }
+        // Bleed under the bars only when there's a hero; otherwise let the system
+        // inset the title below the floating toolbar (matches the article reader).
+        .ignoresSafeArea(hasHero(thread) ? .all : [], edges: .top)
     }
 
     // MARK: - Hero image
 
     @ViewBuilder
     private func heroSection(_ thread: Thread) -> some View {
-        if let imageURLString = thread.imageURL, let imageURL = URL(string: imageURLString) {
-            // Fixed-size container + clipped image overlay so scaledToFill cannot
-            // overflow and force the content column wider than the screen. Rectangle
-            // (not Color) so the hero respects the safe area (Color slides under the bar).
-            Rectangle()
-                .fill(Color.secondary.opacity(0.15))
-                .frame(maxWidth: .infinity)
-                .frame(height: 220)
-                .overlay {
-                    AsyncImage(url: imageURL) { phase in
-                        if case .success(let image) = phase {
-                            image.resizable().scaledToFill()
-                        }
-                    }
-                }
-                .clipped()
+        if hasHero(thread), let imageURLString = thread.imageURL {
+            HeroImageView(urlString: imageURLString, height: 220)
                 .accessibilityHidden(true)
         }
     }
