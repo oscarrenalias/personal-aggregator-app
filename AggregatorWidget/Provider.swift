@@ -163,17 +163,19 @@ struct AggregatorRadarProvider: AppIntentTimelineProvider {
 
     private func fetchItems(client: APIClient, source: ContentSource) async throws -> [WidgetContentItem] {
         switch source {
-        case .latestThreads:
+        case .latestThreads, .latestThreadsRecent:
+            let sort: ThreadSort = (source == .latestThreadsRecent) ? .recent : .importance
             let resp: PaginatedResponse<Thread> = try await client.get("/threads", query: [
-                URLQueryItem(name: "sort", value: ThreadSort.importance.rawValue),
+                URLQueryItem(name: "sort", value: sort.rawValue),
                 URLQueryItem(name: "show_dismissed", value: "false"),
                 URLQueryItem(name: "limit", value: "5")
             ])
             return Array(resp.items.prefix(5)).map { .thread($0) }
-        case .unreadImportant:
+        case .unreadImportant, .unreadImportantRecent:
+            let sort: ArticleSort = (source == .unreadImportantRecent) ? .recent : .importance
             let resp = try await client.getArticles(
                 feed: .important,
-                sort: .importance,
+                sort: sort,
                 unreadOnly: true,
                 limit: 5
             )
