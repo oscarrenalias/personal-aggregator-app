@@ -15,9 +15,39 @@ enum WidgetState {
 
 // MARK: - Widget Content Item
 
-enum WidgetContentItem {
+enum WidgetContentItem: Codable {
     case thread(Thread)
     case article(Article)
+
+    private enum CodingKeys: String, CodingKey { case type, thread, article }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        switch self {
+        case .thread(let t):
+            try container.encode("thread", forKey: .type)
+            try container.encode(t, forKey: .thread)
+        case .article(let a):
+            try container.encode("article", forKey: .type)
+            try container.encode(a, forKey: .article)
+        }
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let type = try container.decode(String.self, forKey: .type)
+        switch type {
+        case "thread":
+            self = .thread(try container.decode(Thread.self, forKey: .thread))
+        case "article":
+            self = .article(try container.decode(Article.self, forKey: .article))
+        default:
+            throw DecodingError.dataCorruptedError(
+                forKey: .type, in: container,
+                debugDescription: "Unknown WidgetContentItem type: \(type)"
+            )
+        }
+    }
 }
 
 // MARK: - Widget Entry
@@ -51,11 +81,13 @@ extension Thread {
 
 // MARK: - Cached Entry Data
 
-/// Minimal metadata persisted after a successful timeline fetch so entries can be
-/// reconstructed (with cached hero images) when a subsequent fetch fails.
+/// Metadata persisted after a successful timeline fetch so entries can be
+/// reconstructed when a subsequent fetch fails. Stores the full content item
+/// so offline entries render title, source, and date instead of a generic message.
 private struct CachedEntryData: Codable {
     let itemId: String
     let deepLinkURL: String?
+    let contentItem: WidgetContentItem?
 }
 
 // MARK: - Last Good Cache
@@ -194,7 +226,7 @@ struct AggregatorRadarProvider: AppIntentTimelineProvider {
                 widgetState: .loaded,
                 isPlaceholder: false
             ))
-            toCache.append(CachedEntryData(itemId: itemId, deepLinkURL: deepLink?.absoluteString))
+            toCache.append(CachedEntryData(itemId: itemId, deepLinkURL: deepLink?.absoluteString, contentItem: item))
         }
 
         WidgetImageCache.prune(retaining: Set(toCache.map(\.itemId)))
@@ -211,7 +243,7 @@ struct AggregatorRadarProvider: AppIntentTimelineProvider {
             let entries: [WidgetEntry] = cached.prefix(5).enumerated().map { i, data in
                 WidgetEntry(
                     date: now.addingTimeInterval(Double(i) * 180),
-                    contentItem: nil,
+                    contentItem: data.contentItem,
                     heroImage: WidgetImageCache.read(itemId: data.itemId, targetSize: targetSize),
                     deepLinkURL: data.deepLinkURL.flatMap { URL(string: $0) },
                     widgetState: .offline,

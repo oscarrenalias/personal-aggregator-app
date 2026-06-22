@@ -1,6 +1,6 @@
 import Foundation
 
-struct Article: Decodable, Identifiable {
+struct Article: Codable, Identifiable {
     let id: Int
     let title: String?
     let url: String?
@@ -35,6 +35,29 @@ struct Article: Decodable, Identifiable {
         case wordCount = "word_count"
         case imageURL = "image_url"
         case commentsURL = "comments_url"
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encodeIfPresent(title, forKey: .title)
+        try container.encodeIfPresent(url, forKey: .url)
+        try container.encode(sourceId, forKey: .sourceId)
+        try container.encodeIfPresent(sourceName, forKey: .sourceName)
+        try container.encodeIfPresent(feedPublishedAt, forKey: .feedPublishedAt)
+        try container.encodeIfPresent(summary, forKey: .summary)
+        try container.encodeIfPresent(cleanText, forKey: .cleanText)
+        try container.encodeIfPresent(importanceScore, forKey: .importanceScore)
+        try container.encodeIfPresent(importanceReason, forKey: .importanceReason)
+        try container.encode(topics, forKey: .topics)
+        try container.encode(categories, forKey: .categories)
+        try container.encode(isRead, forKey: .isRead)
+        try container.encode(isSaved, forKey: .isSaved)
+        try container.encodeIfPresent(author, forKey: .author)
+        try container.encodeIfPresent(wordCount, forKey: .wordCount)
+        try container.encodeIfPresent(language, forKey: .language)
+        try container.encodeIfPresent(imageURL, forKey: .imageURL)
+        try container.encodeIfPresent(commentsURL, forKey: .commentsURL)
     }
 
     init(from decoder: Decoder) throws {
