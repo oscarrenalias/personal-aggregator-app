@@ -12,7 +12,7 @@ struct AppRoot: View {
             Tab("Sources", systemImage: "antenna.radiowaves.left.and.right", value: "sources") {
                 SourcesView()
             }
-            Tab("Today", systemImage: "sparkles", value: "today") {
+            Tab("Today", systemImage: "calendar", value: "today") {
                 TodayView()
             }
             Tab("Settings", systemImage: "gearshape", value: "settings") {
