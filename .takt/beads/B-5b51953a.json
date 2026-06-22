@@ -1,0 +1,71 @@
+{
+  "bead_id": "B-5b51953a",
+  "title": "Add Saved NavigationLink to SourcesView Feeds section",
+  "agent_type": "developer",
+  "description": "In SourcesView.swift, append a third NavigationLink to the existing Feeds Section after the Unread link (~line 47). Destination: ArticleListView(feed: .saved). Label: \"Saved\" with systemImage \"bookmark\". Attach .accessibilityLabel(\"Saved articles\") and .listRowBackground(Color.clear) to match the sibling rows. No other SourcesView changes.",
+  "status": "ready",
+  "bead_type": "task",
+  "parent_id": "B-c2456509",
+  "dependencies": [
+    "B-8a065d5e"
+  ],
+  "acceptance_criteria": [
+    "Feeds section shows Important, Unread, Saved \u2014 in that order",
+    "Saved row displays bookmark icon and 'Saved' label",
+    "Tapping Saved navigates to ArticleListView(feed: .saved)",
+    "accessibilityLabel is set; listRowBackground is Color.clear",
+    "No hardcoded colors introduced"
+  ],
+  "linked_docs": [
+    "specs/drafts/saved-articles-feed.md"
+  ],
+  "feature_root_id": "B-c2456509",
+  "execution_branch_name": "feature/b-c2456509",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-c2456509",
+  "expected_files": [
+    "AggregatorApp/Sources/SourcesView.swift"
+  ],
+  "expected_globs": [],
+  "touched_files": [],
+  "changed_files": [],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "",
+    "remaining": "",
+    "risks": "",
+    "verdict": "",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [],
+    "updated_docs": [],
+    "next_action": "",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [],
+    "expected_globs": [],
+    "touched_files": [],
+    "conflict_risks": "",
+    "design_decisions": "",
+    "test_coverage_notes": "",
+    "known_limitations": ""
+  },
+  "block_reason": "",
+  "conflict_risks": "",
+  "branch_name": "",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-22T08:23:27.995688+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    }
+  ],
+  "metadata": {},
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

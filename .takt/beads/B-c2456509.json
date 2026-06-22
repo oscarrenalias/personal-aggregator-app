@@ -1,0 +1,61 @@
+{
+  "bead_id": "B-c2456509",
+  "title": "Saved Articles Feed",
+  "agent_type": "planner",
+  "description": "Non-runnable execution root for spec-c142424c. Coordinates the three small developer changes (ArticleFeed enum, APIClient query mapping, SourcesView row) plus shared testing, documentation, and review.",
+  "status": "done",
+  "bead_type": "feature",
+  "parent_id": "B-4ac8a39c",
+  "dependencies": [],
+  "acceptance_criteria": [],
+  "linked_docs": [
+    "specs/drafts/saved-articles-feed.md"
+  ],
+  "feature_root_id": "B-c2456509",
+  "execution_branch_name": "feature/b-c2456509",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-c2456509",
+  "expected_files": [],
+  "expected_globs": [],
+  "touched_files": [],
+  "changed_files": [],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "",
+    "remaining": "",
+    "risks": "",
+    "verdict": "",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [],
+    "updated_docs": [],
+    "next_action": "",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [],
+    "expected_globs": [],
+    "touched_files": [],
+    "conflict_risks": "",
+    "design_decisions": "",
+    "test_coverage_notes": "",
+    "known_limitations": ""
+  },
+  "block_reason": "",
+  "conflict_risks": "",
+  "branch_name": "",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-22T08:23:27.970086+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    }
+  ],
+  "metadata": {},
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}
