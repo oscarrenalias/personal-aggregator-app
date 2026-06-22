@@ -52,6 +52,7 @@ targets:
       - path: AggregatorApp/Common/DateDisplay.swift
       - path: AggregatorApp/Common/Error+Cancellation.swift
       - path: AggregatorApp/Models
+      - path: AggregatorApp/Articles/ArticleFeed.swift
     dependencies:
       - sdk: WidgetKit.framework
       - sdk: SwiftUI.framework
