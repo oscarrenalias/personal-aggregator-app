@@ -1,0 +1,71 @@
+{
+  "bead_id": "B-a94d144b",
+  "title": "APIClient: add searchArticles method",
+  "agent_type": "developer",
+  "description": "Add func searchArticles(q: String, limit: Int = 25, cursor: String? = nil) async throws -> PaginatedResponse<Article> to AggregatorApp/Common/APIClient.swift near the existing getArticles method (around line 153). Build the query items array with q, limit, and cursor (cursor only when non-nil). No sort, view, or unread_only params. The method must guard callers \u2014 it is a programming error (not a network error) to call it with an empty/whitespace q; add a precondition or guard + throw.",
+  "status": "ready",
+  "bead_type": "task",
+  "parent_id": "B-cc58d0d7",
+  "dependencies": [],
+  "acceptance_criteria": [
+    "searchArticles emits q and limit query items on every call",
+    "cursor query item is included only when a non-nil value is passed",
+    "No sort, view, or unread_only items appear in the query",
+    "The return type is PaginatedResponse<Article>, decoded by the existing generic get helper",
+    "Calling with empty/whitespace q produces an error (not a network request)"
+  ],
+  "linked_docs": [
+    "docs/API.md",
+    "docs/openapi.json",
+    "AggregatorApp/Common/APIClient.swift"
+  ],
+  "feature_root_id": "B-cc58d0d7",
+  "execution_branch_name": "feature/b-cc58d0d7",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-cc58d0d7",
+  "expected_files": [
+    "AggregatorApp/Common/APIClient.swift"
+  ],
+  "expected_globs": [],
+  "touched_files": [],
+  "changed_files": [],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "",
+    "remaining": "",
+    "risks": "",
+    "verdict": "",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [],
+    "updated_docs": [],
+    "next_action": "",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [],
+    "expected_globs": [],
+    "touched_files": [],
+    "conflict_risks": "",
+    "design_decisions": "",
+    "test_coverage_notes": "",
+    "known_limitations": ""
+  },
+  "block_reason": "",
+  "conflict_risks": "",
+  "branch_name": "",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-22T14:02:20.545033+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    }
+  ],
+  "metadata": {},
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

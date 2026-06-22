@@ -1,0 +1,74 @@
+{
+  "bead_id": "B-43b5a0ea",
+  "title": "Test: verify search tab end-to-end",
+  "agent_type": "tester",
+  "description": "Run the full test suite (xcodebuild test -scheme AggregatorApp -destination 'platform=iOS Simulator,name=iPhone 17,OS=latest') and verify it exits 0. Confirm all five new tests in SearchArticlesTests pass. Smoke-check the simulator: Search tab is visible at the trailing edge, typing produces debounced results, empty query shows Idle state, a result tap opens ArticlePagerView.",
+  "status": "ready",
+  "bead_type": "task",
+  "parent_id": "B-cc58d0d7",
+  "dependencies": [
+    "B-a94d144b",
+    "B-92ac61f7",
+    "B-4b54287f",
+    "B-3c225547",
+    "B-9c29c77b"
+  ],
+  "acceptance_criteria": [
+    "xcodebuild test exits 0 with no regressions in existing tests",
+    "All SearchArticlesTests pass",
+    "Search tab renders at the trailing edge of the tab bar in the simulator",
+    "Live debounce behaviour confirmed (no per-keystroke request)",
+    "Empty query shows Idle ContentUnavailableView",
+    "Result tap opens ArticlePagerView"
+  ],
+  "linked_docs": [
+    "specs/drafts/search-full-text-article-search-tab.md"
+  ],
+  "feature_root_id": "B-cc58d0d7",
+  "execution_branch_name": "feature/b-cc58d0d7",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-cc58d0d7",
+  "expected_files": [],
+  "expected_globs": [],
+  "touched_files": [],
+  "changed_files": [],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "",
+    "remaining": "",
+    "risks": "",
+    "verdict": "",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [],
+    "updated_docs": [],
+    "next_action": "",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [],
+    "expected_globs": [],
+    "touched_files": [],
+    "conflict_risks": "",
+    "design_decisions": "",
+    "test_coverage_notes": "",
+    "known_limitations": ""
+  },
+  "block_reason": "",
+  "conflict_risks": "",
+  "branch_name": "",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-22T14:02:20.554356+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    }
+  ],
+  "metadata": {},
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

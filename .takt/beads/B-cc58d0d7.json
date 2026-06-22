@@ -1,0 +1,73 @@
+{
+  "bead_id": "B-cc58d0d7",
+  "title": "Search: full-text article search tab",
+  "agent_type": "planner",
+  "description": "Shared execution root for the search tab feature. Encompasses the APIClient extension (searchArticles), a new SearchView with full state handling and debounced pagination, AppRoot tab wiring, and unit tests for query construction. No project.yml edit required \u2014 SearchView.swift falls under the existing AggregatorApp source glob, but xcodegen must be re-run after the file is created.",
+  "status": "done",
+  "bead_type": "feature",
+  "parent_id": "B-22d2208d",
+  "dependencies": [],
+  "acceptance_criteria": [
+    "xcodebuild test exits 0 including new searchArticles query-construction tests",
+    "A detached Search tab appears at the trailing edge of the tab bar (role: .search); existing tabs are unchanged",
+    "Typing performs live debounced search (~300 ms); submit runs immediately",
+    "Empty/whitespace query never hits the network and shows the Idle ContentUnavailableView",
+    "Results render with ArticleRowView; tapping opens ArticlePagerView with full read/save behaviour",
+    "Pagination uses the committed query + nextCursor; paging never mixes queries",
+    "Empty-results, Loading, Error (with Retry), and Not-Configured states all render",
+    "No sort or unread control is shown; results are in backend relevance order",
+    "No hardcoded hex colors; GlassEffectContainer wraps the list; SF Symbols only"
+  ],
+  "linked_docs": [
+    "specs/drafts/search-full-text-article-search-tab.md",
+    "docs/API.md",
+    "docs/openapi.json"
+  ],
+  "feature_root_id": "B-cc58d0d7",
+  "execution_branch_name": "feature/b-cc58d0d7",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-cc58d0d7",
+  "expected_files": [],
+  "expected_globs": [],
+  "touched_files": [],
+  "changed_files": [],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "",
+    "remaining": "",
+    "risks": "",
+    "verdict": "",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [],
+    "updated_docs": [],
+    "next_action": "",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [],
+    "expected_globs": [],
+    "touched_files": [],
+    "conflict_risks": "",
+    "design_decisions": "",
+    "test_coverage_notes": "",
+    "known_limitations": ""
+  },
+  "block_reason": "",
+  "conflict_risks": "",
+  "branch_name": "",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-22T14:02:20.538558+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    }
+  ],
+  "metadata": {},
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

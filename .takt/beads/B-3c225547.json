@@ -1,0 +1,71 @@
+{
+  "bead_id": "B-3c225547",
+  "title": "AppRoot: wire Search tab",
+  "agent_type": "developer",
+  "description": "In AggregatorApp/AppRoot.swift add a Tab(\"Search\", systemImage: \"magnifyingglass\", value: \"search\", role: .search) { SearchView() } entry to the TabView. Place it after the existing tabs \u2014 the role: .search treatment detaches it to the trailing edge regardless of insertion order. No change to selectedTab type (String) or other tabs. Run xcodegen generate after this edit to ensure SearchView.swift is included in the Xcode target.",
+  "status": "ready",
+  "bead_type": "task",
+  "parent_id": "B-cc58d0d7",
+  "dependencies": [
+    "B-4b54287f"
+  ],
+  "acceptance_criteria": [
+    "The Search tab appears at the trailing edge of the Liquid Glass tab bar",
+    "All existing tabs (Threads, Sources, Today, Settings) are unchanged",
+    "role: .search is set on the new Tab",
+    "SearchView is the content of the tab",
+    "xcodegen generate runs cleanly after the edit"
+  ],
+  "linked_docs": [
+    "AggregatorApp/AppRoot.swift"
+  ],
+  "feature_root_id": "B-cc58d0d7",
+  "execution_branch_name": "feature/b-cc58d0d7",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-cc58d0d7",
+  "expected_files": [
+    "AggregatorApp/AppRoot.swift"
+  ],
+  "expected_globs": [],
+  "touched_files": [],
+  "changed_files": [],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "",
+    "remaining": "",
+    "risks": "",
+    "verdict": "",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [],
+    "updated_docs": [],
+    "next_action": "",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [],
+    "expected_globs": [],
+    "touched_files": [],
+    "conflict_risks": "",
+    "design_decisions": "",
+    "test_coverage_notes": "",
+    "known_limitations": ""
+  },
+  "block_reason": "",
+  "conflict_risks": "",
+  "branch_name": "",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-22T14:02:20.550336+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    }
+  ],
+  "metadata": {},
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

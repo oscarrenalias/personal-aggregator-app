@@ -5,7 +5,7 @@ description: "Add full-text article search as a dedicated iOS 26 Tab(role: .sear
 dependencies: null
 priority: medium
 complexity: null
-status: draft
+status: planned
 tags:
 - articles
 - search
@@ -14,7 +14,7 @@ tags:
 scope:
   in: null
   out: null
-feature_root_id: null
+feature_root_id: B-cc58d0d7
 ---
 # Search: full-text article search tab
 

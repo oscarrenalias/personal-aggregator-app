@@ -1,0 +1,81 @@
+{
+  "bead_id": "B-03a66f7f",
+  "title": "Review: search tab feature",
+  "agent_type": "review",
+  "description": "Review the complete diff across APIClient.swift, SearchView.swift, AppRoot.swift, and SearchArticlesTests.swift. Check: no hardcoded hex colors, GlassEffectContainer present, SF Symbols used, Dynamic Type respected, all five UI states reachable, debounce guard prevents empty-query network calls, cursor pagination uses committedQuery (not live query), no sort/view/unread_only params leak into the request, accessibility labels on interactive elements.",
+  "status": "ready",
+  "bead_type": "task",
+  "parent_id": "B-cc58d0d7",
+  "dependencies": [
+    "B-a94d144b",
+    "B-92ac61f7",
+    "B-4b54287f",
+    "B-3c225547",
+    "B-9c29c77b",
+    "B-43b5a0ea",
+    "B-14a90a73"
+  ],
+  "acceptance_criteria": [
+    "No semantic or behavioral regressions identified",
+    "All UI conventions from CLAUDE.md are satisfied (Liquid Glass, SF Symbols, semantic colors, Dynamic Type)",
+    "All five required states (Idle, Loading, Empty, Error, Not Configured) confirmed present",
+    "Empty-query guard and committed-query pagination logic verified correct",
+    "No sort/view/unread_only params present in searchArticles",
+    "Accessibility labels present on interactive elements"
+  ],
+  "linked_docs": [
+    "specs/drafts/search-full-text-article-search-tab.md"
+  ],
+  "feature_root_id": "B-cc58d0d7",
+  "execution_branch_name": "feature/b-cc58d0d7",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-cc58d0d7",
+  "expected_files": [
+    "AggregatorApp/Common/APIClient.swift",
+    "AggregatorApp/Search/SearchView.swift",
+    "AggregatorApp/AppRoot.swift",
+    "AggregatorAppTests/SearchArticlesTests.swift"
+  ],
+  "expected_globs": [],
+  "touched_files": [],
+  "changed_files": [],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "",
+    "remaining": "",
+    "risks": "",
+    "verdict": "",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [],
+    "updated_docs": [],
+    "next_action": "",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [],
+    "expected_globs": [],
+    "touched_files": [],
+    "conflict_risks": "",
+    "design_decisions": "",
+    "test_coverage_notes": "",
+    "known_limitations": ""
+  },
+  "block_reason": "",
+  "conflict_risks": "",
+  "branch_name": "",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-22T14:02:20.556857+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    }
+  ],
+  "metadata": {},
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

@@ -1,0 +1,74 @@
+{
+  "bead_id": "B-4b54287f",
+  "title": "SearchView: debounced search logic and cursor pagination",
+  "agent_type": "developer",
+  "description": "Add the live-search and pagination behaviour to SearchView.swift. Implement .task(id: query): trim the query; if empty set loadPhase = .idle, clear articles; otherwise sleep ~300 ms (Task.sleep), treat CancellationError as a no-op, then call apiClient.searchArticles(q:) and populate articles + committedQuery + nextCursor. Add .onSubmit(of: .search) to bypass the debounce delay and run immediately. For pagination, on the last ArticleRowView's .onAppear fetch the next page using committedQuery + nextCursor (ensuring paging never mixes queries). Wrap each NavigationLink destination in ArticlePagerView(articles:startIndex:) matching ArticleListView:119.",
+  "status": "ready",
+  "bead_type": "task",
+  "parent_id": "B-cc58d0d7",
+  "dependencies": [
+    "B-92ac61f7"
+  ],
+  "acceptance_criteria": [
+    "Typing triggers a search after ~300 ms with no intermediate requests",
+    "Pressing the keyboard search button runs the search immediately",
+    "Empty/whitespace query clears results and shows Idle state without a network call",
+    "CancellationError from a superseded task is silently ignored",
+    "Scrolling to the last row fetches the next page with committedQuery + nextCursor",
+    "Paging appends to articles without resetting the list",
+    "Tapping a row opens ArticlePagerView with the correct startIndex"
+  ],
+  "linked_docs": [
+    "specs/drafts/search-full-text-article-search-tab.md",
+    "AggregatorApp/Articles/ArticleListView.swift"
+  ],
+  "feature_root_id": "B-cc58d0d7",
+  "execution_branch_name": "feature/b-cc58d0d7",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-cc58d0d7",
+  "expected_files": [
+    "AggregatorApp/Search/SearchView.swift"
+  ],
+  "expected_globs": [],
+  "touched_files": [],
+  "changed_files": [],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "",
+    "remaining": "",
+    "risks": "",
+    "verdict": "",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [],
+    "updated_docs": [],
+    "next_action": "",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [],
+    "expected_globs": [],
+    "touched_files": [],
+    "conflict_risks": "",
+    "design_decisions": "",
+    "test_coverage_notes": "",
+    "known_limitations": ""
+  },
+  "block_reason": "",
+  "conflict_risks": "",
+  "branch_name": "",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-22T14:02:20.548076+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    }
+  ],
+  "metadata": {},
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

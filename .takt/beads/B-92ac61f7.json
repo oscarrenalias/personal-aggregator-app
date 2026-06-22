@@ -1,0 +1,73 @@
+{
+  "bead_id": "B-92ac61f7",
+  "title": "SearchView: scaffold, navigation, and UI states",
+  "agent_type": "developer",
+  "description": "Create AggregatorApp/Search/SearchView.swift. Set up the NavigationStack with .navigationTitle(\"Search\") and .searchable(text: $query, placement: .navigationBarDrawer(displayMode: .always)). Declare @State for query, articles ([Article]), nextCursor (String?), loadPhase (enum: idle/loading/loaded/error), and committedQuery (String). Implement all five required UI states: Idle (ContentUnavailableView with magnifyingglass), Loading (ProgressView), Empty (ContentUnavailableView.search(text:)), Error (message + Retry button that re-runs the current query), and Not Configured (matching the other tabs' ContentUnavailableView). The Loaded state renders a List placeholder \u2014 actual rows and pagination come in the next bead. Wrap the List in GlassEffectContainer.",
+  "status": "ready",
+  "bead_type": "task",
+  "parent_id": "B-cc58d0d7",
+  "dependencies": [
+    "B-a94d144b"
+  ],
+  "acceptance_criteria": [
+    "File compiles cleanly as a standalone SwiftUI view",
+    "NavigationStack has .navigationTitle(\"Search\")",
+    ".searchable is attached with always-visible placement",
+    "All five state branches (Idle, Loading, Empty, Error, Not Configured) render the correct UI element",
+    "Retry button in Error state calls a re-run action (can be a stub at this stage)",
+    "GlassEffectContainer wraps the list area"
+  ],
+  "linked_docs": [
+    "specs/drafts/search-full-text-article-search-tab.md",
+    "AggregatorApp/Articles/ArticleListView.swift"
+  ],
+  "feature_root_id": "B-cc58d0d7",
+  "execution_branch_name": "feature/b-cc58d0d7",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-cc58d0d7",
+  "expected_files": [
+    "AggregatorApp/Search/SearchView.swift"
+  ],
+  "expected_globs": [],
+  "touched_files": [],
+  "changed_files": [],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "",
+    "remaining": "",
+    "risks": "",
+    "verdict": "",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [],
+    "updated_docs": [],
+    "next_action": "",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [],
+    "expected_globs": [],
+    "touched_files": [],
+    "conflict_risks": "",
+    "design_decisions": "",
+    "test_coverage_notes": "",
+    "known_limitations": ""
+  },
+  "block_reason": "",
+  "conflict_risks": "",
+  "branch_name": "",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-22T14:02:20.546332+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    }
+  ],
+  "metadata": {},
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}
