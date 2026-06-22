@@ -5,7 +5,7 @@ description: "Add full-text article search as a dedicated iOS 26 Tab(role: .sear
 dependencies: null
 priority: medium
 complexity: null
-status: planned
+status: done
 tags:
 - articles
 - search
@@ -183,8 +183,20 @@ Run `xcodegen generate`, then the test gate
   narrowing search to a category or source; a later enhancement could add a scope
   picker. v1 searches everything via `q` only.
 - **Search history / recent searches / suggestions**: out of scope.
-- **`.searchable` placement vs `role: .search`**: the exact composition of an
-  always-visible `.searchable` field inside a search-role tab is a new iOS 26 API
-  interaction — verify on a real run at implementation and adjust placement
-  (`.navigationBarDrawer` vs `.automatic`) to match the native detached-search feel.
+- **`.searchable` placement vs `role: .search`**: resolved — `.searchable` is
+  attached to the view returned by `NavigationStack { ... }` (i.e. outside the
+  stack, not inside it), with `placement: .navigationBarDrawer(displayMode: .always)`.
+  This placement works correctly with `Tab(role: .search)` on iOS 26.
 - **Deep linking to a search query**: out of scope (no `aggregator://search` route).
+
+## Implementation Notes
+
+- **Double empty-query guard**: `searchArticles(q:)` in `APIClient.swift` includes
+  its own guard that throws `URLError(.badURL)` for empty/whitespace `q`, in addition
+  to the guard already present in `SearchView`'s `.task(id:)` block. The spec's code
+  sample only showed a view-layer guard; the implementation added a method-level guard
+  for defensive safety. The `SearchArticlesTests` suite covers this behavior (14 cases
+  all pass).
+- **Tab ordering**: the Search tab is declared after Settings in `AppRoot.swift`.
+  The spec said order didn't matter since `role: .search` detaches it regardless;
+  this confirms that choice.
