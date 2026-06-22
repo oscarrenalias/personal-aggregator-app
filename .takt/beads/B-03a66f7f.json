@@ -3,17 +3,17 @@
   "title": "Review: search tab feature",
   "agent_type": "review",
   "description": "Review the complete diff across APIClient.swift, SearchView.swift, AppRoot.swift, and SearchArticlesTests.swift. Check: no hardcoded hex colors, GlassEffectContainer present, SF Symbols used, Dynamic Type respected, all five UI states reachable, debounce guard prevents empty-query network calls, cursor pagination uses committedQuery (not live query), no sort/view/unread_only params leak into the request, accessibility labels on interactive elements.",
-  "status": "ready",
+  "status": "done",
   "bead_type": "task",
   "parent_id": "B-cc58d0d7",
   "dependencies": [
-    "B-a94d144b",
-    "B-92ac61f7",
-    "B-4b54287f",
+    "B-14a90a73",
     "B-3c225547",
-    "B-9c29c77b",
     "B-43b5a0ea",
-    "B-14a90a73"
+    "B-4b54287f",
+    "B-92ac61f7",
+    "B-9c29c77b",
+    "B-a94d144b"
   ],
   "acceptance_criteria": [
     "No semantic or behavioral regressions identified",
@@ -30,38 +30,79 @@
   "execution_branch_name": "feature/b-cc58d0d7",
   "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-cc58d0d7",
   "expected_files": [
+    "AggregatorApp/AppRoot.swift",
     "AggregatorApp/Common/APIClient.swift",
     "AggregatorApp/Search/SearchView.swift",
-    "AggregatorApp/AppRoot.swift",
     "AggregatorAppTests/SearchArticlesTests.swift"
   ],
-  "expected_globs": [],
-  "touched_files": [],
-  "changed_files": [],
-  "updated_docs": [],
+  "expected_globs": [
+    "AggregatorAppTests/**/*.swift"
+  ],
+  "touched_files": [
+    "AggregatorApp/AppRoot.swift",
+    "AggregatorApp/Common/APIClient.swift",
+    "AggregatorApp/Search/SearchView.swift",
+    "AggregatorAppTests/SearchArticlesTests.swift",
+    "specs/done/search-full-text-article-search-tab.md",
+    "specs/planned/search-full-text-article-search-tab.md"
+  ],
+  "changed_files": [
+    "AggregatorApp/AppRoot.swift",
+    "AggregatorApp/Common/APIClient.swift",
+    "AggregatorApp/Search/SearchView.swift",
+    "AggregatorAppTests/SearchArticlesTests.swift",
+    "specs/done/search-full-text-article-search-tab.md",
+    "specs/planned/search-full-text-article-search-tab.md"
+  ],
+  "updated_docs": [
+    "specs/done/search-full-text-article-search-tab.md"
+  ],
   "handoff_summary": {
-    "completed": "",
+    "completed": "Reviewed APIClient.searchArticles (query construction, empty-query guard, no forbidden params), SearchView (all five states, GlassEffectContainer, SF Symbols, debounce logic, committedQuery pagination guard), AppRoot (tab added, existing tabs unchanged), SearchArticlesTests (14 cases, no regressions), and spec lifecycle (moved to done/).",
     "remaining": "",
-    "risks": "",
-    "verdict": "",
+    "risks": "None identified. The implementation is purely additive and follows established patterns.",
+    "verdict": "approved",
     "findings_count": 0,
     "requires_followup": false,
-    "changed_files": [],
-    "updated_docs": [],
-    "next_action": "",
-    "next_agent": "",
+    "changed_files": [
+      "AggregatorApp/AppRoot.swift",
+      "AggregatorApp/Common/APIClient.swift",
+      "AggregatorApp/Search/SearchView.swift",
+      "AggregatorAppTests/SearchArticlesTests.swift",
+      "specs/done/search-full-text-article-search-tab.md",
+      "specs/planned/search-full-text-article-search-tab.md"
+    ],
+    "updated_docs": [
+      "specs/done/search-full-text-article-search-tab.md"
+    ],
+    "next_action": "Run takt merge gate (xcodebuild test) to confirm build and tests pass before merging to main.",
+    "next_agent": "tester",
     "block_reason": "",
-    "expected_files": [],
-    "expected_globs": [],
-    "touched_files": [],
-    "conflict_risks": "",
-    "design_decisions": "",
-    "test_coverage_notes": "",
-    "known_limitations": ""
+    "expected_files": [
+      "AggregatorApp/AppRoot.swift",
+      "AggregatorApp/Common/APIClient.swift",
+      "AggregatorApp/Search/SearchView.swift",
+      "AggregatorAppTests/SearchArticlesTests.swift"
+    ],
+    "expected_globs": [
+      "AggregatorAppTests/**/*.swift"
+    ],
+    "touched_files": [
+      "AggregatorApp/AppRoot.swift",
+      "AggregatorApp/Common/APIClient.swift",
+      "AggregatorApp/Search/SearchView.swift",
+      "AggregatorAppTests/SearchArticlesTests.swift",
+      "specs/done/search-full-text-article-search-tab.md",
+      "specs/planned/search-full-text-article-search-tab.md"
+    ],
+    "conflict_risks": "No conflicts. All changes are additive: searchArticles is a new APIClient method, SearchView.swift is a new file, AppRoot.swift change is append-only (new Tab block), SearchArticlesTests.swift is a new test file.",
+    "design_decisions": "loadNextPage guards on committedQuery (not live query) to prevent pagination mixing queries. Empty-query guard exists at both the view layer (debounce task and onSubmit) and the APIClient layer (defensive). Tab(role: .search) placed after Settings \u2014 role detaches it to trailing edge regardless of insertion order. .searchable attached outside NavigationStack per iOS 26 placement guidance.",
+    "test_coverage_notes": "14 test cases in SearchArticlesTests: query construction (q/limit always present, values correct), cursor absent/present/percent-encoded, multi-word q percent-encoding, no forbidden params (sort/view/unread_only), and three empty-query guard variants (empty string, whitespace, newline+tab).",
+    "known_limitations": "No XCUITest coverage for UI state transitions (Idle \u2192 Loading \u2192 Loaded/Empty/Error) \u2014 manual simulator verification required per the lack of XCUITest infrastructure noted in the bead handoff."
   },
   "block_reason": "",
-  "conflict_risks": "",
-  "branch_name": "",
+  "conflict_risks": "No conflicts. All changes are additive: searchArticles is a new APIClient method, SearchView.swift is a new file, AppRoot.swift change is append-only (new Tab block), SearchArticlesTests.swift is a new test file.",
+  "branch_name": "feature/b-cc58d0d7",
   "worktree_path": "",
   "lease": null,
   "retries": 0,
@@ -72,9 +113,181 @@
       "agent_type": "scheduler",
       "summary": "Bead created",
       "details": {}
+    },
+    {
+      "timestamp": "2026-06-22T14:34:04.887561+00:00",
+      "event": "skills_loaded",
+      "agent_type": "review",
+      "summary": "Loaded 6 skill(s) for isolated execution",
+      "details": {
+        "loaded_skills": [
+          "core/base-orchestrator",
+          "role/reviewer-signoff",
+          "capability/code-review",
+          "task/corrective-bead-creation",
+          "task/risk-assessment",
+          "memory"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-06-22T14:34:04.887585+00:00",
+      "event": "started",
+      "agent_type": "review",
+      "summary": "Worker started",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-22T14:34:08.962766+00:00",
+      "event": "guardrails_applied",
+      "agent_type": "review",
+      "summary": "Applied guardrails from .takt/agent-runs/B-03a66f7f/repo/templates/agents/review.md",
+      "details": {
+        "template_path": ".takt/agent-runs/B-03a66f7f/repo/templates/agents/review.md"
+      }
+    },
+    {
+      "timestamp": "2026-06-22T14:35:58.937120+00:00",
+      "event": "completed",
+      "agent_type": "review",
+      "summary": "Search tab feature approved: all five UI states confirmed, no forbidden params, empty-query guard correct, committed-query pagination verified, UI conventions satisfied, tests comprehensive.",
+      "details": {}
     }
   ],
-  "metadata": {},
+  "metadata": {
+    "execution_root": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-03a66f7f",
+    "workspace_repo_path": "repo",
+    "loaded_skills": [
+      "core/base-orchestrator",
+      "role/reviewer-signoff",
+      "capability/code-review",
+      "task/corrective-bead-creation",
+      "task/risk-assessment",
+      "memory"
+    ],
+    "skill_bundle_hash": "68ad0ecb7bfe263ceb1ada56efead5a81dac8f9f2173181d0bf030dc0a3f880d",
+    "isolated_home": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-03a66f7f/home",
+    "runner_backend": "claude",
+    "guardrails": {
+      "agent_type": "review",
+      "template_path": ".takt/agent-runs/B-03a66f7f/repo/templates/agents/review.md",
+      "template_text": "# Review Guardrails\n\nPrimary responsibility: Inspect code, tests, docs, and acceptance criteria for correctness, completeness, and risk.\n\nAllowed actions:\n- Review only the changed files listed in the bead's touched_files and changed_files fields. Do not read unrelated files.\n- Validate acceptance criteria against the implementation and handoff state.\n- Block with a clear recommendation when the bead actually requires implementation work.\n\n## Memory\n\n**Read memory at bead start.** Before reviewing any files, run three searches using `$TAKT_CMD` (injected by the orchestrator):\n\n```bash\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace global\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace feature:<feature_root_id>\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace specs\n```\n\nTreat results as ambient context \u2014 apply relevant entries to inform the review; skip entries that don't apply.\n\nDo **not** write to memory \u2014 review agents are read-only.\n\nEfficiency constraints:\n- Do not run the test suite. Testing is the tester agent's responsibility.\n- Focus on correctness, completeness, and risk \u2014 not style or formatting.\n- Keep the review concise. If there are no findings, say so and approve promptly.\n\nDisallowed actions:\n- Implement feature work, tests, or docs instead of reporting findings.\n- Rewrite architecture or silently fix issues discovered during review.\n- Mark incomplete work as accepted without evidence.\n\nExpected outputs:\n- Return JSON with `outcome` set to `completed` (reviews always complete; use `verdict` for pass/fail) and `summary` as a one-line description of the review result.\n- Return JSON with structured verdict fields for every run: `verdict`, `findings_count`, and `requires_followup`.\n- Treat `verdict` as the review signoff decision: `approved` means the bead can complete, while `needs_changes` means the bead must block for follow-up work.\n- Use `verdict=approved`, `findings_count=0`, and `requires_followup=false` when no unresolved findings remain.\n- Use `verdict=needs_changes`, set `findings_count` to the unresolved finding count, set `requires_followup=true` unless there is a stronger explicit reason not to, and always include `block_reason` when any required fix remains.\n- Keep `completed`, `remaining`, and `risks` as free-form narrative context only. They inform operators, but they do not override the structured verdict or control scheduler state.\n- Review findings ordered by severity, or an explicit statement that no findings were discovered.\n- Clear blocked handoff details when the task belongs to another agent type.",
+      "captured_at": "2026-06-22T14:34:08.962722+00:00"
+    },
+    "worker_prompt_context": {
+      "bead_id": "B-03a66f7f",
+      "feature_root_id": "B-cc58d0d7",
+      "title": "Review: search tab feature",
+      "agent_type": "review",
+      "description": "Review the complete diff across APIClient.swift, SearchView.swift, AppRoot.swift, and SearchArticlesTests.swift. Check: no hardcoded hex colors, GlassEffectContainer present, SF Symbols used, Dynamic Type respected, all five UI states reachable, debounce guard prevents empty-query network calls, cursor pagination uses committedQuery (not live query), no sort/view/unread_only params leak into the request, accessibility labels on interactive elements.",
+      "status": "in_progress",
+      "acceptance_criteria": [
+        "No semantic or behavioral regressions identified",
+        "All UI conventions from CLAUDE.md are satisfied (Liquid Glass, SF Symbols, semantic colors, Dynamic Type)",
+        "All five required states (Idle, Loading, Empty, Error, Not Configured) confirmed present",
+        "Empty-query guard and committed-query pagination logic verified correct",
+        "No sort/view/unread_only params present in searchArticles",
+        "Accessibility labels present on interactive elements"
+      ],
+      "dependencies": [
+        "B-14a90a73",
+        "B-3c225547",
+        "B-43b5a0ea",
+        "B-4b54287f",
+        "B-92ac61f7",
+        "B-9c29c77b",
+        "B-a94d144b"
+      ],
+      "linked_docs": [
+        "specs/drafts/search-full-text-article-search-tab.md"
+      ],
+      "execution_branch_name": "feature/b-cc58d0d7",
+      "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-cc58d0d7",
+      "expected_files": [
+        "AggregatorApp/AppRoot.swift",
+        "AggregatorApp/Common/APIClient.swift",
+        "AggregatorApp/Search/SearchView.swift",
+        "AggregatorAppTests/SearchArticlesTests.swift"
+      ],
+      "expected_globs": [
+        "AggregatorAppTests/**/*.swift"
+      ],
+      "touched_files": [
+        "AggregatorApp/AppRoot.swift",
+        "AggregatorApp/Common/APIClient.swift",
+        "AggregatorApp/Search/SearchView.swift",
+        "AggregatorAppTests/SearchArticlesTests.swift",
+        "specs/done/search-full-text-article-search-tab.md",
+        "specs/planned/search-full-text-article-search-tab.md"
+      ],
+      "conflict_risks": "The `searchArticles` method is a purely additive change with no overlap against other in-flight beads unless another bead also modifies `APIClient.swift` in the same region (lines 176\u2013200). Low risk.\nAppRoot.swift has no Search tab yet \u2014 the next bead adding Tab(role: .search) to AppRoot will touch that file. No other bead is currently touching AppRoot, so no conflict expected.\nNone \u2014 only `SearchView.swift` was modified.\nNone \u2014 only AppRoot.swift was touched; no overlap with sibling beads in this feature tree.\nNone \u2014 file is new; no sibling bead touches AggregatorAppTests/SearchArticlesTests.swift.",
+      "handoff_summary": {
+        "completed": "",
+        "remaining": "",
+        "risks": "",
+        "verdict": "",
+        "findings_count": 0,
+        "requires_followup": false,
+        "changed_files": [],
+        "updated_docs": [],
+        "next_action": "",
+        "next_agent": "",
+        "block_reason": "",
+        "expected_files": [],
+        "expected_globs": [],
+        "touched_files": [],
+        "conflict_risks": "",
+        "design_decisions": "",
+        "test_coverage_notes": "",
+        "known_limitations": ""
+      }
+    },
+    "last_agent_result": {
+      "outcome": "completed",
+      "summary": "Search tab feature approved: all five UI states confirmed, no forbidden params, empty-query guard correct, committed-query pagination verified, UI conventions satisfied, tests comprehensive.",
+      "verdict": "approved",
+      "findings_count": 0,
+      "requires_followup": false,
+      "next_agent": "tester",
+      "block_reason": ""
+    },
+    "telemetry": {
+      "cost_usd": 0.33063960000000003,
+      "duration_ms": 109937,
+      "duration_api_ms": 102198,
+      "num_turns": 10,
+      "input_tokens": 10,
+      "output_tokens": 5566,
+      "cache_creation_tokens": 30403,
+      "cache_read_tokens": 202032,
+      "stop_reason": "end_turn",
+      "session_id": "9314f46e-8a96-4ec6-9487-bcd5b99e79df",
+      "permission_denials": [],
+      "prompt_chars": 12741,
+      "prompt_lines": 197,
+      "source": "provider",
+      "attempt": 1
+    },
+    "telemetry_history": [
+      {
+        "cost_usd": 0.33063960000000003,
+        "duration_ms": 109937,
+        "duration_api_ms": 102198,
+        "num_turns": 10,
+        "input_tokens": 10,
+        "output_tokens": 5566,
+        "cache_creation_tokens": 30403,
+        "cache_read_tokens": 202032,
+        "stop_reason": "end_turn",
+        "session_id": "9314f46e-8a96-4ec6-9487-bcd5b99e79df",
+        "permission_denials": [],
+        "prompt_chars": 12741,
+        "prompt_lines": 197,
+        "source": "provider",
+        "attempt": 1
+      }
+    ]
+  },
   "labels": [],
   "recovery_for": null,
   "priority": null

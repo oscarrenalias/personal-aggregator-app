@@ -3,7 +3,7 @@
   "title": "Documentation: update spec status and notes",
   "agent_type": "documentation",
   "description": "Advance the spec status from draft \u2192 done via the spec.py skill. Verify that CLAUDE.md's feature list already covers 'search' (it does \u2014 no edit needed). If any implementation decisions diverged from the spec (e.g. .searchable placement adjusted for role: .search), note them in the spec's Pending Decisions section.",
-  "status": "ready",
+  "status": "done",
   "bead_type": "task",
   "parent_id": "B-cc58d0d7",
   "dependencies": [
@@ -24,37 +24,67 @@
   "feature_root_id": "B-cc58d0d7",
   "execution_branch_name": "feature/b-cc58d0d7",
   "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-cc58d0d7",
-  "expected_files": [],
+  "expected_files": [
+    "AggregatorApp/AppRoot.swift",
+    "AggregatorApp/Common/APIClient.swift",
+    "AggregatorApp/Search/SearchView.swift",
+    "AggregatorAppTests/SearchArticlesTests.swift"
+  ],
   "expected_globs": [
+    "AggregatorAppTests/**/*.swift",
     "specs/**/*.md"
   ],
-  "touched_files": [],
-  "changed_files": [],
-  "updated_docs": [],
+  "touched_files": [
+    "specs/done/search-full-text-article-search-tab.md",
+    "specs/planned/search-full-text-article-search-tab.md"
+  ],
+  "changed_files": [
+    "specs/done/search-full-text-article-search-tab.md",
+    "specs/planned/search-full-text-article-search-tab.md"
+  ],
+  "updated_docs": [
+    "specs/done/search-full-text-article-search-tab.md"
+  ],
   "handoff_summary": {
-    "completed": "",
-    "remaining": "",
-    "risks": "",
-    "verdict": "",
+    "completed": "Spec status set to done. Pending Decision for .searchable placement marked resolved (outside NavigationStack, .navigationBarDrawer placement confirmed working on iOS 26 with role: .search). New Implementation Notes section added to document the APIClient-level empty-query guard and tab ordering choice. CLAUDE.md already covers 'search' \u2014 no edit needed.",
+    "remaining": "Nothing. All acceptance criteria met: spec is done, deviations documented, no new markdown files created unnecessarily.",
+    "risks": "None. Documentation-only changes; no runtime code touched.",
+    "verdict": "approved",
     "findings_count": 0,
     "requires_followup": false,
-    "changed_files": [],
-    "updated_docs": [],
-    "next_action": "",
+    "changed_files": [
+      "specs/done/search-full-text-article-search-tab.md",
+      "specs/planned/search-full-text-article-search-tab.md"
+    ],
+    "updated_docs": [
+      "specs/done/search-full-text-article-search-tab.md"
+    ],
+    "next_action": "None. Feature is fully implemented, tested, and documented.",
     "next_agent": "",
     "block_reason": "",
-    "expected_files": [],
-    "expected_globs": [],
-    "touched_files": [],
-    "conflict_risks": "",
-    "design_decisions": "",
-    "test_coverage_notes": "",
+    "expected_files": [
+      "AggregatorApp/AppRoot.swift",
+      "AggregatorApp/Common/APIClient.swift",
+      "AggregatorApp/Search/SearchView.swift",
+      "AggregatorAppTests/SearchArticlesTests.swift"
+    ],
+    "expected_globs": [
+      "AggregatorAppTests/**/*.swift",
+      "specs/**/*.md"
+    ],
+    "touched_files": [
+      "specs/done/search-full-text-article-search-tab.md",
+      "specs/planned/search-full-text-article-search-tab.md"
+    ],
+    "conflict_risks": "None. Spec file was the only file touched; no overlap with other in-flight beads.",
+    "design_decisions": "Spec Pending Decisions for .searchable placement resolved: attached outside NavigationStack with .navigationBarDrawer(displayMode: .always); confirmed compatible with Tab(role: .search) on iOS 26.",
+    "test_coverage_notes": "14 SearchArticlesTests cases all pass per global memory entry. Tests cover query params, percent-encoding, no-sort guard, and empty/whitespace guard (URLError.badURL).",
     "known_limitations": ""
   },
   "block_reason": "",
-  "conflict_risks": "",
-  "branch_name": "",
-  "worktree_path": "",
+  "conflict_risks": "None. Spec file was the only file touched; no overlap with other in-flight beads.",
+  "branch_name": "feature/b-cc58d0d7",
+  "worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-cc58d0d7",
   "lease": null,
   "retries": 0,
   "execution_history": [
@@ -64,9 +94,176 @@
       "agent_type": "scheduler",
       "summary": "Bead created",
       "details": {}
+    },
+    {
+      "timestamp": "2026-06-22T14:31:13.174949+00:00",
+      "event": "skills_loaded",
+      "agent_type": "documentation",
+      "summary": "Loaded 6 skill(s) for isolated execution",
+      "details": {
+        "loaded_skills": [
+          "core/base-orchestrator",
+          "role/docs-agent",
+          "capability/docs-edit",
+          "task/release-notes",
+          "task/spec-sync",
+          "memory"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-06-22T14:31:13.174974+00:00",
+      "event": "started",
+      "agent_type": "documentation",
+      "summary": "Worker started",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-22T14:31:24.736902+00:00",
+      "event": "guardrails_applied",
+      "agent_type": "documentation",
+      "summary": "Applied guardrails from .takt/agent-runs/B-14a90a73/repo/templates/agents/documentation.md",
+      "details": {
+        "template_path": ".takt/agent-runs/B-14a90a73/repo/templates/agents/documentation.md"
+      }
+    },
+    {
+      "timestamp": "2026-06-22T14:34:03.720585+00:00",
+      "event": "completed",
+      "agent_type": "documentation",
+      "summary": "Spec spec-9ada6cc7 advanced from planned \u2192 done via spec.py; implementation deviations (.searchable placement resolved, double empty-query guard in APIClient) documented in new Implementation Notes section.",
+      "details": {}
     }
   ],
-  "metadata": {},
+  "metadata": {
+    "execution_root": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-14a90a73",
+    "workspace_repo_path": "repo",
+    "loaded_skills": [
+      "core/base-orchestrator",
+      "role/docs-agent",
+      "capability/docs-edit",
+      "task/release-notes",
+      "task/spec-sync",
+      "memory"
+    ],
+    "skill_bundle_hash": "191f95261a4d31e4f4a691e9c39926c722504f21a3c370b6975facad92e3c1f0",
+    "isolated_home": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-14a90a73/home",
+    "runner_backend": "claude",
+    "guardrails": {
+      "agent_type": "documentation",
+      "template_path": ".takt/agent-runs/B-14a90a73/repo/templates/agents/documentation.md",
+      "template_text": "# Documentation Guardrails\n\nPrimary responsibility: Update documentation and examples that explain the assigned behavior without changing runtime feature behavior.\n\nAllowed actions:\n- Edit docs, examples, and explanatory text tied to the assigned bead.\n- Focus only on files listed in the bead's touched_files and changed_files fields. Do not read or modify unrelated documentation.\n- Align documentation with existing code and validated behavior.\n- Identify when implementation or tests must land first and block with a handoff.\n\nDisallowed actions:\n- Change runtime behavior, production code paths, or feature logic.\n- Invent undocumented behavior that is not present in the codebase.\n- Approve code quality or test completeness as a substitute for review.\n- Do not run the test suite. Testing is the tester agent's responsibility.\n\n## Memory\n\n**Read memory at bead start.** Before writing any documentation, run three searches using `$TAKT_CMD` (injected by the orchestrator):\n\n```bash\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace global\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace feature:<feature_root_id>\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace specs\n```\n\nTreat results as ambient context \u2014 apply relevant entries to inform documentation; skip entries that don't apply.\n\nDo **not** write to memory \u2014 documentation agents are read-only.\n\nEfficiency constraints:\n- Do not read the full codebase for context. Focus on the changed files and their immediate surroundings.\n- Keep documentation updates concise and proportional to the change.\n\nExpected outputs:\n- Return JSON with `outcome` set to `completed` (documentation beads always complete; use `verdict` for pass/fail) and `summary` as a one-line description of what was documented.\n- Return JSON with structured verdict fields for every run: `verdict`, `findings_count`, and `requires_followup`.\n- Use `verdict=approved`, `findings_count=0`, and `requires_followup=false` when documentation is complete with no gaps.\n- Use `verdict=needs_changes`, set `findings_count` to the number of unresolved documentation gaps, set `requires_followup=true`, and include `block_reason` when implementation must land first or documentation cannot be completed.\n- Keep `completed`, `remaining`, and `risks` as concise narrative context only; they do not override the structured verdict fields.\n- Accurate updated docs and clear next-agent recommendations when code changes are required first.",
+      "captured_at": "2026-06-22T14:31:24.736837+00:00"
+    },
+    "worker_prompt_context": {
+      "bead_id": "B-14a90a73",
+      "feature_root_id": "B-cc58d0d7",
+      "title": "Documentation: update spec status and notes",
+      "agent_type": "documentation",
+      "description": "Advance the spec status from draft \u2192 done via the spec.py skill. Verify that CLAUDE.md's feature list already covers 'search' (it does \u2014 no edit needed). If any implementation decisions diverged from the spec (e.g. .searchable placement adjusted for role: .search), note them in the spec's Pending Decisions section.",
+      "status": "in_progress",
+      "acceptance_criteria": [
+        "Spec status is updated to done via spec.py",
+        "Any implementation deviations from the spec are documented in the spec file",
+        "No new markdown files created unnecessarily"
+      ],
+      "dependencies": [
+        "B-a94d144b",
+        "B-92ac61f7",
+        "B-4b54287f",
+        "B-3c225547",
+        "B-9c29c77b"
+      ],
+      "linked_docs": [
+        "specs/drafts/search-full-text-article-search-tab.md"
+      ],
+      "execution_branch_name": "feature/b-cc58d0d7",
+      "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-cc58d0d7",
+      "expected_files": [
+        "AggregatorApp/AppRoot.swift",
+        "AggregatorApp/Common/APIClient.swift",
+        "AggregatorApp/Search/SearchView.swift",
+        "AggregatorAppTests/SearchArticlesTests.swift"
+      ],
+      "expected_globs": [
+        "AggregatorAppTests/**/*.swift",
+        "specs/**/*.md"
+      ],
+      "touched_files": [
+        "AggregatorApp/AppRoot.swift",
+        "AggregatorApp/Common/APIClient.swift",
+        "AggregatorApp/Search/SearchView.swift",
+        "AggregatorAppTests/SearchArticlesTests.swift"
+      ],
+      "conflict_risks": "The `searchArticles` method is a purely additive change with no overlap against other in-flight beads unless another bead also modifies `APIClient.swift` in the same region (lines 176\u2013200). Low risk.\nAppRoot.swift has no Search tab yet \u2014 the next bead adding Tab(role: .search) to AppRoot will touch that file. No other bead is currently touching AppRoot, so no conflict expected.\nNone \u2014 only `SearchView.swift` was modified.\nNone \u2014 only AppRoot.swift was touched; no overlap with sibling beads in this feature tree.\nNone \u2014 file is new; no sibling bead touches AggregatorAppTests/SearchArticlesTests.swift.",
+      "handoff_summary": {
+        "completed": "",
+        "remaining": "",
+        "risks": "",
+        "verdict": "",
+        "findings_count": 0,
+        "requires_followup": false,
+        "changed_files": [],
+        "updated_docs": [],
+        "next_action": "",
+        "next_agent": "",
+        "block_reason": "",
+        "expected_files": [],
+        "expected_globs": [],
+        "touched_files": [],
+        "conflict_risks": "",
+        "design_decisions": "",
+        "test_coverage_notes": "",
+        "known_limitations": ""
+      }
+    },
+    "last_agent_result": {
+      "outcome": "completed",
+      "summary": "Spec spec-9ada6cc7 advanced from planned \u2192 done via spec.py; implementation deviations (.searchable placement resolved, double empty-query guard in APIClient) documented in new Implementation Notes section.",
+      "verdict": "approved",
+      "findings_count": 0,
+      "requires_followup": false,
+      "next_agent": "",
+      "block_reason": ""
+    },
+    "telemetry": {
+      "cost_usd": 0.42030010000000007,
+      "duration_ms": 156713,
+      "duration_api_ms": 131107,
+      "num_turns": 23,
+      "input_tokens": 22,
+      "output_tokens": 5863,
+      "cache_creation_tokens": 25705,
+      "cache_read_tokens": 583807,
+      "stop_reason": "end_turn",
+      "session_id": "51391c68-30b5-45ea-8614-33ba1c990d57",
+      "permission_denials": [],
+      "prompt_chars": 8117,
+      "prompt_lines": 171,
+      "source": "provider",
+      "attempt": 1
+    },
+    "telemetry_history": [
+      {
+        "cost_usd": 0.42030010000000007,
+        "duration_ms": 156713,
+        "duration_api_ms": 131107,
+        "num_turns": 23,
+        "input_tokens": 22,
+        "output_tokens": 5863,
+        "cache_creation_tokens": 25705,
+        "cache_read_tokens": 583807,
+        "stop_reason": "end_turn",
+        "session_id": "51391c68-30b5-45ea-8614-33ba1c990d57",
+        "permission_denials": [],
+        "prompt_chars": 8117,
+        "prompt_lines": 171,
+        "source": "provider",
+        "attempt": 1
+      }
+    ],
+    "last_commit": "dd0335c3f9596684642b2af2ca9da1bdfb0a3b01"
+  },
   "labels": [],
   "recovery_for": null,
   "priority": null
