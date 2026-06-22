@@ -126,7 +126,11 @@ widget target settings; `GENERATE_INFOPLIST_FILE: YES` replaced it to fix an
 - **Offline fallback**: on network failure the provider reads `LastGoodCache`
   from the App Group container (`widget_last_good_entries.json`) and builds an
   `.offline` timeline with the same 3-minute rotation and 30-minute reload
-  policy.
+  policy. Each `CachedEntryData` entry includes the full `WidgetContentItem`
+  (thread or article), so offline entries render the item's title, source, and
+  date rather than a generic placeholder. `Article` and `Thread` implement
+  explicit `encode(to:)` and `init(from:)` to support this cache
+  serialisation.
 - **Image cache**: hero images are stored in the App Group container under
   `WidgetImageCache/`. Files are keyed by `<itemId>_<w>x<h>.cache` and pruned
   on every successful timeline build to remove stale entries.
