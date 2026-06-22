@@ -33,7 +33,7 @@ struct WidgetEntry: TimelineEntry {
 
 // MARK: - Sample Data
 
-private extension Thread {
+extension Thread {
     // JSON is a hardcoded literal — force-try is safe; this never touches the network.
     static var sample: Thread {
         let json = Data("""
