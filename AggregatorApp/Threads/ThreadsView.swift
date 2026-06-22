@@ -9,12 +9,14 @@ private enum LoadPhase {
 struct ThreadsView: View {
     @Environment(CredentialsStore.self) private var credentialsStore
     @Environment(ListPreferences.self) private var listPreferences
+    @Environment(DeepLinkRouter.self) private var deepLinkRouter
 
     @State private var threads: [Thread] = []
     @State private var nextCursor: String? = nil
     @State private var phase: LoadPhase = .loading
     @State private var isFetchingNextPage: Bool = false
     @State private var loadGate = LoadOnceGate()
+    @State private var path = NavigationPath()
 
     private var apiClient: APIClient {
         APIClient(store: credentialsStore)
@@ -22,7 +24,7 @@ struct ThreadsView: View {
 
     var body: some View {
         @Bindable var prefs = listPreferences
-        NavigationStack {
+        NavigationStack(path: $path) {
             Group {
                 if !credentialsStore.isConfigured {
                     ContentUnavailableView(
@@ -74,6 +76,12 @@ struct ThreadsView: View {
             .navigationDestination(for: Int.self) { index in
                 ThreadPagerView(threads: threads, startIndex: index)
             }
+            .navigationDestination(for: DeepLink.self) { link in
+                switch link {
+                case .thread(let id): ThreadDetailView(threadId: id)
+                case .article(let id): ArticleDetailView(articleId: id)
+                }
+            }
         }
         .task {
             guard credentialsStore.isConfigured, loadGate.shouldLoad() else { return }
@@ -84,6 +92,17 @@ struct ThreadsView: View {
         }
         .onChange(of: listPreferences.threadsShowDismissed) {
             Task { await loadFirstPage() }
+        }
+        .onAppear {
+            if let link = deepLinkRouter.pendingLink {
+                path.append(link)
+                deepLinkRouter.pendingLink = nil
+            }
+        }
+        .onChange(of: deepLinkRouter.pendingLink) { _, newLink in
+            guard let link = newLink else { return }
+            path.append(link)
+            deepLinkRouter.pendingLink = nil
         }
     }
 
