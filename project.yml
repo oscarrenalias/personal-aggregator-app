@@ -18,6 +18,13 @@ targets:
       - path: AggregatorApp
     dependencies:
       - target: AggregatorWidget
+    entitlements:
+      path: AggregatorApp/AggregatorApp.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.net.renalias.AggregatorApp
+        keychain-access-groups:
+          - $(AppIdentifierPrefix)net.renalias.AggregatorApp.shared
     settings:
       base:
         CODE_SIGN_STYLE: Automatic
@@ -48,6 +55,13 @@ targets:
     dependencies:
       - sdk: WidgetKit.framework
       - sdk: SwiftUI.framework
+    entitlements:
+      path: AggregatorWidget/AggregatorWidget.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.net.renalias.AggregatorApp
+        keychain-access-groups:
+          - $(AppIdentifierPrefix)net.renalias.AggregatorApp.shared
     settings:
       base:
         CODE_SIGN_STYLE: Automatic
