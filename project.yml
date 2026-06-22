@@ -16,6 +16,8 @@ targets:
     platform: iOS
     sources:
       - path: AggregatorApp
+    dependencies:
+      - target: AggregatorWidget
     settings:
       base:
         CODE_SIGN_STYLE: Automatic
@@ -31,6 +33,29 @@ targets:
     scheme:
       testTargets:
         - AggregatorAppTests
+
+  AggregatorWidget:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: AggregatorWidget
+      - path: AggregatorApp/Common/APIClient.swift
+      - path: AggregatorApp/Common/KeychainHelper.swift
+      - path: AggregatorApp/Common/CredentialsStore.swift
+      - path: AggregatorApp/Common/DateDisplay.swift
+      - path: AggregatorApp/Common/Error+Cancellation.swift
+      - path: AggregatorApp/Models
+    dependencies:
+      - sdk: WidgetKit.framework
+      - sdk: SwiftUI.framework
+    settings:
+      base:
+        CODE_SIGN_STYLE: Automatic
+        DEVELOPMENT_TEAM: QEZ63CXN26
+        INFOPLIST_FILE: AggregatorWidget/Info.plist
+        PRODUCT_BUNDLE_IDENTIFIER: net.renalias.AggregatorApp.AggregatorWidget
+        TARGETED_DEVICE_FAMILY: "1"
+        SWIFT_VERSION: "5.0"
 
   AggregatorAppTests:
     type: bundle.unit-test
