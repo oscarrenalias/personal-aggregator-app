@@ -67,7 +67,8 @@ targets:
       base:
         CODE_SIGN_STYLE: Automatic
         DEVELOPMENT_TEAM: QEZ63CXN26
-        INFOPLIST_FILE: AggregatorWidget/Info.plist
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_NSExtensionPointIdentifier: com.apple.widgetkit-extension
         PRODUCT_BUNDLE_IDENTIFIER: net.renalias.AggregatorApp.AggregatorWidget
         TARGETED_DEVICE_FAMILY: "1"
         SWIFT_VERSION: "5.0"
