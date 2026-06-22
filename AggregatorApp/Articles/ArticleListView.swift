@@ -1,4 +1,5 @@
 import SwiftUI
+import WidgetKit
 
 private enum LoadPhase {
     case loading
@@ -139,6 +140,7 @@ struct ArticleListView: View {
         }
         .refreshable {
             await loadFirstPage(showSpinner: false)
+            WidgetCenter.shared.reloadTimelines(ofKind: "AggregatorRadarWidget")
         }
     }
 

@@ -1,5 +1,6 @@
 import Foundation
 import Observation
+import WidgetKit
 
 /// In-memory, session-scoped cache of article IDs that have been marked read (or
 /// explicitly unread) during this app run.
@@ -25,6 +26,7 @@ import Observation
     func markRead(_ id: Int) {
         unreadIDs.remove(id)
         readIDs.insert(id)
+        WidgetCenter.shared.reloadTimelines(ofKind: "AggregatorRadarWidget")
     }
 
     func markUnread(_ id: Int) {
