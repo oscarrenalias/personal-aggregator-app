@@ -144,6 +144,7 @@ struct APIClient {
     /// - Parameters:
     ///   - feed: The feed to query. `.source(id:name:)` sends `source_id=<id>`;
     ///     `.important` sends `view=important`; `.unread` sends `view=unread`;
+    ///     `.saved` sends `view=saved`;
     ///     `.category(name:)` sends `category=<name>` (matched by name, not id).
     ///   - sort: Controls ranking — `.importance` or `.recent`.
     ///   - unreadOnly: When `true`, adds `unread_only=true`; param is omitted when `false`.
@@ -158,6 +159,8 @@ struct APIClient {
             query.append(URLQueryItem(name: "view", value: "important"))
         case .unread:
             query.append(URLQueryItem(name: "view", value: "unread"))
+        case .saved:
+            query.append(URLQueryItem(name: "view", value: "saved"))
         case .category(let name):
             query.append(URLQueryItem(name: "category", value: name))
         }

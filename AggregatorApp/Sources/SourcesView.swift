@@ -45,6 +45,11 @@ struct SourcesView: View {
                                 }
                                 .accessibilityLabel("Unread articles")
                                 .listRowBackground(Color.clear)
+                                NavigationLink(destination: ArticleListView(feed: .saved)) {
+                                    Label("Saved", systemImage: "bookmark")
+                                }
+                                .accessibilityLabel("Saved articles")
+                                .listRowBackground(Color.clear)
                             }
                             if !categories.isEmpty {
                                 Section("Categories") {
