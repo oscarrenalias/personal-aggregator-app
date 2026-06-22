@@ -1,29 +1,35 @@
-import WidgetKit
+import AppIntents
 import SwiftUI
+import WidgetKit
 
-// Stub entry point — full widget implementation added in a subsequent bead.
-struct AggregatorPlaceholderEntry: TimelineEntry {
+// Stub entry point — replaced by full AggregatorRadarWidget implementation in a subsequent bead.
+struct AggregatorRadarPlaceholderEntry: TimelineEntry {
     let date: Date = .now
 }
 
-struct AggregatorPlaceholderProvider: TimelineProvider {
-    func placeholder(in context: Context) -> AggregatorPlaceholderEntry { .init() }
-    func getSnapshot(in context: Context, completion: @escaping (AggregatorPlaceholderEntry) -> Void) { completion(.init()) }
-    func getTimeline(in context: Context, completion: @escaping (Timeline<AggregatorPlaceholderEntry>) -> Void) {
-        completion(Timeline(entries: [.init()], policy: .never))
+struct AggregatorRadarPlaceholderProvider: AppIntentTimelineProvider {
+    typealias Intent = ContentSourceIntent
+    typealias Entry = AggregatorRadarPlaceholderEntry
+
+    func placeholder(in context: Context) -> AggregatorRadarPlaceholderEntry { .init() }
+
+    func snapshot(for configuration: ContentSourceIntent, in context: Context) async -> AggregatorRadarPlaceholderEntry { .init() }
+
+    func timeline(for configuration: ContentSourceIntent, in context: Context) async -> Timeline<AggregatorRadarPlaceholderEntry> {
+        Timeline(entries: [.init()], policy: .never)
     }
 }
 
-struct AggregatorPlaceholderWidget: Widget {
-    let kind: String = "AggregatorWidget"
+struct AggregatorRadarWidget: Widget {
+    let kind: String = "AggregatorRadarWidget"
 
     var body: some WidgetConfiguration {
-        StaticConfiguration(kind: kind, provider: AggregatorPlaceholderProvider()) { _ in
+        AppIntentConfiguration(kind: kind, intent: ContentSourceIntent.self, provider: AggregatorRadarPlaceholderProvider()) { _ in
             Color.clear
                 .containerBackground(.clear, for: .widget)
         }
-        .configurationDisplayName("Aggregator")
-        .description("Latest articles and threads.")
+        .configurationDisplayName("Aggregator Radar")
+        .description("Latest threads and unread important articles.")
         .supportedFamilies([.systemSmall, .systemMedium])
     }
 }
@@ -31,6 +37,6 @@ struct AggregatorPlaceholderWidget: Widget {
 @main
 struct AggregatorWidgetBundle: WidgetBundle {
     var body: some Widget {
-        AggregatorPlaceholderWidget()
+        AggregatorRadarWidget()
     }
 }
