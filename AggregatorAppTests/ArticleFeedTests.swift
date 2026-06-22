@@ -17,6 +17,10 @@ final class ArticleFeedTests: XCTestCase {
         let unreadItems = feedQueryItems(for: .unread)
         XCTAssertEqual(unreadItems.first(where: { $0.name == "view" })?.value, "unread")
         XCTAssertNil(unreadItems.first(where: { $0.name == "source_id" }))
+
+        let savedItems = feedQueryItems(for: .saved)
+        XCTAssertEqual(savedItems.first(where: { $0.name == "view" })?.value, "saved")
+        XCTAssertNil(savedItems.first(where: { $0.name == "source_id" }))
     }
 
     // MARK: - 2. getArticles URL composition via APIClient.makeURL
@@ -56,6 +60,7 @@ final class ArticleFeedTests: XCTestCase {
 
     func testAllowsUnreadFilter() {
         XCTAssertFalse(ArticleFeed.unread.allowsUnreadFilter)
+        XCTAssertFalse(ArticleFeed.saved.allowsUnreadFilter)
         XCTAssertTrue(ArticleFeed.source(id: 1, name: "Test").allowsUnreadFilter)
         XCTAssertTrue(ArticleFeed.important.allowsUnreadFilter)
         XCTAssertTrue(ArticleFeed.category(name: "Tech").allowsUnreadFilter)
@@ -109,6 +114,58 @@ final class ArticleFeedTests: XCTestCase {
         XCTAssertEqual(ArticleFeed.category(name: "Tech").systemImage, "tag")
     }
 
+    // MARK: - 6. Saved feed — identity and query params
+
+    func testSavedFeedIdentity() {
+        XCTAssertEqual(ArticleFeed.saved.id, "saved")
+        XCTAssertEqual(ArticleFeed.saved.title, "Saved")
+        XCTAssertEqual(ArticleFeed.saved.systemImage, "bookmark")
+    }
+
+    func testSavedFeedQueryParamEmitsViewSaved() {
+        let query = articlesQuery(feed: .saved, sort: .importance, unreadOnly: false, cursor: nil)
+        XCTAssertEqual(query.first(where: { $0.name == "view" })?.value, "saved")
+        XCTAssertNil(query.first(where: { $0.name == "source_id" }))
+        XCTAssertNil(query.first(where: { $0.name == "category" }))
+    }
+
+    func testSavedFeedComposesWithSort() {
+        let query = articlesQuery(feed: .saved, sort: .recent, unreadOnly: false, cursor: nil)
+        XCTAssertEqual(query.first(where: { $0.name == "view" })?.value, "saved")
+        XCTAssertEqual(query.first(where: { $0.name == "sort" })?.value, "recent")
+    }
+
+    func testSavedFeedWithUnreadOnlyStillAppendsUnreadOnly() {
+        let query = articlesQuery(feed: .saved, sort: .importance, unreadOnly: true, cursor: nil)
+        XCTAssertEqual(query.first(where: { $0.name == "view" })?.value, "saved")
+        XCTAssertEqual(query.first(where: { $0.name == "unread_only" })?.value, "true")
+    }
+
+    func testSavedFeedURLComposition() {
+        let query = articlesQuery(feed: .saved, sort: .recent, unreadOnly: false, cursor: nil)
+        let url = APIClient.makeURL(baseURL: "https://example.com/api/v1", path: "/articles", query: query)
+        XCTAssertNotNil(url)
+        guard let url else { return }
+        let components = URLComponents(url: url, resolvingAgainstBaseURL: false)
+        let items = components?.queryItems ?? []
+        XCTAssertEqual(items.first(where: { $0.name == "view" })?.value, "saved")
+        XCTAssertEqual(items.first(where: { $0.name == "sort" })?.value, "recent")
+    }
+
+    func testSavedFeedRegressionExistingFeedsUnchanged() {
+        let importantQuery = articlesQuery(feed: .important, sort: .importance, unreadOnly: false, cursor: nil)
+        XCTAssertEqual(importantQuery.first(where: { $0.name == "view" })?.value, "important")
+        XCTAssertNil(importantQuery.first(where: { $0.name == "category" }))
+        XCTAssertNil(importantQuery.first(where: { $0.name == "source_id" }))
+
+        let unreadQuery = articlesQuery(feed: .unread, sort: .importance, unreadOnly: false, cursor: nil)
+        XCTAssertEqual(unreadQuery.first(where: { $0.name == "view" })?.value, "unread")
+
+        let sourceQuery = articlesQuery(feed: .source(id: 3, name: "Y"), sort: .importance, unreadOnly: false, cursor: nil)
+        XCTAssertEqual(sourceQuery.first(where: { $0.name == "source_id" })?.value, "3")
+        XCTAssertNil(sourceQuery.first(where: { $0.name == "view" }))
+    }
+
     // MARK: - Private helpers
 
     private func feedQueryItems(for feed: ArticleFeed) -> [URLQueryItem] {
@@ -119,6 +176,8 @@ final class ArticleFeedTests: XCTestCase {
             return [URLQueryItem(name: "view", value: "important")]
         case .unread:
             return [URLQueryItem(name: "view", value: "unread")]
+        case .saved:
+            return [URLQueryItem(name: "view", value: "saved")]
         case .category(let name):
             return [URLQueryItem(name: "category", value: name)]
         }
@@ -134,6 +193,8 @@ final class ArticleFeedTests: XCTestCase {
             query.append(URLQueryItem(name: "view", value: "important"))
         case .unread:
             query.append(URLQueryItem(name: "view", value: "unread"))
+        case .saved:
+            query.append(URLQueryItem(name: "view", value: "saved"))
         case .category(let name):
             query.append(URLQueryItem(name: "category", value: name))
         }
