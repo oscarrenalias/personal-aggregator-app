@@ -15,6 +15,7 @@ struct SearchView: View {
     @State private var nextCursor: String? = nil
     @State private var loadPhase: LoadPhase = .idle
     @State private var committedQuery = ""
+    @State private var isLoadingMore = false
 
     private var apiClient: APIClient {
         APIClient(store: credentialsStore)
@@ -89,7 +90,27 @@ struct SearchView: View {
     private var resultsList: some View {
         GlassEffectContainer {
             List {
-                // Article rows and pagination added in the next bead
+                ForEach(Array(articles.enumerated()), id: \.element.id) { index, article in
+                    NavigationLink {
+                        ArticlePagerView(articles: articles, startIndex: index)
+                    } label: {
+                        ArticleRowView(article: article)
+                    }
+                    .listRowBackground(Color.clear)
+                    .onAppear {
+                        if index == articles.count - 1 {
+                            Task { await loadNextPage() }
+                        }
+                    }
+                }
+                if isLoadingMore {
+                    HStack {
+                        Spacer()
+                        ProgressView()
+                        Spacer()
+                    }
+                    .listRowBackground(Color.clear)
+                }
             }
         }
     }
@@ -98,6 +119,7 @@ struct SearchView: View {
         loadPhase = .loading
         articles = []
         nextCursor = nil
+        isLoadingMore = false
         do {
             let response = try await apiClient.searchArticles(q: q)
             articles = response.items
@@ -106,6 +128,19 @@ struct SearchView: View {
         } catch {
             if isCancellation(error) { return }
             loadPhase = .error(error)
+        }
+    }
+
+    private func loadNextPage() async {
+        guard !isLoadingMore, let cursor = nextCursor, !committedQuery.isEmpty else { return }
+        isLoadingMore = true
+        defer { isLoadingMore = false }
+        do {
+            let response = try await apiClient.searchArticles(q: committedQuery, cursor: cursor)
+            articles.append(contentsOf: response.items)
+            nextCursor = response.nextCursor
+        } catch {
+            // Silent failure on next-page errors; user can scroll back to trigger retry
         }
     }
 }
