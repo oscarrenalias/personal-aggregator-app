@@ -19,6 +19,7 @@ struct AppRoot: View {
                 SettingsView()
             }
         }
+        .tabBarMinimizeBehavior(.onScrollDown)
         .onChange(of: router.pendingLink) { _, link in
             guard link != nil else { return }
             selectedTab = "threads"
