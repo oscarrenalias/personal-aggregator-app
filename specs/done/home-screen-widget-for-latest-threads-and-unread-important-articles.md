@@ -5,7 +5,7 @@ description: "WidgetKit Home Screen widget (small + medium) showing rotating top
 dependencies: null
 priority: medium
 complexity: null
-status: planned
+status: done
 tags:
 - widget
 - widgetkit

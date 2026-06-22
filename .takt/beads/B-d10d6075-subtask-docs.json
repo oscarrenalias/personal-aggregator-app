@@ -1,0 +1,235 @@
+{
+  "bead_id": "B-d10d6075-subtask-docs",
+  "title": "Document Fix ArticleFeed missing from widget target sources",
+  "agent_type": "documentation",
+  "description": "Update docs for B-d10d6075-subtask",
+  "status": "done",
+  "bead_type": "task",
+  "parent_id": "B-d10d6075-subtask",
+  "dependencies": [
+    "B-d10d6075-subtask"
+  ],
+  "acceptance_criteria": [],
+  "linked_docs": [],
+  "feature_root_id": "B-6b2810c5",
+  "execution_branch_name": "feature/b-6b2810c5",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-6b2810c5",
+  "expected_files": [
+    "AggregatorApp/AggregatorApp.swift",
+    "project.yml"
+  ],
+  "expected_globs": [],
+  "touched_files": [
+    "AggregatorApp/AggregatorApp.swift",
+    "project.yml"
+  ],
+  "changed_files": [
+    "AggregatorApp/AggregatorApp.swift",
+    "project.yml"
+  ],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "Reviewed changed files (AggregatorApp/AggregatorApp.swift, project.yml) and all existing documentation in docs/API.md. Confirmed project.yml required no change (ArticleFeed.swift was already present from parent bead B-d10d6075, commit 29f429c). The commit for this bead added DeepLink enum and DeepLinkRouter class to AggregatorApp.swift \u2014 shared infrastructure for deep links. No documentation covers widget source membership or app-level routing, and the bead has no acceptance criteria or linked docs requiring updates.",
+    "remaining": "None.",
+    "risks": "None. The deep-link infrastructure introduced in AggregatorApp.swift is covered in scope by B-87f5ee19 (In-app URL router for deep links), which should own any related documentation if needed.",
+    "verdict": "approved",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [
+      "AggregatorApp/AggregatorApp.swift",
+      "project.yml"
+    ],
+    "updated_docs": [],
+    "next_action": "None required. Documentation is complete (no-op) for this bead.",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [
+      "AggregatorApp/AggregatorApp.swift",
+      "project.yml"
+    ],
+    "expected_globs": [],
+    "touched_files": [
+      "AggregatorApp/AggregatorApp.swift",
+      "project.yml"
+    ],
+    "conflict_risks": "None. project.yml untouched. AggregatorApp.swift changes are additive (new types only).",
+    "design_decisions": "ArticleFeed.swift was already in the widget target sources (added by parent bead B-d10d6075 in commit 29f429c). The subtask's actual commit added DeepLink/DeepLinkRouter as shared app-entry infrastructure, which belongs to B-87f5ee19's documentation scope.",
+    "test_coverage_notes": "Not applicable \u2014 documentation bead.",
+    "known_limitations": "docs/API.md has no widget section. If widget behavior documentation is desired, it should be a dedicated documentation bead scoped to the full widget feature (B-6b2810c5 feature root)."
+  },
+  "block_reason": "",
+  "conflict_risks": "None. project.yml untouched. AggregatorApp.swift changes are additive (new types only).",
+  "branch_name": "feature/b-6b2810c5",
+  "worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-6b2810c5",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-22T09:49:02.495415+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-22T09:49:02.759685+00:00",
+      "event": "deferred",
+      "agent_type": "documentation",
+      "summary": "file-scope conflict with in-progress B-87f5ee19",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-22T09:56:05.465385+00:00",
+      "event": "skills_loaded",
+      "agent_type": "documentation",
+      "summary": "Loaded 6 skill(s) for isolated execution",
+      "details": {
+        "loaded_skills": [
+          "core/base-orchestrator",
+          "role/docs-agent",
+          "capability/docs-edit",
+          "task/release-notes",
+          "task/spec-sync",
+          "memory"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-06-22T09:56:05.465407+00:00",
+      "event": "started",
+      "agent_type": "documentation",
+      "summary": "Worker started",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-22T09:56:05.467914+00:00",
+      "event": "guardrails_applied",
+      "agent_type": "documentation",
+      "summary": "Applied guardrails from .takt/agent-runs/B-d10d6075-subtask-docs/repo/templates/agents/documentation.md",
+      "details": {
+        "template_path": ".takt/agent-runs/B-d10d6075-subtask-docs/repo/templates/agents/documentation.md"
+      }
+    },
+    {
+      "timestamp": "2026-06-22T09:58:20.519111+00:00",
+      "event": "completed",
+      "agent_type": "documentation",
+      "summary": "No documentation updates required: project.yml was already correct before this bead ran, and AggregatorApp.swift's DeepLink/DeepLinkRouter additions are internal infrastructure with no documentation surface in the existing docs/API.md.",
+      "details": {}
+    }
+  ],
+  "metadata": {
+    "execution_root": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-d10d6075-subtask-docs",
+    "workspace_repo_path": "repo",
+    "loaded_skills": [
+      "core/base-orchestrator",
+      "role/docs-agent",
+      "capability/docs-edit",
+      "task/release-notes",
+      "task/spec-sync",
+      "memory"
+    ],
+    "skill_bundle_hash": "191f95261a4d31e4f4a691e9c39926c722504f21a3c370b6975facad92e3c1f0",
+    "isolated_home": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-d10d6075-subtask-docs/home",
+    "runner_backend": "claude",
+    "guardrails": {
+      "agent_type": "documentation",
+      "template_path": ".takt/agent-runs/B-d10d6075-subtask-docs/repo/templates/agents/documentation.md",
+      "template_text": "# Documentation Guardrails\n\nPrimary responsibility: Update documentation and examples that explain the assigned behavior without changing runtime feature behavior.\n\nAllowed actions:\n- Edit docs, examples, and explanatory text tied to the assigned bead.\n- Focus only on files listed in the bead's touched_files and changed_files fields. Do not read or modify unrelated documentation.\n- Align documentation with existing code and validated behavior.\n- Identify when implementation or tests must land first and block with a handoff.\n\nDisallowed actions:\n- Change runtime behavior, production code paths, or feature logic.\n- Invent undocumented behavior that is not present in the codebase.\n- Approve code quality or test completeness as a substitute for review.\n- Do not run the test suite. Testing is the tester agent's responsibility.\n\n## Memory\n\n**Read memory at bead start.** Before writing any documentation, run three searches using `$TAKT_CMD` (injected by the orchestrator):\n\n```bash\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace global\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace feature:<feature_root_id>\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace specs\n```\n\nTreat results as ambient context \u2014 apply relevant entries to inform documentation; skip entries that don't apply.\n\nDo **not** write to memory \u2014 documentation agents are read-only.\n\nEfficiency constraints:\n- Do not read the full codebase for context. Focus on the changed files and their immediate surroundings.\n- Keep documentation updates concise and proportional to the change.\n\nExpected outputs:\n- Return JSON with `outcome` set to `completed` (documentation beads always complete; use `verdict` for pass/fail) and `summary` as a one-line description of what was documented.\n- Return JSON with structured verdict fields for every run: `verdict`, `findings_count`, and `requires_followup`.\n- Use `verdict=approved`, `findings_count=0`, and `requires_followup=false` when documentation is complete with no gaps.\n- Use `verdict=needs_changes`, set `findings_count` to the number of unresolved documentation gaps, set `requires_followup=true`, and include `block_reason` when implementation must land first or documentation cannot be completed.\n- Keep `completed`, `remaining`, and `risks` as concise narrative context only; they do not override the structured verdict fields.\n- Accurate updated docs and clear next-agent recommendations when code changes are required first.",
+      "captured_at": "2026-06-22T09:56:05.467906+00:00"
+    },
+    "worker_prompt_context": {
+      "bead_id": "B-d10d6075-subtask-docs",
+      "feature_root_id": "B-6b2810c5",
+      "title": "Document Fix ArticleFeed missing from widget target sources",
+      "agent_type": "documentation",
+      "description": "Update docs for B-d10d6075-subtask",
+      "status": "in_progress",
+      "acceptance_criteria": [],
+      "dependencies": [
+        "B-d10d6075-subtask"
+      ],
+      "linked_docs": [],
+      "execution_branch_name": "feature/b-6b2810c5",
+      "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-6b2810c5",
+      "expected_files": [
+        "AggregatorApp/AggregatorApp.swift",
+        "project.yml"
+      ],
+      "expected_globs": [],
+      "touched_files": [
+        "AggregatorApp/AggregatorApp.swift",
+        "project.yml"
+      ],
+      "conflict_risks": "None. project.yml was already correct when this bead ran.",
+      "handoff_summary": {
+        "completed": "",
+        "remaining": "",
+        "risks": "",
+        "verdict": "",
+        "findings_count": 0,
+        "requires_followup": false,
+        "changed_files": [],
+        "updated_docs": [],
+        "next_action": "",
+        "next_agent": "",
+        "block_reason": "",
+        "expected_files": [],
+        "expected_globs": [],
+        "touched_files": [],
+        "conflict_risks": "",
+        "design_decisions": "",
+        "test_coverage_notes": "",
+        "known_limitations": ""
+      }
+    },
+    "last_agent_result": {
+      "outcome": "completed",
+      "summary": "No documentation updates required: project.yml was already correct before this bead ran, and AggregatorApp.swift's DeepLink/DeepLinkRouter additions are internal infrastructure with no documentation surface in the existing docs/API.md.",
+      "verdict": "approved",
+      "findings_count": 0,
+      "requires_followup": false,
+      "next_agent": "",
+      "block_reason": ""
+    },
+    "telemetry": {
+      "cost_usd": 0.3880774,
+      "duration_ms": 134879,
+      "duration_api_ms": 128255,
+      "num_turns": 22,
+      "input_tokens": 1432,
+      "output_tokens": 6206,
+      "cache_creation_tokens": 22742,
+      "cache_read_tokens": 505678,
+      "stop_reason": "end_turn",
+      "session_id": "02535317-8623-4a01-af16-2e26075d9d5b",
+      "permission_denials": [],
+      "prompt_chars": 6821,
+      "prompt_lines": 159,
+      "source": "provider",
+      "attempt": 1
+    },
+    "telemetry_history": [
+      {
+        "cost_usd": 0.3880774,
+        "duration_ms": 134879,
+        "duration_api_ms": 128255,
+        "num_turns": 22,
+        "input_tokens": 1432,
+        "output_tokens": 6206,
+        "cache_creation_tokens": 22742,
+        "cache_read_tokens": 505678,
+        "stop_reason": "end_turn",
+        "session_id": "02535317-8623-4a01-af16-2e26075d9d5b",
+        "permission_denials": [],
+        "prompt_chars": 6821,
+        "prompt_lines": 159,
+        "source": "provider",
+        "attempt": 1
+      }
+    ]
+  },
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

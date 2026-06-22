@@ -1,0 +1,293 @@
+{
+  "bead_id": "B-0a02b504-corrective",
+  "title": "Corrective fix for B-0a02b504: Widget feature code review",
+  "agent_type": "developer",
+  "description": "Blocked reason: CRITICAL (Finding 1): AggregatorWidgetBundle.swift still uses AggregatorRadarPlaceholderProvider and Color.clear entry view \u2014 the real AggregatorRadarProvider and SmallWidgetView/MediumWidgetView are never invoked; widget renders blank on device. HIGH (Finding 2): Provider.swift:211 uses a.url (external web URL) for article deep links instead of aggregator://article/{id}; tapping widget for an article opens Safari rather than the app.\n\nRemaining work: Two defects need developer fixes: (1) AggregatorWidgetBundle.swift must replace AggregatorRadarPlaceholderProvider with AggregatorRadarProvider and dispatch entry view to SmallWidgetView/MediumWidgetView by family; (2) Provider.swift:211 must use aggregator://article/\\(a.id) instead of a.url for article deep links. Test coverage gap (finding 3) and markUnread missing reload (finding 4) should be addressed in the same pass.",
+  "status": "done",
+  "bead_type": "task",
+  "parent_id": "B-0a02b504",
+  "dependencies": [],
+  "acceptance_criteria": [
+    "Implement the minimum fix required to unblock B-0a02b504.",
+    "Update tests/docs as needed for the corrective change.",
+    "Leave a handoff summary that states how the parent bead can be retried."
+  ],
+  "linked_docs": [
+    "specs/drafts/home-screen-widget-for-latest-threads-and-unread-important-articles.md"
+  ],
+  "feature_root_id": "B-6b2810c5",
+  "execution_branch_name": "feature/b-6b2810c5",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-6b2810c5",
+  "expected_files": [
+    "AggregatorWidget/AggregatorWidgetBundle.swift",
+    "AggregatorWidget/Provider.swift",
+    "AggregatorApp/Common/ArticleReadStore.swift"
+  ],
+  "expected_globs": [
+    "AggregatorWidget/**/*.swift",
+    "AggregatorApp/Common/**/*.swift"
+  ],
+  "touched_files": [
+    "AggregatorApp/Common/ArticleReadStore.swift",
+    "AggregatorWidget/AggregatorWidgetBundle.swift",
+    "AggregatorWidget/Provider.swift"
+  ],
+  "changed_files": [
+    "AggregatorApp/Common/ArticleReadStore.swift",
+    "AggregatorWidget/AggregatorWidgetBundle.swift",
+    "AggregatorWidget/Provider.swift"
+  ],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "All three defects fixed: widget now renders SmallWidgetView/MediumWidgetView with real data; article widget taps open the app via deep link; markUnread triggers widget refresh.",
+    "remaining": "Finding 3 (test coverage gap for widget provider) remains for the tester agent \u2014 specifically: tests for the article deep-link URL form, markUnread/markRead WidgetCenter reload symmetry, and SmallWidgetView/MediumWidgetView dispatch.",
+    "risks": "No breaking changes to existing interfaces. The placeholder types (AggregatorRadarPlaceholderEntry, AggregatorRadarPlaceholderProvider) were private to the bundle file and are now removed \u2014 no other file referenced them. Article deep-link change affects widget tap behaviour only; article list and detail views are unaffected.",
+    "verdict": "approved",
+    "findings_count": 0,
+    "requires_followup": true,
+    "changed_files": [
+      "AggregatorApp/Common/ArticleReadStore.swift",
+      "AggregatorWidget/AggregatorWidgetBundle.swift",
+      "AggregatorWidget/Provider.swift"
+    ],
+    "updated_docs": [],
+    "next_action": "Tester agent should add/update tests in AggregatorAppTests/WidgetLogicTests.swift covering: article deep link URL form (aggregator://article/{id}), markUnread triggers WidgetCenter reload, and SmallWidgetView/MediumWidgetView family dispatch.",
+    "next_agent": "tester",
+    "block_reason": "",
+    "expected_files": [
+      "AggregatorWidget/AggregatorWidgetBundle.swift",
+      "AggregatorWidget/Provider.swift",
+      "AggregatorApp/Common/ArticleReadStore.swift"
+    ],
+    "expected_globs": [
+      "AggregatorWidget/**/*.swift",
+      "AggregatorApp/Common/**/*.swift"
+    ],
+    "touched_files": [
+      "AggregatorApp/Common/ArticleReadStore.swift",
+      "AggregatorWidget/AggregatorWidgetBundle.swift",
+      "AggregatorWidget/Provider.swift"
+    ],
+    "conflict_risks": "None. All changed files are self-contained. AggregatorWidgetBundle.swift previously had duplicate type names (placeholder types) that are now removed, eliminating the duplicate-symbol risk called out in the bead spec.",
+    "design_decisions": "AggregatorRadarEntryView is a private inner view (file-private) rather than a public named type, keeping the family dispatch local to the bundle file. This avoids polluting the widget target's namespace with a one-off adapter view. @Environment(\\.widgetFamily) is the canonical WidgetKit API for family dispatch \u2014 it resolves correctly at render time and works identically for both live widget rendering and Xcode previews.",
+    "test_coverage_notes": "Tester agent should cover: (1) article deepLinkURL in buildTimeline produces aggregator://article/{id} (not a.url); (2) markRead and markUnread both trigger WidgetCenter.shared.reloadTimelines; (3) AggregatorRadarEntryView routes .systemSmall \u2192 SmallWidgetView and .systemMedium \u2192 MediumWidgetView. Existing placeholder provider tests (if any) are now obsolete and should be removed.",
+    "known_limitations": "Finding 3 (test coverage gap identified by the review agent) is not addressed in this corrective \u2014 that is tester-agent scope. The markUnread WidgetCenter reload is a code fix; test verification of symmetry with markRead is left to the tester."
+  },
+  "block_reason": "",
+  "conflict_risks": "None. All changed files are self-contained. AggregatorWidgetBundle.swift previously had duplicate type names (placeholder types) that are now removed, eliminating the duplicate-symbol risk called out in the bead spec.",
+  "branch_name": "feature/b-6b2810c5",
+  "worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-6b2810c5",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-22T10:27:58.683910+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-22T10:27:58.949992+00:00",
+      "event": "deferred",
+      "agent_type": "developer",
+      "summary": "file-scope conflict with in-progress B-422672f9-subtask-test",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-22T10:41:37.392871+00:00",
+      "event": "skills_loaded",
+      "agent_type": "developer",
+      "summary": "Loaded 7 skill(s) for isolated execution",
+      "details": {
+        "loaded_skills": [
+          "core/base-orchestrator",
+          "role/developer-implementation",
+          "capability/code-edit",
+          "task/corrective-implementation",
+          "task/refactor-safe",
+          "task/migration",
+          "memory"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-06-22T10:41:37.392902+00:00",
+      "event": "started",
+      "agent_type": "developer",
+      "summary": "Worker started",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-22T10:41:38.307570+00:00",
+      "event": "guardrails_applied",
+      "agent_type": "developer",
+      "summary": "Applied guardrails from .takt/agent-runs/B-0a02b504-corrective/repo/templates/agents/developer.md",
+      "details": {
+        "template_path": ".takt/agent-runs/B-0a02b504-corrective/repo/templates/agents/developer.md"
+      }
+    },
+    {
+      "timestamp": "2026-06-22T10:44:12.071055+00:00",
+      "event": "completed",
+      "agent_type": "developer",
+      "summary": "Applied three corrective fixes: (1) AggregatorWidgetBundle.swift replaced the placeholder stub (AggregatorRadarPlaceholderProvider/AggregatorRadarPlaceholderEntry/Color.clear) with the real AggregatorRadarProvider and a family-dispatching AggregatorRadarEntryView that routes to SmallWidgetView or MediumWidgetView via @Environment(\\.widgetFamily). (2) Provider.swift:211 changed article deep link from a.url (external web URL) to aggregator://article/\\(a.id). (3) ArticleReadStore.swift markUnread now calls WidgetCenter.shared.reloadTimelines(ofKind: \"AggregatorRadarWidget\") to match the reload behaviour already present in markRead. Build passes cleanly.",
+      "details": {}
+    }
+  ],
+  "metadata": {
+    "auto_corrective_for": "B-0a02b504",
+    "execution_root": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-0a02b504-corrective",
+    "workspace_repo_path": "repo",
+    "loaded_skills": [
+      "core/base-orchestrator",
+      "role/developer-implementation",
+      "capability/code-edit",
+      "task/corrective-implementation",
+      "task/refactor-safe",
+      "task/migration",
+      "memory"
+    ],
+    "skill_bundle_hash": "ecae5633083d1bbec41a6e5ec6ea05bbab117f60499c19b2ed76dbbe3e1aec7c",
+    "isolated_home": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-0a02b504-corrective/home",
+    "runner_backend": "claude",
+    "guardrails": {
+      "agent_type": "developer",
+      "template_path": ".takt/agent-runs/B-0a02b504-corrective/repo/templates/agents/developer.md",
+      "template_text": "# Developer Guardrails\n\nPrimary responsibility: Implement only the assigned bead inside the existing architecture and file scope.\n\n## Corrective bead scope\n\nIf your `bead_id` ends in `-corrective` or `-corrective-<N>` (e.g. `B-abc12345-corrective`, `B-abc12345-test-corrective-2`), you are running as a CORRECTIVE bead. Your scope is **strictly limited to fixing the specific failure that blocked the parent bead**. Do not:\n\n- Add unrelated improvements, refactors, or cleanup, even if you notice them\n- Reapply previously-reverted changes (the operator reverted them for a reason)\n- Expand the surface area beyond what is needed to unblock the parent\n- Touch files outside what the parent bead's `expected_files` / `expected_globs` covered, unless the failure is genuinely in another file and there is no smaller fix\n\nIf you notice an unrelated issue while fixing the corrective scope: **file a separate bead** via `takt bead create` describing what you saw, but do not fix it in this corrective. The operator will prioritize and dispatch.\n\nWhen in doubt about scope: prefer the smallest possible fix. The reviewer of this corrective will check that the scope was respected.\n\nAllowed actions:\n- Modify code, configuration, or local docs required to complete the assigned bead.\n- Create sub-beads for discovered follow-up work that should be handled separately.\n- Verify your `Swift` changes compile and import correctly with a quick syntax check: ``.\n\nDisallowed actions:\n- Run any test suite \u2014 not even a targeted `` run or any subset. Test execution is exclusively the tester agent's responsibility. Running tests wastes the agent budget and delays the pipeline.\n- Redesign unrelated architecture or broaden scope beyond the assigned bead.\n- Perform final review signoff in place of a review agent.\n- Silently absorb unrelated test, documentation, or planning work that should be handed off.\n\n## Memory\n\n**Read memory at bead start.** Before touching any code, run three searches using `$TAKT_CMD` (injected by the orchestrator):\n\n```bash\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace global\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace feature:<feature_root_id>\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace specs\n```\n\nTreat results as ambient context \u2014 apply relevant entries; skip entries that don't apply.\n\n**Write to memory when you discover reusable project knowledge** \u2014 something that would have changed your approach if you had known it upfront, and is not already in CLAUDE.md or the guardrails.\n\n```bash\n$TAKT_CMD memory add \"<concise fact>\" --namespace global               # project-wide knowledge\n$TAKT_CMD memory add \"<discovery>\" --namespace feature:<feature_root_id>  # feature-scoped\n```\n\nRequired Handoff Fields:\n\nEvery developer bead **must** populate the following three fields in its output JSON. Reviewers and tester agents rely on these fields to scope their work without additional back-and-forth turns. Use `\"N/A\"` only when a field is genuinely inapplicable (e.g., a trivial rename with no design trade-offs); do not leave fields blank.\n\n- **`design_decisions`** \u2014 Document non-obvious architectural or implementation choices made during this bead. Include alternatives considered and why the chosen approach was preferred. Reviewers use this to evaluate correctness without re-deriving intent. Set to `\"N/A\"` only if the change was purely mechanical with no meaningful trade-offs.\n\n- **`test_coverage_notes`** \u2014 Describe what the tester agent should verify: new code paths, edge cases introduced, regression risks, and any known untested scenarios left to the tester. Set to `\"N/A\"` only if the bead touched no executable code paths (e.g., documentation-only changes).\n\n- **`known_limitations`** \u2014 Call out constraints, deferred work, or known gaps in the implementation. This includes out-of-scope items deliberately left for follow-up beads and any areas where the implementation is intentionally incomplete. Set to `\"N/A\"` if the implementation is complete as specified with no known gaps.\n\nExpected outputs:\n- Completed or blocked JSON with concise implementation summary.\n- Accurate touched files, changed files, risks, and follow-up handoff fields.\n- Populated `design_decisions`, `test_coverage_notes`, and `known_limitations` fields in every response.",
+      "captured_at": "2026-06-22T10:41:38.307550+00:00"
+    },
+    "worker_prompt_context": {
+      "bead_id": "B-0a02b504-corrective",
+      "feature_root_id": "B-6b2810c5",
+      "title": "Corrective fix for B-0a02b504: Widget feature code review",
+      "agent_type": "developer",
+      "description": "Blocked reason: CRITICAL (Finding 1): AggregatorWidgetBundle.swift still uses AggregatorRadarPlaceholderProvider and Color.clear entry view \u2014 the real AggregatorRadarProvider and SmallWidgetView/MediumWidgetView are never invoked; widget renders blank on device. HIGH (Finding 2): Provider.swift:211 uses a.url (external web URL) for article deep links instead of aggregator://article/{id}; tapping widget for an article opens Safari rather than the app.\n\nRemaining work: Two defects need developer fixes: (1) AggregatorWidgetBundle.swift must replace AggregatorRadarPlaceholderProvider with AggregatorRadarProvider and dispatch entry view to SmallWidgetView/MediumWidgetView by family; (2) Provider.swift:211 must use aggregator://article/\\(a.id) instead of a.url for article deep links. Test coverage gap (finding 3) and markUnread missing reload (finding 4) should be addressed in the same pass.",
+      "status": "in_progress",
+      "acceptance_criteria": [
+        "Implement the minimum fix required to unblock B-0a02b504.",
+        "Update tests/docs as needed for the corrective change.",
+        "Leave a handoff summary that states how the parent bead can be retried."
+      ],
+      "dependencies": [],
+      "linked_docs": [
+        "specs/drafts/home-screen-widget-for-latest-threads-and-unread-important-articles.md"
+      ],
+      "execution_branch_name": "feature/b-6b2810c5",
+      "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-6b2810c5",
+      "expected_files": [
+        "AggregatorApp/AggregatorApp.entitlements",
+        "AggregatorApp/AggregatorApp.swift",
+        "AggregatorApp/AppRoot.swift",
+        "AggregatorApp/Articles/ArticleListView.swift",
+        "AggregatorApp/Common/ArticleReadStore.swift",
+        "AggregatorApp/Common/KeychainHelper.swift",
+        "AggregatorApp/Info.plist",
+        "AggregatorApp/Threads/ThreadsView.swift",
+        "AggregatorWidget/AggregatorWidget.entitlements",
+        "AggregatorWidget/AggregatorWidgetBundle.swift",
+        "AggregatorWidget/ContentSourceIntent.swift",
+        "AggregatorWidget/ImageDownsampler.swift",
+        "AggregatorWidget/Info.plist",
+        "AggregatorWidget/Provider.swift",
+        "AggregatorWidget/WidgetViews.swift",
+        "project.yml"
+      ],
+      "expected_globs": [
+        "AggregatorApp/**/*.swift",
+        "AggregatorWidget/**/*.swift",
+        "AggregatorAppTests/**/*.swift"
+      ],
+      "touched_files": [
+        "AggregatorApp/AggregatorApp.entitlements",
+        "AggregatorApp/AggregatorApp.swift",
+        "AggregatorApp/AppRoot.swift",
+        "AggregatorApp/Articles/ArticleListView.swift",
+        "AggregatorApp/Common/ArticleReadStore.swift",
+        "AggregatorApp/Common/KeychainHelper.swift",
+        "AggregatorApp/Info.plist",
+        "AggregatorApp/Threads/ThreadsView.swift",
+        "AggregatorAppTests/WidgetLogicTests.swift",
+        "AggregatorWidget/AggregatorWidget.entitlements",
+        "AggregatorWidget/AggregatorWidgetBundle.swift",
+        "AggregatorWidget/ContentSourceIntent.swift",
+        "AggregatorWidget/ImageDownsampler.swift",
+        "AggregatorWidget/Info.plist",
+        "AggregatorWidget/Provider.swift",
+        "AggregatorWidget/WidgetViews.swift",
+        "CLAUDE.md",
+        "project.yml"
+      ],
+      "conflict_risks": "AggregatorWidgetBundle.swift fix must remove AggregatorRadarPlaceholderProvider and AggregatorRadarPlaceholderEntry to avoid duplicate-symbol conflicts with WidgetEntry and AggregatorRadarProvider. Entry view dispatcher must check WidgetFamily \u2014 both SmallWidgetView and MediumWidgetView are available in scope after the fix. Provider.swift fix is a single-line change with no downstream conflicts.",
+      "handoff_summary": {
+        "completed": "",
+        "remaining": "",
+        "risks": "",
+        "verdict": "",
+        "findings_count": 0,
+        "requires_followup": false,
+        "changed_files": [],
+        "updated_docs": [],
+        "next_action": "",
+        "next_agent": "",
+        "block_reason": "",
+        "expected_files": [],
+        "expected_globs": [],
+        "touched_files": [],
+        "conflict_risks": "",
+        "design_decisions": "",
+        "test_coverage_notes": "",
+        "known_limitations": ""
+      }
+    },
+    "last_agent_result": {
+      "outcome": "completed",
+      "summary": "Applied three corrective fixes: (1) AggregatorWidgetBundle.swift replaced the placeholder stub (AggregatorRadarPlaceholderProvider/AggregatorRadarPlaceholderEntry/Color.clear) with the real AggregatorRadarProvider and a family-dispatching AggregatorRadarEntryView that routes to SmallWidgetView or MediumWidgetView via @Environment(\\.widgetFamily). (2) Provider.swift:211 changed article deep link from a.url (external web URL) to aggregator://article/\\(a.id). (3) ArticleReadStore.swift markUnread now calls WidgetCenter.shared.reloadTimelines(ofKind: \"AggregatorRadarWidget\") to match the reload behaviour already present in markRead. Build passes cleanly.",
+      "verdict": "approved",
+      "findings_count": 0,
+      "requires_followup": true,
+      "next_agent": "tester",
+      "block_reason": ""
+    },
+    "telemetry": {
+      "cost_usd": 0.4486742,
+      "duration_ms": 153101,
+      "duration_api_ms": 115143,
+      "num_turns": 17,
+      "input_tokens": 19,
+      "output_tokens": 6429,
+      "cache_creation_tokens": 30277,
+      "cache_read_tokens": 553634,
+      "stop_reason": "end_turn",
+      "session_id": "5963aede-b3d7-48bf-9d22-0ca83a8f0a04",
+      "permission_denials": [],
+      "prompt_chars": 12973,
+      "prompt_lines": 241,
+      "source": "provider",
+      "attempt": 1
+    },
+    "telemetry_history": [
+      {
+        "cost_usd": 0.4486742,
+        "duration_ms": 153101,
+        "duration_api_ms": 115143,
+        "num_turns": 17,
+        "input_tokens": 19,
+        "output_tokens": 6429,
+        "cache_creation_tokens": 30277,
+        "cache_read_tokens": 553634,
+        "stop_reason": "end_turn",
+        "session_id": "5963aede-b3d7-48bf-9d22-0ca83a8f0a04",
+        "permission_denials": [],
+        "prompt_chars": 12973,
+        "prompt_lines": 241,
+        "source": "provider",
+        "attempt": 1
+      }
+    ],
+    "last_commit": "e9acc1514e1be8a95bef47cd14848bb628cb9d83"
+  },
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

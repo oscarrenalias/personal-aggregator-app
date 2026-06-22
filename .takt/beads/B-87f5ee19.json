@@ -3,7 +3,7 @@
   "title": "In-app URL router for deep links",
   "agent_type": "developer",
   "description": "Implement onOpenURL handling in AggregatorApp.swift (or a dedicated router struct). Parse aggregator://article/{id} \u2192 navigate to ArticleDetailView; parse aggregator://thread/{id} \u2192 navigate to ThreadDetailView. Navigation must be cold-start-safe: store the pending deep-link URL on parse, then apply the navigation path once the root NavigationStack's views are ready. Silently ignore malformed or unrecognized URLs.",
-  "status": "ready",
+  "status": "done",
   "bead_type": "task",
   "parent_id": "B-6b2810c5",
   "dependencies": [
@@ -25,33 +25,57 @@
   "expected_globs": [
     "AggregatorApp/**/*.swift"
   ],
-  "touched_files": [],
-  "changed_files": [],
+  "touched_files": [
+    "AggregatorApp/AggregatorApp.swift",
+    "AggregatorApp/AppRoot.swift",
+    "AggregatorApp/Threads/ThreadsView.swift",
+    "AggregatorWidget/WidgetViews.swift"
+  ],
+  "changed_files": [
+    "AggregatorApp/AggregatorApp.swift",
+    "AggregatorApp/AppRoot.swift",
+    "AggregatorApp/Threads/ThreadsView.swift",
+    "AggregatorWidget/WidgetViews.swift"
+  ],
   "updated_docs": [],
   "handoff_summary": {
-    "completed": "",
-    "remaining": "",
-    "risks": "",
-    "verdict": "",
+    "completed": "DeepLink enum (.article, .thread), DeepLinkRouter @Observable class with handle(_:) URL parsing, onOpenURL wired in WindowGroup, environment injection via .environment(deepLinkRouter), AppRoot tab switching on deep link receipt, ThreadsView NavigationPath binding + dual navigationDestination + onAppear/onChange for cold-start-safe routing.",
+    "remaining": "N/A",
+    "risks": "ThreadsView is the sole NavigationStack handling both article and thread deep links. If a future bead adds a dedicated Articles tab with its own NavigationStack, the routing logic would need to be split. The current approach is intentional for the existing architecture.",
+    "verdict": "approved",
     "findings_count": 0,
     "requires_followup": false,
-    "changed_files": [],
+    "changed_files": [
+      "AggregatorApp/AggregatorApp.swift",
+      "AggregatorApp/AppRoot.swift",
+      "AggregatorApp/Threads/ThreadsView.swift",
+      "AggregatorWidget/WidgetViews.swift"
+    ],
     "updated_docs": [],
-    "next_action": "",
-    "next_agent": "",
+    "next_action": "Tester agent should verify cold-start and warm-start deep link navigation for both aggregator://article/{id} and aggregator://thread/{id}, tab switching behavior, back navigation, and silent failure for malformed/unknown URLs.",
+    "next_agent": "tester",
     "block_reason": "",
-    "expected_files": [],
-    "expected_globs": [],
-    "touched_files": [],
-    "conflict_risks": "",
-    "design_decisions": "",
-    "test_coverage_notes": "",
-    "known_limitations": ""
+    "expected_files": [
+      "AggregatorApp/AggregatorApp.swift"
+    ],
+    "expected_globs": [
+      "AggregatorApp/**/*.swift"
+    ],
+    "touched_files": [
+      "AggregatorApp/AggregatorApp.swift",
+      "AggregatorApp/AppRoot.swift",
+      "AggregatorApp/Threads/ThreadsView.swift",
+      "AggregatorWidget/WidgetViews.swift"
+    ],
+    "conflict_risks": "None anticipated. ThreadsView is the only file owning NavigationStack path state for the Threads tab. AppRoot tab selection is new state not previously owned by any file.",
+    "design_decisions": "1. pendingLink cleared by the consumer (ThreadsView), not the producer \u2014 prevents re-navigation when the Threads tab re-appears after back-navigation. AppRoot.onChange uses `guard link != nil` to ignore the nil-clearing transition. 2. Both .onAppear and .onChange are needed: .onAppear covers cold start where ThreadsView is not yet mounted when onOpenURL fires, so onChange never fires for the initial value; .onChange covers warm start. 3. Both article and thread deep links route through ThreadsView's NavigationStack \u2014 articles are contextually accessed within threads in this app, and the Sources/Today stacks lack a suitable article-by-ID destination. 4. NavigationPath (heterogeneous) chosen over a typed [DeepLink] path because ThreadsView already pushes Int values via NavigationLink(value: index); NavigationPath handles both types without changing the existing thread-list navigation. 5. url.host(percentEncoded: false) uses the non-deprecated iOS 16+ URL API, appropriate for the iOS 26 deployment target.",
+    "test_coverage_notes": "Tester should verify: (1) aggregator://article/42 cold start \u2192 ArticleDetailView(articleId:42) pushed in Threads tab; (2) aggregator://thread/7 cold start \u2192 ThreadDetailView(threadId:7) pushed in Threads tab; (3) same URLs when app is already running (warm start) on any tab; (4) app switches to Threads tab if a non-Threads tab was active when deep link arrives; (5) back navigation from deep-linked destination pops to Threads list; (6) malformed URLs (aggregator://, aggregator://article/, aggregator://article/abc, https://example.com, aggregator://search/1) produce no crash and no navigation; (7) second deep link while already navigated deep \u2192 second destination pushed on top of existing stack.",
+    "known_limitations": "Article deep links always route through the Threads tab's NavigationStack, not through SourcesView. This is consistent with the current architecture (no standalone articles tab) and appropriate for the widget use case, which links to specific articles within thread context. If a dedicated Articles tab is added later, routing logic should be revisited."
   },
   "block_reason": "",
-  "conflict_risks": "",
-  "branch_name": "",
-  "worktree_path": "",
+  "conflict_risks": "None anticipated. ThreadsView is the only file owning NavigationStack path state for the Threads tab. AppRoot tab selection is new state not previously owned by any file.",
+  "branch_name": "feature/b-6b2810c5",
+  "worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-6b2810c5",
   "lease": null,
   "retries": 0,
   "execution_history": [
@@ -61,9 +85,164 @@
       "agent_type": "scheduler",
       "summary": "Bead created",
       "details": {}
+    },
+    {
+      "timestamp": "2026-06-22T09:44:52.766215+00:00",
+      "event": "skills_loaded",
+      "agent_type": "developer",
+      "summary": "Loaded 7 skill(s) for isolated execution",
+      "details": {
+        "loaded_skills": [
+          "core/base-orchestrator",
+          "role/developer-implementation",
+          "capability/code-edit",
+          "task/corrective-implementation",
+          "task/refactor-safe",
+          "task/migration",
+          "memory"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-06-22T09:44:52.766260+00:00",
+      "event": "started",
+      "agent_type": "developer",
+      "summary": "Worker started",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-22T09:44:52.768382+00:00",
+      "event": "guardrails_applied",
+      "agent_type": "developer",
+      "summary": "Applied guardrails from .takt/agent-runs/B-87f5ee19/repo/templates/agents/developer.md",
+      "details": {
+        "template_path": ".takt/agent-runs/B-87f5ee19/repo/templates/agents/developer.md"
+      }
+    },
+    {
+      "timestamp": "2026-06-22T09:51:00.558732+00:00",
+      "event": "completed",
+      "agent_type": "developer",
+      "summary": "Implemented in-app URL router for `aggregator://` deep links. Added `DeepLink` enum and `@Observable DeepLinkRouter` class in `AggregatorApp.swift`, wired `.onOpenURL` on the WindowGroup. Updated `AppRoot.swift` to select the Threads tab when a deep link arrives. Updated `ThreadsView.swift` to bind a `NavigationPath`, register a `navigationDestination(for: DeepLink.self)` for both `.article(Int)` and `.thread(Int)`, and apply pending links on `.onAppear` (cold-start) and `.onChange` (warm-start), clearing `pendingLink` after consumption to prevent re-navigation.",
+      "details": {}
     }
   ],
-  "metadata": {},
+  "metadata": {
+    "execution_root": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-87f5ee19",
+    "workspace_repo_path": "repo",
+    "loaded_skills": [
+      "core/base-orchestrator",
+      "role/developer-implementation",
+      "capability/code-edit",
+      "task/corrective-implementation",
+      "task/refactor-safe",
+      "task/migration",
+      "memory"
+    ],
+    "skill_bundle_hash": "ecae5633083d1bbec41a6e5ec6ea05bbab117f60499c19b2ed76dbbe3e1aec7c",
+    "isolated_home": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-87f5ee19/home",
+    "runner_backend": "claude",
+    "guardrails": {
+      "agent_type": "developer",
+      "template_path": ".takt/agent-runs/B-87f5ee19/repo/templates/agents/developer.md",
+      "template_text": "# Developer Guardrails\n\nPrimary responsibility: Implement only the assigned bead inside the existing architecture and file scope.\n\n## Corrective bead scope\n\nIf your `bead_id` ends in `-corrective` or `-corrective-<N>` (e.g. `B-abc12345-corrective`, `B-abc12345-test-corrective-2`), you are running as a CORRECTIVE bead. Your scope is **strictly limited to fixing the specific failure that blocked the parent bead**. Do not:\n\n- Add unrelated improvements, refactors, or cleanup, even if you notice them\n- Reapply previously-reverted changes (the operator reverted them for a reason)\n- Expand the surface area beyond what is needed to unblock the parent\n- Touch files outside what the parent bead's `expected_files` / `expected_globs` covered, unless the failure is genuinely in another file and there is no smaller fix\n\nIf you notice an unrelated issue while fixing the corrective scope: **file a separate bead** via `takt bead create` describing what you saw, but do not fix it in this corrective. The operator will prioritize and dispatch.\n\nWhen in doubt about scope: prefer the smallest possible fix. The reviewer of this corrective will check that the scope was respected.\n\nAllowed actions:\n- Modify code, configuration, or local docs required to complete the assigned bead.\n- Create sub-beads for discovered follow-up work that should be handled separately.\n- Verify your `Swift` changes compile and import correctly with a quick syntax check: ``.\n\nDisallowed actions:\n- Run any test suite \u2014 not even a targeted `` run or any subset. Test execution is exclusively the tester agent's responsibility. Running tests wastes the agent budget and delays the pipeline.\n- Redesign unrelated architecture or broaden scope beyond the assigned bead.\n- Perform final review signoff in place of a review agent.\n- Silently absorb unrelated test, documentation, or planning work that should be handed off.\n\n## Memory\n\n**Read memory at bead start.** Before touching any code, run three searches using `$TAKT_CMD` (injected by the orchestrator):\n\n```bash\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace global\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace feature:<feature_root_id>\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace specs\n```\n\nTreat results as ambient context \u2014 apply relevant entries; skip entries that don't apply.\n\n**Write to memory when you discover reusable project knowledge** \u2014 something that would have changed your approach if you had known it upfront, and is not already in CLAUDE.md or the guardrails.\n\n```bash\n$TAKT_CMD memory add \"<concise fact>\" --namespace global               # project-wide knowledge\n$TAKT_CMD memory add \"<discovery>\" --namespace feature:<feature_root_id>  # feature-scoped\n```\n\nRequired Handoff Fields:\n\nEvery developer bead **must** populate the following three fields in its output JSON. Reviewers and tester agents rely on these fields to scope their work without additional back-and-forth turns. Use `\"N/A\"` only when a field is genuinely inapplicable (e.g., a trivial rename with no design trade-offs); do not leave fields blank.\n\n- **`design_decisions`** \u2014 Document non-obvious architectural or implementation choices made during this bead. Include alternatives considered and why the chosen approach was preferred. Reviewers use this to evaluate correctness without re-deriving intent. Set to `\"N/A\"` only if the change was purely mechanical with no meaningful trade-offs.\n\n- **`test_coverage_notes`** \u2014 Describe what the tester agent should verify: new code paths, edge cases introduced, regression risks, and any known untested scenarios left to the tester. Set to `\"N/A\"` only if the bead touched no executable code paths (e.g., documentation-only changes).\n\n- **`known_limitations`** \u2014 Call out constraints, deferred work, or known gaps in the implementation. This includes out-of-scope items deliberately left for follow-up beads and any areas where the implementation is intentionally incomplete. Set to `\"N/A\"` if the implementation is complete as specified with no known gaps.\n\nExpected outputs:\n- Completed or blocked JSON with concise implementation summary.\n- Accurate touched files, changed files, risks, and follow-up handoff fields.\n- Populated `design_decisions`, `test_coverage_notes`, and `known_limitations` fields in every response.",
+      "captured_at": "2026-06-22T09:44:52.768372+00:00"
+    },
+    "worker_prompt_context": {
+      "bead_id": "B-87f5ee19",
+      "feature_root_id": "B-6b2810c5",
+      "title": "In-app URL router for deep links",
+      "agent_type": "developer",
+      "description": "Implement onOpenURL handling in AggregatorApp.swift (or a dedicated router struct). Parse aggregator://article/{id} \u2192 navigate to ArticleDetailView; parse aggregator://thread/{id} \u2192 navigate to ThreadDetailView. Navigation must be cold-start-safe: store the pending deep-link URL on parse, then apply the navigation path once the root NavigationStack's views are ready. Silently ignore malformed or unrecognized URLs.",
+      "status": "in_progress",
+      "acceptance_criteria": [
+        "onOpenURL parses aggregator://article/{id} and pushes ArticleDetailView with the given id",
+        "onOpenURL parses aggregator://thread/{id} and pushes ThreadDetailView with the given id",
+        "Routing works from cold start (app launched via widget tap, not running beforehand)",
+        "Malformed URLs and unknown schemes are silently ignored with no crash"
+      ],
+      "dependencies": [
+        "B-9ecb3f85"
+      ],
+      "linked_docs": [],
+      "execution_branch_name": "feature/b-6b2810c5",
+      "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-6b2810c5",
+      "expected_files": [
+        "AggregatorApp/AggregatorApp.swift"
+      ],
+      "expected_globs": [
+        "AggregatorApp/**/*.swift"
+      ],
+      "touched_files": [],
+      "conflict_risks": "",
+      "handoff_summary": {
+        "completed": "",
+        "remaining": "",
+        "risks": "",
+        "verdict": "",
+        "findings_count": 0,
+        "requires_followup": false,
+        "changed_files": [],
+        "updated_docs": [],
+        "next_action": "",
+        "next_agent": "",
+        "block_reason": "",
+        "expected_files": [],
+        "expected_globs": [],
+        "touched_files": [],
+        "conflict_risks": "",
+        "design_decisions": "",
+        "test_coverage_notes": "",
+        "known_limitations": ""
+      }
+    },
+    "last_agent_result": {
+      "outcome": "completed",
+      "summary": "Implemented in-app URL router for `aggregator://` deep links. Added `DeepLink` enum and `@Observable DeepLinkRouter` class in `AggregatorApp.swift`, wired `.onOpenURL` on the WindowGroup. Updated `AppRoot.swift` to select the Threads tab when a deep link arrives. Updated `ThreadsView.swift` to bind a `NavigationPath`, register a `navigationDestination(for: DeepLink.self)` for both `.article(Int)` and `.thread(Int)`, and apply pending links on `.onAppear` (cold-start) and `.onChange` (warm-start), clearing `pendingLink` after consumption to prevent re-navigation.",
+      "verdict": "approved",
+      "findings_count": 0,
+      "requires_followup": false,
+      "next_agent": "tester",
+      "block_reason": ""
+    },
+    "telemetry": {
+      "cost_usd": 1.0533776,
+      "duration_ms": 367049,
+      "duration_api_ms": 354999,
+      "num_turns": 33,
+      "input_tokens": 30,
+      "output_tokens": 20923,
+      "cache_creation_tokens": 57496,
+      "cache_read_tokens": 1304502,
+      "stop_reason": "end_turn",
+      "session_id": "5687fc24-c098-46a6-9ece-1ec121d1cd64",
+      "permission_denials": [],
+      "prompt_chars": 9222,
+      "prompt_lines": 175,
+      "source": "provider",
+      "attempt": 1
+    },
+    "telemetry_history": [
+      {
+        "cost_usd": 1.0533776,
+        "duration_ms": 367049,
+        "duration_api_ms": 354999,
+        "num_turns": 33,
+        "input_tokens": 30,
+        "output_tokens": 20923,
+        "cache_creation_tokens": 57496,
+        "cache_read_tokens": 1304502,
+        "stop_reason": "end_turn",
+        "session_id": "5687fc24-c098-46a6-9ece-1ec121d1cd64",
+        "permission_denials": [],
+        "prompt_chars": 9222,
+        "prompt_lines": 175,
+        "source": "provider",
+        "attempt": 1
+      }
+    ],
+    "last_commit": "93cabb8ca419d5b00d4898a4f2486b084f1dff4d"
+  },
   "labels": [],
   "recovery_for": null,
   "priority": null

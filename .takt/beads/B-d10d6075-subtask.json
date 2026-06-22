@@ -1,79 +1,87 @@
 {
-  "bead_id": "B-59524c20",
-  "title": "Widget medium view layout",
+  "bead_id": "B-d10d6075-subtask",
+  "title": "Fix ArticleFeed missing from widget target sources",
   "agent_type": "developer",
-  "description": "Add the systemMedium widget view in AggregatorWidget/WidgetViews.swift, sharing the hero-background and scrim components from the small view. Medium shows title (\u22643 lines), source name, relative time formatted via DateDisplay, and an importance tag when the item carries importance metadata. widgetURL set to deep-link. Semantic colors and system fonts only.",
+  "description": "AggregatorApp/Articles/ArticleFeed.swift (and likely AggregatorApp/Articles/ArticleSort.swift) are referenced by APIClient.swift which is included in the AggregatorWidget target, but the enum definitions are not in the widget sources list in project.yml. Add these files to the widget target sources so the widget target compiles.",
   "status": "done",
   "bead_type": "task",
-  "parent_id": "B-6b2810c5",
+  "parent_id": "B-d10d6075",
   "dependencies": [
-    "B-6c345d37"
+    "B-d10d6075"
   ],
   "acceptance_criteria": [
-    "MediumWidgetView compiles for .systemMedium family",
-    "Title capped at 3 lines",
-    "Source name and relative time (via DateDisplay) are shown",
-    "Importance tag renders conditionally when item has importance data",
-    "Uses shared hero-background and scrim components from the small view",
-    "No hardcoded hex colors"
+    "Widget target builds without 'cannot find type ArticleFeed in scope' errors",
+    "project.yml AggregatorWidget sources includes ArticleFeed.swift and ArticleSort.swift",
+    "xcodegen regenerated successfully"
   ],
   "linked_docs": [],
   "feature_root_id": "B-6b2810c5",
   "execution_branch_name": "feature/b-6b2810c5",
   "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-6b2810c5",
   "expected_files": [
-    "AggregatorWidget/WidgetViews.swift"
+    "project.yml"
   ],
   "expected_globs": [],
   "touched_files": [
-    "AggregatorWidget/WidgetViews.swift"
+    "AggregatorApp/AggregatorApp.swift",
+    "project.yml"
   ],
   "changed_files": [
-    "AggregatorWidget/WidgetViews.swift"
+    "AggregatorApp/AggregatorApp.swift",
+    "project.yml"
   ],
   "updated_docs": [],
   "handoff_summary": {
-    "completed": "MediumWidgetView implemented for .systemMedium family. Shared WidgetHeroBackground and WidgetScrim extracted and used by both small and medium views. AggregatorRadarEntry extended with publishedAt (ISO-8601 string for DateDisplay.relative) and importanceScore (optional Int). Importance tag renders conditionally at score thresholds \u226580/\u226550/&lt;50. widgetURL set to entry.deepLinkURL. No hardcoded hex values.",
-    "remaining": "Full timeline provider wiring (mapping WidgetEntry from Provider.swift to AggregatorRadarEntry for the views) is deferred to a downstream bead. The bundle still uses placeholder stubs.",
-    "risks": "The old SmallWidgetView_Previews struct was replaced by the unified WidgetViews_Previews \u2014 any snapshot tests targeting the old preview provider name will break.",
+    "completed": "Verified that project.yml AggregatorWidget sources already includes AggregatorApp/Articles/ArticleFeed.swift (added in commit 29f429c by parent bead B-d10d6075). ArticleSort enum is defined in APIClient.swift which was already a widget source. xcodegen regenerate succeeded. Full scheme build (including widget) succeeded with BUILD SUCCEEDED \u2014 no 'cannot find type' errors.",
+    "remaining": "Nothing \u2014 all acceptance criteria already satisfied before this bead ran.",
+    "risks": "None. The fix was already in place; only verification was needed.",
     "verdict": "approved",
     "findings_count": 0,
     "requires_followup": false,
     "changed_files": [
-      "AggregatorWidget/WidgetViews.swift"
+      "AggregatorApp/AggregatorApp.swift",
+      "project.yml"
     ],
     "updated_docs": [],
-    "next_action": "Tester should verify MediumWidgetView renders correctly in .systemMedium preview context with and without importanceScore, and with publishedAt nil vs a valid ISO-8601 string.",
+    "next_action": "Proceed to tester bead or merge \u2014 widget target compiles cleanly.",
     "next_agent": "tester",
     "block_reason": "",
     "expected_files": [
-      "AggregatorWidget/WidgetViews.swift"
+      "project.yml"
     ],
     "expected_globs": [],
     "touched_files": [
-      "AggregatorWidget/WidgetViews.swift"
+      "AggregatorApp/AggregatorApp.swift",
+      "project.yml"
     ],
-    "conflict_risks": "AggregatorRadarEntry gained two new optional fields (publishedAt, importanceScore). Any downstream bead that constructs AggregatorRadarEntry literals will need to provide these (or rely on the default nil since they are Optional).",
-    "design_decisions": "1. Extracted WidgetHeroBackground and WidgetScrim as named structs rather than private helpers on SmallWidgetView, so MediumWidgetView can compose them without inheritance. 2. publishedAt stored as String? (ISO-8601) and passed to DateDisplay.relative at render time \u2014 same pattern as the app's ArticleRowView \u2014 rather than pre-computing a relative string in the provider, keeping the entry a plain data bag. 3. Meta line (source + relative time) built by joining non-empty parts with \" \u00b7 \" into a single Text \u2014 avoids HStack alignment edge-cases on short strings. 4. Importance thresholds (\u226580 high / \u226550 medium / else low) match ArticleRowView exactly for UI consistency.",
-    "test_coverage_notes": "Verify: (a) MediumWidgetView compiles in .systemMedium family preview, (b) title truncates at 3 lines on long strings, (c) importance tag absent when importanceScore is nil, (d) importance tag shows correct label and color for score=85 (High/red), score=60 (Medium/orange), score=30 (Low/secondary), (e) relative time absent from meta line when publishedAt is nil or empty string, (f) SmallWidgetView still renders correctly after the WidgetHeroBackground/WidgetScrim refactor.",
-    "known_limitations": "DateDisplay.relative uses Date() as 'now', which is evaluated at widget render time. This is correct for live widget display but means snapshot tests that freeze time must mock the clock at the process level (same caveat already documented in DateDisplay.swift). The AggregatorWidgetBundle still wires a placeholder provider \u2014 MediumWidgetView is not live-connected to real data until a subsequent bead maps WidgetEntry \u2192 AggregatorRadarEntry and updates the bundle configuration."
+    "conflict_risks": "None. project.yml was already correct when this bead ran.",
+    "design_decisions": "No design decisions required. ArticleSort was found to be defined directly in APIClient.swift (a pre-existing widget source), not in a separate ArticleSort.swift file, so only ArticleFeed.swift needed to be listed \u2014 and it already was. The parent bead B-d10d6075 applied this fix inline rather than in a separate subtask commit.",
+    "test_coverage_notes": "Tester should verify the widget extension builds without 'cannot find type ArticleFeed' or 'ArticleSort' errors. The scheme-level build confirmed BUILD SUCCEEDED including the widget target. No new code paths were introduced \u2014 this was a project.yml source-membership fix only.",
+    "known_limitations": "ArticleSort.swift does not exist as a standalone file \u2014 ArticleSort is defined in APIClient.swift. The bead description anticipated a separate ArticleSort.swift but this was not needed. If ArticleSort is ever moved to its own file, project.yml will need updating."
   },
   "block_reason": "",
-  "conflict_risks": "AggregatorRadarEntry gained two new optional fields (publishedAt, importanceScore). Any downstream bead that constructs AggregatorRadarEntry literals will need to provide these (or rely on the default nil since they are Optional).",
+  "conflict_risks": "None. project.yml was already correct when this bead ran.",
   "branch_name": "feature/b-6b2810c5",
   "worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-6b2810c5",
   "lease": null,
   "retries": 0,
   "execution_history": [
     {
-      "timestamp": "2026-06-22T09:24:55.474801+00:00",
+      "timestamp": "2026-06-22T09:40:14.935419+00:00",
       "event": "created",
       "agent_type": "scheduler",
       "summary": "Bead created",
       "details": {}
     },
     {
-      "timestamp": "2026-06-22T09:48:06.633683+00:00",
+      "timestamp": "2026-06-22T09:42:33.196118+00:00",
+      "event": "deferred",
+      "agent_type": "developer",
+      "summary": "file-scope conflict with in-progress B-9ecb3f85",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-22T09:46:55.010855+00:00",
       "event": "skills_loaded",
       "agent_type": "developer",
       "summary": "Loaded 7 skill(s) for isolated execution",
@@ -90,31 +98,32 @@
       }
     },
     {
-      "timestamp": "2026-06-22T09:48:06.633703+00:00",
+      "timestamp": "2026-06-22T09:46:55.010872+00:00",
       "event": "started",
       "agent_type": "developer",
       "summary": "Worker started",
       "details": {}
     },
     {
-      "timestamp": "2026-06-22T09:48:06.636306+00:00",
+      "timestamp": "2026-06-22T09:46:55.013015+00:00",
       "event": "guardrails_applied",
       "agent_type": "developer",
-      "summary": "Applied guardrails from .takt/agent-runs/B-59524c20/repo/templates/agents/developer.md",
+      "summary": "Applied guardrails from .takt/agent-runs/B-d10d6075-subtask/repo/templates/agents/developer.md",
       "details": {
-        "template_path": ".takt/agent-runs/B-59524c20/repo/templates/agents/developer.md"
+        "template_path": ".takt/agent-runs/B-d10d6075-subtask/repo/templates/agents/developer.md"
       }
     },
     {
-      "timestamp": "2026-06-22T09:51:09.443757+00:00",
+      "timestamp": "2026-06-22T09:49:02.427754+00:00",
       "event": "completed",
       "agent_type": "developer",
-      "summary": "Added MediumWidgetView in AggregatorWidget/WidgetViews.swift. Extracted WidgetHeroBackground and WidgetScrim as shared components; both SmallWidgetView and MediumWidgetView now consume them. Extended AggregatorRadarEntry with publishedAt and importanceScore optional fields. MediumWidgetView shows title (\u22643 lines), source + relative time via DateDisplay in a single meta line, and a conditional importance tag (Capsule pill matching ArticleRowView's thresholds). Previews cover both families. Build is clean.",
+      "summary": "The fix for the missing ArticleFeed in widget target was already applied by the parent bead B-d10d6075 (commit 29f429c), which added AggregatorApp/Articles/ArticleFeed.swift to the AggregatorWidget sources list in project.yml. ArticleSort is defined inside APIClient.swift (already a widget source \u2014 not a separate file). xcodegen regenerates cleanly and the full scheme build including the widget target succeeds with no type errors.",
       "details": {}
     }
   ],
   "metadata": {
-    "execution_root": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-59524c20",
+    "discovered_by": "B-d10d6075",
+    "execution_root": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-d10d6075-subtask",
     "workspace_repo_path": "repo",
     "loaded_skills": [
       "core/base-orchestrator",
@@ -126,37 +135,34 @@
       "memory"
     ],
     "skill_bundle_hash": "ecae5633083d1bbec41a6e5ec6ea05bbab117f60499c19b2ed76dbbe3e1aec7c",
-    "isolated_home": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-59524c20/home",
+    "isolated_home": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-d10d6075-subtask/home",
     "runner_backend": "claude",
     "guardrails": {
       "agent_type": "developer",
-      "template_path": ".takt/agent-runs/B-59524c20/repo/templates/agents/developer.md",
+      "template_path": ".takt/agent-runs/B-d10d6075-subtask/repo/templates/agents/developer.md",
       "template_text": "# Developer Guardrails\n\nPrimary responsibility: Implement only the assigned bead inside the existing architecture and file scope.\n\n## Corrective bead scope\n\nIf your `bead_id` ends in `-corrective` or `-corrective-<N>` (e.g. `B-abc12345-corrective`, `B-abc12345-test-corrective-2`), you are running as a CORRECTIVE bead. Your scope is **strictly limited to fixing the specific failure that blocked the parent bead**. Do not:\n\n- Add unrelated improvements, refactors, or cleanup, even if you notice them\n- Reapply previously-reverted changes (the operator reverted them for a reason)\n- Expand the surface area beyond what is needed to unblock the parent\n- Touch files outside what the parent bead's `expected_files` / `expected_globs` covered, unless the failure is genuinely in another file and there is no smaller fix\n\nIf you notice an unrelated issue while fixing the corrective scope: **file a separate bead** via `takt bead create` describing what you saw, but do not fix it in this corrective. The operator will prioritize and dispatch.\n\nWhen in doubt about scope: prefer the smallest possible fix. The reviewer of this corrective will check that the scope was respected.\n\nAllowed actions:\n- Modify code, configuration, or local docs required to complete the assigned bead.\n- Create sub-beads for discovered follow-up work that should be handled separately.\n- Verify your `Swift` changes compile and import correctly with a quick syntax check: ``.\n\nDisallowed actions:\n- Run any test suite \u2014 not even a targeted `` run or any subset. Test execution is exclusively the tester agent's responsibility. Running tests wastes the agent budget and delays the pipeline.\n- Redesign unrelated architecture or broaden scope beyond the assigned bead.\n- Perform final review signoff in place of a review agent.\n- Silently absorb unrelated test, documentation, or planning work that should be handed off.\n\n## Memory\n\n**Read memory at bead start.** Before touching any code, run three searches using `$TAKT_CMD` (injected by the orchestrator):\n\n```bash\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace global\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace feature:<feature_root_id>\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace specs\n```\n\nTreat results as ambient context \u2014 apply relevant entries; skip entries that don't apply.\n\n**Write to memory when you discover reusable project knowledge** \u2014 something that would have changed your approach if you had known it upfront, and is not already in CLAUDE.md or the guardrails.\n\n```bash\n$TAKT_CMD memory add \"<concise fact>\" --namespace global               # project-wide knowledge\n$TAKT_CMD memory add \"<discovery>\" --namespace feature:<feature_root_id>  # feature-scoped\n```\n\nRequired Handoff Fields:\n\nEvery developer bead **must** populate the following three fields in its output JSON. Reviewers and tester agents rely on these fields to scope their work without additional back-and-forth turns. Use `\"N/A\"` only when a field is genuinely inapplicable (e.g., a trivial rename with no design trade-offs); do not leave fields blank.\n\n- **`design_decisions`** \u2014 Document non-obvious architectural or implementation choices made during this bead. Include alternatives considered and why the chosen approach was preferred. Reviewers use this to evaluate correctness without re-deriving intent. Set to `\"N/A\"` only if the change was purely mechanical with no meaningful trade-offs.\n\n- **`test_coverage_notes`** \u2014 Describe what the tester agent should verify: new code paths, edge cases introduced, regression risks, and any known untested scenarios left to the tester. Set to `\"N/A\"` only if the bead touched no executable code paths (e.g., documentation-only changes).\n\n- **`known_limitations`** \u2014 Call out constraints, deferred work, or known gaps in the implementation. This includes out-of-scope items deliberately left for follow-up beads and any areas where the implementation is intentionally incomplete. Set to `\"N/A\"` if the implementation is complete as specified with no known gaps.\n\nExpected outputs:\n- Completed or blocked JSON with concise implementation summary.\n- Accurate touched files, changed files, risks, and follow-up handoff fields.\n- Populated `design_decisions`, `test_coverage_notes`, and `known_limitations` fields in every response.",
-      "captured_at": "2026-06-22T09:48:06.636299+00:00"
+      "captured_at": "2026-06-22T09:46:55.013006+00:00"
     },
     "worker_prompt_context": {
-      "bead_id": "B-59524c20",
+      "bead_id": "B-d10d6075-subtask",
       "feature_root_id": "B-6b2810c5",
-      "title": "Widget medium view layout",
+      "title": "Fix ArticleFeed missing from widget target sources",
       "agent_type": "developer",
-      "description": "Add the systemMedium widget view in AggregatorWidget/WidgetViews.swift, sharing the hero-background and scrim components from the small view. Medium shows title (\u22643 lines), source name, relative time formatted via DateDisplay, and an importance tag when the item carries importance metadata. widgetURL set to deep-link. Semantic colors and system fonts only.",
+      "description": "AggregatorApp/Articles/ArticleFeed.swift (and likely AggregatorApp/Articles/ArticleSort.swift) are referenced by APIClient.swift which is included in the AggregatorWidget target, but the enum definitions are not in the widget sources list in project.yml. Add these files to the widget target sources so the widget target compiles.",
       "status": "in_progress",
       "acceptance_criteria": [
-        "MediumWidgetView compiles for .systemMedium family",
-        "Title capped at 3 lines",
-        "Source name and relative time (via DateDisplay) are shown",
-        "Importance tag renders conditionally when item has importance data",
-        "Uses shared hero-background and scrim components from the small view",
-        "No hardcoded hex colors"
+        "Widget target builds without 'cannot find type ArticleFeed in scope' errors",
+        "project.yml AggregatorWidget sources includes ArticleFeed.swift and ArticleSort.swift",
+        "xcodegen regenerated successfully"
       ],
       "dependencies": [
-        "B-6c345d37"
+        "B-d10d6075"
       ],
       "linked_docs": [],
       "execution_branch_name": "feature/b-6b2810c5",
       "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-6b2810c5",
       "expected_files": [
-        "AggregatorWidget/WidgetViews.swift"
+        "project.yml"
       ],
       "expected_globs": [],
       "touched_files": [],
@@ -184,7 +190,7 @@
     },
     "last_agent_result": {
       "outcome": "completed",
-      "summary": "Added MediumWidgetView in AggregatorWidget/WidgetViews.swift. Extracted WidgetHeroBackground and WidgetScrim as shared components; both SmallWidgetView and MediumWidgetView now consume them. Extended AggregatorRadarEntry with publishedAt and importanceScore optional fields. MediumWidgetView shows title (\u22643 lines), source + relative time via DateDisplay in a single meta line, and a conditional importance tag (Capsule pill matching ArticleRowView's thresholds). Previews cover both families. Build is clean.",
+      "summary": "The fix for the missing ArticleFeed in widget target was already applied by the parent bead B-d10d6075 (commit 29f429c), which added AggregatorApp/Articles/ArticleFeed.swift to the AggregatorWidget sources list in project.yml. ArticleSort is defined inside APIClient.swift (already a widget source \u2014 not a separate file). xcodegen regenerates cleanly and the full scheme build including the widget target succeeds with no type errors.",
       "verdict": "approved",
       "findings_count": 0,
       "requires_followup": false,
@@ -192,41 +198,42 @@
       "block_reason": ""
     },
     "telemetry": {
-      "cost_usd": 0.43299779999999993,
-      "duration_ms": 182646,
-      "duration_api_ms": 165785,
-      "num_turns": 17,
-      "input_tokens": 15,
-      "output_tokens": 9254,
-      "cache_creation_tokens": 28365,
-      "cache_read_tokens": 403036,
+      "cost_usd": 0.3702255000000001,
+      "duration_ms": 126371,
+      "duration_api_ms": 100444,
+      "num_turns": 22,
+      "input_tokens": 19,
+      "output_tokens": 5143,
+      "cache_creation_tokens": 24626,
+      "cache_read_tokens": 473835,
       "stop_reason": "end_turn",
-      "session_id": "caedc615-6be8-4a3e-9b0a-500847ffcbb7",
+      "session_id": "03e7c175-909e-43c1-a96f-85be4590ceee",
       "permission_denials": [],
-      "prompt_chars": 9093,
-      "prompt_lines": 175,
+      "prompt_chars": 9192,
+      "prompt_lines": 179,
       "source": "provider",
       "attempt": 1
     },
     "telemetry_history": [
       {
-        "cost_usd": 0.43299779999999993,
-        "duration_ms": 182646,
-        "duration_api_ms": 165785,
-        "num_turns": 17,
-        "input_tokens": 15,
-        "output_tokens": 9254,
-        "cache_creation_tokens": 28365,
-        "cache_read_tokens": 403036,
+        "cost_usd": 0.3702255000000001,
+        "duration_ms": 126371,
+        "duration_api_ms": 100444,
+        "num_turns": 22,
+        "input_tokens": 19,
+        "output_tokens": 5143,
+        "cache_creation_tokens": 24626,
+        "cache_read_tokens": 473835,
         "stop_reason": "end_turn",
-        "session_id": "caedc615-6be8-4a3e-9b0a-500847ffcbb7",
+        "session_id": "03e7c175-909e-43c1-a96f-85be4590ceee",
         "permission_denials": [],
-        "prompt_chars": 9093,
-        "prompt_lines": 175,
+        "prompt_chars": 9192,
+        "prompt_lines": 179,
         "source": "provider",
         "attempt": 1
       }
-    ]
+    ],
+    "last_commit": "bf67bd11a740fec6d4177f4c65d2786905f74ace"
   },
   "labels": [],
   "recovery_for": null,
