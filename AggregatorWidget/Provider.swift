@@ -1,4 +1,5 @@
 import AppIntents
+import Foundation
 import UIKit
 import WidgetKit
 
@@ -7,7 +8,9 @@ import WidgetKit
 enum WidgetState {
     case placeholder
     case loaded
-    case error(String)
+    case notConfigured
+    case empty
+    case offline
 }
 
 // MARK: - Widget Content Item
@@ -46,6 +49,41 @@ private extension Thread {
     }
 }
 
+// MARK: - Cached Entry Data
+
+/// Minimal metadata persisted after a successful timeline fetch so entries can be
+/// reconstructed (with cached hero images) when a subsequent fetch fails.
+private struct CachedEntryData: Codable {
+    let itemId: String
+    let deepLinkURL: String?
+}
+
+// MARK: - Last Good Cache
+
+/// Persists the last successfully fetched entry list to the shared App Group container.
+private struct LastGoodCache {
+    private static let appGroupID = "group.net.renalias.AggregatorApp"
+    private static let fileName = "widget_last_good_entries.json"
+
+    static func save(_ entries: [CachedEntryData]) {
+        guard let url = fileURL,
+              let data = try? JSONEncoder().encode(entries) else { return }
+        try? data.write(to: url)
+    }
+
+    static func load() -> [CachedEntryData]? {
+        guard let url = fileURL,
+              let data = try? Data(contentsOf: url) else { return nil }
+        return try? JSONDecoder().decode([CachedEntryData].self, from: data)
+    }
+
+    private static var fileURL: URL? {
+        FileManager.default
+            .containerURL(forSecurityApplicationGroupIdentifier: appGroupID)?
+            .appendingPathComponent(fileName)
+    }
+}
+
 // MARK: - Timeline Provider
 
 struct AggregatorRadarProvider: AppIntentTimelineProvider {
@@ -74,17 +112,152 @@ struct AggregatorRadarProvider: AppIntentTimelineProvider {
         )
     }
 
-    // Full timeline fetch with live network data is implemented in a downstream bead.
     func timeline(for configuration: ContentSourceIntent, in context: Context) async -> Timeline<WidgetEntry> {
-        let entry = WidgetEntry(
+        let store = CredentialsStore()
+        guard store.isConfigured else {
+            return Timeline(entries: [notConfiguredEntry()], policy: .never)
+        }
+
+        let client = APIClient(store: store)
+        do {
+            let items = try await fetchItems(client: client, source: configuration.contentSource)
+            return await buildTimeline(from: items)
+        } catch {
+            return makeOfflineTimeline()
+        }
+    }
+
+    // MARK: - Private helpers
+
+    private func fetchItems(client: APIClient, source: ContentSource) async throws -> [WidgetContentItem] {
+        switch source {
+        case .latestThreads:
+            let resp: PaginatedResponse<Thread> = try await client.get("/threads", query: [
+                URLQueryItem(name: "sort", value: ThreadSort.importance.rawValue),
+                URLQueryItem(name: "show_dismissed", value: "false"),
+                URLQueryItem(name: "limit", value: "5")
+            ])
+            return Array(resp.items.prefix(5)).map { .thread($0) }
+        case .unreadImportant:
+            let resp = try await client.getArticles(
+                feed: .important,
+                sort: .importance,
+                unreadOnly: true,
+                limit: 5
+            )
+            return Array(resp.items.prefix(5)).map { .article($0) }
+        }
+    }
+
+    private func buildTimeline(from items: [WidgetContentItem]) async -> Timeline<WidgetEntry> {
+        let now = Date()
+        guard !items.isEmpty else {
+            return Timeline(
+                entries: [emptyEntry(date: now)],
+                policy: .after(now.addingTimeInterval(1800))
+            )
+        }
+
+        let targetSize = CGSize(width: 155, height: 155)
+        var entries: [WidgetEntry] = []
+        var toCache: [CachedEntryData] = []
+
+        for (i, item) in items.enumerated() {
+            let entryDate = now.addingTimeInterval(Double(i) * 180)
+            let itemId: String
+            let imageURLStr: String?
+            let deepLink: URL?
+
+            switch item {
+            case .thread(let t):
+                itemId = "thread-\(t.id)"
+                imageURLStr = t.imageURL
+                deepLink = URL(string: "aggregator://thread/\(t.id)")
+            case .article(let a):
+                itemId = "article-\(a.id)"
+                imageURLStr = a.imageURL
+                deepLink = a.url.flatMap { URL(string: $0) }
+            }
+
+            let heroImage: UIImage?
+            if let urlStr = imageURLStr, let url = URL(string: urlStr) {
+                heroImage = await WidgetImageCache.downloadAndCache(from: url, itemId: itemId, targetSize: targetSize)
+            } else {
+                heroImage = nil
+            }
+
+            entries.append(WidgetEntry(
+                date: entryDate,
+                contentItem: item,
+                heroImage: heroImage,
+                deepLinkURL: deepLink,
+                widgetState: .loaded,
+                isPlaceholder: false
+            ))
+            toCache.append(CachedEntryData(itemId: itemId, deepLinkURL: deepLink?.absoluteString))
+        }
+
+        WidgetImageCache.prune(retaining: Set(toCache.map(\.itemId)))
+        LastGoodCache.save(toCache)
+
+        return Timeline(entries: entries, policy: .after(now.addingTimeInterval(1800)))
+    }
+
+    private func makeOfflineTimeline() -> Timeline<WidgetEntry> {
+        let now = Date()
+        let targetSize = CGSize(width: 155, height: 155)
+
+        if let cached = LastGoodCache.load(), !cached.isEmpty {
+            let entries: [WidgetEntry] = cached.prefix(5).enumerated().map { i, data in
+                WidgetEntry(
+                    date: now.addingTimeInterval(Double(i) * 180),
+                    contentItem: nil,
+                    heroImage: WidgetImageCache.read(itemId: data.itemId, targetSize: targetSize),
+                    deepLinkURL: data.deepLinkURL.flatMap { URL(string: $0) },
+                    widgetState: .offline,
+                    isPlaceholder: false
+                )
+            }
+            return Timeline(entries: entries, policy: .after(now.addingTimeInterval(1800)))
+        }
+
+        return Timeline(
+            entries: [offlineEntry(date: now)],
+            policy: .after(now.addingTimeInterval(1800))
+        )
+    }
+
+    private func notConfiguredEntry() -> WidgetEntry {
+        WidgetEntry(
             date: .now,
-            contentItem: .thread(.sample),
+            contentItem: nil,
             heroImage: nil,
-            deepLinkURL: URL(string: "aggregator://thread/1"),
-            widgetState: .loaded,
+            deepLinkURL: nil,
+            widgetState: .notConfigured,
             isPlaceholder: false
         )
-        return Timeline(entries: [entry], policy: .never)
+    }
+
+    private func offlineEntry(date: Date) -> WidgetEntry {
+        WidgetEntry(
+            date: date,
+            contentItem: nil,
+            heroImage: nil,
+            deepLinkURL: nil,
+            widgetState: .offline,
+            isPlaceholder: false
+        )
+    }
+
+    private func emptyEntry(date: Date) -> WidgetEntry {
+        WidgetEntry(
+            date: date,
+            contentItem: nil,
+            heroImage: nil,
+            deepLinkURL: nil,
+            widgetState: .empty,
+            isPlaceholder: false
+        )
     }
 }
 
