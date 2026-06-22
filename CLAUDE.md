@@ -83,6 +83,87 @@ an API error.
   `GlassEffectContainer`) — these are iOS 26-only APIs and that is intentional.
   Do not use APIs newer than iOS 26 without raising with the user first.
 
+## Widget extension (AggregatorWidget)
+
+The widget is a WidgetKit app extension with bundle identifier
+`net.renalias.AggregatorApp.AggregatorWidget`.
+
+### Shared identifiers
+
+Both the app target and the widget extension declare identical entitlements so
+they can share data:
+
+| Capability | Identifier |
+|---|---|
+| App Group | `group.net.renalias.AggregatorApp` |
+| Keychain Access Group | `$(AppIdentifierPrefix)net.renalias.AggregatorApp.shared` |
+
+`$(AppIdentifierPrefix)` expands at build time to the Apple Development Team ID
+(`QEZ63CXN26`) followed by a period. The resolved value is
+`QEZ63CXN26.net.renalias.AggregatorApp.shared`. Both targets must use the same
+string for Keychain sharing to work.
+
+### project.yml and xcodegen
+
+`AggregatorWidget` is defined as a separate `app-extension` target in
+`project.yml`. It shares several source files from `AggregatorApp/Common/` and
+`AggregatorApp/Models/` via explicit `sources` entries. Any change to
+`project.yml` that touches the widget target (adding/removing sources,
+entitlements, build settings) **requires `xcodegen generate` afterward** — the
+same rule as any other target change. Do not add `INFOPLIST_FILE` back to the
+widget target settings; `GENERATE_INFOPLIST_FILE: YES` replaced it to fix an
+`AppIntentsSSUTraining` build failure.
+
+### Widget data refresh model
+
+`AggregatorRadarProvider` (in `AggregatorWidget/Provider.swift`) implements
+`AppIntentTimelineProvider`:
+
+- **Timeline entries**: up to 5 entries per fetch, spaced 3 minutes (180 s)
+  apart — one content item (thread or article) per entry.
+- **Refresh interval**: 30 minutes (`1800` s). After the last entry's date
+  passes, WidgetKit calls `timeline(for:in:)` again with the `.after` policy.
+- **Offline fallback**: on network failure the provider reads `LastGoodCache`
+  from the App Group container (`widget_last_good_entries.json`) and builds an
+  `.offline` timeline with the same 3-minute rotation and 30-minute reload
+  policy. Each `CachedEntryData` entry includes the full `WidgetContentItem`
+  (thread or article), so offline entries render the item's title, source, and
+  date rather than a generic placeholder. `Article` and `Thread` implement
+  explicit `encode(to:)` and `init(from:)` to support this cache
+  serialisation.
+- **Image cache**: hero images are stored in the App Group container under
+  `WidgetImageCache/`. Files are keyed by `<itemId>_<w>x<h>.cache` and pruned
+  on every successful timeline build to remove stale entries.
+- **WidgetCenter reloads**: the main app can call
+  `WidgetCenter.shared.reloadAllTimelines()` to force an immediate refresh (for
+  example, after credentials are saved in Settings). The widget does not
+  self-initiate out-of-band reloads beyond the `.after` policy.
+
+### Widget configuration
+
+The widget exposes one user-configurable parameter via `ContentSourceIntent`:
+
+| Option | Value |
+|---|---|
+| Latest Threads | `ContentSource.latestThreads` — top-5 threads sorted by importance |
+| Unread Important | `ContentSource.unreadImportant` — top-5 unread articles from the important feed |
+
+### aggregator:// URL scheme
+
+The main app registers the `aggregator` custom URL scheme
+(`CFBundleURLSchemes: [aggregator]` in `Info.plist` / `project.yml`).
+`DeepLinkRouter` in `AggregatorApp.swift` handles incoming URLs.
+
+Supported paths:
+
+| URL | Action |
+|---|---|
+| `aggregator://thread/{id}` | Navigate to the Threads tab and open thread `{id}` |
+| `aggregator://article/{id}` | Navigate to the article detail for article `{id}` |
+
+`{id}` is always an integer. The widget sets `deepLinkURL` on each
+`WidgetEntry` so tapping the widget opens the correct item in the app.
+
 ## Networking conventions
 
 - Inject `CF-Access-Client-Id` and `CF-Access-Client-Secret` headers via a

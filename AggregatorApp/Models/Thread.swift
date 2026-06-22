@@ -1,6 +1,6 @@
 import Foundation
 
-struct Thread: Decodable, Identifiable {
+struct Thread: Codable, Identifiable {
     let id: Int
     let representativeTitle: String
     let rollingSummary: String?
@@ -31,6 +31,24 @@ struct Thread: Decodable, Identifiable {
         case hasUpdates = "has_updates"
         case dismissed
         case topGrade = "top_grade"
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(representativeTitle, forKey: .representativeTitle)
+        try container.encodeIfPresent(rollingSummary, forKey: .rollingSummary)
+        try container.encode(knownFacts, forKey: .knownFacts)
+        try container.encode(status, forKey: .status)
+        try container.encodeIfPresent(noveltyLabel, forKey: .noveltyLabel)
+        try container.encode(firstSeen, forKey: .firstSeen)
+        try container.encode(lastUpdated, forKey: .lastUpdated)
+        try container.encode(sourceCount, forKey: .sourceCount)
+        try container.encode(memberCount, forKey: .memberCount)
+        try container.encodeIfPresent(imageURL, forKey: .imageURL)
+        try container.encode(hasUpdates, forKey: .hasUpdates)
+        try container.encode(dismissed, forKey: .dismissed)
+        try container.encodeIfPresent(topGrade, forKey: .topGrade)
     }
 
     init(from decoder: Decoder) throws {
