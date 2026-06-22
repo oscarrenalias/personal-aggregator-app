@@ -228,6 +228,97 @@ final class TimelineBuilderContractTests: XCTestCase {
 
 // MARK: - Group 5: ContentSource enum and ContentSourceIntent default
 
+// MARK: - Group 6: Article Codable round-trip
+
+/// Article gained a custom encode(to:) method in B-422672f9-subtask so it can be stored
+/// inside WidgetContentItem in the offline cache. These tests validate that every field
+/// survives an encode → decode round-trip, covering both present and absent optional values.
+final class ArticleCodableRoundTripTests: XCTestCase {
+
+    private func decodeArticle(_ json: String) throws -> Article {
+        try JSONDecoder().decode(Article.self, from: Data(json.utf8))
+    }
+
+    private func roundTrip(_ article: Article) throws -> Article {
+        let data = try JSONEncoder().encode(article)
+        return try JSONDecoder().decode(Article.self, from: data)
+    }
+
+    func testAllPresentFieldsRoundTrip() throws {
+        let original = try decodeArticle("""
+        {
+          "id": 55, "title": "Test Article", "url": "https://example.com/test",
+          "source_id": 7, "source_name": "Example News",
+          "feed_published_at": "2026-06-18T08:00:00+00:00",
+          "summary": "A brief summary", "clean_text": "Full text here",
+          "importance_score": 85, "importance_reason": "High relevance",
+          "topics": ["technology", "AI"], "categories": ["tech"],
+          "is_read": true, "is_saved": true,
+          "author": "Jane Doe", "word_count": 420, "language": "en",
+          "image_url": "https://example.com/img.jpg",
+          "comments_url": "https://news.ycombinator.com/item?id=99"
+        }
+        """)
+        let decoded = try roundTrip(original)
+        XCTAssertEqual(decoded.id, 55)
+        XCTAssertEqual(decoded.title, "Test Article")
+        XCTAssertEqual(decoded.url, "https://example.com/test")
+        XCTAssertEqual(decoded.sourceId, 7)
+        XCTAssertEqual(decoded.sourceName, "Example News")
+        XCTAssertEqual(decoded.feedPublishedAt, "2026-06-18T08:00:00+00:00")
+        XCTAssertEqual(decoded.summary, "A brief summary")
+        XCTAssertEqual(decoded.importanceScore, 85)
+        XCTAssertEqual(decoded.importanceReason, "High relevance")
+        XCTAssertEqual(decoded.topics, ["technology", "AI"])
+        XCTAssertEqual(decoded.categories, ["tech"])
+        XCTAssertTrue(decoded.isRead)
+        XCTAssertTrue(decoded.isSaved)
+        XCTAssertEqual(decoded.author, "Jane Doe")
+        XCTAssertEqual(decoded.wordCount, 420)
+        XCTAssertEqual(decoded.language, "en")
+        XCTAssertEqual(decoded.imageURL, "https://example.com/img.jpg")
+        XCTAssertEqual(decoded.commentsURL, "https://news.ycombinator.com/item?id=99")
+    }
+
+    func testAbsentOptionalFieldsRoundTripAsNil() throws {
+        let original = try decodeArticle("""
+        {
+          "id": 1, "source_id": 42, "is_read": false, "is_saved": false,
+          "topics": [], "categories": []
+        }
+        """)
+        let decoded = try roundTrip(original)
+        XCTAssertNil(decoded.title)
+        XCTAssertNil(decoded.url)
+        XCTAssertNil(decoded.sourceName)
+        XCTAssertNil(decoded.feedPublishedAt)
+        XCTAssertNil(decoded.summary)
+        XCTAssertNil(decoded.cleanText)
+        XCTAssertNil(decoded.importanceScore)
+        XCTAssertNil(decoded.importanceReason)
+        XCTAssertNil(decoded.author)
+        XCTAssertNil(decoded.wordCount)
+        XCTAssertNil(decoded.language)
+        XCTAssertNil(decoded.imageURL)
+        XCTAssertNil(decoded.commentsURL)
+    }
+
+    func testEncodedJSONUsesSnakeCaseKeys() throws {
+        let article = try decodeArticle("""
+        {"id":1,"source_id":42,"source_name":"News","feed_published_at":"2026-01-01T00:00:00Z",
+         "is_read":false,"is_saved":false,"topics":[],"categories":[]}
+        """)
+        let data = try JSONEncoder().encode(article)
+        let json = try JSONSerialization.jsonObject(with: data) as? [String: Any]
+        XCTAssertNotNil(json?["source_id"], "Encoded JSON must use snake_case key 'source_id'")
+        XCTAssertNotNil(json?["source_name"], "Encoded JSON must use snake_case key 'source_name'")
+        XCTAssertNotNil(json?["feed_published_at"], "Encoded JSON must use snake_case key 'feed_published_at'")
+        XCTAssertNotNil(json?["is_read"], "Encoded JSON must use snake_case key 'is_read'")
+        XCTAssertNotNil(json?["is_saved"], "Encoded JSON must use snake_case key 'is_saved'")
+    }
+}
+
+
 final class ContentSourceTests: XCTestCase {
 
     func testContentSourceRawValues() {
