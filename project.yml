@@ -25,14 +25,23 @@ targets:
           - group.net.renalias.AggregatorApp
         keychain-access-groups:
           - $(AppIdentifierPrefix)net.renalias.AggregatorApp.shared
+    info:
+      path: AggregatorApp/Info.plist
+      properties:
+        CFBundleURLTypes:
+          - CFBundleURLName: net.renalias.AggregatorApp
+            CFBundleURLSchemes:
+              - aggregator
+        UILaunchScreen: {}
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+          UISceneConfigurations: {}
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
     settings:
       base:
         CODE_SIGN_STYLE: Automatic
         DEVELOPMENT_TEAM: QEZ63CXN26
-        GENERATE_INFOPLIST_FILE: YES
-        INFOPLIST_KEY_UILaunchScreen_Generation: YES
-        INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
-        INFOPLIST_KEY_UISupportedInterfaceOrientations: "UIInterfaceOrientationPortrait"
         PRODUCT_BUNDLE_IDENTIFIER: net.renalias.AggregatorApp
         TARGETED_DEVICE_FAMILY: "1"
         ENABLE_PREVIEWS: YES
