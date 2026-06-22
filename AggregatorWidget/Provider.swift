@@ -1,4 +1,92 @@
+import AppIntents
 import UIKit
+import WidgetKit
+
+// MARK: - Widget State
+
+enum WidgetState {
+    case placeholder
+    case loaded
+    case error(String)
+}
+
+// MARK: - Widget Content Item
+
+enum WidgetContentItem {
+    case thread(Thread)
+    case article(Article)
+}
+
+// MARK: - Widget Entry
+
+struct WidgetEntry: TimelineEntry {
+    let date: Date
+    let contentItem: WidgetContentItem?
+    let heroImage: UIImage?
+    let deepLinkURL: URL?
+    let widgetState: WidgetState
+    let isPlaceholder: Bool
+}
+
+// MARK: - Sample Data
+
+private extension Thread {
+    // JSON is a hardcoded literal — force-try is safe; this never touches the network.
+    static var sample: Thread {
+        let json = Data("""
+        {"id":1,"representative_title":"Swift 6 Concurrency Lands in Open Source",
+         "rolling_summary":"The Swift community merges the full strict-concurrency model into the main branch.",
+         "known_facts":["Actors replace locks for shared state","Sendable propagation is exhaustive"],
+         "status":"active","novelty_label":"new",
+         "first_seen":"2026-06-01T10:00:00Z","last_updated":"2026-06-22T09:00:00Z",
+         "source_count":4,"member_count":12,"image_url":null,
+         "has_updates":true,"dismissed":false,"top_grade":90}
+        """.utf8)
+        return try! JSONDecoder().decode(Thread.self, from: json)
+    }
+}
+
+// MARK: - Timeline Provider
+
+struct AggregatorRadarProvider: AppIntentTimelineProvider {
+    typealias Intent = ContentSourceIntent
+    typealias Entry = WidgetEntry
+
+    func placeholder(in context: Context) -> WidgetEntry {
+        WidgetEntry(
+            date: .now,
+            contentItem: .thread(.sample),
+            heroImage: nil,
+            deepLinkURL: nil,
+            widgetState: .placeholder,
+            isPlaceholder: true
+        )
+    }
+
+    func snapshot(for configuration: ContentSourceIntent, in context: Context) async -> WidgetEntry {
+        WidgetEntry(
+            date: .now,
+            contentItem: .thread(.sample),
+            heroImage: nil,
+            deepLinkURL: URL(string: "aggregator://thread/1"),
+            widgetState: .loaded,
+            isPlaceholder: false
+        )
+    }
+
+    // Full timeline fetch with live network data is implemented in a downstream bead.
+    func timeline(for configuration: ContentSourceIntent, in context: Context) async -> Timeline<WidgetEntry> {
+        let entry = WidgetEntry(
+            date: .now,
+            contentItem: .thread(.sample),
+            heroImage: nil,
+            deepLinkURL: URL(string: "aggregator://thread/1"),
+            widgetState: .loaded,
+            isPlaceholder: false
+        )
+        return Timeline(entries: [entry], policy: .never)
+    }
+}
 
 // MARK: - Widget Image Cache
 
