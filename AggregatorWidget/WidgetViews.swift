@@ -28,18 +28,84 @@ struct WidgetHeroBackground: View {
     }
 }
 
-/// Black-to-clear scrim anchored at the bottom so text over images stays legible.
+/// Bottom-anchored darkening scrim so text over images stays legible.
+/// `.heavy` darkens the whole frame (for bright/light images where a bottom-only
+/// fade leaves the upper title lines unreadable); `.standard` is a lighter
+/// bottom fade that preserves more of a dark image.
 struct WidgetScrim: View {
+    enum Strength { case standard, heavy }
+    var strength: Strength = .standard
+
     var body: some View {
-        LinearGradient(
-            stops: [
-                .init(color: .black.opacity(0.7), location: 0),
-                .init(color: .clear, location: 0.6)
-            ],
-            startPoint: .bottom,
-            endPoint: .top
-        )
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        // Full-frame (bottom-biased) gradients: the title is vertically centered,
+        // so the darkening must reach the middle, not just the bottom edge.
+        let stops: [Gradient.Stop]
+        switch strength {
+        case .standard:
+            stops = [
+                .init(color: .black.opacity(0.6), location: 0),
+                .init(color: .black.opacity(0.2), location: 1)
+            ]
+        case .heavy:
+            stops = [
+                .init(color: .black.opacity(0.9), location: 0),
+                .init(color: .black.opacity(0.5), location: 1)
+            ]
+        }
+        return LinearGradient(stops: stops, startPoint: .bottom, endPoint: .top)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+}
+
+/// Full-bleed widget background. Lives inside `.containerBackground` (not the
+/// content layer) so the scrim covers the whole image edge-to-edge rather than
+/// being inset by the widget's content margins.
+///
+/// In tinted ("accented") / lock-screen ("vibrant") rendering the system
+/// desaturates everything and applies the user's tint by luminance, which turns
+/// a photo into a muddy wash and any solid-filled shape into a tint blob. In
+/// those modes we drop the photo + scrim for a clean dark surface so the tinted
+/// text reads cleanly.
+struct WidgetContentBackground: View {
+    let image: UIImage?
+    let renderingMode: WidgetRenderingMode
+
+    var body: some View {
+        if renderingMode == .fullColor {
+            WidgetHeroBackground(image: image)
+                .overlay { WidgetScrim(strength: scrimStrength) }
+        } else {
+            Color.black
+        }
+    }
+
+    /// Darken more aggressively when the hero's text region is bright, so white
+    /// text stays legible on light images; keep the lighter scrim for dark ones.
+    private var scrimStrength: WidgetScrim.Strength {
+        guard let luminance = image?.bottomRegionLuminance() else { return .standard }
+        return luminance > 0.6 ? .heavy : .standard
+    }
+}
+
+private extension UIImage {
+    /// Average perceived luminance (0...1) of the bottom `fraction` of the image —
+    /// the region the widget's text sits over. Computed by averaging the cropped
+    /// region down to a single pixel. Returns nil if it can't be measured.
+    func bottomRegionLuminance(fraction: CGFloat = 0.5) -> CGFloat? {
+        guard let cg = cgImage else { return nil }
+        let cropY = Int(CGFloat(cg.height) * (1 - fraction))
+        let rect = CGRect(x: 0, y: cropY, width: cg.width, height: cg.height - cropY)
+        guard let region = cg.cropping(to: rect),
+              let ctx = CGContext(
+                data: nil, width: 1, height: 1, bitsPerComponent: 8, bytesPerRow: 4,
+                space: CGColorSpaceCreateDeviceRGB(),
+                bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
+              ) else { return nil }
+        ctx.draw(region, in: CGRect(x: 0, y: 0, width: 1, height: 1))
+        guard let data = ctx.data else { return nil }
+        let p = data.bindMemory(to: UInt8.self, capacity: 4)
+        let r = CGFloat(p[0]) / 255, g = CGFloat(p[1]) / 255, b = CGFloat(p[2]) / 255
+        return 0.299 * r + 0.587 * g + 0.114 * b
     }
 }
 
@@ -132,10 +198,18 @@ private extension WidgetContentItem {
         }
     }
 
-    var displayImportanceScore: Int? {
+    /// "<source> · <relative time>", omitting whichever part is empty.
+    var metaText: String {
+        [displaySourceName, DateDisplay.relative(displayPublishedAt)]
+            .filter { !$0.isEmpty }
+            .joined(separator: " · ")
+    }
+
+    /// Article summary for the medium widget. Nil for threads (handled separately).
+    var articleSummary: String? {
         switch self {
-        case .thread(let t): return t.topGrade
-        case .article(let a): return a.importanceScore
+        case .article(let a): return a.summary
+        case .thread: return nil
         }
     }
 }
@@ -143,25 +217,27 @@ private extension WidgetContentItem {
 // MARK: - Content views (used by both small and medium when data is available)
 
 private struct SmallContentView: View {
+    @Environment(\.widgetRenderingMode) private var renderingMode
     let entry: WidgetEntry
     let contentItem: WidgetContentItem
 
     var body: some View {
-        ZStack(alignment: .bottomLeading) {
-            WidgetScrim()
-            VStack(alignment: .leading, spacing: 2) {
-                Text(contentItem.displayTitle)
-                    .font(.headline)
-                    .lineLimit(2)
-                    .foregroundStyle(.white)
-                Text(contentItem.displaySourceName)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
-            .padding(12)
+        VStack(alignment: .leading, spacing: 4) {
+            Text(contentItem.displayTitle)
+                .font(.headline)
+                .lineLimit(4)
+                .minimumScaleFactor(0.85)
+                .foregroundStyle(.white)
+            Text(contentItem.metaText)
+                .font(.caption)
+                .foregroundStyle(.white.opacity(0.85))
         }
+        .shadow(color: renderingMode == .fullColor ? .black.opacity(0.45) : .clear, radius: 3, y: 1)
+        // Vertically centered, leading-aligned — consistent across full-color and
+        // tinted modes.
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
         .containerBackground(for: .widget) {
-            WidgetHeroBackground(image: entry.heroImage)
+            WidgetContentBackground(image: entry.heroImage, renderingMode: renderingMode)
         }
         .widgetURL(entry.deepLinkURL)
         .accessibilityElement(children: .combine)
@@ -170,26 +246,36 @@ private struct SmallContentView: View {
 }
 
 private struct MediumContentView: View {
+    @Environment(\.widgetRenderingMode) private var renderingMode
     let entry: WidgetEntry
     let contentItem: WidgetContentItem
 
     var body: some View {
-        ZStack(alignment: .bottomLeading) {
-            WidgetScrim()
-            VStack(alignment: .leading, spacing: 4) {
-                Text(contentItem.displayTitle)
-                    .font(.headline)
+        VStack(alignment: .leading, spacing: 4) {
+            Text(contentItem.displayTitle)
+                .font(.headline)
+                // Capped at 2 lines so the article summary has room below.
+                .lineLimit(2)
+                .foregroundStyle(.white)
+            if let summary = contentItem.articleSummary, !summary.isEmpty {
+                Text(summary)
+                    .font(.footnote)
                     .lineLimit(3)
-                    .foregroundStyle(.white)
-                metaLine
-                if let score = contentItem.displayImportanceScore {
-                    importanceTag(score: score)
-                }
+                    .foregroundStyle(.white.opacity(0.85))
             }
-            .padding(12)
+            // Hairline rule separating the title/summary from the meta line.
+            Rectangle()
+                .fill(.white.opacity(0.35))
+                .frame(maxWidth: 150, maxHeight: 1)
+                .padding(.vertical, 2)
+            metaLine
         }
+        .shadow(color: renderingMode == .fullColor ? .black.opacity(0.45) : .clear, radius: 3, y: 1)
+        // Vertically centered, leading-aligned — consistent across full-color and
+        // tinted modes.
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
         .containerBackground(for: .widget) {
-            WidgetHeroBackground(image: entry.heroImage)
+            WidgetContentBackground(image: entry.heroImage, renderingMode: renderingMode)
         }
         .widgetURL(entry.deepLinkURL)
         .accessibilityElement(children: .combine)
@@ -197,25 +283,9 @@ private struct MediumContentView: View {
 
     @ViewBuilder
     private var metaLine: some View {
-        let relativeTime = DateDisplay.relative(contentItem.displayPublishedAt)
-        let parts = [contentItem.displaySourceName, relativeTime].filter { !$0.isEmpty }
-        Text(parts.joined(separator: " · "))
+        Text(contentItem.metaText)
             .font(.caption)
-            .foregroundStyle(.secondary)
-    }
-
-    @ViewBuilder
-    private func importanceTag(score: Int) -> some View {
-        let label = score >= 80 ? "High importance" : score >= 50 ? "Medium importance" : "Low importance"
-        let tint: Color = score >= 80 ? .red : score >= 50 ? .orange : .secondary
-        Text(label)
-            .font(.caption.bold())
-            .foregroundStyle(.white)
-            .padding(.horizontal, 8)
-            .padding(.vertical, 4)
-            .background(tint)
-            .clipShape(Capsule())
-            .accessibilityLabel("Importance: \(label)")
+            .foregroundStyle(.white.opacity(0.85))
     }
 }
 
