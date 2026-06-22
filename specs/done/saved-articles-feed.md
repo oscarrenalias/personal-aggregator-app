@@ -5,7 +5,7 @@ description: Add a Saved entry to the Sources tab Feeds section (GET /articles?v
 dependencies: null
 priority: medium
 complexity: null
-status: planned
+status: done
 tags:
 - articles
 - saved

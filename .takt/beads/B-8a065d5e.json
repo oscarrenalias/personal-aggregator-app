@@ -3,7 +3,7 @@
   "title": "Add ArticleFeed.saved case",
   "agent_type": "developer",
   "description": "Extend the ArticleFeed enum in ArticleFeed.swift with a `.saved` case. Provide the required computed properties: `id` \u2192 \"saved\", `title` \u2192 \"Saved\", `systemImage` \u2192 \"bookmark\". Update `allowsUnreadFilter` so `.saved` returns `false` alongside `.unread` in the existing guard arm. Fill in all four switch statements the compiler flags \u2014 none of the other cases change.",
-  "status": "ready",
+  "status": "done",
   "bead_type": "task",
   "parent_id": "B-c2456509",
   "dependencies": [],
@@ -23,33 +23,43 @@
     "AggregatorApp/Articles/ArticleFeed.swift"
   ],
   "expected_globs": [],
-  "touched_files": [],
-  "changed_files": [],
+  "touched_files": [
+    "AggregatorApp/Articles/ArticleFeed.swift"
+  ],
+  "changed_files": [
+    "AggregatorApp/Articles/ArticleFeed.swift"
+  ],
   "updated_docs": [],
   "handoff_summary": {
-    "completed": "",
-    "remaining": "",
-    "risks": "",
-    "verdict": "",
+    "completed": "Extended ArticleFeed enum in AggregatorApp/Articles/ArticleFeed.swift: added `.saved` case, filled all four switch statements (id, title, systemImage, allowsUnreadFilter), and replaced the `default` arm in allowsUnreadFilter with explicit exhaustive cases.",
+    "remaining": "N/A",
+    "risks": "None. Change is additive; no existing cases modified.",
+    "verdict": "approved",
     "findings_count": 0,
     "requires_followup": false,
-    "changed_files": [],
+    "changed_files": [
+      "AggregatorApp/Articles/ArticleFeed.swift"
+    ],
     "updated_docs": [],
-    "next_action": "",
-    "next_agent": "",
+    "next_action": "Proceed to tester agent to verify acceptance criteria.",
+    "next_agent": "tester",
     "block_reason": "",
-    "expected_files": [],
+    "expected_files": [
+      "AggregatorApp/Articles/ArticleFeed.swift"
+    ],
     "expected_globs": [],
-    "touched_files": [],
-    "conflict_risks": "",
-    "design_decisions": "",
-    "test_coverage_notes": "",
-    "known_limitations": ""
+    "touched_files": [
+      "AggregatorApp/Articles/ArticleFeed.swift"
+    ],
+    "conflict_risks": "Low. Only ArticleFeed.swift was touched. Any sibling bead that pattern-matches on ArticleFeed without exhaustive switches may get a new compiler warning for the missing .saved arm \u2014 that is the intended compiler-enforced outcome.",
+    "design_decisions": "Replaced the `default: return true` arm in `allowsUnreadFilter` with an explicit exhaustive match (`case .source, .important, .category: return true`). This ensures the compiler flags any future new cases that forget to declare their unread-filter behavior, rather than silently defaulting to `true`. This is a strictly safer invariant with no behavioral change for existing cases.",
+    "test_coverage_notes": "Tester should verify: (1) `.saved.id == \"saved\"`, (2) `.saved.title == \"Saved\"`, (3) `.saved.systemImage == \"bookmark\"`, (4) `.saved.allowsUnreadFilter == false`, (5) all pre-existing cases still return their original values (regression check), (6) the enum conforms to Hashable and Identifiable with .saved included.",
+    "known_limitations": "N/A \u2014 implementation is complete as specified. Downstream beads (e.g. ArticleListView integration, saved-articles API fetch) are separate work items tracked in the feature spec."
   },
   "block_reason": "",
-  "conflict_risks": "",
-  "branch_name": "",
-  "worktree_path": "",
+  "conflict_risks": "Low. Only ArticleFeed.swift was touched. Any sibling bead that pattern-matches on ArticleFeed without exhaustive switches may get a new compiler warning for the missing .saved arm \u2014 that is the intended compiler-enforced outcome.",
+  "branch_name": "feature/b-c2456509",
+  "worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-c2456509",
   "lease": null,
   "retries": 0,
   "execution_history": [
@@ -59,9 +69,162 @@
       "agent_type": "scheduler",
       "summary": "Bead created",
       "details": {}
+    },
+    {
+      "timestamp": "2026-06-22T08:24:05.533699+00:00",
+      "event": "skills_loaded",
+      "agent_type": "developer",
+      "summary": "Loaded 7 skill(s) for isolated execution",
+      "details": {
+        "loaded_skills": [
+          "core/base-orchestrator",
+          "role/developer-implementation",
+          "capability/code-edit",
+          "task/corrective-implementation",
+          "task/refactor-safe",
+          "task/migration",
+          "memory"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-06-22T08:24:05.533723+00:00",
+      "event": "started",
+      "agent_type": "developer",
+      "summary": "Worker started",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-06-22T08:24:06.186139+00:00",
+      "event": "guardrails_applied",
+      "agent_type": "developer",
+      "summary": "Applied guardrails from .takt/agent-runs/B-8a065d5e/repo/templates/agents/developer.md",
+      "details": {
+        "template_path": ".takt/agent-runs/B-8a065d5e/repo/templates/agents/developer.md"
+      }
+    },
+    {
+      "timestamp": "2026-06-22T08:25:16.223632+00:00",
+      "event": "completed",
+      "agent_type": "developer",
+      "summary": "Added `.saved` case to ArticleFeed enum with id=\"saved\", title=\"Saved\", systemImage=\"bookmark\", and allowsUnreadFilter=false. Also converted the allowsUnreadFilter default arm to an explicit exhaustive switch to catch future missing cases at compile time.",
+      "details": {}
     }
   ],
-  "metadata": {},
+  "metadata": {
+    "execution_root": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-8a065d5e",
+    "workspace_repo_path": "repo",
+    "loaded_skills": [
+      "core/base-orchestrator",
+      "role/developer-implementation",
+      "capability/code-edit",
+      "task/corrective-implementation",
+      "task/refactor-safe",
+      "task/migration",
+      "memory"
+    ],
+    "skill_bundle_hash": "ecae5633083d1bbec41a6e5ec6ea05bbab117f60499c19b2ed76dbbe3e1aec7c",
+    "isolated_home": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-8a065d5e/home",
+    "runner_backend": "claude",
+    "guardrails": {
+      "agent_type": "developer",
+      "template_path": ".takt/agent-runs/B-8a065d5e/repo/templates/agents/developer.md",
+      "template_text": "# Developer Guardrails\n\nPrimary responsibility: Implement only the assigned bead inside the existing architecture and file scope.\n\n## Corrective bead scope\n\nIf your `bead_id` ends in `-corrective` or `-corrective-<N>` (e.g. `B-abc12345-corrective`, `B-abc12345-test-corrective-2`), you are running as a CORRECTIVE bead. Your scope is **strictly limited to fixing the specific failure that blocked the parent bead**. Do not:\n\n- Add unrelated improvements, refactors, or cleanup, even if you notice them\n- Reapply previously-reverted changes (the operator reverted them for a reason)\n- Expand the surface area beyond what is needed to unblock the parent\n- Touch files outside what the parent bead's `expected_files` / `expected_globs` covered, unless the failure is genuinely in another file and there is no smaller fix\n\nIf you notice an unrelated issue while fixing the corrective scope: **file a separate bead** via `takt bead create` describing what you saw, but do not fix it in this corrective. The operator will prioritize and dispatch.\n\nWhen in doubt about scope: prefer the smallest possible fix. The reviewer of this corrective will check that the scope was respected.\n\nAllowed actions:\n- Modify code, configuration, or local docs required to complete the assigned bead.\n- Create sub-beads for discovered follow-up work that should be handled separately.\n- Verify your `Swift` changes compile and import correctly with a quick syntax check: ``.\n\nDisallowed actions:\n- Run any test suite \u2014 not even a targeted `` run or any subset. Test execution is exclusively the tester agent's responsibility. Running tests wastes the agent budget and delays the pipeline.\n- Redesign unrelated architecture or broaden scope beyond the assigned bead.\n- Perform final review signoff in place of a review agent.\n- Silently absorb unrelated test, documentation, or planning work that should be handed off.\n\n## Memory\n\n**Read memory at bead start.** Before touching any code, run three searches using `$TAKT_CMD` (injected by the orchestrator):\n\n```bash\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace global\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace feature:<feature_root_id>\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace specs\n```\n\nTreat results as ambient context \u2014 apply relevant entries; skip entries that don't apply.\n\n**Write to memory when you discover reusable project knowledge** \u2014 something that would have changed your approach if you had known it upfront, and is not already in CLAUDE.md or the guardrails.\n\n```bash\n$TAKT_CMD memory add \"<concise fact>\" --namespace global               # project-wide knowledge\n$TAKT_CMD memory add \"<discovery>\" --namespace feature:<feature_root_id>  # feature-scoped\n```\n\nRequired Handoff Fields:\n\nEvery developer bead **must** populate the following three fields in its output JSON. Reviewers and tester agents rely on these fields to scope their work without additional back-and-forth turns. Use `\"N/A\"` only when a field is genuinely inapplicable (e.g., a trivial rename with no design trade-offs); do not leave fields blank.\n\n- **`design_decisions`** \u2014 Document non-obvious architectural or implementation choices made during this bead. Include alternatives considered and why the chosen approach was preferred. Reviewers use this to evaluate correctness without re-deriving intent. Set to `\"N/A\"` only if the change was purely mechanical with no meaningful trade-offs.\n\n- **`test_coverage_notes`** \u2014 Describe what the tester agent should verify: new code paths, edge cases introduced, regression risks, and any known untested scenarios left to the tester. Set to `\"N/A\"` only if the bead touched no executable code paths (e.g., documentation-only changes).\n\n- **`known_limitations`** \u2014 Call out constraints, deferred work, or known gaps in the implementation. This includes out-of-scope items deliberately left for follow-up beads and any areas where the implementation is intentionally incomplete. Set to `\"N/A\"` if the implementation is complete as specified with no known gaps.\n\nExpected outputs:\n- Completed or blocked JSON with concise implementation summary.\n- Accurate touched files, changed files, risks, and follow-up handoff fields.\n- Populated `design_decisions`, `test_coverage_notes`, and `known_limitations` fields in every response.",
+      "captured_at": "2026-06-22T08:24:06.186130+00:00"
+    },
+    "worker_prompt_context": {
+      "bead_id": "B-8a065d5e",
+      "feature_root_id": "B-c2456509",
+      "title": "Add ArticleFeed.saved case",
+      "agent_type": "developer",
+      "description": "Extend the ArticleFeed enum in ArticleFeed.swift with a `.saved` case. Provide the required computed properties: `id` \u2192 \"saved\", `title` \u2192 \"Saved\", `systemImage` \u2192 \"bookmark\". Update `allowsUnreadFilter` so `.saved` returns `false` alongside `.unread` in the existing guard arm. Fill in all four switch statements the compiler flags \u2014 none of the other cases change.",
+      "status": "in_progress",
+      "acceptance_criteria": [
+        "ArticleFeed.saved compiles with no warnings or errors",
+        "id == \"saved\", title == \"Saved\", systemImage == \"bookmark\"",
+        "allowsUnreadFilter returns false for .saved",
+        "All existing switch exhaustiveness is maintained"
+      ],
+      "dependencies": [],
+      "linked_docs": [
+        "specs/drafts/saved-articles-feed.md"
+      ],
+      "execution_branch_name": "feature/b-c2456509",
+      "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-c2456509",
+      "expected_files": [
+        "AggregatorApp/Articles/ArticleFeed.swift"
+      ],
+      "expected_globs": [],
+      "touched_files": [],
+      "conflict_risks": "",
+      "handoff_summary": {
+        "completed": "",
+        "remaining": "",
+        "risks": "",
+        "verdict": "",
+        "findings_count": 0,
+        "requires_followup": false,
+        "changed_files": [],
+        "updated_docs": [],
+        "next_action": "",
+        "next_agent": "",
+        "block_reason": "",
+        "expected_files": [],
+        "expected_globs": [],
+        "touched_files": [],
+        "conflict_risks": "",
+        "design_decisions": "",
+        "test_coverage_notes": "",
+        "known_limitations": ""
+      }
+    },
+    "last_agent_result": {
+      "outcome": "completed",
+      "summary": "Added `.saved` case to ArticleFeed enum with id=\"saved\", title=\"Saved\", systemImage=\"bookmark\", and allowsUnreadFilter=false. Also converted the allowsUnreadFilter default arm to an explicit exhaustive switch to catch future missing cases at compile time.",
+      "verdict": "approved",
+      "findings_count": 0,
+      "requires_followup": false,
+      "next_agent": "tester",
+      "block_reason": ""
+    },
+    "telemetry": {
+      "cost_usd": 0.31724959999999996,
+      "duration_ms": 67965,
+      "duration_api_ms": 60276,
+      "num_turns": 13,
+      "input_tokens": 16,
+      "output_tokens": 3166,
+      "cache_creation_tokens": 29537,
+      "cache_read_tokens": 298032,
+      "stop_reason": "end_turn",
+      "session_id": "935f60f5-5612-423c-b68b-5d35adc7442e",
+      "permission_denials": [],
+      "prompt_chars": 9038,
+      "prompt_lines": 173,
+      "source": "provider",
+      "attempt": 1
+    },
+    "telemetry_history": [
+      {
+        "cost_usd": 0.31724959999999996,
+        "duration_ms": 67965,
+        "duration_api_ms": 60276,
+        "num_turns": 13,
+        "input_tokens": 16,
+        "output_tokens": 3166,
+        "cache_creation_tokens": 29537,
+        "cache_read_tokens": 298032,
+        "stop_reason": "end_turn",
+        "session_id": "935f60f5-5612-423c-b68b-5d35adc7442e",
+        "permission_denials": [],
+        "prompt_chars": 9038,
+        "prompt_lines": 173,
+        "source": "provider",
+        "attempt": 1
+      }
+    ],
+    "last_commit": "1d9cf919c681cca6e25299e541a2df8a05aa151a"
+  },
   "labels": [],
   "recovery_for": null,
   "priority": null
