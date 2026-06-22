@@ -89,8 +89,12 @@ targets:
     platform: iOS
     sources:
       - path: AggregatorAppTests
+      - path: AggregatorWidget/ContentSourceIntent.swift
+      - path: AggregatorWidget/ImageDownsampler.swift
     dependencies:
       - target: AggregatorApp
+      - sdk: WidgetKit.framework
+      - sdk: AppIntents.framework
     settings:
       base:
         GENERATE_INFOPLIST_FILE: YES

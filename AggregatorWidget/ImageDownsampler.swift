@@ -14,7 +14,7 @@ struct ImageDownsampler {
         return downsample(data: data, targetSize: targetSize)
     }
 
-    private static func downsample(data: Data, targetSize: CGSize) -> UIImage? {
+    static func downsample(data: Data, targetSize: CGSize) -> UIImage? {
         // kCGImageSourceShouldCache: false avoids storing the decoded full-size bitmap
         let sourceOptions = [kCGImageSourceShouldCache: false] as CFDictionary
         guard let source = CGImageSourceCreateWithData(data as CFData, sourceOptions) else {
