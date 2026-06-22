@@ -81,6 +81,8 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: net.renalias.AggregatorApp.AggregatorWidget
         TARGETED_DEVICE_FAMILY: "1"
         SWIFT_VERSION: "5.0"
+        CURRENT_PROJECT_VERSION: 1
+        MARKETING_VERSION: 1.0
 
   AggregatorAppTests:
     type: bundle.unit-test
