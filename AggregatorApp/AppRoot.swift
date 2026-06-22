@@ -18,6 +18,9 @@ struct AppRoot: View {
             Tab("Settings", systemImage: "gearshape", value: "settings") {
                 SettingsView()
             }
+            Tab("Search", systemImage: "magnifyingglass", value: "search", role: .search) {
+                SearchView()
+            }
         }
         .tabBarMinimizeBehavior(.onScrollDown)
         .onChange(of: router.pendingLink) { _, link in
