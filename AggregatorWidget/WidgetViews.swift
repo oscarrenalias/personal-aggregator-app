@@ -205,11 +205,12 @@ private extension WidgetContentItem {
             .joined(separator: " · ")
     }
 
-    /// Article summary for the medium widget. Nil for threads (handled separately).
-    var articleSummary: String? {
+    /// Summary shown in the medium widget: an article's summary or a thread's
+    /// rolling summary.
+    var summaryText: String? {
         switch self {
         case .article(let a): return a.summary
-        case .thread: return nil
+        case .thread(let t): return t.rollingSummary
         }
     }
 }
@@ -257,7 +258,7 @@ private struct MediumContentView: View {
                 // Capped at 2 lines so the article summary has room below.
                 .lineLimit(2)
                 .foregroundStyle(.white)
-            if let summary = contentItem.articleSummary, !summary.isEmpty {
+            if let summary = contentItem.summaryText, !summary.isEmpty {
                 Text(summary)
                     .font(.footnote)
                     .lineLimit(3)
