@@ -1,0 +1,68 @@
+{
+  "bead_id": "B-4ce9369f",
+  "title": "ImageDownsampler helper",
+  "agent_type": "developer",
+  "description": "Create AggregatorWidget/ImageDownsampler.swift with an async function downloadAndDownsample(url:targetSize:) that fetches a hero image URL and resizes it to targetSize (widget family point-size at @3x) using CGImageSourceCreateThumbnailAtIndex or UIGraphicsImageRenderer. The full-size image must not be retained in memory after downsampling. Returns UIImage? (nil on network error or invalid URL).",
+  "status": "ready",
+  "bead_type": "task",
+  "parent_id": "B-6b2810c5",
+  "dependencies": [
+    "B-b89c0ea0"
+  ],
+  "acceptance_criteria": [
+    "ImageDownsampler.swift compiles in the widget target",
+    "Returned image dimensions are within targetSize bounds",
+    "Full-size bitmap is released after downsampling (no large intermediate allocation retained)",
+    "Returns nil gracefully for unreachable URLs or non-image responses"
+  ],
+  "linked_docs": [],
+  "feature_root_id": "B-6b2810c5",
+  "execution_branch_name": "feature/b-6b2810c5",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-6b2810c5",
+  "expected_files": [
+    "AggregatorWidget/ImageDownsampler.swift"
+  ],
+  "expected_globs": [],
+  "touched_files": [],
+  "changed_files": [],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "",
+    "remaining": "",
+    "risks": "",
+    "verdict": "",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [],
+    "updated_docs": [],
+    "next_action": "",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [],
+    "expected_globs": [],
+    "touched_files": [],
+    "conflict_risks": "",
+    "design_decisions": "",
+    "test_coverage_notes": "",
+    "known_limitations": ""
+  },
+  "block_reason": "",
+  "conflict_risks": "",
+  "branch_name": "",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-22T09:24:55.465497+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    }
+  ],
+  "metadata": {},
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

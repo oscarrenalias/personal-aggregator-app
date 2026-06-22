@@ -1,0 +1,71 @@
+{
+  "bead_id": "B-83f45143",
+  "title": "WidgetCenter reloads after read and refresh",
+  "agent_type": "developer",
+  "description": "Call WidgetCenter.shared.reloadTimelines(ofKind: \"AggregatorRadarWidget\") in two places: (1) in ArticleReadStore (or the APIClient call site for POST /articles/{id}/read) after an article is successfully marked read, so unread-important items that were read drop off on the next widget reload; (2) after a foreground data refresh completes, so the widget freshens sooner than the background budget alone allows. Import WidgetKit only in the files that need it.",
+  "status": "ready",
+  "bead_type": "task",
+  "parent_id": "B-6b2810c5",
+  "dependencies": [
+    "B-b89c0ea0",
+    "B-87f5ee19"
+  ],
+  "acceptance_criteria": [
+    "reloadTimelines(ofKind: \"AggregatorRadarWidget\") called after successful mark-read",
+    "reloadTimelines(ofKind: \"AggregatorRadarWidget\") called after foreground refresh completion",
+    "Kind string matches AggregatorWidgetBundle exactly (no typo)",
+    "WidgetKit import added only to the two call-site files"
+  ],
+  "linked_docs": [],
+  "feature_root_id": "B-6b2810c5",
+  "execution_branch_name": "feature/b-6b2810c5",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-6b2810c5",
+  "expected_files": [
+    "AggregatorApp/Common/ArticleReadStore.swift"
+  ],
+  "expected_globs": [
+    "AggregatorApp/**/*.swift"
+  ],
+  "touched_files": [],
+  "changed_files": [],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "",
+    "remaining": "",
+    "risks": "",
+    "verdict": "",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [],
+    "updated_docs": [],
+    "next_action": "",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [],
+    "expected_globs": [],
+    "touched_files": [],
+    "conflict_risks": "",
+    "design_decisions": "",
+    "test_coverage_notes": "",
+    "known_limitations": ""
+  },
+  "block_reason": "",
+  "conflict_risks": "",
+  "branch_name": "",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-22T09:24:55.482642+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    }
+  ],
+  "metadata": {},
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

@@ -1,0 +1,74 @@
+{
+  "bead_id": "B-b7a3bc0c",
+  "title": "Timeline provider fetch and entry building",
+  "agent_type": "developer",
+  "description": "Implement timeline(for:in:) in Provider.swift. Detect absent credentials (CredentialsStore reads from shared Keychain) and return a single not-configured entry if missing. Otherwise call APIClient for top-5 items matching the selected ContentSource (getThreads top-5 or getArticles view:important unreadOnly:true top-5). For each item download+cache the hero image. Build 5 TimelineEntry values staggered ~3 min apart (entry i shows item i). Set TimelineReloadPolicy to .after(Date() + 30 * 60). On fetch failure use last-good cached entries if present; otherwise return an offline entry.",
+  "status": "ready",
+  "bead_type": "task",
+  "parent_id": "B-6b2810c5",
+  "dependencies": [
+    "B-8d75c57e",
+    "B-4ce9369f"
+  ],
+  "acceptance_criteria": [
+    "Absent credentials returns a single not-configured entry; no APIClient call made",
+    "latestThreads source calls GET /threads with sort and limit=5",
+    "unreadImportant source calls GET /articles?view=important&unread_only=true&limit=5",
+    "5 entries produced with monotonically increasing dates ~3 min apart",
+    "TimelineReloadPolicy is .after(Date() + 1800)",
+    "Network or 403/HTML failure falls back to last-good cached entries or offline entry"
+  ],
+  "linked_docs": [
+    "docs/API.md",
+    "AggregatorApp/Common/APIClient.swift"
+  ],
+  "feature_root_id": "B-6b2810c5",
+  "execution_branch_name": "feature/b-6b2810c5",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-6b2810c5",
+  "expected_files": [
+    "AggregatorWidget/Provider.swift"
+  ],
+  "expected_globs": [],
+  "touched_files": [],
+  "changed_files": [],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "",
+    "remaining": "",
+    "risks": "",
+    "verdict": "",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [],
+    "updated_docs": [],
+    "next_action": "",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [],
+    "expected_globs": [],
+    "touched_files": [],
+    "conflict_risks": "",
+    "design_decisions": "",
+    "test_coverage_notes": "",
+    "known_limitations": ""
+  },
+  "block_reason": "",
+  "conflict_risks": "",
+  "branch_name": "",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-22T09:24:55.470106+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    }
+  ],
+  "metadata": {},
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

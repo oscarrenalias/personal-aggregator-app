@@ -1,0 +1,70 @@
+{
+  "bead_id": "B-c32ae391",
+  "title": "Shared source membership in project.yml",
+  "agent_type": "developer",
+  "description": "Add AggregatorApp/Common source files (APIClient.swift, KeychainHelper.swift, CredentialsStore, models Article/Thread/PaginatedResponse, DateDisplay) to a shared sources path in project.yml so the widget extension target can compile against them without a separate framework. This must be done before the entitlements verification step so the verification build links against the final shared structure. Run xcodegen generate after the change.",
+  "status": "ready",
+  "bead_type": "task",
+  "parent_id": "B-6b2810c5",
+  "dependencies": [],
+  "acceptance_criteria": [
+    "project.yml lists AggregatorApp/Common (or individual files) under both AggregatorApp and AggregatorWidget target sources",
+    "xcodegen generate succeeds without errors",
+    "A scratch Swift file in AggregatorWidget that imports APIClient or Article types compiles successfully"
+  ],
+  "linked_docs": [
+    "AggregatorApp/Common/APIClient.swift",
+    "AggregatorApp/Common/KeychainHelper.swift"
+  ],
+  "feature_root_id": "B-6b2810c5",
+  "execution_branch_name": "feature/b-6b2810c5",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-6b2810c5",
+  "expected_files": [
+    "project.yml"
+  ],
+  "expected_globs": [
+    "AggregatorApp/Common/**/*.swift"
+  ],
+  "touched_files": [],
+  "changed_files": [],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "",
+    "remaining": "",
+    "risks": "",
+    "verdict": "",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [],
+    "updated_docs": [],
+    "next_action": "",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [],
+    "expected_globs": [],
+    "touched_files": [],
+    "conflict_risks": "",
+    "design_decisions": "",
+    "test_coverage_notes": "",
+    "known_limitations": ""
+  },
+  "block_reason": "",
+  "conflict_risks": "",
+  "branch_name": "",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-22T09:24:55.458601+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    }
+  ],
+  "metadata": {},
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

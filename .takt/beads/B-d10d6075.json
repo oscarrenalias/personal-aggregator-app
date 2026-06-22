@@ -1,0 +1,68 @@
+{
+  "bead_id": "B-d10d6075",
+  "title": "ContentSource configuration intent",
+  "agent_type": "developer",
+  "description": "Create AggregatorWidget/ContentSourceIntent.swift. Define ContentSource as an AppEnum with cases latestThreads (default) and unreadImportant, each with a localized display title. Define ContentSourceIntent conforming to WidgetConfigurationIntent with one @Parameter of type ContentSource. This enables per-instance configuration via long-press Edit Widget.",
+  "status": "ready",
+  "bead_type": "task",
+  "parent_id": "B-6b2810c5",
+  "dependencies": [
+    "B-b89c0ea0"
+  ],
+  "acceptance_criteria": [
+    "ContentSourceIntent.swift compiles in the widget target",
+    "ContentSource conforms to AppEnum with localized titles for both cases",
+    "ContentSourceIntent.contentSource defaults to .latestThreads",
+    "AppIntentConfiguration in the bundle references ContentSourceIntent"
+  ],
+  "linked_docs": [],
+  "feature_root_id": "B-6b2810c5",
+  "execution_branch_name": "feature/b-6b2810c5",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-6b2810c5",
+  "expected_files": [
+    "AggregatorWidget/ContentSourceIntent.swift"
+  ],
+  "expected_globs": [],
+  "touched_files": [],
+  "changed_files": [],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "",
+    "remaining": "",
+    "risks": "",
+    "verdict": "",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [],
+    "updated_docs": [],
+    "next_action": "",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [],
+    "expected_globs": [],
+    "touched_files": [],
+    "conflict_risks": "",
+    "design_decisions": "",
+    "test_coverage_notes": "",
+    "known_limitations": ""
+  },
+  "block_reason": "",
+  "conflict_risks": "",
+  "branch_name": "",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-22T09:24:55.464076+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    }
+  ],
+  "metadata": {},
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

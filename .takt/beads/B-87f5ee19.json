@@ -1,0 +1,70 @@
+{
+  "bead_id": "B-87f5ee19",
+  "title": "In-app URL router for deep links",
+  "agent_type": "developer",
+  "description": "Implement onOpenURL handling in AggregatorApp.swift (or a dedicated router struct). Parse aggregator://article/{id} \u2192 navigate to ArticleDetailView; parse aggregator://thread/{id} \u2192 navigate to ThreadDetailView. Navigation must be cold-start-safe: store the pending deep-link URL on parse, then apply the navigation path once the root NavigationStack's views are ready. Silently ignore malformed or unrecognized URLs.",
+  "status": "ready",
+  "bead_type": "task",
+  "parent_id": "B-6b2810c5",
+  "dependencies": [
+    "B-9ecb3f85"
+  ],
+  "acceptance_criteria": [
+    "onOpenURL parses aggregator://article/{id} and pushes ArticleDetailView with the given id",
+    "onOpenURL parses aggregator://thread/{id} and pushes ThreadDetailView with the given id",
+    "Routing works from cold start (app launched via widget tap, not running beforehand)",
+    "Malformed URLs and unknown schemes are silently ignored with no crash"
+  ],
+  "linked_docs": [],
+  "feature_root_id": "B-6b2810c5",
+  "execution_branch_name": "feature/b-6b2810c5",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-6b2810c5",
+  "expected_files": [
+    "AggregatorApp/AggregatorApp.swift"
+  ],
+  "expected_globs": [
+    "AggregatorApp/**/*.swift"
+  ],
+  "touched_files": [],
+  "changed_files": [],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "",
+    "remaining": "",
+    "risks": "",
+    "verdict": "",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [],
+    "updated_docs": [],
+    "next_action": "",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [],
+    "expected_globs": [],
+    "touched_files": [],
+    "conflict_risks": "",
+    "design_decisions": "",
+    "test_coverage_notes": "",
+    "known_limitations": ""
+  },
+  "block_reason": "",
+  "conflict_risks": "",
+  "branch_name": "",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-22T09:24:55.481122+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    }
+  ],
+  "metadata": {},
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

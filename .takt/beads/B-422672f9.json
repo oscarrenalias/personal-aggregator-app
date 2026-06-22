@@ -1,0 +1,70 @@
+{
+  "bead_id": "B-422672f9",
+  "title": "Widget state views",
+  "agent_type": "developer",
+  "description": "Add state-aware rendering in WidgetViews.swift driven by the WidgetEntry state enum. Three non-content states: (1) notConfigured \u2014 \"Open app to sign in\" prompt, shown only when CF credentials are genuinely absent (no network call); (2) empty \u2014 friendly \"Nothing here yet\" message; (3) offline \u2014 last-good cached entries rendered normally, or a neutral \"Can't update\" message when no cache exists. A 403/HTML response is treated as offline, not notConfigured. State precedence: notConfigured > empty > offline > content.",
+  "status": "ready",
+  "bead_type": "task",
+  "parent_id": "B-6b2810c5",
+  "dependencies": [
+    "B-6c345d37",
+    "B-59524c20"
+  ],
+  "acceptance_criteria": [
+    "notConfigured state renders sign-in prompt; no API call triggered",
+    "empty state renders a friendly empty message in both small and medium",
+    "offline state renders last-good entries when cache exists; neutral message otherwise",
+    "403/HTML rejection routes to offline, not notConfigured",
+    "State precedence matches spec order"
+  ],
+  "linked_docs": [],
+  "feature_root_id": "B-6b2810c5",
+  "execution_branch_name": "feature/b-6b2810c5",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-6b2810c5",
+  "expected_files": [
+    "AggregatorWidget/WidgetViews.swift"
+  ],
+  "expected_globs": [],
+  "touched_files": [],
+  "changed_files": [],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "",
+    "remaining": "",
+    "risks": "",
+    "verdict": "",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [],
+    "updated_docs": [],
+    "next_action": "",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [],
+    "expected_globs": [],
+    "touched_files": [],
+    "conflict_risks": "",
+    "design_decisions": "",
+    "test_coverage_notes": "",
+    "known_limitations": ""
+  },
+  "block_reason": "",
+  "conflict_risks": "",
+  "branch_name": "",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-22T09:24:55.475816+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    }
+  ],
+  "metadata": {},
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

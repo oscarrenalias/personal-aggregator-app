@@ -1,0 +1,65 @@
+{
+  "bead_id": "B-9ecb3f85",
+  "title": "aggregator URL scheme registration in project.yml",
+  "agent_type": "developer",
+  "description": "Register the aggregator:// custom URL scheme in project.yml for the AggregatorApp target via CFBundleURLTypes (or the equivalent xcodegen INFOPLIST_KEY mechanism) so iOS routes aggregator:// URLs to AggregatorApp. Run xcodegen generate afterward to confirm the Info.plist entry is emitted.",
+  "status": "ready",
+  "bead_type": "task",
+  "parent_id": "B-6b2810c5",
+  "dependencies": [],
+  "acceptance_criteria": [
+    "project.yml includes a CFBundleURLTypes entry with CFBundleURLSchemes: [aggregator]",
+    "xcodegen generate produces the corresponding Info.plist key",
+    "iOS routes an aggregator:// URL to AggregatorApp (verifiable via Simulator)"
+  ],
+  "linked_docs": [],
+  "feature_root_id": "B-6b2810c5",
+  "execution_branch_name": "feature/b-6b2810c5",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-6b2810c5",
+  "expected_files": [
+    "project.yml"
+  ],
+  "expected_globs": [],
+  "touched_files": [],
+  "changed_files": [],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "",
+    "remaining": "",
+    "risks": "",
+    "verdict": "",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [],
+    "updated_docs": [],
+    "next_action": "",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [],
+    "expected_globs": [],
+    "touched_files": [],
+    "conflict_risks": "",
+    "design_decisions": "",
+    "test_coverage_notes": "",
+    "known_limitations": ""
+  },
+  "block_reason": "",
+  "conflict_risks": "",
+  "branch_name": "",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-22T09:24:55.478935+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    }
+  ],
+  "metadata": {},
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

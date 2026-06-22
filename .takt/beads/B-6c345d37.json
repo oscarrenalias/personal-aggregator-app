@@ -1,0 +1,72 @@
+{
+  "bead_id": "B-6c345d37",
+  "title": "Widget small view layout",
+  "agent_type": "developer",
+  "description": "Create the systemSmall widget view in AggregatorWidget/WidgetViews.swift. The hero UIImage is set via .containerBackground(for: .widget). A dark gradient scrim (black to clear, bottom-up) ensures legibility. Title text (\u22642 lines, .headline weight) and source name (.caption, .secondary color) sit above the scrim. widgetURL(_:) is set to the entry's deep-link URL so the whole widget is the tap target. Semantic colors and system fonts only; no hardcoded hex.",
+  "status": "ready",
+  "bead_type": "task",
+  "parent_id": "B-6b2810c5",
+  "dependencies": [
+    "B-bc140d37",
+    "B-d10d6075",
+    "B-4ce9369f"
+  ],
+  "acceptance_criteria": [
+    "SmallWidgetView compiles for .systemSmall family",
+    "Hero image set as .containerBackground using containerBackground(for: .widget)",
+    "Dark gradient scrim covers the bottom portion of the widget",
+    "Title capped at 2 lines using .lineLimit(2)",
+    "widgetURL set to the entry's deep-link URL",
+    "No hardcoded hex colors; no non-system fonts"
+  ],
+  "linked_docs": [],
+  "feature_root_id": "B-6b2810c5",
+  "execution_branch_name": "feature/b-6b2810c5",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-6b2810c5",
+  "expected_files": [
+    "AggregatorWidget/WidgetViews.swift"
+  ],
+  "expected_globs": [],
+  "touched_files": [],
+  "changed_files": [],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "",
+    "remaining": "",
+    "risks": "",
+    "verdict": "",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [],
+    "updated_docs": [],
+    "next_action": "",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [],
+    "expected_globs": [],
+    "touched_files": [],
+    "conflict_risks": "",
+    "design_decisions": "",
+    "test_coverage_notes": "",
+    "known_limitations": ""
+  },
+  "block_reason": "",
+  "conflict_risks": "",
+  "branch_name": "",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-22T09:24:55.473394+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    }
+  ],
+  "metadata": {},
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

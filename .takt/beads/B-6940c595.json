@@ -1,0 +1,87 @@
+{
+  "bead_id": "B-6940c595",
+  "title": "Widget logic unit tests",
+  "agent_type": "tester",
+  "description": "Extend AggregatorAppTests with the five test groups mandated by the spec: (1) APIClient URL construction \u2014 threads top-5 produces correct URL; articles view=important&unread_only=true&limit=5 produces correct URL. (2) ImageDownsampler \u2014 given an oversized UIImage and a target size, the returned image fits within target bounds. (3) Deep-link parsing \u2014 aggregator://article/123 and aggregator://thread/45 parse to the correct route enum values; malformed URLs return nil. (4) Timeline builder \u2014 given 5 sample items, produces 5 entries with strictly increasing dates ~3 min apart and correct per-entry item + URL. (5) ContentSource default \u2014 ContentSourceIntent.contentSource defaults to .latestThreads. Run xcodebuild test and confirm exit 0.",
+  "status": "ready",
+  "bead_type": "task",
+  "parent_id": "B-6b2810c5",
+  "dependencies": [
+    "B-c32ae391",
+    "B-dfc0afae",
+    "B-b91c2ea5",
+    "B-b89c0ea0",
+    "B-bc140d37",
+    "B-d10d6075",
+    "B-4ce9369f",
+    "B-60193899",
+    "B-8d75c57e",
+    "B-b7a3bc0c",
+    "B-6c345d37",
+    "B-59524c20",
+    "B-422672f9",
+    "B-c98f5412",
+    "B-9ecb3f85",
+    "B-87f5ee19",
+    "B-83f45143"
+  ],
+  "acceptance_criteria": [
+    "All five test groups are implemented and passing",
+    "xcodebuild test exits 0 including all new tests",
+    "No pre-existing tests are broken",
+    "APIClient URL tests cover both threads and articles query variants",
+    "Deep-link tests cover valid article, valid thread, and malformed inputs"
+  ],
+  "linked_docs": [
+    "docs/API.md"
+  ],
+  "feature_root_id": "B-6b2810c5",
+  "execution_branch_name": "feature/b-6b2810c5",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-6b2810c5",
+  "expected_files": [],
+  "expected_globs": [
+    "AggregatorAppTests/**/*.swift"
+  ],
+  "touched_files": [],
+  "changed_files": [],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "",
+    "remaining": "",
+    "risks": "",
+    "verdict": "",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [],
+    "updated_docs": [],
+    "next_action": "",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [],
+    "expected_globs": [],
+    "touched_files": [],
+    "conflict_risks": "",
+    "design_decisions": "",
+    "test_coverage_notes": "",
+    "known_limitations": ""
+  },
+  "block_reason": "",
+  "conflict_risks": "",
+  "branch_name": "",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-22T09:24:55.483610+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    }
+  ],
+  "metadata": {},
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

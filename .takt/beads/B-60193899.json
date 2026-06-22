@@ -1,0 +1,70 @@
+{
+  "bead_id": "B-60193899",
+  "title": "Widget image cache with App Group container",
+  "agent_type": "developer",
+  "description": "Add image cache logic (in Provider.swift or a dedicated ImageCache.swift) backed by the App Group container (FileManager.default.containerURL(forSecurityApplicationGroupIdentifier:)). Cache key is itemId + targetSize encoded as a filename. On each timeline build, enumerate existing cached files and delete any whose item id is not in the current top-5 set, keeping the container from growing unbounded across reloads.",
+  "status": "ready",
+  "bead_type": "task",
+  "parent_id": "B-6b2810c5",
+  "dependencies": [
+    "B-b89c0ea0",
+    "B-4ce9369f"
+  ],
+  "acceptance_criteria": [
+    "Cache files are written to and read from the App Group container URL",
+    "Cache key encodes both item id and target size",
+    "Cache hit skips the network download",
+    "Pruning deletes files for item ids not in the current top-5 on every timeline build",
+    "Cache directory is created if absent on first write"
+  ],
+  "linked_docs": [],
+  "feature_root_id": "B-6b2810c5",
+  "execution_branch_name": "feature/b-6b2810c5",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-6b2810c5",
+  "expected_files": [
+    "AggregatorWidget/Provider.swift"
+  ],
+  "expected_globs": [],
+  "touched_files": [],
+  "changed_files": [],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "",
+    "remaining": "",
+    "risks": "",
+    "verdict": "",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [],
+    "updated_docs": [],
+    "next_action": "",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [],
+    "expected_globs": [],
+    "touched_files": [],
+    "conflict_risks": "",
+    "design_decisions": "",
+    "test_coverage_notes": "",
+    "known_limitations": ""
+  },
+  "block_reason": "",
+  "conflict_risks": "",
+  "branch_name": "",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-22T09:24:55.466670+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    }
+  ],
+  "metadata": {},
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

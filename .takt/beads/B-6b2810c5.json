@@ -1,0 +1,69 @@
+{
+  "bead_id": "B-6b2810c5",
+  "title": "Home Screen WidgetKit Widget",
+  "agent_type": "planner",
+  "description": "Non-runnable feature container for the WidgetKit Home Screen widget epic. Coordinates all developer, tester, documentation, and review beads. Must be built in dependency order: shared sources \u2192 entitlements \u2192 KeychainHelper migration \u2192 widget target \u2192 extension code \u2192 views \u2192 deep linking \u2192 tests \u2192 docs \u2192 review.",
+  "status": "done",
+  "bead_type": "feature",
+  "parent_id": "B-22b0baa9",
+  "dependencies": [],
+  "acceptance_criteria": [
+    "All child beads complete without errors",
+    "xcodebuild test exits 0 including all new widget-logic tests",
+    "Widget appears in the system gallery with working preview in small and medium sizes",
+    "Per-instance content source configuration works via long-press Edit Widget",
+    "Deep-link tap opens the correct article or thread from cold start",
+    "CF credentials read from shared Keychain Access Group; absent credentials show sign-in prompt",
+    "Hero images downsampled; image cache pruned to current 5 ids on each timeline build"
+  ],
+  "linked_docs": [
+    "specs/drafts/home-screen-widget-for-latest-threads-and-unread-important-articles.md"
+  ],
+  "feature_root_id": "B-6b2810c5",
+  "execution_branch_name": "feature/b-6b2810c5",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-6b2810c5",
+  "expected_files": [],
+  "expected_globs": [],
+  "touched_files": [],
+  "changed_files": [],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "",
+    "remaining": "",
+    "risks": "",
+    "verdict": "",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [],
+    "updated_docs": [],
+    "next_action": "",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [],
+    "expected_globs": [],
+    "touched_files": [],
+    "conflict_risks": "",
+    "design_decisions": "",
+    "test_coverage_notes": "",
+    "known_limitations": ""
+  },
+  "block_reason": "",
+  "conflict_risks": "",
+  "branch_name": "",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-06-22T09:24:55.452679+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    }
+  ],
+  "metadata": {},
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}
