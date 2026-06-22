@@ -208,7 +208,7 @@ struct AggregatorRadarProvider: AppIntentTimelineProvider {
             case .article(let a):
                 itemId = "article-\(a.id)"
                 imageURLStr = a.imageURL
-                deepLink = a.url.flatMap { URL(string: $0) }
+                deepLink = URL(string: "aggregator://article/\(a.id)")
             }
 
             let heroImage: UIImage?

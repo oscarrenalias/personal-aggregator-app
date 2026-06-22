@@ -2,21 +2,17 @@ import AppIntents
 import SwiftUI
 import WidgetKit
 
-// Stub entry point — replaced by full AggregatorRadarWidget implementation in a subsequent bead.
-struct AggregatorRadarPlaceholderEntry: TimelineEntry {
-    let date: Date = .now
-}
+private struct AggregatorRadarEntryView: View {
+    let entry: WidgetEntry
+    @Environment(\.widgetFamily) private var family
 
-struct AggregatorRadarPlaceholderProvider: AppIntentTimelineProvider {
-    typealias Intent = ContentSourceIntent
-    typealias Entry = AggregatorRadarPlaceholderEntry
-
-    func placeholder(in context: Context) -> AggregatorRadarPlaceholderEntry { .init() }
-
-    func snapshot(for configuration: ContentSourceIntent, in context: Context) async -> AggregatorRadarPlaceholderEntry { .init() }
-
-    func timeline(for configuration: ContentSourceIntent, in context: Context) async -> Timeline<AggregatorRadarPlaceholderEntry> {
-        Timeline(entries: [.init()], policy: .never)
+    var body: some View {
+        switch family {
+        case .systemMedium:
+            MediumWidgetView(entry: entry)
+        default:
+            SmallWidgetView(entry: entry)
+        }
     }
 }
 
@@ -24,9 +20,8 @@ struct AggregatorRadarWidget: Widget {
     let kind: String = "AggregatorRadarWidget"
 
     var body: some WidgetConfiguration {
-        AppIntentConfiguration(kind: kind, intent: ContentSourceIntent.self, provider: AggregatorRadarPlaceholderProvider()) { _ in
-            Color.clear
-                .containerBackground(.clear, for: .widget)
+        AppIntentConfiguration(kind: kind, intent: ContentSourceIntent.self, provider: AggregatorRadarProvider()) { entry in
+            AggregatorRadarEntryView(entry: entry)
         }
         .configurationDisplayName("Aggregator Radar")
         .description("Latest threads and unread important articles.")

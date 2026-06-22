@@ -32,5 +32,6 @@ import WidgetKit
     func markUnread(_ id: Int) {
         readIDs.remove(id)
         unreadIDs.insert(id)
+        WidgetCenter.shared.reloadTimelines(ofKind: "AggregatorRadarWidget")
     }
 }
