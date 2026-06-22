@@ -175,6 +175,27 @@ struct APIClient {
         return try await get("/articles", query: query)
     }
 
+    /// Full-text article search.
+    /// - Parameters:
+    ///   - q: Search query string. Must not be empty or whitespace-only.
+    ///   - limit: Page size (default 25).
+    ///   - cursor: Opaque pagination cursor from the previous page; `nil` fetches the first page.
+    /// - Throws: `APIError` variants on network/HTTP failures. Passing an empty or
+    ///   whitespace-only `q` is a programming error and throws `URLError(.badURL)`.
+    func searchArticles(q: String, limit: Int = 25, cursor: String? = nil) async throws -> PaginatedResponse<Article> {
+        guard !q.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            throw URLError(.badURL)
+        }
+        var query: [URLQueryItem] = [
+            URLQueryItem(name: "q", value: q),
+            URLQueryItem(name: "limit", value: "\(limit)"),
+        ]
+        if let cursor {
+            query.append(URLQueryItem(name: "cursor", value: cursor))
+        }
+        return try await get("/articles/search", query: query)
+    }
+
     /// Fetches today's generated brief.
     ///
     /// A 404 surfaces as `APIError.http(status: 404)`. `TodayView` treats this as the
