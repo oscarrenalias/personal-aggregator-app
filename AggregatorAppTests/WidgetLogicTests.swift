@@ -45,6 +45,40 @@ final class APIClientWidgetURLTests: XCTestCase {
         XCTAssertNil(items.first(where: { $0.name == "cursor" }), "no cursor on first widget fetch")
     }
 
+    func testThreadsRecentWidgetURLHasCorrectQueryParams() {
+        // Provider.fetchItems(.latestThreadsRecent) sorts threads by recency
+        let query: [URLQueryItem] = [
+            URLQueryItem(name: "sort", value: ThreadSort.recent.rawValue),
+            URLQueryItem(name: "show_dismissed", value: "false"),
+            URLQueryItem(name: "limit", value: "5")
+        ]
+        let url = APIClient.makeURL(baseURL: base, path: "/threads", query: query)
+        XCTAssertNotNil(url)
+        guard let url else { return }
+        let items = URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems ?? []
+        XCTAssertEqual(items.first(where: { $0.name == "sort" })?.value, "recent")
+        XCTAssertEqual(items.first(where: { $0.name == "show_dismissed" })?.value, "false")
+        XCTAssertEqual(items.first(where: { $0.name == "limit" })?.value, "5")
+    }
+
+    func testArticlesRecentWidgetURLHasCorrectQueryParams() {
+        // Provider.fetchItems(.unreadImportantRecent) calls getArticles(feed:.important,sort:.recent,unreadOnly:true,limit:5)
+        let query: [URLQueryItem] = [
+            URLQueryItem(name: "view", value: "important"),
+            URLQueryItem(name: "sort", value: ArticleSort.recent.rawValue),
+            URLQueryItem(name: "unread_only", value: "true"),
+            URLQueryItem(name: "limit", value: "5")
+        ]
+        let url = APIClient.makeURL(baseURL: base, path: "/articles", query: query)
+        XCTAssertNotNil(url)
+        guard let url else { return }
+        let items = URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems ?? []
+        XCTAssertEqual(items.first(where: { $0.name == "view" })?.value, "important")
+        XCTAssertEqual(items.first(where: { $0.name == "sort" })?.value, "recent")
+        XCTAssertEqual(items.first(where: { $0.name == "unread_only" })?.value, "true")
+        XCTAssertEqual(items.first(where: { $0.name == "limit" })?.value, "5")
+    }
+
     func testThreadsWidgetURLPathIsCorrect() {
         let url = APIClient.makeURL(baseURL: base, path: "/threads", query: [])
         XCTAssertEqual(url?.path, "/api/v1/threads")
@@ -322,14 +356,19 @@ final class ArticleCodableRoundTripTests: XCTestCase {
 final class ContentSourceTests: XCTestCase {
 
     func testContentSourceRawValues() {
+        // Stable raw values — persisted in saved widget configurations.
         XCTAssertEqual(ContentSource.latestThreads.rawValue, "latestThreads")
+        XCTAssertEqual(ContentSource.latestThreadsRecent.rawValue, "latestThreadsRecent")
         XCTAssertEqual(ContentSource.unreadImportant.rawValue, "unreadImportant")
+        XCTAssertEqual(ContentSource.unreadImportantRecent.rawValue, "unreadImportantRecent")
     }
 
     func testContentSourceDisplayRepresentationsExist() {
         let reps = ContentSource.caseDisplayRepresentations
         XCTAssertNotNil(reps[.latestThreads], "latestThreads must have a display representation")
+        XCTAssertNotNil(reps[.latestThreadsRecent], "latestThreadsRecent must have a display representation")
         XCTAssertNotNil(reps[.unreadImportant], "unreadImportant must have a display representation")
+        XCTAssertNotNil(reps[.unreadImportantRecent], "unreadImportantRecent must have a display representation")
     }
 
     func testContentSourceIntentDefaultIsLatestThreads() {
