@@ -31,6 +31,18 @@ enum DateDisplay {
         return formatter.string(from: date)
     }
 
+    /// Returns the uppercase month abbreviation and day-of-month for an ISO date,
+    /// for rendering a calendar-style date badge (e.g. ("JUN", "23")).
+    /// Returns nil for nil or unparseable input.
+    static func monthDay(_ iso: String?) -> (month: String, day: String)? {
+        guard let iso, let date = parseISO8601(iso) else { return nil }
+        let monthFormatter = DateFormatter()
+        monthFormatter.dateFormat = "MMM"
+        let dayFormatter = DateFormatter()
+        dayFormatter.dateFormat = "d"
+        return (monthFormatter.string(from: date).uppercased(), dayFormatter.string(from: date))
+    }
+
     private static func parseISO8601(_ iso: String) -> Date? {
         // Try fractional seconds first (e.g. 2026-06-17T04:41:10.929002+00:00)
         let withFractional = ISO8601DateFormatter()

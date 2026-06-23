@@ -109,6 +109,28 @@ final class BriefModelTests: XCTestCase {
         XCTAssertEqual(DateDisplay.mediumDate("not-a-date"), "")
     }
 
+    // MARK: - DateDisplay.monthDay (calendar badge)
+
+    func testMonthDayReturnsUppercaseMonthAndDay() {
+        // Derive expected with the same formatters/locale/timezone as the implementation.
+        let iso = "2026-06-19T12:00:00+00:00"
+        let isoParser = ISO8601DateFormatter()
+        isoParser.formatOptions = [.withInternetDateTime]
+        let date = isoParser.date(from: iso)!
+        let monthFormatter = DateFormatter()
+        monthFormatter.dateFormat = "MMM"
+        let dayFormatter = DateFormatter()
+        dayFormatter.dateFormat = "d"
+        let result = DateDisplay.monthDay(iso)
+        XCTAssertEqual(result?.month, monthFormatter.string(from: date).uppercased())
+        XCTAssertEqual(result?.day, dayFormatter.string(from: date))
+    }
+
+    func testMonthDayNilAndGarbageReturnNil() {
+        XCTAssertNil(DateDisplay.monthDay(nil))
+        XCTAssertNil(DateDisplay.monthDay("not-a-date"))
+    }
+
     // MARK: - getBriefs URL construction via APIClient.makeURL
 
     func testGetBriefsURLWithCursor() {

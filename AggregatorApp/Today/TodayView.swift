@@ -50,14 +50,17 @@ struct TodayView: View {
                         }
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                     case .loaded:
-                        List {
-                            ForEach(briefs) { brief in
-                                NavigationLink(destination: BriefDetailView(brief: brief)) {
-                                    BriefCardView(brief: brief, isLatest: brief.id == briefs.first?.id)
-                                }
-                                .onAppear {
-                                    if !isFallback && brief.id == briefs.last?.id {
-                                        Task { await loadMoreBriefs() }
+                        GlassEffectContainer {
+                            List {
+                                ForEach(briefs) { brief in
+                                    NavigationLink(destination: BriefDetailView(brief: brief)) {
+                                        BriefCardView(brief: brief, isLatest: brief.id == briefs.first?.id)
+                                    }
+                                    .listRowBackground(Color.clear)
+                                    .onAppear {
+                                        if !isFallback && brief.id == briefs.last?.id {
+                                            Task { await loadMoreBriefs() }
+                                        }
                                     }
                                 }
                             }

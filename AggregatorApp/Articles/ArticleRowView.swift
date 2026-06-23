@@ -11,23 +11,32 @@ struct ArticleRowView: View {
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
             VStack(alignment: .leading, spacing: 4) {
-                HStack(alignment: .top, spacing: 6) {
+                // Meta line — source · date, with the unread dot, above the headline
+                // (mirrors ThreadCardView so article and thread rows look consistent).
+                HStack(spacing: 4) {
                     if !isRead {
                         Image(systemName: "circle.fill")
                             .font(.caption2)
                             .foregroundStyle(.tint)
-                            .padding(.top, 5)
                             .accessibilityLabel("Unread")
                     }
-                    Text(article.title ?? "")
-                        .font(.headline)
-                        .lineLimit(2)
-                        .foregroundStyle(isRead ? AnyShapeStyle(.secondary) : AnyShapeStyle(.primary))
+                    Text(caption)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
                 }
+                .accessibilityElement(children: .combine)
 
-                Text(caption)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                Text(article.title ?? "")
+                    .font(.headline)
+                    .lineLimit(2)
+                    .foregroundStyle(isRead ? AnyShapeStyle(.secondary) : AnyShapeStyle(.primary))
+
+                if let summary = article.summary, !summary.isEmpty {
+                    Text(summary)
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(3)
+                }
 
                 if let score = article.importanceScore {
                     importancePill(score: score)

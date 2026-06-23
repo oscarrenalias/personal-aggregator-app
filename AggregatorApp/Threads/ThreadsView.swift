@@ -106,9 +106,34 @@ struct ThreadsView: View {
         }
     }
 
+    private var threadsHeader: some View {
+        // Mirrors ArticleListView's feed header so Threads and Sources stay consistent.
+        Text(threadSortSummary)
+            .font(.caption)
+            .foregroundStyle(.secondary)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.vertical, 4)
+            .listRowBackground(Color.clear)
+            .listRowSeparator(.hidden)
+            .accessibilityElement(children: .combine)
+    }
+
+    private var threadSortSummary: String {
+        var parts: [String] = []
+        switch listPreferences.threadsSort {
+        case .importance: parts.append("Sorted by importance")
+        case .recent: parts.append("Most recent first")
+        }
+        if listPreferences.threadsShowDismissed {
+            parts.append("Showing dismissed")
+        }
+        return parts.joined(separator: " · ")
+    }
+
     private var threadList: some View {
         GlassEffectContainer {
             List {
+                threadsHeader
                 ForEach(Array(threads.enumerated()), id: \.element.id) { index, thread in
                     NavigationLink(value: index) {
                         ThreadCardView(thread: thread)
