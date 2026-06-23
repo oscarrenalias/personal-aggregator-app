@@ -158,6 +158,7 @@ struct ThreadsView: View {
                     }
                 }
             }
+            .listStyle(.plain)
         }
         .refreshable {
             await loadFirstPage(showSpinner: false)

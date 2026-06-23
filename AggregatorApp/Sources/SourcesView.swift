@@ -92,6 +92,7 @@ struct SourcesView: View {
                                 }
                             }
                         }
+                        .listStyle(.plain)
                         .refreshable {
                             await loadAll()
                         }

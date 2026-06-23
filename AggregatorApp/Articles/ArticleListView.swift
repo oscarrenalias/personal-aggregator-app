@@ -137,6 +137,7 @@ struct ArticleListView: View {
                     .listRowBackground(Color.clear)
                 }
             }
+            .listStyle(.plain)
         }
         .refreshable {
             await loadFirstPage(showSpinner: false)

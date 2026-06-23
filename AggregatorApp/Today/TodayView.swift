@@ -64,6 +64,7 @@ struct TodayView: View {
                                     }
                                 }
                             }
+                            .listStyle(.plain)
                         }
                         .refreshable {
                             await refreshBriefs()
