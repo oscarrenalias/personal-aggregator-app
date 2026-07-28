@@ -84,6 +84,11 @@ struct ThreadDetailView: View {
                 VStack(alignment: .leading, spacing: 20) {
                     headerSection(thread)
 
+                    let qualifying = newDeltas(thread)
+                    if !qualifying.isEmpty {
+                        newDeltasSection(qualifying)
+                    }
+
                     if !thread.knownFacts.isEmpty {
                         knownFactsSection(thread.knownFacts)
                     }
@@ -124,6 +129,59 @@ struct ThreadDetailView: View {
 
             if let summary = thread.rollingSummary, !summary.isEmpty {
                 Text(summary)
+                    .font(.body)
+            }
+        }
+    }
+
+    // MARK: - New-since-last-visit deltas
+
+    private func newDeltas(_ thread: Thread) -> [ThreadDelta] {
+        let filtered: [ThreadDelta]
+        if let cutoff = previousLastViewedAt {
+            filtered = thread.deltas.filter { $0.timestamp > cutoff }
+        } else {
+            filtered = thread.deltas
+        }
+        return filtered.filter { delta in
+            delta.label != nil || !delta.newFacts.isEmpty || (delta.reason.map { !$0.isEmpty } ?? false)
+        }
+    }
+
+    @ViewBuilder
+    private func newDeltasSection(_ deltas: [ThreadDelta]) -> some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("New since last visit")
+                .font(.headline)
+
+            ForEach(Array(deltas.enumerated()), id: \.offset) { _, delta in
+                newDeltaRow(delta)
+            }
+        }
+        .padding()
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 12))
+    }
+
+    @ViewBuilder
+    private func newDeltaRow(_ delta: ThreadDelta) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            if let label = delta.label {
+                classificationBadge(for: label)
+            }
+
+            if !delta.newFacts.isEmpty {
+                ForEach(delta.newFacts, id: \.self) { fact in
+                    HStack(alignment: .top, spacing: 8) {
+                        Text("•")
+                            .foregroundStyle(.secondary)
+                            .accessibilityHidden(true)
+                        Text(fact)
+                            .font(.body)
+                    }
+                }
+            } else if let reason = delta.reason, !reason.isEmpty {
+                Text(reason)
                     .font(.body)
             }
         }
