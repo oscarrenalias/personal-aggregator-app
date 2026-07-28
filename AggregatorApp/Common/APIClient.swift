@@ -87,6 +87,22 @@ struct APIClient {
         try inspectResponse(response, data: data)
     }
 
+    /// Performs an authenticated POST request and decodes the response body as `T`.
+    /// - Parameter path: Path relative to `store.baseURL`.
+    /// - Throws: `APIError.cloudflareRejected`, `APIError.http`, `DecodingError`, or `URLError` on failure.
+    func post<T: Decodable>(_ path: String) async throws -> T {
+        guard let url = APIClient.makeURL(baseURL: store.baseURL, path: path) else {
+            throw URLError(.badURL)
+        }
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue(store.clientId, forHTTPHeaderField: "CF-Access-Client-Id")
+        request.setValue(store.clientSecret, forHTTPHeaderField: "CF-Access-Client-Secret")
+        let (data, response) = try await URLSession.shared.data(for: request)
+        try inspectResponse(response, data: data)
+        return try JSONDecoder().decode(T.self, from: data)
+    }
+
     func getSources() async throws -> [Source] {
         return try await get("/sources")
     }
@@ -248,6 +264,12 @@ struct APIClient {
     /// Removes an article from the user's saved list.
     func unsaveArticle(id: Int) async throws {
         try await post("/articles/\(id)/unsave")
+    }
+
+    /// Records that the user viewed a thread and returns the updated thread with `last_viewed_at` set.
+    @discardableResult
+    func postViewedThread(id: Int) async throws -> Thread {
+        return try await post("/threads/\(id)/viewed")
     }
 
     // MARK: - Private helpers
