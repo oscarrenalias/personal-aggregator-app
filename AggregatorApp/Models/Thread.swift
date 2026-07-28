@@ -1,5 +1,25 @@
 import Foundation
 
+struct ThreadDelta: Codable {
+    let timestamp: String
+    let articleId: Int?
+    let label: String?
+    let newFacts: [String]
+    let reason: String?
+    let absorbedId: Int?
+    let type: String?
+
+    enum CodingKeys: String, CodingKey {
+        case timestamp
+        case articleId = "article_id"
+        case label
+        case newFacts = "new_facts"
+        case reason
+        case absorbedId = "absorbed_id"
+        case type
+    }
+}
+
 struct Thread: Codable, Identifiable {
     let id: Int
     let representativeTitle: String
@@ -15,6 +35,8 @@ struct Thread: Codable, Identifiable {
     let hasUpdates: Bool
     let dismissed: Bool
     let topGrade: Int?
+    let lastViewedAt: String?
+    let deltas: [ThreadDelta]
 
     enum CodingKeys: String, CodingKey {
         case id
@@ -31,6 +53,8 @@ struct Thread: Codable, Identifiable {
         case hasUpdates = "has_updates"
         case dismissed
         case topGrade = "top_grade"
+        case lastViewedAt = "last_viewed_at"
+        case deltas
     }
 
     func encode(to encoder: Encoder) throws {
@@ -49,6 +73,8 @@ struct Thread: Codable, Identifiable {
         try container.encode(hasUpdates, forKey: .hasUpdates)
         try container.encode(dismissed, forKey: .dismissed)
         try container.encodeIfPresent(topGrade, forKey: .topGrade)
+        try container.encodeIfPresent(lastViewedAt, forKey: .lastViewedAt)
+        try container.encode(deltas, forKey: .deltas)
     }
 
     init(from decoder: Decoder) throws {
@@ -68,5 +94,7 @@ struct Thread: Codable, Identifiable {
         hasUpdates = try container.decode(Bool.self, forKey: .hasUpdates)
         dismissed = try container.decode(Bool.self, forKey: .dismissed)
         topGrade = try container.decodeIfPresent(Int.self, forKey: .topGrade)
+        lastViewedAt = try container.decodeIfPresent(String.self, forKey: .lastViewedAt)
+        deltas = (try? container.decode([ThreadDelta].self, forKey: .deltas)) ?? []
     }
 }
