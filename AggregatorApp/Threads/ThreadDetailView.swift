@@ -8,6 +8,7 @@ struct ThreadDetailView: View {
     @State private var thread: Thread? = nil
     @State private var members: [ThreadMember] = []
     @State private var nextCursor: String? = nil
+    @State private var previousLastViewedAt: String? = nil
     @State private var isLoadingMore = false
     @State private var isInitialLoad = true
     @State private var loadError: Error? = nil
@@ -311,7 +312,13 @@ struct ThreadDetailView: View {
             thread = t
             members = m.items
             nextCursor = m.nextCursor
+            previousLastViewedAt = t.lastViewedAt
             seenStore.markSeen(id: t.id, lastUpdated: t.lastUpdated)
+            do {
+                _ = try await apiClient.postViewedThread(id: threadId)
+            } catch {
+                // swallow: thread content already rendered
+            }
         } catch {
             if isCancellation(error) { return }
             loadError = error
