@@ -375,6 +375,9 @@ struct ThreadDetailView: View {
             thread = t
             members = m.items
             nextCursor = m.nextCursor
+            // Capture the pre-POST value so newDeltasSection shows deltas since the *previous*
+            // visit, not the current one. postViewedThread updates last_viewed_at to now on
+            // the server, so reading it afterward would hide all current-visit deltas.
             previousLastViewedAt = t.lastViewedAt
             seenStore.markSeen(id: t.id, lastUpdated: t.lastUpdated)
             do {

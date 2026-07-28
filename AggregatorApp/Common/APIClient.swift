@@ -266,7 +266,11 @@ struct APIClient {
         try await post("/articles/\(id)/unsave")
     }
 
-    /// Records that the user viewed a thread and returns the updated thread with `last_viewed_at` set.
+    /// Records that the user viewed a thread.
+    ///
+    /// Returns the updated `Thread` with `last_viewed_at` set to the server-assigned view timestamp.
+    /// The result is discardable — callers that only need the side effect (marking viewed) can ignore
+    /// the return value; callers that need to read the fresh `last_viewed_at` should capture it.
     @discardableResult
     func postViewedThread(id: Int) async throws -> Thread {
         return try await post("/threads/\(id)/viewed")
