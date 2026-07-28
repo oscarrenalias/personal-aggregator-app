@@ -3,7 +3,7 @@
   "info": {
     "title": "Personal Aggregator API",
     "description": "JSON REST API for mobile and TUI clients. Read-only access to articles, threads, and feeds.",
-    "version": "0.1.0"
+    "version": "0.1.54"
   },
   "paths": {
     "/brief/today": {
