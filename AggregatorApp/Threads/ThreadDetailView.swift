@@ -8,6 +8,7 @@ struct ThreadDetailView: View {
     @State private var thread: Thread? = nil
     @State private var members: [ThreadMember] = []
     @State private var nextCursor: String? = nil
+    @State private var previousLastViewedAt: String? = nil
     @State private var isLoadingMore = false
     @State private var isInitialLoad = true
     @State private var loadError: Error? = nil
@@ -83,6 +84,11 @@ struct ThreadDetailView: View {
                 VStack(alignment: .leading, spacing: 20) {
                     headerSection(thread)
 
+                    let qualifying = newDeltas(thread)
+                    if !qualifying.isEmpty {
+                        newDeltasSection(qualifying)
+                    }
+
                     if !thread.knownFacts.isEmpty {
                         knownFactsSection(thread.knownFacts)
                     }
@@ -123,6 +129,64 @@ struct ThreadDetailView: View {
 
             if let summary = thread.rollingSummary, !summary.isEmpty {
                 Text(summary)
+                    .font(.body)
+            }
+        }
+    }
+
+    // MARK: - New-since-last-visit deltas
+
+    // Exposed as static (internal) for unit testing; pure — no view state dependency.
+    static func filterNewDeltas(in deltas: [ThreadDelta], since cutoff: String?) -> [ThreadDelta] {
+        let filtered: [ThreadDelta]
+        if let cutoff {
+            filtered = deltas.filter { $0.timestamp > cutoff }
+        } else {
+            filtered = deltas
+        }
+        return filtered.filter { delta in
+            delta.label != nil || !delta.newFacts.isEmpty || (delta.reason.map { !$0.isEmpty } ?? false)
+        }
+    }
+
+    private func newDeltas(_ thread: Thread) -> [ThreadDelta] {
+        Self.filterNewDeltas(in: thread.deltas, since: previousLastViewedAt)
+    }
+
+    @ViewBuilder
+    private func newDeltasSection(_ deltas: [ThreadDelta]) -> some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("New since last visit")
+                .font(.headline)
+
+            ForEach(Array(deltas.enumerated()), id: \.offset) { _, delta in
+                newDeltaRow(delta)
+            }
+        }
+        .padding()
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 12))
+    }
+
+    @ViewBuilder
+    private func newDeltaRow(_ delta: ThreadDelta) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            if let label = delta.label {
+                classificationBadge(for: label)
+            }
+
+            if !delta.newFacts.isEmpty {
+                ForEach(delta.newFacts, id: \.self) { fact in
+                    HStack(alignment: .top, spacing: 8) {
+                        Text("•")
+                            .foregroundStyle(.secondary)
+                            .accessibilityHidden(true)
+                        Text(fact)
+                            .font(.body)
+                    }
+                }
+            } else if let reason = delta.reason, !reason.isEmpty {
+                Text(reason)
                     .font(.body)
             }
         }
@@ -311,7 +375,16 @@ struct ThreadDetailView: View {
             thread = t
             members = m.items
             nextCursor = m.nextCursor
+            // Capture the pre-POST value so newDeltasSection shows deltas since the *previous*
+            // visit, not the current one. postViewedThread updates last_viewed_at to now on
+            // the server, so reading it afterward would hide all current-visit deltas.
+            previousLastViewedAt = t.lastViewedAt
             seenStore.markSeen(id: t.id, lastUpdated: t.lastUpdated)
+            do {
+                _ = try await apiClient.postViewedThread(id: threadId)
+            } catch {
+                // swallow: thread content already rendered
+            }
         } catch {
             if isCancellation(error) { return }
             loadError = error

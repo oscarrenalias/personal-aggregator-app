@@ -3,7 +3,7 @@
   "info": {
     "title": "Personal Aggregator API",
     "description": "JSON REST API for mobile and TUI clients. Read-only access to articles, threads, and feeds.",
-    "version": "0.1.0"
+    "version": "0.1.54"
   },
   "paths": {
     "/brief/today": {
@@ -785,6 +785,49 @@
           }
         }
       }
+    },
+    "/threads/{thread_id}/viewed": {
+      "post": {
+        "tags": [
+          "threads"
+        ],
+        "summary": "Mark Thread Viewed",
+        "description": "Stamp the thread as viewed, updating last_viewed_at to the current time.",
+        "operationId": "mark_thread_viewed_threads__thread_id__viewed_post",
+        "parameters": [
+          {
+            "name": "thread_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Thread Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ThreadResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1428,6 +1471,82 @@
         ],
         "title": "ThreadMemberResponse"
       },
+      "ThreadDelta": {
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "title": "Timestamp"
+          },
+          "article_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Article Id"
+          },
+          "label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Label"
+          },
+          "new_facts": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "New Facts"
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason"
+          },
+          "absorbed_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Absorbed Id"
+          },
+          "type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "timestamp",
+          "new_facts"
+        ],
+        "title": "ThreadDelta"
+      },
       "ThreadResponse": {
         "properties": {
           "id": {
@@ -1583,16 +1702,22 @@
             ],
             "title": "Novelty Label"
           },
-          "deltas": {
+          "last_viewed_at": {
             "anyOf": [
               {
-                "items": {},
-                "type": "array"
+                "type": "string"
               },
               {
                 "type": "null"
               }
             ],
+            "title": "Last Viewed At"
+          },
+          "deltas": {
+            "items": {
+              "$ref": "#/components/schemas/ThreadDelta"
+            },
+            "type": "array",
             "title": "Deltas"
           },
           "source_list": {

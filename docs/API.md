@@ -101,11 +101,24 @@ middleware so every request carries them.
 | `POST /articles/{id}/unsave` | Unsave article |
 | `POST /threads/{id}/dismiss` | Dismiss thread |
 | `POST /threads/{id}/restore` | Restore dismissed thread |
+| `POST /threads/{id}/viewed` | Stamp thread as viewed (updates `last_viewed_at`) |
 
 Write endpoints take no body; the resource is identified by the path. They are
 **unauthenticated at the app layer** — they are protected only by the perimeter
 (Cloudflare Access / Tailscale / localhost). Do not expose them publicly without
 that perimeter.
+
+### Thread `last_viewed_at`
+
+`GET /threads/{id}` returns a `last_viewed_at` field: an ISO-8601 timestamp of the
+**previous** visit to that thread. The value reflects the time recorded before the
+current `POST /threads/{id}/viewed` call stamps the new time — so reading
+`last_viewed_at` from the `GET` response shows when the user last opened the thread,
+and calling `POST /threads/{id}/viewed` immediately afterward advances it to now.
+
+- `null` means the thread has never been marked viewed.
+- Passive `GET /threads/{id}` reads never mutate `last_viewed_at`; only the explicit
+  `/viewed` write does.
 
 ### Enumerations
 
