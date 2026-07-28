@@ -136,16 +136,21 @@ struct ThreadDetailView: View {
 
     // MARK: - New-since-last-visit deltas
 
-    private func newDeltas(_ thread: Thread) -> [ThreadDelta] {
+    // Exposed as static (internal) for unit testing; pure — no view state dependency.
+    static func filterNewDeltas(in deltas: [ThreadDelta], since cutoff: String?) -> [ThreadDelta] {
         let filtered: [ThreadDelta]
-        if let cutoff = previousLastViewedAt {
-            filtered = thread.deltas.filter { $0.timestamp > cutoff }
+        if let cutoff {
+            filtered = deltas.filter { $0.timestamp > cutoff }
         } else {
-            filtered = thread.deltas
+            filtered = deltas
         }
         return filtered.filter { delta in
             delta.label != nil || !delta.newFacts.isEmpty || (delta.reason.map { !$0.isEmpty } ?? false)
         }
+    }
+
+    private func newDeltas(_ thread: Thread) -> [ThreadDelta] {
+        Self.filterNewDeltas(in: thread.deltas, since: previousLastViewedAt)
     }
 
     @ViewBuilder
