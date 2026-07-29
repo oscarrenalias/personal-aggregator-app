@@ -92,7 +92,7 @@ struct SearchView: View {
             List {
                 ForEach(Array(articles.enumerated()), id: \.element.id) { index, article in
                     NavigationLink {
-                        ArticlePagerView(articles: articles, startIndex: index)
+                        ArticlePagerView(articles: $articles, startIndex: index)
                     } label: {
                         ArticleRowView(article: article)
                     }
