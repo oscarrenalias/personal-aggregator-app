@@ -13,7 +13,7 @@ import SwiftUI
 /// insets its pages below the status bar, which left a strip above the hero. A
 /// plain ScrollView lets each page's hero bleed to the very top.
 struct ThreadPagerView: View {
-    let threads: [Thread]
+    @Binding var threads: [Thread]
     let startIndex: Int
 
     @Environment(CredentialsStore.self) private var credentialsStore
@@ -22,8 +22,8 @@ struct ThreadPagerView: View {
     // Optimistic per-thread override for the dismissed flag toggled from the toolbar.
     @State private var dismissOverrides: [Int: Bool] = [:]
 
-    init(threads: [Thread], startIndex: Int) {
-        self.threads = threads
+    init(threads: Binding<[Thread]>, startIndex: Int) {
+        self._threads = threads
         self.startIndex = startIndex
         self._currentID = State(initialValue: startIndex)
     }

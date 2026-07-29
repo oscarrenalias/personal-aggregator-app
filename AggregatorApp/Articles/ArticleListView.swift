@@ -117,7 +117,7 @@ struct ArticleListView: View {
                     // NavigationLinks, and mixing those with value-based links in
                     // the same stack made the first tap resolve to the wrong view.
                     NavigationLink {
-                        ArticlePagerView(articles: articles, startIndex: index)
+                        ArticlePagerView(articles: $articles, startIndex: index)
                     } label: {
                         ArticleRowView(article: article)
                     }

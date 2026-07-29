@@ -74,7 +74,7 @@ struct ThreadsView: View {
                 }
             }
             .navigationDestination(for: Int.self) { index in
-                ThreadPagerView(threads: threads, startIndex: index)
+                ThreadPagerView(threads: $threads, startIndex: index)
             }
             .navigationDestination(for: DeepLink.self) { link in
                 switch link {

@@ -16,7 +16,7 @@ import UIKit
 /// plain ScrollView lets each page's hero bleed to the very top like the
 /// standalone reader does.
 struct ArticlePagerView: View {
-    let articles: [Article]
+    @Binding var articles: [Article]
     let startIndex: Int
 
     @Environment(CredentialsStore.self) private var credentialsStore
@@ -28,8 +28,8 @@ struct ArticlePagerView: View {
     @State private var safariURL: SafariURL?
     @State private var autoMarked: Set<Int> = []
 
-    init(articles: [Article], startIndex: Int) {
-        self.articles = articles
+    init(articles: Binding<[Article]>, startIndex: Int) {
+        self._articles = articles
         self.startIndex = startIndex
         self._currentID = State(initialValue: startIndex)
     }
