@@ -28,6 +28,7 @@ targets:
     info:
       path: AggregatorApp/Info.plist
       properties:
+        ITSAppUsesNonExemptEncryption: false
         CFBundleURLTypes:
           - CFBundleURLName: net.renalias.AggregatorApp
             CFBundleURLSchemes:
