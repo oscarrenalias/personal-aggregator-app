@@ -85,15 +85,13 @@ struct ThreadDetailView: View {
                     headerSection(thread)
 
                     let qualifying = newDeltas(thread)
-                    if !qualifying.isEmpty {
-                        newDeltasSection(qualifying)
+                    let coveredFacts = Self.factsCoveredByDeltas(qualifying)
+                    let residualFacts = thread.knownFacts.filter { !coveredFacts.contains($0) }
+                    if !residualFacts.isEmpty {
+                        knownFactsSection(residualFacts)
                     }
 
-                    if !thread.knownFacts.isEmpty {
-                        knownFactsSection(thread.knownFacts)
-                    }
-
-                    membersSection()
+                    membersSection(thread: thread, qualifyingDeltas: qualifying)
                 }
                 .padding(.horizontal, ReaderLayout.hPadding)
                 .padding(.vertical)
@@ -134,7 +132,7 @@ struct ThreadDetailView: View {
         }
     }
 
-    // MARK: - New-since-last-visit deltas
+    // MARK: - Delta filtering helpers
 
     // Exposed as static (internal) for unit testing; pure — no view state dependency.
     static func filterNewDeltas(in deltas: [ThreadDelta], since cutoff: String?) -> [ThreadDelta] {
@@ -153,43 +151,14 @@ struct ThreadDetailView: View {
         Self.filterNewDeltas(in: thread.deltas, since: previousLastViewedAt)
     }
 
-    @ViewBuilder
-    private func newDeltasSection(_ deltas: [ThreadDelta]) -> some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("New since last visit")
-                .font(.headline)
-
-            ForEach(Array(deltas.enumerated()), id: \.offset) { _, delta in
-                newDeltaRow(delta)
-            }
-        }
-        .padding()
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 12))
+    // Returns the union of newFacts across all deltas — facts already surfaced inline in article rows.
+    static func factsCoveredByDeltas(_ deltas: [ThreadDelta]) -> Set<String> {
+        Set(deltas.flatMap { $0.newFacts })
     }
 
-    @ViewBuilder
-    private func newDeltaRow(_ delta: ThreadDelta) -> some View {
-        VStack(alignment: .leading, spacing: 6) {
-            if let label = delta.label {
-                classificationBadge(for: label)
-            }
-
-            if !delta.newFacts.isEmpty {
-                ForEach(delta.newFacts, id: \.self) { fact in
-                    HStack(alignment: .top, spacing: 8) {
-                        Text("•")
-                            .foregroundStyle(.secondary)
-                            .accessibilityHidden(true)
-                        Text(fact)
-                            .font(.body)
-                    }
-                }
-            } else if let reason = delta.reason, !reason.isEmpty {
-                Text(reason)
-                    .font(.body)
-            }
-        }
+    // Finds the first qualifying delta whose articleId matches the given member's articleId.
+    static func delta(for member: ThreadMember, in qualifyingDeltas: [ThreadDelta]) -> ThreadDelta? {
+        qualifyingDeltas.first { $0.articleId == member.articleId }
     }
 
     // MARK: - Known facts
@@ -218,20 +187,32 @@ struct ThreadDetailView: View {
     // MARK: - Members
 
     @ViewBuilder
-    private func membersSection() -> some View {
+    private func membersSection(thread: Thread, qualifyingDeltas: [ThreadDelta]) -> some View {
         if activeMembers.isEmpty && suppressedMembers.isEmpty {
             ContentUnavailableView("No articles", systemImage: "doc.text")
                 .frame(maxWidth: .infinity)
         } else {
             VStack(alignment: .leading, spacing: 0) {
+                let hasNewDeltaArticles = activeMembers.contains { member in
+                    Self.delta(for: member, in: qualifyingDeltas) != nil
+                }
+                let unlinkedDeltas = qualifyingDeltas.filter { $0.articleId == nil && !$0.newFacts.isEmpty }
+
                 if !activeMembers.isEmpty {
-                    Text("Articles")
-                        .font(.headline)
-                        .padding(.bottom, 12)
+                    if hasNewDeltaArticles {
+                        Text("New since last visit")
+                            .font(.headline)
+                            .padding(.bottom, 12)
+                    } else {
+                        Text("Articles")
+                            .font(.headline)
+                            .padding(.bottom, 12)
+                    }
 
                     ForEach(Array(activeMembers.enumerated()), id: \.element.id) { index, member in
+                        let matchedDelta = Self.delta(for: member, in: qualifyingDeltas)
                         NavigationLink(destination: ArticleDetailView(articleId: member.articleId)) {
-                            activeMemberRow(member)
+                            activeMemberRow(member, delta: matchedDelta)
                         }
                         .buttonStyle(.plain)
                         .onAppear {
@@ -247,12 +228,21 @@ struct ThreadDetailView: View {
                     }
                 }
 
-                if !suppressedMembers.isEmpty {
-                    // Suppressed members show source name only — their titles duplicate content
-                    // already captured in the active members or thread summary.
-                    Text("Also covered by")
+                if !unlinkedDeltas.isEmpty {
+                    Text("Other updates")
                         .font(.headline)
                         .padding(.top, activeMembers.isEmpty ? 0 : 20)
+                        .padding(.bottom, 8)
+
+                    ForEach(Array(unlinkedDeltas.enumerated()), id: \.offset) { _, delta in
+                        deltaFactRow(delta)
+                    }
+                }
+
+                if !suppressedMembers.isEmpty {
+                    Text("Also covered by")
+                        .font(.headline)
+                        .padding(.top, (activeMembers.isEmpty && unlinkedDeltas.isEmpty) ? 0 : 20)
                         .padding(.bottom, 8)
 
                     ForEach(suppressedMembers) { member in
@@ -280,7 +270,7 @@ struct ThreadDetailView: View {
     // MARK: - Active member row
 
     @ViewBuilder
-    private func activeMemberRow(_ member: ThreadMember) -> some View {
+    private func activeMemberRow(_ member: ThreadMember, delta: ThreadDelta?) -> some View {
         HStack(alignment: .center, spacing: 0) {
             VStack(alignment: .leading, spacing: 4) {
                 if let raw = member.classificationLabel {
@@ -298,6 +288,18 @@ struct ThreadDetailView: View {
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
+
+                if let delta, !delta.newFacts.isEmpty {
+                    ForEach(delta.newFacts, id: \.self) { fact in
+                        HStack(alignment: .top, spacing: 8) {
+                            Text("•")
+                                .foregroundStyle(.secondary)
+                                .accessibilityHidden(true)
+                            Text(fact)
+                                .font(.body)
+                        }
+                    }
+                }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
 
@@ -309,6 +311,26 @@ struct ThreadDetailView: View {
         .contentShape(Rectangle())
         .padding(.vertical, 4)
         .accessibilityElement(children: .combine)
+    }
+
+    // Used for unlinked qualifying deltas rendered in the "Other updates" group.
+    @ViewBuilder
+    private func deltaFactRow(_ delta: ThreadDelta) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            if let label = delta.label {
+                classificationBadge(for: label)
+            }
+
+            ForEach(delta.newFacts, id: \.self) { fact in
+                HStack(alignment: .top, spacing: 8) {
+                    Text("•")
+                        .foregroundStyle(.secondary)
+                        .accessibilityHidden(true)
+                    Text(fact)
+                        .font(.body)
+                }
+            }
+        }
     }
 
     @ViewBuilder
@@ -375,7 +397,7 @@ struct ThreadDetailView: View {
             thread = t
             members = m.items
             nextCursor = m.nextCursor
-            // Capture the pre-POST value so newDeltasSection shows deltas since the *previous*
+            // Capture the pre-POST value so the articles section shows deltas since the *previous*
             // visit, not the current one. postViewedThread updates last_viewed_at to now on
             // the server, so reading it afterward would hide all current-visit deltas.
             previousLastViewedAt = t.lastViewedAt
