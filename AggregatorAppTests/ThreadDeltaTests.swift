@@ -176,17 +176,122 @@ final class ThreadDeltaTests: XCTestCase {
         XCTAssertEqual(result.count, 1)
     }
 
+    // MARK: - factsCoveredByDeltas
+
+    func testFactsCoveredByDeltasUnionsAllNewFacts() {
+        let deltas = [
+            makeDelta(ts: "2026-07-28T00:00:00Z", label: "same_thread_new_fact", facts: ["Fact A", "Fact B"]),
+            makeDelta(ts: "2026-07-29T00:00:00Z", label: "same_thread_new_fact", facts: ["Fact C"]),
+        ]
+        let covered = ThreadDetailView.factsCoveredByDeltas(deltas)
+        XCTAssertEqual(covered, Set(["Fact A", "Fact B", "Fact C"]))
+    }
+
+    func testFactsCoveredByDeltasEmptyDeltasReturnsEmpty() {
+        let covered = ThreadDetailView.factsCoveredByDeltas([])
+        XCTAssertTrue(covered.isEmpty)
+    }
+
+    // MARK: - knownFacts suppression (regression: duplication between knownFacts and delta bullets)
+
+    func testKnownFactsCardHiddenWhenAllFactsCoveredByDeltas() {
+        // Bug: knownFacts card rendered even when every fact already appears as a delta bullet.
+        let knownFacts = ["Fact A", "Fact B"]
+        let deltas = [
+            makeDelta(ts: "2026-07-28T00:00:00Z", label: "same_thread_new_fact", facts: ["Fact A", "Fact B"])
+        ]
+        let qualifying = ThreadDetailView.filterNewDeltas(in: deltas, since: nil)
+        let covered = ThreadDetailView.factsCoveredByDeltas(qualifying)
+        let residual = knownFacts.filter { !covered.contains($0) }
+        XCTAssertTrue(residual.isEmpty, "knownFacts card must be suppressed when all facts appear in delta bullets")
+    }
+
+    func testKnownFactsCardShownWhenSomeFactsNotCovered() {
+        let knownFacts = ["Fact A", "Fact B", "Fact C"]
+        let deltas = [
+            makeDelta(ts: "2026-07-28T00:00:00Z", label: "same_thread_new_fact", facts: ["Fact A"])
+        ]
+        let qualifying = ThreadDetailView.filterNewDeltas(in: deltas, since: nil)
+        let covered = ThreadDetailView.factsCoveredByDeltas(qualifying)
+        let residual = knownFacts.filter { !covered.contains($0) }
+        XCTAssertFalse(residual.isEmpty, "knownFacts card must appear when at least one fact is not covered")
+        XCTAssertEqual(Set(residual), Set(["Fact B", "Fact C"]),
+                       "only uncovered facts should be shown in the knownFacts card")
+    }
+
+    func testKnownFactsCardShownWhenNoDeltasExist() {
+        let knownFacts = ["Fact A", "Fact B"]
+        let covered = ThreadDetailView.factsCoveredByDeltas([])
+        let residual = knownFacts.filter { !covered.contains($0) }
+        XCTAssertEqual(residual, knownFacts, "all knownFacts should appear when there are no deltas")
+    }
+
+    // MARK: - delta(for:in:) (regression: delta bullets disconnected from article rows)
+
+    func testDeltaLookupMatchesMemberByArticleId() {
+        let member = ThreadMember(
+            id: 1, threadId: 10, articleId: 99,
+            cleanTitle: "Test Article", url: nil, sourceName: nil,
+            publishedAt: nil, classificationLabel: nil, suppressed: false
+        )
+        let matchingDelta = ThreadDelta(
+            timestamp: "2026-07-28T00:00:00Z", articleId: 99,
+            label: "same_thread_new_fact", newFacts: ["New fact"],
+            reason: nil, absorbedId: nil, type: nil
+        )
+        let otherDelta = ThreadDelta(
+            timestamp: "2026-07-28T00:00:00Z", articleId: 200,
+            label: "same_thread_new_fact", newFacts: ["Other fact"],
+            reason: nil, absorbedId: nil, type: nil
+        )
+        let result = ThreadDetailView.delta(for: member, in: [matchingDelta, otherDelta])
+        XCTAssertNotNil(result, "delta must match member with articleId 99")
+        XCTAssertEqual(result?.newFacts, ["New fact"])
+    }
+
+    func testDeltaLookupReturnsNilForUnmatchedMember() {
+        let member = ThreadMember(
+            id: 2, threadId: 10, articleId: 999,
+            cleanTitle: "Other Article", url: nil, sourceName: nil,
+            publishedAt: nil, classificationLabel: nil, suppressed: false
+        )
+        let delta = ThreadDelta(
+            timestamp: "2026-07-28T00:00:00Z", articleId: 42,
+            label: "same_thread_new_fact", newFacts: ["Some fact"],
+            reason: nil, absorbedId: nil, type: nil
+        )
+        let result = ThreadDetailView.delta(for: member, in: [delta])
+        XCTAssertNil(result, "delta must not match when articleId differs")
+    }
+
+    func testDeltaLookupIgnoresUnlinkedDeltas() {
+        let member = ThreadMember(
+            id: 3, threadId: 10, articleId: 77,
+            cleanTitle: "Article", url: nil, sourceName: nil,
+            publishedAt: nil, classificationLabel: nil, suppressed: false
+        )
+        // Delta with articleId == nil should not match any member
+        let unlinkedDelta = ThreadDelta(
+            timestamp: "2026-07-28T00:00:00Z", articleId: nil,
+            label: "same_thread_new_fact", newFacts: ["Unlinked fact"],
+            reason: nil, absorbedId: nil, type: nil
+        )
+        let result = ThreadDetailView.delta(for: member, in: [unlinkedDelta])
+        XCTAssertNil(result, "unlinked delta (articleId nil) must not match any member")
+    }
+
     // MARK: - Helpers
 
     private func makeDelta(
         ts: String,
         label: String?,
         facts: [String],
-        reason: String? = nil
+        reason: String? = nil,
+        articleId: Int? = nil
     ) -> ThreadDelta {
         ThreadDelta(
             timestamp: ts,
-            articleId: nil,
+            articleId: articleId,
             label: label,
             newFacts: facts,
             reason: reason,
