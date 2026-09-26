@@ -234,6 +234,30 @@ struct APIClient {
         return try await get("/briefs", query: query)
     }
 
+    /// Fetches a paginated list of podcast episodes.
+    /// - Parameters:
+    ///   - cursor: Opaque pagination cursor from the previous page; `nil` fetches the first page.
+    ///   - limit: Page size.
+    func getPodcasts(cursor: String? = nil, limit: Int) async throws -> PaginatedResponse<PodcastEpisode> {
+        var query: [URLQueryItem] = [
+            URLQueryItem(name: "limit", value: "\(limit)"),
+        ]
+        if let cursor {
+            query.append(URLQueryItem(name: "cursor", value: cursor))
+        }
+        return try await get("/podcasts", query: query)
+    }
+
+    /// Fetches the full detail for a single podcast episode by its numeric ID.
+    func getPodcastEpisode(id: Int) async throws -> PodcastEpisode {
+        return try await get("/podcasts/\(id)")
+    }
+
+    /// Fetches the latest podcast episode.
+    func getLatestPodcastEpisode() async throws -> PodcastEpisode {
+        return try await get("/podcasts/latest")
+    }
+
     // MARK: - Write endpoints
 
     /// Dismisses a thread so it no longer appears in the default (non-dismissed) listing.

@@ -15,6 +15,9 @@ struct AppRoot: View {
             Tab("Today", systemImage: "calendar", value: "today") {
                 TodayView()
             }
+            Tab("Podcasts", systemImage: "headphones", value: "podcasts") {
+                PodcastsView()
+            }
             Tab("Settings", systemImage: "gearshape", value: "settings") {
                 SettingsView()
             }

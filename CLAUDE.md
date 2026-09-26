@@ -164,13 +164,46 @@ Supported paths:
 `{id}` is always an integer. The widget sets `deepLinkURL` on each
 `WidgetEntry` so tapping the widget opens the correct item in the app.
 
+## Podcasts tab
+
+The app has a **Podcasts** tab (4th position, `headphones` SF Symbol, value `"podcasts"`) wired up in `AppRoot.swift`. It presents `PodcastsView`, which lists episodes from the `/podcasts` endpoint; tapping an episode opens `PodcastPlayerView`.
+
+### Audio streaming and CF-Access headers
+
+The Cloudflare Access domain covers audio stream URLs as well as API endpoints. `AudioPlayerViewModel` injects the CF-Access credentials into the AVFoundation layer using `AVURLAssetHTTPHeaderFieldsKey`:
+
+```swift
+let asset = AVURLAsset(url: url, options: [AVURLAssetHTTPHeaderFieldsKey: headers])
+```
+
+This ensures every byte-range request AVPlayer makes to the audio URL carries the `CF-Access-Client-Id` and `CF-Access-Client-Secret` headers. The credentials are read from `CredentialsStore` (Keychain-backed) at player initialisation — the same credentials used for API calls.
+
+### Podcasts v1 out-of-scope items
+
+The following items are intentionally deferred to a future iteration:
+
+- **MPNowPlayingInfoCenter / lock-screen remote controls** — AVPlayer plays audio without populating the Now Playing widget or responding to lock-screen/Control Center transport controls.
+- **Offline episode caching** — episodes are not downloaded for offline playback.
+- **Episode script / transcript view** — the API returns a `script` field but it is not rendered in v1.
+
 ## Networking conventions
 
 - Inject `CF-Access-Client-Id` and `CF-Access-Client-Secret` headers via a
   `URLSession` middleware / transport layer so every request carries them
-  automatically.
+  automatically. For audio streams, inject the same headers via
+  `AVURLAssetHTTPHeaderFieldsKey` (see Podcasts tab section above).
 - All list endpoints are cursor-paginated: `{ items: [...], next_cursor: string | null }`.
   Pass `next_cursor` verbatim as the `cursor` query param. Never parse or
   construct cursor values.
 - `GET` endpoints are passive — reading an article or thread does **not**
   mark it as read. Use the explicit `POST /articles/{id}/read` write endpoint.
+
+## DateDisplay.parseISO8601
+
+`DateDisplay.parseISO8601` attempts three passes in order:
+
+1. **Fractional-second ISO-8601** (`withInternetDateTime | withFractionalSeconds`) — handles timestamps like `2026-06-17T04:41:10.929002+00:00`.
+2. **Whole-second ISO-8601** (`withInternetDateTime`) — handles `2026-06-17T04:41:10+00:00`.
+3. **Date-only** (`yyyy-MM-dd`, `en_US_POSIX` locale) — handles podcast episode date strings like `2024-01-15` that contain no time component.
+
+All three callers (`relative`, `mediumDate`, `monthDay`) share this single parser, so podcast episode dates render correctly in all display contexts.
