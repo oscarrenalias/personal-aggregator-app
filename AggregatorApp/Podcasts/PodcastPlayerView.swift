@@ -54,6 +54,7 @@ struct PodcastPlayerView: View {
         }
         .navigationTitle("Episode")
         .navigationBarTitleDisplayMode(.inline)
+        .task { await viewModel.loadDuration() }
     }
 
     @ViewBuilder

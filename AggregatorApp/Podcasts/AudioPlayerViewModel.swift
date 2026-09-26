@@ -12,8 +12,10 @@ final class AudioPlayerViewModel {
     var playbackSpeed: Float = 1.0
 
     private var player: AVPlayer?
+    private var asset: AVURLAsset?
     private var timeObserver: Any?
     private var endObserver: NSObjectProtocol?
+    private var failObserver: NSObjectProtocol?
 
     init(episode: PodcastEpisode, store: CredentialsStore) {
         do {
@@ -31,16 +33,13 @@ final class AudioPlayerViewModel {
             return
         }
 
-        // "AVURLAssetHTTPHeaderFieldsKey" used as string literal — the typed constant
-        // is not available in all SDK versions; the string form is stable since iOS 10.
         let asset = AVURLAsset(url: url, options: ["AVURLAssetHTTPHeaderFieldsKey": headers])
         let item = AVPlayerItem(asset: asset)
         let player = AVPlayer(playerItem: item)
         player.defaultRate = playbackSpeed
         self.player = player
+        self.asset = asset
 
-        // Capture duration inside the periodic observer rather than via KVO — avoids
-        // NSKeyValueObservation type-inference ambiguity inside @Observable classes.
         let interval = CMTime(seconds: 0.5, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
         timeObserver = player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] (time: CMTime) in
             guard let self else { return }
@@ -61,6 +60,30 @@ final class AudioPlayerViewModel {
             self.isPlaying = false
             self.currentTime = 0
             self.player?.seek(to: .zero)
+        }
+
+        failObserver = NotificationCenter.default.addObserver(
+            forName: AVPlayerItem.failedToPlayToEndTimeNotification,
+            object: item,
+            queue: .main
+        ) { [weak self] (_: Notification) in
+            self?.playerError = true
+        }
+    }
+
+    /// Proactively loads the asset duration via async AVFoundation API.
+    /// Call from the view's .task so the scrubber shows the correct total
+    /// before the user taps play.
+    func loadDuration() async {
+        guard let asset else { return }
+        do {
+            let d = try await asset.load(.duration)
+            let secs = CMTimeGetSeconds(d)
+            if secs.isFinite && secs > 0 {
+                duration = secs
+            }
+        } catch {
+            // Duration will update from the periodic observer once playback starts.
         }
     }
 
@@ -90,8 +113,7 @@ final class AudioPlayerViewModel {
         if let timeObserver, let player {
             player.removeTimeObserver(timeObserver)
         }
-        if let endObserver {
-            NotificationCenter.default.removeObserver(endObserver)
-        }
+        if let endObserver { NotificationCenter.default.removeObserver(endObserver) }
+        if let failObserver { NotificationCenter.default.removeObserver(failObserver) }
     }
 }
