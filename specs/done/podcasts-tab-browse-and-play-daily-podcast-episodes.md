@@ -5,7 +5,7 @@ description: "New Podcasts tab: cursor-paginated episode list with calendar badg
 dependencies: null
 priority: medium
 complexity: medium
-status: planned
+status: done
 tags:
 - podcasts
 - audio
