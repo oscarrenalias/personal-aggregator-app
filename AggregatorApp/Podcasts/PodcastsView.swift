@@ -70,7 +70,7 @@ struct PodcastsView: View {
             List {
                 ForEach(episodes) { episode in
                     NavigationLink {
-                        PodcastPlayerView(episode: episode, credentialsStore: credentialsStore)
+                        PodcastPlayerView(episode: episode)
                     } label: {
                         PodcastEpisodeRowView(episode: episode)
                     }

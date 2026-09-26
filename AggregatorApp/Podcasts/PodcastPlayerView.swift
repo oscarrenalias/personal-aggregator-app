@@ -9,52 +9,99 @@ private func formatTime(_ seconds: Double) -> String {
 
 struct PodcastPlayerView: View {
     let episode: PodcastEpisode
-    @State private var viewModel: AudioPlayerViewModel
-    // Local drag tracking: currentTime is private(set) on the ViewModel; we track
-    // the scrubber position here during active drags and commit via seek(to:) on release.
+    @Environment(CredentialsStore.self) private var credentialsStore
+    // Initialized lazily in .task to ensure @Observable tracking is wired up
+    // correctly by SwiftUI before the first view body evaluation.
+    @State private var viewModel: AudioPlayerViewModel?
     @State private var dragTime: Double = 0
-
-    init(episode: PodcastEpisode, credentialsStore: CredentialsStore) {
-        self.episode = episode
-        _viewModel = State(wrappedValue: AudioPlayerViewModel(episode: episode, store: credentialsStore))
-    }
 
     var body: some View {
         Group {
-            if viewModel.playerError {
-                ContentUnavailableView("Cannot play episode", systemImage: "exclamationmark.triangle")
-            } else {
-                ScrollView {
-                    VStack(spacing: 24) {
-                        calendarBadge
-                            .frame(maxWidth: .infinity)
-
-                        Text("Daily Podcast")
-                            .font(.title2.bold())
-                            .multilineTextAlignment(.center)
-
-                        metaLine
-
-                        if let theme = episode.episodeTheme {
-                            ParagraphText(theme)
-                        }
-
-                        scrubber
-
-                        timeLabels
-
-                        playPauseButton
-
-                        speedPicker
-                    }
-                    .padding(.horizontal, ReaderLayout.hPadding)
-                    .padding(.vertical, 24)
+            if let vm = viewModel {
+                if vm.playerError {
+                    ContentUnavailableView("Cannot play episode", systemImage: "exclamationmark.triangle")
+                } else {
+                    playerContent(vm: vm)
                 }
+            } else {
+                ProgressView()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
         }
         .navigationTitle("Episode")
         .navigationBarTitleDisplayMode(.inline)
-        .task { await viewModel.loadDuration() }
+        .task {
+            guard viewModel == nil else { return }
+            let vm = AudioPlayerViewModel(episode: episode, store: credentialsStore)
+            viewModel = vm
+            await vm.loadDuration()
+        }
+    }
+
+    private func playerContent(vm: AudioPlayerViewModel) -> some View {
+        ScrollView {
+            VStack(spacing: 24) {
+                calendarBadge
+                    .frame(maxWidth: .infinity)
+
+                Text("Daily Podcast")
+                    .font(.title2.bold())
+                    .multilineTextAlignment(.center)
+
+                metaLine
+
+                if let theme = episode.episodeTheme {
+                    ParagraphText(theme)
+                }
+
+                Slider(
+                    value: Binding(
+                        get: { vm.isSeeking ? dragTime : vm.currentTime },
+                        set: { dragTime = $0; vm.isSeeking = true }
+                    ),
+                    in: 0...max(vm.duration, 1),
+                    onEditingChanged: { editing in
+                        if editing {
+                            dragTime = vm.currentTime
+                            vm.isSeeking = true
+                        } else {
+                            vm.seek(to: dragTime)
+                        }
+                    }
+                )
+                .accessibilityLabel("Playback position")
+
+                HStack {
+                    Text(formatTime(vm.currentTime))
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                    Spacer()
+                    Text(formatTime(vm.duration))
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+
+                Button {
+                    vm.togglePlayPause()
+                } label: {
+                    Image(systemName: vm.isPlaying ? "pause.circle.fill" : "play.circle.fill")
+                        .font(.system(size: 64))
+                }
+                .accessibilityLabel(vm.isPlaying ? "Pause" : "Play")
+
+                Picker("Speed", selection: Binding(
+                    get: { vm.playbackSpeed },
+                    set: { vm.setSpeed($0) }
+                )) {
+                    Text("1×").tag(Float(1.0))
+                    Text("1.5×").tag(Float(1.5))
+                    Text("2×").tag(Float(2.0))
+                }
+                .pickerStyle(.segmented)
+            }
+            .padding(.horizontal, ReaderLayout.hPadding)
+            .padding(.vertical, 24)
+        }
     }
 
     @ViewBuilder
@@ -83,58 +130,5 @@ struct PodcastPlayerView: View {
         return Text("\(datePart) · \(segmentPart)")
             .font(.caption)
             .foregroundStyle(.secondary)
-    }
-
-    private var scrubber: some View {
-        Slider(
-            value: Binding(
-                get: { viewModel.isSeeking ? dragTime : viewModel.currentTime },
-                set: { dragTime = $0; viewModel.isSeeking = true }
-            ),
-            in: 0...max(viewModel.duration, 1),
-            onEditingChanged: { editing in
-                if editing {
-                    dragTime = viewModel.currentTime
-                    viewModel.isSeeking = true
-                } else {
-                    viewModel.seek(to: dragTime)
-                }
-            }
-        )
-        .accessibilityLabel("Playback position")
-    }
-
-    private var timeLabels: some View {
-        HStack {
-            Text(formatTime(viewModel.currentTime))
-                .font(.caption)
-                .foregroundStyle(.secondary)
-            Spacer()
-            Text(formatTime(viewModel.duration))
-                .font(.caption)
-                .foregroundStyle(.secondary)
-        }
-    }
-
-    private var playPauseButton: some View {
-        Button {
-            viewModel.togglePlayPause()
-        } label: {
-            Image(systemName: viewModel.isPlaying ? "pause.circle.fill" : "play.circle.fill")
-                .font(.system(size: 64))
-        }
-        .accessibilityLabel(viewModel.isPlaying ? "Pause" : "Play")
-    }
-
-    private var speedPicker: some View {
-        Picker("Speed", selection: Binding(
-            get: { viewModel.playbackSpeed },
-            set: { viewModel.setSpeed($0) }
-        )) {
-            Text("1×").tag(Float(1.0))
-            Text("1.5×").tag(Float(1.5))
-            Text("2×").tag(Float(2.0))
-        }
-        .pickerStyle(.segmented)
     }
 }
