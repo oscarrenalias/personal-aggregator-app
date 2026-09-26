@@ -60,7 +60,7 @@ struct PodcastEpisodeRowView: View {
                 Text(comps.month)
                     .font(.caption2)
                     .fontWeight(.bold)
-                    .foregroundStyle(.red)
+                    .foregroundStyle(.accentColor)
                 Text(comps.day)
                     .font(.title)
                     .fontWeight(.semibold)

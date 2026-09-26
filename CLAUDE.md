@@ -166,7 +166,7 @@ Supported paths:
 
 ## Podcasts tab
 
-The app has a **Podcasts** tab (4th position, `headphones` SF Symbol, value `"podcasts"`) wired up in `AppRoot.swift`. It presents `PodcastsView`, which lists episodes from the `/podcasts/episodes` endpoint; tapping an episode opens `PodcastPlayerView`.
+The app has a **Podcasts** tab (4th position, `headphones` SF Symbol, value `"podcasts"`) wired up in `AppRoot.swift`. It presents `PodcastsView`, which lists episodes from the `/podcasts` endpoint; tapping an episode opens `PodcastPlayerView`.
 
 ### Audio streaming and CF-Access headers
 

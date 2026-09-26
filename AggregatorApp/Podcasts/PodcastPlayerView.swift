@@ -63,7 +63,7 @@ struct PodcastPlayerView: View {
                 Text(comps.month)
                     .font(.caption2)
                     .fontWeight(.bold)
-                    .foregroundStyle(.red)
+                    .foregroundStyle(.accentColor)
                 Text(comps.day)
                     .font(.title)
                     .fontWeight(.semibold)
@@ -92,6 +92,7 @@ struct PodcastPlayerView: View {
             ),
             in: 0...max(viewModel.duration, 1)
         )
+        .accessibilityLabel("Playback position")
         .onEditingChanged { editing in
             if editing {
                 dragTime = viewModel.currentTime
