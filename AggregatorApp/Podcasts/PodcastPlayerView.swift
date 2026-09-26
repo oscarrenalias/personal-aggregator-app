@@ -92,7 +92,6 @@ struct PodcastPlayerView: View {
             ),
             in: 0...max(viewModel.duration, 1)
         )
-        .accessibilityLabel("Playback position")
         .onEditingChanged { editing in
             if editing {
                 dragTime = viewModel.currentTime
@@ -101,6 +100,7 @@ struct PodcastPlayerView: View {
                 viewModel.seek(to: dragTime)
             }
         }
+        .accessibilityLabel("Playback position")
     }
 
     private var timeLabels: some View {
