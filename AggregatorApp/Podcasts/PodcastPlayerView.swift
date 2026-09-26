@@ -63,7 +63,7 @@ struct PodcastPlayerView: View {
                 Text(comps.month)
                     .font(.caption2)
                     .fontWeight(.bold)
-                    .foregroundStyle(.accentColor)
+                    .foregroundStyle(.tint)
                 Text(comps.day)
                     .font(.title)
                     .fontWeight(.semibold)
