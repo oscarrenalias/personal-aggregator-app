@@ -1,0 +1,75 @@
+{
+  "bead_id": "B-dc4d0324",
+  "title": "PodcastsView",
+  "agent_type": "developer",
+  "description": "Create AggregatorApp/Podcasts/PodcastsView.swift mirroring the ThreadsView/TodayView pattern. Declare private enum LoadPhase { case loading, loaded, error(Error) }. Use @Environment(CredentialsStore.self), @State episodes array, nextCursor, phase, isFetchingNextPage, and LoadOnceGate. body: NavigationStack > Group switching on phase \u2014 .loading shows ProgressView; .error shows message + Retry button; .loaded shows not-configured ContentUnavailableView when !credentialsStore.isConfigured, empty ContentUnavailableView(\"No episodes\", systemImage: \"headphones\") when empty, else GlassEffectContainer > List > ForEach with NavigationLink to PodcastPlayerView passing credentialsStore explicitly. Last-row .onAppear triggers loadNextPage. .refreshable calls loadFirstPage(showSpinner: false). .task loads first page via loadGate.",
+  "status": "ready",
+  "bead_type": "task",
+  "parent_id": "B-8b3b82ea",
+  "dependencies": [
+    "B-5b29201c",
+    "B-61d51125",
+    "B-376d1bf5",
+    "B-2ea82d00"
+  ],
+  "acceptance_criteria": [
+    "Loading, loaded, error, not-configured, and empty states all render correctly",
+    "NavigationLink pushes PodcastPlayerView with credentialsStore passed explicitly",
+    "Scrolling to the last row triggers loadNextPage exactly once (isFetchingNextPage guard)",
+    "Pull-to-refresh calls loadFirstPage without spinner flash",
+    "loadNextPage silently fails on network error without changing phase",
+    "navigationTitle is 'Podcasts'"
+  ],
+  "linked_docs": [
+    "specs/drafts/podcasts-tab-browse-and-play-daily-podcast-episodes.md"
+  ],
+  "feature_root_id": "B-8b3b82ea",
+  "execution_branch_name": "feature/b-8b3b82ea",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-8b3b82ea",
+  "expected_files": [
+    "AggregatorApp/Podcasts/PodcastsView.swift"
+  ],
+  "expected_globs": [],
+  "touched_files": [],
+  "changed_files": [],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "",
+    "remaining": "",
+    "risks": "",
+    "verdict": "",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [],
+    "updated_docs": [],
+    "next_action": "",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [],
+    "expected_globs": [],
+    "touched_files": [],
+    "conflict_risks": "",
+    "design_decisions": "",
+    "test_coverage_notes": "",
+    "known_limitations": ""
+  },
+  "block_reason": "",
+  "conflict_risks": "",
+  "branch_name": "",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-09-26T17:40:59.584166+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    }
+  ],
+  "metadata": {},
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

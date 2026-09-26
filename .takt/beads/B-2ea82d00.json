@@ -1,0 +1,75 @@
+{
+  "bead_id": "B-2ea82d00",
+  "title": "PodcastPlayerView",
+  "agent_type": "developer",
+  "description": "Create AggregatorApp/Podcasts/PodcastPlayerView.swift. Accept episode: PodcastEpisode and credentialsStore: CredentialsStore; initialise AudioPlayerViewModel via State(wrappedValue:) in a custom init so the player is ready before body runs. Show ContentUnavailableView on viewModel.playerError. Otherwise show ScrollView > VStack(spacing:24) with horizontal ReaderLayout.hPadding containing: (1) centred calendarBadge from episode.date; (2) 'Daily Podcast' title2.bold centred; (3) date/meta caption; (4) optional ParagraphText for episodeTheme when non-nil; (5) Slider scrubber with isSeeking coordination per spec; (6) HStack time labels; (7) 64pt play/pause button with accessibility label; (8) 1\u00d7/1.5\u00d7/2\u00d7 segmented speed picker. Include file-scope formatTime helper. navigationTitle 'Episode' with .inline display mode.",
+  "status": "ready",
+  "bead_type": "task",
+  "parent_id": "B-8b3b82ea",
+  "dependencies": [
+    "B-0820f355",
+    "B-5b29201c",
+    "B-49bfbdda"
+  ],
+  "acceptance_criteria": [
+    "Compiles without errors",
+    "playerError=true shows ContentUnavailableView",
+    "Slider set closure sets isSeeking=true; onEditingChanged(false) calls seek(to:) and resets isSeeking=false",
+    "Play/pause button toggles isPlaying; accessibility label matches current state",
+    "Speed picker Binding calls setSpeed(_:) on change",
+    "episodeTheme shown only when non-nil",
+    "navigationTitle is 'Episode' with .inline mode"
+  ],
+  "linked_docs": [
+    "specs/drafts/podcasts-tab-browse-and-play-daily-podcast-episodes.md"
+  ],
+  "feature_root_id": "B-8b3b82ea",
+  "execution_branch_name": "feature/b-8b3b82ea",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-8b3b82ea",
+  "expected_files": [
+    "AggregatorApp/Podcasts/PodcastPlayerView.swift"
+  ],
+  "expected_globs": [],
+  "touched_files": [],
+  "changed_files": [],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "",
+    "remaining": "",
+    "risks": "",
+    "verdict": "",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [],
+    "updated_docs": [],
+    "next_action": "",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [],
+    "expected_globs": [],
+    "touched_files": [],
+    "conflict_risks": "",
+    "design_decisions": "",
+    "test_coverage_notes": "",
+    "known_limitations": ""
+  },
+  "block_reason": "",
+  "conflict_risks": "",
+  "branch_name": "",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-09-26T17:40:59.583407+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    }
+  ],
+  "metadata": {},
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

@@ -1,0 +1,61 @@
+{
+  "bead_id": "B-2cbb8f95",
+  "title": "Podcasts Tab: Browse and Play Daily Podcast Episodes",
+  "agent_type": "planner",
+  "description": "Add a Podcasts tab enabling users to browse cursor-paginated daily podcast episodes and play them with an AVPlayer-based audio player featuring play/pause, scrubbing, 1\u00d7/1.5\u00d7/2\u00d7 speed control, and CF-Access authenticated streaming via AVURLAssetHTTPHeaderFieldsKey. Episodes use a calendar badge (matching the Today tab) in place of cover art. The DateDisplay utility gains a date-only ISO-8601 fallback so episode date strings parse correctly throughout the app.",
+  "status": "done",
+  "bead_type": "epic",
+  "parent_id": null,
+  "dependencies": [],
+  "acceptance_criteria": [],
+  "linked_docs": [
+    "specs/drafts/podcasts-tab-browse-and-play-daily-podcast-episodes.md"
+  ],
+  "feature_root_id": null,
+  "execution_branch_name": "",
+  "execution_worktree_path": "",
+  "expected_files": [],
+  "expected_globs": [],
+  "touched_files": [],
+  "changed_files": [],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "",
+    "remaining": "",
+    "risks": "",
+    "verdict": "",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [],
+    "updated_docs": [],
+    "next_action": "",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [],
+    "expected_globs": [],
+    "touched_files": [],
+    "conflict_risks": "",
+    "design_decisions": "",
+    "test_coverage_notes": "",
+    "known_limitations": ""
+  },
+  "block_reason": "",
+  "conflict_risks": "",
+  "branch_name": "",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-09-26T17:40:59.550738+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    }
+  ],
+  "metadata": {},
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

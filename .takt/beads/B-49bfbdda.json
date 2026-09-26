@@ -1,0 +1,73 @@
+{
+  "bead_id": "B-49bfbdda",
+  "title": "AudioPlayerViewModel",
+  "agent_type": "developer",
+  "description": "Create AggregatorApp/Podcasts/AudioPlayerViewModel.swift as an @Observable final class. Init takes episode: PodcastEpisode and store: CredentialsStore. Steps: (1) configure AVAudioSession with .playback category and activate; (2) build CF-Access headers dict from store; (3) guard URL(string: episode.audioUrl) \u2014 set playerError=true and return if nil; (4) build AVURLAsset with AVURLAssetHTTPHeaderFieldsKey; (5) build AVPlayerItem and AVPlayer; (6) set player.defaultRate; (7) KVO on item.status capturing real duration on .readyToPlay on main queue; (8) periodic 0.5s time observer updating currentTime when !isSeeking; (9) AVPlayerItem.didPlayToEndTimeNotification resets isPlaying, currentTime=0, seeks to .zero. Expose togglePlayPause(), seek(to:), setSpeed(_:). deinit removes all observers.",
+  "status": "ready",
+  "bead_type": "task",
+  "parent_id": "B-8b3b82ea",
+  "dependencies": [
+    "B-5b29201c"
+  ],
+  "acceptance_criteria": [
+    "Compiles without errors",
+    "CF-Access headers injected via AVURLAssetHTTPHeaderFieldsKey",
+    "duration captured from CMTimeGetSeconds(item.duration) on .readyToPlay",
+    "currentTime updates every ~0.5s when playing and isSeeking is false",
+    "End of episode resets isPlaying to false, currentTime to 0, and seeks to .zero",
+    "deinit removes time observer, KVO observation, and notification observer without crashing",
+    "playerError set to true when audio URL is malformed"
+  ],
+  "linked_docs": [
+    "specs/drafts/podcasts-tab-browse-and-play-daily-podcast-episodes.md"
+  ],
+  "feature_root_id": "B-8b3b82ea",
+  "execution_branch_name": "feature/b-8b3b82ea",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-8b3b82ea",
+  "expected_files": [
+    "AggregatorApp/Podcasts/AudioPlayerViewModel.swift"
+  ],
+  "expected_globs": [],
+  "touched_files": [],
+  "changed_files": [],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "",
+    "remaining": "",
+    "risks": "",
+    "verdict": "",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [],
+    "updated_docs": [],
+    "next_action": "",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [],
+    "expected_globs": [],
+    "touched_files": [],
+    "conflict_risks": "",
+    "design_decisions": "",
+    "test_coverage_notes": "",
+    "known_limitations": ""
+  },
+  "block_reason": "",
+  "conflict_risks": "",
+  "branch_name": "",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-09-26T17:40:59.581919+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    }
+  ],
+  "metadata": {},
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

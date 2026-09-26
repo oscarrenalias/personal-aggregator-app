@@ -1,0 +1,73 @@
+{
+  "bead_id": "B-376d1bf5",
+  "title": "PodcastEpisodeRowView",
+  "agent_type": "developer",
+  "description": "Create AggregatorApp/Podcasts/PodcastEpisodeRowView.swift as a SwiftUI view for a single episode row. Copy the calendarBadge ViewBuilder pattern from BriefCardView exactly, sourcing month/day from DateDisplay.monthDay(episode.date). Show: meta line (DateDisplay.mediumDate \u00b7 duration formatted as M:SS when durationSeconds != nil \u00b7 segment count) in .caption/.secondary; 'Daily Podcast' headline in .headline; optional episodeTheme subtitle in .subheadline/.secondary limited to 2 lines. Set .listRowBackground(Color.clear). Accessibility label combines 'Daily Podcast', date, and duration.",
+  "status": "ready",
+  "bead_type": "task",
+  "parent_id": "B-8b3b82ea",
+  "dependencies": [
+    "B-0820f355",
+    "B-5b29201c"
+  ],
+  "acceptance_criteria": [
+    "Calendar badge renders correct month abbreviation and day from date-only string",
+    "Meta line shows date, duration as M:SS (when present), and segment count",
+    "Title is always 'Daily Podcast'",
+    "episodeTheme subtitle appears only when non-nil; no empty space when nil",
+    ".listRowBackground is Color.clear",
+    "Accessibility label combines title, date, and duration"
+  ],
+  "linked_docs": [
+    "specs/drafts/podcasts-tab-browse-and-play-daily-podcast-episodes.md"
+  ],
+  "feature_root_id": "B-8b3b82ea",
+  "execution_branch_name": "feature/b-8b3b82ea",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-8b3b82ea",
+  "expected_files": [
+    "AggregatorApp/Podcasts/PodcastEpisodeRowView.swift"
+  ],
+  "expected_globs": [],
+  "touched_files": [],
+  "changed_files": [],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "",
+    "remaining": "",
+    "risks": "",
+    "verdict": "",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [],
+    "updated_docs": [],
+    "next_action": "",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [],
+    "expected_globs": [],
+    "touched_files": [],
+    "conflict_risks": "",
+    "design_decisions": "",
+    "test_coverage_notes": "",
+    "known_limitations": ""
+  },
+  "block_reason": "",
+  "conflict_risks": "",
+  "branch_name": "",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-09-26T17:40:59.582706+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    }
+  ],
+  "metadata": {},
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}
