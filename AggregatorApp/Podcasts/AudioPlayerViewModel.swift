@@ -13,16 +13,13 @@ final class AudioPlayerViewModel {
 
     private var player: AVPlayer?
     private var timeObserver: Any?
-    private var statusObservation: NSKeyValueObservation?
     private var endObserver: NSObjectProtocol?
 
     init(episode: PodcastEpisode, store: CredentialsStore) {
         do {
             try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
             try AVAudioSession.sharedInstance().setActive(true)
-        } catch {
-            // Non-fatal: audio still works on simulator without a real session
-        }
+        } catch {}
 
         let headers: [String: String] = [
             "CF-Access-Client-Id": store.clientId,
@@ -34,23 +31,24 @@ final class AudioPlayerViewModel {
             return
         }
 
-        let asset = AVURLAsset(url: url, options: [AVURLAssetHTTPHeaderFieldsKey: headers])
+        // "AVURLAssetHTTPHeaderFieldsKey" used as string literal — the typed constant
+        // is not available in all SDK versions; the string form is stable since iOS 10.
+        let asset = AVURLAsset(url: url, options: ["AVURLAssetHTTPHeaderFieldsKey": headers])
         let item = AVPlayerItem(asset: asset)
         let player = AVPlayer(playerItem: item)
         player.defaultRate = playbackSpeed
         self.player = player
 
-        statusObservation = item.observe(\.status, options: [.new]) { [weak self] observedItem, _ in
-            guard let self, observedItem.status == .readyToPlay else { return }
-            let dur = CMTimeGetSeconds(observedItem.duration)
-            DispatchQueue.main.async {
-                self.duration = dur.isFinite ? dur : 0
-            }
-        }
-
+        // Capture duration inside the periodic observer rather than via KVO — avoids
+        // NSKeyValueObservation type-inference ambiguity inside @Observable classes.
         let interval = CMTime(seconds: 0.5, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
-        timeObserver = player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] time in
-            guard let self, !self.isSeeking else { return }
+        timeObserver = player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] (time: CMTime) in
+            guard let self else { return }
+            if let d = self.player?.currentItem?.duration {
+                let secs = CMTimeGetSeconds(d)
+                if secs.isFinite && secs > 0 { self.duration = secs }
+            }
+            guard !self.isSeeking else { return }
             self.currentTime = CMTimeGetSeconds(time)
         }
 
@@ -58,7 +56,7 @@ final class AudioPlayerViewModel {
             forName: AVPlayerItem.didPlayToEndTimeNotification,
             object: item,
             queue: .main
-        ) { [weak self] _ in
+        ) { [weak self] (_: Notification) in
             guard let self else { return }
             self.isPlaying = false
             self.currentTime = 0
@@ -85,16 +83,13 @@ final class AudioPlayerViewModel {
     func setSpeed(_ speed: Float) {
         playbackSpeed = speed
         player?.defaultRate = speed
-        if isPlaying {
-            player?.rate = speed
-        }
+        if isPlaying { player?.rate = speed }
     }
 
     deinit {
         if let timeObserver, let player {
             player.removeTimeObserver(timeObserver)
         }
-        statusObservation?.invalidate()
         if let endObserver {
             NotificationCenter.default.removeObserver(endObserver)
         }
