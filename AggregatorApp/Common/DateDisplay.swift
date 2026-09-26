@@ -52,6 +52,12 @@ enum DateDisplay {
         // Fall back to whole-second ISO-8601
         let withoutFractional = ISO8601DateFormatter()
         withoutFractional.formatOptions = [.withInternetDateTime]
-        return withoutFractional.date(from: iso)
+        if let date = withoutFractional.date(from: iso) { return date }
+
+        // Fall back to date-only strings (e.g. episode.date "2024-01-15")
+        let dateOnly = DateFormatter()
+        dateOnly.dateFormat = "yyyy-MM-dd"
+        dateOnly.locale = Locale(identifier: "en_US_POSIX")
+        return dateOnly.date(from: iso)
     }
 }
