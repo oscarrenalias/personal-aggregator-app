@@ -28,7 +28,27 @@ final class AudioPlayerViewModel {
             "CF-Access-Client-Secret": store.clientSecret
         ]
 
-        guard let url = URL(string: episode.audioUrl) else {
+        // Resolve relative audio_url against the store baseURL scheme+host.
+        // The API may return either a full URL or a path like /api/v1/podcasts/1/audio.mp3.
+        var urlString = episode.audioUrl
+        if !urlString.hasPrefix("http://") && !urlString.hasPrefix("https://") {
+            if let base = URLComponents(string: store.baseURL),
+               let scheme = base.scheme, let host = base.host {
+                let prefix = "\(scheme)://\(host)"
+                urlString = prefix + (urlString.hasPrefix("/") ? "" : "/") + urlString
+            }
+        }
+
+        #if DEBUG
+        print("[AudioPlayer] URL: \(urlString)")
+        print("[AudioPlayer] CF-Access-Client-Id set: \(!store.clientId.isEmpty)")
+        print("[AudioPlayer] CF-Access-Client-Secret set: \(!store.clientSecret.isEmpty)")
+        #endif
+
+        guard let url = URL(string: urlString), url.scheme != nil else {
+            #if DEBUG
+            print("[AudioPlayer] ERROR: cannot parse URL '\(urlString)'")
+            #endif
             playerError = true
             return
         }
@@ -73,17 +93,28 @@ final class AudioPlayerViewModel {
 
     /// Proactively loads the asset duration via async AVFoundation API.
     /// Call from the view's .task so the scrubber shows the correct total
-    /// before the user taps play.
+    /// before the user taps play. Also surfaces load failures to the UI.
     func loadDuration() async {
-        guard let asset else { return }
+        guard let asset, let item = player?.currentItem else { return }
         do {
             let d = try await asset.load(.duration)
             let secs = CMTimeGetSeconds(d)
             if secs.isFinite && secs > 0 {
                 duration = secs
             }
+            #if DEBUG
+            print("[AudioPlayer] loadDuration: \(secs)s, item.status=\(item.status.rawValue)")
+            #endif
         } catch {
-            // Duration will update from the periodic observer once playback starts.
+            #if DEBUG
+            print("[AudioPlayer] loadDuration error: \(error)")
+            #endif
+            if item.status == .failed {
+                #if DEBUG
+                print("[AudioPlayer] Player item error: \(String(describing: item.error))")
+                #endif
+                playerError = true
+            }
         }
     }
 
