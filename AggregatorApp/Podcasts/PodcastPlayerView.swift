@@ -90,16 +90,16 @@ struct PodcastPlayerView: View {
                 get: { viewModel.isSeeking ? dragTime : viewModel.currentTime },
                 set: { dragTime = $0; viewModel.isSeeking = true }
             ),
-            in: 0...max(viewModel.duration, 1)
-        )
-        .onEditingChanged { editing in
-            if editing {
-                dragTime = viewModel.currentTime
-                viewModel.isSeeking = true
-            } else {
-                viewModel.seek(to: dragTime)
+            in: 0...max(viewModel.duration, 1),
+            onEditingChanged: { editing in
+                if editing {
+                    dragTime = viewModel.currentTime
+                    viewModel.isSeeking = true
+                } else {
+                    viewModel.seek(to: dragTime)
+                }
             }
-        }
+        )
         .accessibilityLabel("Playback position")
     }
 
