@@ -178,11 +178,21 @@ let asset = AVURLAsset(url: url, options: [AVURLAssetHTTPHeaderFieldsKey: header
 
 This ensures every byte-range request AVPlayer makes to the audio URL carries the `CF-Access-Client-Id` and `CF-Access-Client-Secret` headers. The credentials are read from `CredentialsStore` (Keychain-backed) at player initialisation — the same credentials used for API calls.
 
+### Background audio and system transport controls
+
+`AudioPlayerViewModel` configures `AVAudioSession` with the `.playback` category on init so audio continues when the app is backgrounded. `Info.plist` declares `UIBackgroundModes: [audio]` to enable this capability.
+
+Now Playing metadata and lock-screen / Control Center transport controls are wired through `MPNowPlayingInfoCenter` and `MPRemoteCommandCenter`:
+
+- **`setupNowPlaying(episode:)`** — populates `MPNowPlayingInfoCenter.default().nowPlayingInfo` with the episode title (`"Daily Podcast"`) and artist (the episode date formatted by `DateDisplay.mediumDate`).
+- **`updateNowPlayingPlaybackState()`** — called on every periodic time tick, seek, and play/pause toggle; keeps `MPNowPlayingInfoPropertyElapsedPlaybackTime`, `MPNowPlayingInfoPropertyPlaybackRate`, and `MPMediaItemPropertyPlaybackDuration` in sync.
+- **`setupRemoteCommands()`** — registers handlers on `MPRemoteCommandCenter` for `togglePlayPauseCommand`, `playCommand`, `pauseCommand`, and `changePlaybackPositionCommand` (scrub bar).
+- **Cleanup** — `deinit` removes all `MPRemoteCommandCenter` targets and clears `nowPlayingInfo` to avoid stale lock-screen state after the player is dismissed.
+
 ### Podcasts v1 out-of-scope items
 
 The following items are intentionally deferred to a future iteration:
 
-- **MPNowPlayingInfoCenter / lock-screen remote controls** — AVPlayer plays audio without populating the Now Playing widget or responding to lock-screen/Control Center transport controls.
 - **Offline episode caching** — episodes are not downloaded for offline playback.
 - **Episode script / transcript view** — the API returns a `script` field but it is not rendered in v1.
 

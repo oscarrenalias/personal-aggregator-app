@@ -1,5 +1,6 @@
 import AVFoundation
 import Foundation
+import MediaPlayer
 import Observation
 
 @Observable
@@ -69,6 +70,7 @@ final class AudioPlayerViewModel {
             }
             guard !self.isSeeking else { return }
             self.currentTime = CMTimeGetSeconds(time)
+            self.updateNowPlayingPlaybackState()
         }
 
         endObserver = NotificationCenter.default.addObserver(
@@ -80,6 +82,7 @@ final class AudioPlayerViewModel {
             self.isPlaying = false
             self.currentTime = 0
             self.player?.seek(to: .zero)
+            self.updateNowPlayingPlaybackState()
         }
 
         failObserver = NotificationCenter.default.addObserver(
@@ -89,6 +92,9 @@ final class AudioPlayerViewModel {
         ) { [weak self] (_: Notification) in
             self?.playerError = true
         }
+
+        setupNowPlaying(episode: episode)
+        setupRemoteCommands()
     }
 
     /// Proactively loads the asset duration via async AVFoundation API.
@@ -101,6 +107,7 @@ final class AudioPlayerViewModel {
             let secs = CMTimeGetSeconds(d)
             if secs.isFinite && secs > 0 {
                 duration = secs
+                updateNowPlayingPlaybackState()
             }
             #if DEBUG
             print("[AudioPlayer] loadDuration: \(secs)s, item.status=\(item.status.rawValue)")
@@ -126,12 +133,14 @@ final class AudioPlayerViewModel {
             player.play()
         }
         isPlaying.toggle()
+        updateNowPlayingPlaybackState()
     }
 
     func seek(to seconds: Double) {
         player?.seek(to: CMTime(seconds: seconds, preferredTimescale: 1000))
         isSeeking = false
         currentTime = seconds
+        updateNowPlayingPlaybackState()
     }
 
     func setSpeed(_ speed: Float) {
@@ -146,5 +155,68 @@ final class AudioPlayerViewModel {
         }
         if let endObserver { NotificationCenter.default.removeObserver(endObserver) }
         if let failObserver { NotificationCenter.default.removeObserver(failObserver) }
+
+        let commandCenter = MPRemoteCommandCenter.shared()
+        commandCenter.togglePlayPauseCommand.removeTarget(nil)
+        commandCenter.playCommand.removeTarget(nil)
+        commandCenter.pauseCommand.removeTarget(nil)
+        commandCenter.changePlaybackPositionCommand.removeTarget(nil)
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
+    }
+
+    private func setupNowPlaying(episode: PodcastEpisode) {
+        var info: [String: Any] = [:]
+        info[MPMediaItemPropertyTitle] = "Daily Podcast"
+        info[MPMediaItemPropertyArtist] = DateDisplay.mediumDate(episode.date)
+        info[MPNowPlayingInfoPropertyMediaType] = MPNowPlayingInfoMediaType.audio.rawValue
+        info[MPNowPlayingInfoPropertyPlaybackRate] = Float(0.0)
+        info[MPNowPlayingInfoPropertyElapsedPlaybackTime] = Double(0.0)
+        if let secs = episode.durationSeconds {
+            info[MPMediaItemPropertyPlaybackDuration] = Double(secs)
+        }
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = info
+    }
+
+    private func setupRemoteCommands() {
+        let commandCenter = MPRemoteCommandCenter.shared()
+
+        commandCenter.togglePlayPauseCommand.isEnabled = true
+        commandCenter.togglePlayPauseCommand.addTarget { [weak self] _ in
+            self?.togglePlayPause()
+            return .success
+        }
+
+        commandCenter.playCommand.isEnabled = true
+        commandCenter.playCommand.addTarget { [weak self] _ in
+            guard let self, !self.isPlaying else { return .success }
+            self.togglePlayPause()
+            return .success
+        }
+
+        commandCenter.pauseCommand.isEnabled = true
+        commandCenter.pauseCommand.addTarget { [weak self] _ in
+            guard let self, self.isPlaying else { return .success }
+            self.togglePlayPause()
+            return .success
+        }
+
+        commandCenter.changePlaybackPositionCommand.isEnabled = true
+        commandCenter.changePlaybackPositionCommand.addTarget { [weak self] event in
+            guard let self, let posEvent = event as? MPChangePlaybackPositionCommandEvent else {
+                return .commandFailed
+            }
+            self.seek(to: posEvent.positionTime)
+            return .success
+        }
+    }
+
+    private func updateNowPlayingPlaybackState() {
+        guard var info = MPNowPlayingInfoCenter.default().nowPlayingInfo else { return }
+        info[MPNowPlayingInfoPropertyElapsedPlaybackTime] = currentTime
+        info[MPNowPlayingInfoPropertyPlaybackRate] = isPlaying ? Float(1.0) : Float(0.0)
+        if duration > 0 {
+            info[MPMediaItemPropertyPlaybackDuration] = duration
+        }
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = info
     }
 }
