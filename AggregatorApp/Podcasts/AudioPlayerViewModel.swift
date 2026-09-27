@@ -168,31 +168,39 @@ final class AudioPlayerViewModel {
         var info: [String: Any] = [:]
         info[MPMediaItemPropertyTitle] = "Daily Podcast"
         info[MPMediaItemPropertyArtist] = DateDisplay.mediumDate(episode.date)
+        info[MPNowPlayingInfoPropertyMediaType] = MPNowPlayingInfoMediaType.audio.rawValue
         info[MPNowPlayingInfoPropertyPlaybackRate] = Float(0.0)
         info[MPNowPlayingInfoPropertyElapsedPlaybackTime] = Double(0.0)
+        if let secs = episode.durationSeconds {
+            info[MPMediaItemPropertyPlaybackDuration] = Double(secs)
+        }
         MPNowPlayingInfoCenter.default().nowPlayingInfo = info
     }
 
     private func setupRemoteCommands() {
         let commandCenter = MPRemoteCommandCenter.shared()
 
+        commandCenter.togglePlayPauseCommand.isEnabled = true
         commandCenter.togglePlayPauseCommand.addTarget { [weak self] _ in
             self?.togglePlayPause()
             return .success
         }
 
+        commandCenter.playCommand.isEnabled = true
         commandCenter.playCommand.addTarget { [weak self] _ in
             guard let self, !self.isPlaying else { return .success }
             self.togglePlayPause()
             return .success
         }
 
+        commandCenter.pauseCommand.isEnabled = true
         commandCenter.pauseCommand.addTarget { [weak self] _ in
             guard let self, self.isPlaying else { return .success }
             self.togglePlayPause()
             return .success
         }
 
+        commandCenter.changePlaybackPositionCommand.isEnabled = true
         commandCenter.changePlaybackPositionCommand.addTarget { [weak self] event in
             guard let self, let posEvent = event as? MPChangePlaybackPositionCommandEvent else {
                 return .commandFailed
