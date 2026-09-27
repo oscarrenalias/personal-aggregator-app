@@ -12,6 +12,7 @@ struct ThreadDetailView: View {
     @State private var isLoadingMore = false
     @State private var isInitialLoad = true
     @State private var loadError: Error? = nil
+    @State private var showKnownFacts: Bool = false
 
     private var apiClient: APIClient {
         APIClient(store: credentialsStore)
@@ -85,13 +86,14 @@ struct ThreadDetailView: View {
                     headerSection(thread)
 
                     let qualifying = newDeltas(thread)
+                    let all = allDeltas(thread)
                     let coveredFacts = Self.factsCoveredByDeltas(qualifying)
                     let residualFacts = thread.knownFacts.filter { !coveredFacts.contains($0) }
                     if !residualFacts.isEmpty {
                         knownFactsSection(residualFacts)
                     }
 
-                    membersSection(thread: thread, qualifyingDeltas: qualifying)
+                    membersSection(thread: thread, qualifyingDeltas: qualifying, articleDeltas: all)
                 }
                 .padding(.horizontal, ReaderLayout.hPadding)
                 .padding(.vertical)
@@ -126,6 +128,8 @@ struct ThreadDetailView: View {
                 .foregroundStyle(.secondary)
 
             if let summary = thread.rollingSummary, !summary.isEmpty {
+                Text("Here's the latest")
+                    .font(.headline)
                 Text(summary)
                     .font(.body)
             }
@@ -151,6 +155,13 @@ struct ThreadDetailView: View {
         Self.filterNewDeltas(in: thread.deltas, since: previousLastViewedAt)
     }
 
+    // All deltas with non-empty content, regardless of timestamp.
+    private func allDeltas(_ thread: Thread) -> [ThreadDelta] {
+        thread.deltas.filter { delta in
+            delta.label != nil || !delta.newFacts.isEmpty || (delta.reason.map { !$0.isEmpty } ?? false)
+        }
+    }
+
     // Returns the union of newFacts across all deltas — facts already surfaced inline in article rows.
     static func factsCoveredByDeltas(_ deltas: [ThreadDelta]) -> Set<String> {
         Set(deltas.flatMap { $0.newFacts })
@@ -163,21 +174,32 @@ struct ThreadDetailView: View {
 
     // MARK: - Known facts
 
+    // Strip leading bullet chars and whitespace the backend embeds in some known_facts strings.
+    private func cleanFact(_ raw: String) -> String {
+        raw.drop(while: { $0 == "•" || $0 == "-" || $0 == "*" || $0.isWhitespace })
+            .trimmingCharacters(in: .whitespaces)
+    }
+
     @ViewBuilder
     private func knownFactsSection(_ facts: [String]) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text("Known facts")
-                .font(.headline)
-
-            ForEach(facts, id: \.self) { fact in
-                HStack(alignment: .top, spacing: 8) {
-                    Text("•")
-                        .foregroundStyle(.secondary)
-                        .accessibilityHidden(true)
-                    Text(fact)
-                        .font(.body)
+        DisclosureGroup(isExpanded: $showKnownFacts) {
+            VStack(alignment: .leading, spacing: 6) {
+                ForEach(facts, id: \.self) { fact in
+                    HStack(alignment: .top, spacing: 8) {
+                        Text("•")
+                            .foregroundStyle(.secondary)
+                            .accessibilityHidden(true)
+                        Text(cleanFact(fact))
+                            .font(.body)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    }
                 }
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
+        } label: {
+            Text("Known facts")
+                .font(.headline)
+                .foregroundStyle(.primary)
         }
         .padding()
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -187,7 +209,7 @@ struct ThreadDetailView: View {
     // MARK: - Members
 
     @ViewBuilder
-    private func membersSection(thread: Thread, qualifyingDeltas: [ThreadDelta]) -> some View {
+    private func membersSection(thread: Thread, qualifyingDeltas: [ThreadDelta], articleDeltas: [ThreadDelta]) -> some View {
         if activeMembers.isEmpty && suppressedMembers.isEmpty {
             ContentUnavailableView("No articles", systemImage: "doc.text")
                 .frame(maxWidth: .infinity)
@@ -210,7 +232,7 @@ struct ThreadDetailView: View {
                     }
 
                     ForEach(Array(activeMembers.enumerated()), id: \.element.id) { index, member in
-                        let matchedDelta = Self.delta(for: member, in: qualifyingDeltas)
+                        let matchedDelta = Self.delta(for: member, in: articleDeltas)
                         NavigationLink(destination: ArticleDetailView(articleId: member.articleId)) {
                             activeMemberRow(member, delta: matchedDelta)
                         }
