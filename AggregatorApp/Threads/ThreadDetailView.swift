@@ -174,6 +174,12 @@ struct ThreadDetailView: View {
 
     // MARK: - Known facts
 
+    // Strip leading bullet chars and whitespace the backend embeds in some known_facts strings.
+    private func cleanFact(_ raw: String) -> String {
+        raw.drop(while: { $0 == "•" || $0 == "-" || $0 == "*" || $0.isWhitespace })
+            .trimmingCharacters(in: .whitespaces)
+    }
+
     @ViewBuilder
     private func knownFactsSection(_ facts: [String]) -> some View {
         DisclosureGroup(isExpanded: $showKnownFacts) {
@@ -182,7 +188,7 @@ struct ThreadDetailView: View {
                     Text("•")
                         .foregroundStyle(.secondary)
                         .accessibilityHidden(true)
-                    Text(fact)
+                    Text(cleanFact(fact))
                         .font(.body)
                 }
             }
