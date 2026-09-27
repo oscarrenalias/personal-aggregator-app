@@ -280,6 +280,81 @@ final class ThreadDeltaTests: XCTestCase {
         XCTAssertNil(result, "unlinked delta (articleId nil) must not match any member")
     }
 
+    // MARK: - Section header logic via static helpers
+
+    func testSectionHeaderIsArticlesWhenNoQualifyingDeltasMatchMembers() {
+        let member = ThreadMember(
+            id: 1, threadId: 10, articleId: 99,
+            cleanTitle: "Test Article", url: nil, sourceName: nil,
+            publishedAt: nil, classificationLabel: nil, suppressed: false
+        )
+        // Delta predates the cutoff — excluded from qualifying
+        let cutoff = "2026-07-28T00:00:00Z"
+        let oldDelta = makeDelta(ts: "2026-07-27T00:00:00Z", label: "same_thread_new_fact", facts: ["Fact"], articleId: 99)
+
+        let qualifying = ThreadDetailView.filterNewDeltas(in: [oldDelta], since: cutoff)
+        let hasNewDeltaArticles = [member].contains { ThreadDetailView.delta(for: $0, in: qualifying) != nil }
+        XCTAssertFalse(hasNewDeltaArticles, "section header must be 'Articles' when no qualifying deltas match any member")
+    }
+
+    func testSectionHeaderIsNewSinceLastVisitWhenQualifyingDeltaMatchesMember() {
+        let member = ThreadMember(
+            id: 1, threadId: 10, articleId: 99,
+            cleanTitle: "Test Article", url: nil, sourceName: nil,
+            publishedAt: nil, classificationLabel: nil, suppressed: false
+        )
+        let cutoff = "2026-07-27T00:00:00Z"
+        let newDelta = makeDelta(ts: "2026-07-28T00:00:00Z", label: "same_thread_new_fact", facts: ["New fact"], articleId: 99)
+
+        let qualifying = ThreadDetailView.filterNewDeltas(in: [newDelta], since: cutoff)
+        let hasNewDeltaArticles = [member].contains { ThreadDetailView.delta(for: $0, in: qualifying) != nil }
+        XCTAssertTrue(hasNewDeltaArticles, "section header must be 'New since last visit' when a qualifying delta matches an active member")
+    }
+
+    // MARK: - Unlinked deltas in "Other updates"
+
+    func testUnlinkedDeltaWithNonEmptyFactsAppearsInOtherUpdates() {
+        let unlinked = makeDelta(ts: "2026-07-28T00:00:00Z", label: nil, facts: ["Unlinked fact"], articleId: nil)
+        let qualifying = ThreadDetailView.filterNewDeltas(in: [unlinked], since: nil)
+        let unlinkedDeltas = qualifying.filter { $0.articleId == nil && !$0.newFacts.isEmpty }
+        XCTAssertEqual(unlinkedDeltas.count, 1, "unlinked delta with non-empty facts must appear in Other Updates")
+        XCTAssertEqual(unlinkedDeltas[0].newFacts, ["Unlinked fact"])
+    }
+
+    func testUnlinkedDeltaWithEmptyFactsExcludedFromOtherUpdates() {
+        // Qualifies via label but has no facts and no articleId — must NOT appear in unlinkedDeltas
+        let unlinked = makeDelta(ts: "2026-07-28T00:00:00Z", label: "same_thread_new_fact", facts: [], articleId: nil)
+        let qualifying = ThreadDetailView.filterNewDeltas(in: [unlinked], since: nil)
+        let unlinkedDeltas = qualifying.filter { $0.articleId == nil && !$0.newFacts.isEmpty }
+        XCTAssertTrue(unlinkedDeltas.isEmpty, "unlinked delta with empty facts must not appear in Other Updates even when it qualifies via label")
+    }
+
+    // MARK: - Regression: article rows use allDeltas (not qualifyingDeltas)
+
+    func testOlderDeltaExcludedFromQualifyingButMatchesInAllDeltasContext() {
+        // Regression: old behaviour used qualifyingDeltas for article rows, hiding pre-cutoff facts.
+        // New behaviour: article rows use allDeltas (content filter only, no timestamp filter).
+        let cutoff = "2026-07-28T00:00:00Z"
+        let member = ThreadMember(
+            id: 1, threadId: 10, articleId: 99,
+            cleanTitle: "Test Article", url: nil, sourceName: nil,
+            publishedAt: nil, classificationLabel: nil, suppressed: false
+        )
+        let oldDelta = makeDelta(ts: "2026-07-27T00:00:00Z", label: "same_thread_new_fact", facts: ["Old fact"], articleId: 99)
+
+        // qualifyingDeltas path (timestamp + content filter) — old delta excluded
+        let qualifying = ThreadDetailView.filterNewDeltas(in: [oldDelta], since: cutoff)
+        XCTAssertTrue(qualifying.isEmpty, "old delta must be absent from qualifyingDeltas")
+
+        // allDeltas path (content filter only, mirrors the private allDeltas() implementation)
+        let allContent = [oldDelta].filter { d in
+            d.label != nil || !d.newFacts.isEmpty || (d.reason.map { !$0.isEmpty } ?? false)
+        }
+        let matched = ThreadDetailView.delta(for: member, in: allContent)
+        XCTAssertNotNil(matched, "old delta must match in allDeltas context for article row display")
+        XCTAssertEqual(matched?.newFacts, ["Old fact"])
+    }
+
     // MARK: - Helpers
 
     private func makeDelta(
