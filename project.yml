@@ -39,6 +39,8 @@ targets:
           UISceneConfigurations: {}
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait
+        UIBackgroundModes:
+          - audio
     settings:
       base:
         CODE_SIGN_STYLE: Automatic
