@@ -183,15 +183,19 @@ struct ThreadDetailView: View {
     @ViewBuilder
     private func knownFactsSection(_ facts: [String]) -> some View {
         DisclosureGroup(isExpanded: $showKnownFacts) {
-            ForEach(facts, id: \.self) { fact in
-                HStack(alignment: .top, spacing: 8) {
-                    Text("•")
-                        .foregroundStyle(.secondary)
-                        .accessibilityHidden(true)
-                    Text(cleanFact(fact))
-                        .font(.body)
+            VStack(alignment: .leading, spacing: 6) {
+                ForEach(facts, id: \.self) { fact in
+                    HStack(alignment: .top, spacing: 8) {
+                        Text("•")
+                            .foregroundStyle(.secondary)
+                            .accessibilityHidden(true)
+                        Text(cleanFact(fact))
+                            .font(.body)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    }
                 }
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
         } label: {
             Text("Known facts")
                 .font(.headline)
