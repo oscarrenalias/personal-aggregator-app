@@ -66,22 +66,33 @@ struct AppRootIPad: View {
     @ViewBuilder
     private var landscapeDetailColumn: some View {
         if let thread = navigationModel.selectedThread {
-            // ThreadDetailView uses NavigationLink internally to push articles,
-            // so it needs its own NavigationStack.
             NavigationStack {
                 ThreadDetailView(threadId: thread.id)
             }
+            // Suppress the NavigationSplitView's outer detail-column glass nav bar;
+            // the inner NavigationStack provides its own bar that adapts correctly
+            // to hero-bleed content (iOS 26 Liquid Glass floating-pill behaviour).
+            .toolbarBackground(.hidden, for: .navigationBar)
             .id(thread.id)
         } else if let brief = navigationModel.selectedBrief {
-            BriefDetailView(brief: brief)
-                .navigationTitle(brief.headline ?? "Daily Brief")
-                .id(brief.id)
+            NavigationStack {
+                BriefDetailView(brief: brief)
+                    .navigationTitle(brief.headline ?? "Daily Brief")
+            }
+            .toolbarBackground(.hidden, for: .navigationBar)
+            .id(brief.id)
         } else if let episode = navigationModel.selectedEpisode {
-            PodcastPlayerView(episode: episode)
-                .id(episode.id)
+            NavigationStack {
+                PodcastPlayerView(episode: episode)
+            }
+            .toolbarBackground(.hidden, for: .navigationBar)
+            .id(episode.id)
         } else if let article = navigationModel.selectedArticle {
-            ArticleDetailView(articleId: article.id)
-                .id(article.id)
+            NavigationStack {
+                ArticleDetailView(articleId: article.id)
+            }
+            .toolbarBackground(.hidden, for: .navigationBar)
+            .id(article.id)
         } else {
             landscapePlaceholder
         }
