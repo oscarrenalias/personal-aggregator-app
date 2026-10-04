@@ -1,11 +1,11 @@
 import SwiftUI
+import UIKit
 
 struct ArticleDetailView: View {
     let articleId: Int
 
     @Environment(CredentialsStore.self) private var credentialsStore
     @Environment(ArticleReadStore.self) private var readStore
-    @Environment(\.horizontalSizeClass) private var hSizeClass
     @State private var article: Article? = nil
     @State private var loadError: Error? = nil
     @State private var isRead = false
@@ -18,10 +18,11 @@ struct ArticleDetailView: View {
         APIClient(store: credentialsStore)
     }
 
-    /// Bleed under the bars only when on iPhone (compact) with a hero image.
-    /// On iPad the split-view Liquid Glass nav bar is too prominent over the hero.
+    /// Bleed under the bars only on iPhone with a hero image.
+    /// On iPad, NavigationSplitView injects .compact into content columns so
+    /// horizontalSizeClass is unreliable — check the idiom directly instead.
     private func bleedRegions(_ a: Article) -> SafeAreaRegions {
-        guard hSizeClass == .compact else { return [] }
+        guard UIDevice.current.userInterfaceIdiom != .pad else { return [] }
         return (a.imageURL.flatMap { URL(string: $0) } != nil) ? .all : []
     }
 
