@@ -102,6 +102,7 @@ struct ThreadDetailView: View {
         // Bleed under the bars only when there's a hero; otherwise let the system
         // inset the title below the floating toolbar (matches the article reader).
         .ignoresSafeArea(hasHero(thread) ? .all : [], edges: .top)
+        .scrollEdgeEffectHidden(true, for: .top)
     }
 
     // MARK: - Hero image
