@@ -84,7 +84,7 @@ struct ArticlePagerView: View {
         // content, rather than duplicated as an inline title over the image.
         .navigationBarTitleDisplayMode(.inline)
         .toolbar { readerToolbar }
-        .sheet(item: $safariURL) { item in
+        .inAppBrowser(item: $safariURL) { item in
             SafariView(url: item.url)
         }
         .task { await autoMarkRead(current) }

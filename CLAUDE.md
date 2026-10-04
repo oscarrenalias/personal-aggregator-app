@@ -1,8 +1,8 @@
 # Personal Aggregator App — Claude operating notes
 
 iOS SwiftUI news reader app for the personal aggregator backend. Personal-use
-scope, iPhone-only (`TARGETED_DEVICE_FAMILY = "1"`). Feedly-style UX: article
-list, threads view, daily brief, search, sources/categories.
+scope, iPhone and iPad (`TARGETED_DEVICE_FAMILY = "1,2"`). Feedly-style UX:
+article list, threads view, daily brief, search, sources/categories.
 
 Backend: FastAPI service at `https://aggregator-api.renaliaslabs.net/api/v1`.
 Full API contract: `docs/API.md` and `docs/openapi.json` in
@@ -82,6 +82,148 @@ an API error.
 - iOS 26 deployment target. Use Liquid Glass UI (`Tab {}` syntax, `.glassEffect()`,
   `GlassEffectContainer`) — these are iOS 26-only APIs and that is intentional.
   Do not use APIs newer than iOS 26 without raising with the user first.
+
+## iPad layout
+
+The app supports iPad via a three-column `NavigationSplitView`. iPhone and iPad
+code paths are branch-guarded at `AppRoot.swift` using
+`@Environment(\.horizontalSizeClass)`: `.regular` (iPad in landscape or
+full-width split view) → `AppRootIPad`; `.compact` (iPhone, or iPad in a
+narrow Split View slot) → the tab-based `TabView` UI.
+
+### Folder structure
+
+All iPad-specific views live under `AggregatorApp/iPad/`:
+
+```
+AggregatorApp/iPad/
+├── AppRootIPad.swift           — root NavigationSplitView (sidebar + content + detail)
+├── SidebarView.swift           — sidebar List driven by AppSection
+├── NavigationModel.swift       — AppSection enum + iPadNavigationModel
+├── Threads/ThreadsIPadView.swift
+├── Today/TodayIPadView.swift
+├── Podcasts/PodcastsIPadView.swift
+├── Sources/SourcesIPadView.swift
+├── Search/SearchIPadView.swift
+└── Settings/SettingsIPadView.swift
+```
+
+### NavigationModel and AppSection
+
+`AppSection` is a `String`-backed enum with cases `.threads`, `.sources`,
+`.today`, `.podcasts`, `.search`, `.settings`.
+
+`iPadNavigationModel` is `@Observable` and holds:
+
+- `selectedSection: AppSection` — which section is active in the sidebar.
+- One optional selected-item property per section: `selectedThread`,
+  `selectedArticle`, `selectedSource`, `selectedEpisode`, `selectedFeed`,
+  `selectedBrief`.
+
+The model is instantiated at app startup in `AggregatorApp.swift` and injected
+via `.environment(iPadNavModel)`. All iPad views read it via
+`@Environment(iPadNavigationModel.self)`.
+
+`DeepLinkRouter.handle(_:iPadNavModel:)` receives the model so deep links can
+navigate the sidebar to the correct section as well as set a `pendingLink`.
+
+### Orientation detection
+
+`AppRootIPad` detects orientation by comparing `UIScreen.main.bounds.width` and
+`.height` — **not** `verticalSizeClass`. `verticalSizeClass` is unreliable on
+iPad because both orientations typically report `.regular`. The bounds ratio is
+checked in `updateColumnVisibility()`, called on `.onAppear` and on every
+`UIDevice.orientationDidChangeNotification`:
+
+- Portrait (`width < height`) → `.doubleColumn` (sidebar hidden; content +
+  detail visible)
+- Landscape → `.all` (sidebar + content + detail all visible)
+
+### Column width conventions
+
+| Column  | min    | ideal  | max    |
+|---------|--------|--------|--------|
+| Sidebar | 200 pt | 220 pt | 260 pt |
+| Content | 280 pt | 320 pt | 380 pt |
+| Detail  | flexible (fills remaining width) | | |
+
+### Detail column content and deep link capture
+
+`AppRootIPad` routes each section's selected item to the detail column via
+`sectionDetailContent`. When nothing is selected, a `ContentUnavailableView`
+placeholder is shown:
+
+| Section  | Selected item → detail column      | No selection placeholder            |
+|----------|------------------------------------|-------------------------------------|
+| Threads  | `ThreadDetailView(threadId:)`      | "Select a thread"                   |
+| Today    | `BriefDetailView(brief:)`          | "Select a brief"                    |
+| Podcasts | `PodcastPlayerView(episode:)`      | "Select an episode"                 |
+| Sources  | `ArticleListView(feed:)`           | "Select a source"                   |
+| Search   | `ArticleDetailView(articleId:)`    | "Search results"                    |
+| Settings | —                                  | "Settings panel coming soon"        |
+
+**Deep link capture**: when `router.pendingLink` arrives, `AppRootIPad` captures
+it into a local `capturedDeepLink` state that takes priority over
+`sectionDetailContent` in the detail column. `capturedDeepLink` clears when any
+navigation model item property changes (the user makes a new selection). This
+ensures a tapped widget deep link opens the correct detail regardless of the
+current sidebar state.
+
+### Content column dual-mode pattern
+
+Each iPad section view (except Settings) implements orientation-aware navigation
+using this pattern:
+
+- **Landscape**: list rows call `navigationModel.selectedXxx = item`, which
+  drives `AppRootIPad.sectionDetailContent` in the detail column. Rows use
+  `.buttonStyle(.plain)` and show a selection highlight via
+  `Color.accentColor.opacity(0.12)` when they match the current selection.
+- **Portrait**: the list is wrapped in a `NavigationStack`; rows use
+  `NavigationLink` to push the detail view inline within the content column.
+
+Each section view holds `@State private var isPortrait` using the same bounds
+ratio check as `AppRootIPad`, updated via `UIDevice.orientationDidChangeNotification`:
+
+```swift
+@State private var isPortrait = UIScreen.main.bounds.width < UIScreen.main.bounds.height
+// updated in .onReceive(NotificationCenter.default.publisher(for: UIDevice.orientationDidChangeNotification))
+```
+
+The view typically delegates rendering to a private helper (e.g.
+`briefListPane(isPortrait:)`) that switches `NavigationLink` ↔ `Button` based on
+the flag. This keeps orientation-specific branching contained to the row level
+rather than duplicating the entire list body.
+
+**`SettingsIPadView` internal layout**: rather than routing Settings detail
+through the `AppRootIPad` detail column, `SettingsIPadView` manages its own
+orientation-aware split layout inside the content column:
+
+- **Landscape**: `HStack` with a fixed 260 pt `GlassEffectContainer` section
+  list pane + a detail pane (`NavigationStack`) that renders
+  `CredentialsSettingsView` or `AboutSettingsView`.
+- **Portrait**: full-width `NavigationStack` with
+  `navigationDestination`-based push navigation.
+
+The `AppRootIPad` detail column shows a static placeholder for Settings; all
+Settings UI is self-contained within `SettingsIPadView` in the content column.
+
+### TARGETED_DEVICE_FAMILY
+
+`project.yml` sets `TARGETED_DEVICE_FAMILY: "1,2"` for the main app target
+(iPhone + iPad). The widget target stays at `"1"` (iPhone only, unchanged).
+After any change to `project.yml` — including adding new iPad source files —
+run `xcodegen generate` to regenerate `AggregatorApp.xcodeproj`.
+
+### Testing the iPad layout on a simulator
+
+```bash
+xcodegen generate
+xcodebuild test -project AggregatorApp.xcodeproj -scheme AggregatorApp \
+  -destination 'platform=iOS Simulator,name=iPad Pro 13-inch (M4),OS=latest' -quiet
+```
+
+To exercise orientation interactively, run the app on an iPad simulator in
+Xcode and use **Device → Rotate Left / Rotate Right** (⌘← / ⌘→).
 
 ## Widget extension (AggregatorWidget)
 

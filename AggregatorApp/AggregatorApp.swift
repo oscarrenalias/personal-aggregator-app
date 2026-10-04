@@ -9,15 +9,19 @@ enum DeepLink: Hashable {
 final class DeepLinkRouter {
     var pendingLink: DeepLink?
 
-    func handle(_ url: URL) {
+    func handle(_ url: URL, iPadNavModel: iPadNavigationModel? = nil) {
         guard url.scheme == "aggregator",
               let host = url.host(percentEncoded: false),
               let idString = url.pathComponents.dropFirst().first,
               let id = Int(idString) else { return }
         switch host {
-        case "article": pendingLink = .article(id)
-        case "thread":  pendingLink = .thread(id)
-        default:        break
+        case "article":
+            pendingLink = .article(id)
+        case "thread":
+            pendingLink = .thread(id)
+            iPadNavModel?.selectedSidebarItem = .threads
+        default:
+            break
         }
     }
 }
@@ -29,6 +33,7 @@ struct AggregatorApp: App {
     @State private var listPreferences = ListPreferences()
     @State private var readStore = ArticleReadStore()
     @State private var deepLinkRouter = DeepLinkRouter()
+    @State private var iPadNavModel = iPadNavigationModel()
 
     init() {
         // Migration must run before CredentialsStore reads from the keychain.
@@ -47,8 +52,9 @@ struct AggregatorApp: App {
                 .environment(listPreferences)
                 .environment(readStore)
                 .environment(deepLinkRouter)
+                .environment(iPadNavModel)
                 .onOpenURL { url in
-                    deepLinkRouter.handle(url)
+                    deepLinkRouter.handle(url, iPadNavModel: iPadNavModel)
                 }
         }
     }

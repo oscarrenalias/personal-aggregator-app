@@ -2,9 +2,13 @@ import SwiftUI
 
 struct AppRoot: View {
     @Environment(DeepLinkRouter.self) private var router
+    @Environment(\.horizontalSizeClass) var hSizeClass
     @State private var selectedTab = "threads"
 
     var body: some View {
+        if hSizeClass == .regular {
+            AppRootIPad()
+        } else {
         TabView(selection: $selectedTab) {
             Tab("Threads", systemImage: "rectangle.stack", value: "threads") {
                 ThreadsView()
@@ -29,6 +33,7 @@ struct AppRoot: View {
         .onChange(of: router.pendingLink) { _, link in
             guard link != nil else { return }
             selectedTab = "threads"
+        }
         }
     }
 }
