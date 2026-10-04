@@ -118,11 +118,7 @@ struct AppRootIPad: View {
         case .search:
             SearchIPadView()
         case .settings:
-            ContentUnavailableView(
-                "Settings",
-                systemImage: "gearshape",
-                description: Text("Settings panel coming soon.")
-            )
+            SettingsIPadView()
         }
     }
 
