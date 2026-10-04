@@ -86,6 +86,7 @@ struct ArticlePagerView: View {
         .toolbar { readerToolbar }
         .sheet(item: $safariURL) { item in
             SafariView(url: item.url)
+                .presentationDetents([.large])
         }
         .task { await autoMarkRead(current) }
         .onChange(of: currentID) { _, _ in

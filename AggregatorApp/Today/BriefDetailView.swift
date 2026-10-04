@@ -41,6 +41,7 @@ struct BriefDetailView: View {
         )) {
             if let url = safariURL {
                 SafariView(url: url)
+                    .presentationDetents([.large])
             }
         }
     }

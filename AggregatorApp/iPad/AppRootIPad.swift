@@ -133,12 +133,7 @@ struct AppRootIPad: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
         case .settings:
-            ContentUnavailableView(
-                "Settings",
-                systemImage: "gearshape",
-                description: Text("Settings panel coming soon.")
-            )
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            SettingsIPadView()
         }
     }
 
@@ -156,7 +151,12 @@ struct AppRootIPad: View {
         case .search:
             SearchIPadView()
         case .settings:
-            SettingsIPadView()
+            ContentUnavailableView(
+                "Settings",
+                systemImage: "gearshape",
+                description: Text("Choose a category from the list.")
+            )
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
     }
 
