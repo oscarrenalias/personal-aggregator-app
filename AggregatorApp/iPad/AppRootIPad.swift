@@ -17,6 +17,11 @@ struct AppRootIPad: View {
         } detail: {
             detailColumn
         }
+        // In iOS 26, the nav bars of all visible columns merge into a single
+        // Liquid Glass panel spanning the full width of the split view. Hiding
+        // the background here removes that merged band; toolbar items in each
+        // column still render as floating glass pills (iOS 26 standard behaviour).
+        .toolbarBackground(.hidden, for: .navigationBar)
         .onAppear { updateOrientation() }
         .onReceive(
             NotificationCenter.default.publisher(for: UIDevice.orientationDidChangeNotification)
