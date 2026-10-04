@@ -169,6 +169,31 @@ navigation model item property changes (the user makes a new selection). This
 ensures a tapped widget deep link opens the correct detail regardless of the
 current sidebar state.
 
+### Content column dual-mode pattern
+
+Each iPad section view (except Settings) implements orientation-aware navigation
+using this pattern:
+
+- **Landscape**: list rows call `navigationModel.selectedXxx = item`, which
+  drives `AppRootIPad.sectionDetailContent` in the detail column. Rows use
+  `.buttonStyle(.plain)` and show a selection highlight via
+  `Color.accentColor.opacity(0.12)` when they match the current selection.
+- **Portrait**: the list is wrapped in a `NavigationStack`; rows use
+  `NavigationLink` to push the detail view inline within the content column.
+
+Each section view holds `@State private var isPortrait` using the same bounds
+ratio check as `AppRootIPad`, updated via `UIDevice.orientationDidChangeNotification`:
+
+```swift
+@State private var isPortrait = UIScreen.main.bounds.width < UIScreen.main.bounds.height
+// updated in .onReceive(NotificationCenter.default.publisher(for: UIDevice.orientationDidChangeNotification))
+```
+
+The view typically delegates rendering to a private helper (e.g.
+`briefListPane(isPortrait:)`) that switches `NavigationLink` ↔ `Button` based on
+the flag. This keeps orientation-specific branching contained to the row level
+rather than duplicating the entire list body.
+
 **`SettingsIPadView` internal layout**: rather than routing Settings detail
 through the `AppRootIPad` detail column, `SettingsIPadView` manages its own
 orientation-aware split layout inside the content column:
