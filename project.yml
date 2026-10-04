@@ -29,6 +29,12 @@ targets:
     info:
       path: AggregatorApp/Info.plist
       properties:
+        # Without these, xcodegen writes its literal defaults (1.0 / 1) into the
+        # generated plist and MARKETING_VERSION / CURRENT_PROJECT_VERSION below
+        # are silently ignored for the app, leaving it out of step with the
+        # widget (which generates its plist from those settings).
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         ITSAppUsesNonExemptEncryption: false
         CFBundleURLTypes:
           - CFBundleURLName: net.renalias.AggregatorApp
@@ -48,7 +54,7 @@ targets:
         DEVELOPMENT_TEAM: QEZ63CXN26
         PRODUCT_BUNDLE_IDENTIFIER: net.renalias.AggregatorApp
         MARKETING_VERSION: 1.1
-        CURRENT_PROJECT_VERSION: 4
+        CURRENT_PROJECT_VERSION: 5
         TARGETED_DEVICE_FAMILY: "1,2"
         ENABLE_PREVIEWS: YES
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
@@ -88,7 +94,9 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: net.renalias.AggregatorApp.AggregatorWidget
         TARGETED_DEVICE_FAMILY: "1"
         SWIFT_VERSION: "5.0"
-        CURRENT_PROJECT_VERSION: 3
+        # Must match the app target: an extension's CFBundleVersion has to equal
+        # its containing app's, or the build warns and App Store upload fails.
+        CURRENT_PROJECT_VERSION: 5
         MARKETING_VERSION: 1.1
 
   AggregatorAppTests:
