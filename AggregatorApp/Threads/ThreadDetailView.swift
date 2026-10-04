@@ -1,6 +1,13 @@
 import SwiftUI
 import UIKit
 
+/// Identifies an article pushed from a thread. A dedicated type rather than a
+/// bare `Int` because surrounding stacks already register `Int` destinations
+/// for thread, episode, and search-result ids.
+struct ThreadArticleRef: Hashable {
+    let articleId: Int
+}
+
 struct ThreadDetailView: View {
     let threadId: Int
 
@@ -54,6 +61,9 @@ struct ThreadDetailView: View {
         // hero in the content. A redundant inline title would also render black
         // over the hero image, which reads poorly.
         .navigationBarTitleDisplayMode(.inline)
+        .navigationDestination(for: ThreadArticleRef.self) { ref in
+            ArticleDetailView(articleId: ref.articleId)
+        }
         .task {
             await loadInitial()
         }
@@ -236,7 +246,7 @@ struct ThreadDetailView: View {
 
                     ForEach(Array(activeMembers.enumerated()), id: \.element.id) { index, member in
                         let matchedDelta = Self.delta(for: member, in: articleDeltas)
-                        NavigationLink(destination: ArticleDetailView(articleId: member.articleId)) {
+                        NavigationLink(value: ThreadArticleRef(articleId: member.articleId)) {
                             activeMemberRow(member, delta: matchedDelta)
                         }
                         .buttonStyle(.plain)
@@ -271,7 +281,7 @@ struct ThreadDetailView: View {
                         .padding(.bottom, 8)
 
                     ForEach(suppressedMembers) { member in
-                        NavigationLink(destination: ArticleDetailView(articleId: member.articleId)) {
+                        NavigationLink(value: ThreadArticleRef(articleId: member.articleId)) {
                             Text(member.sourceName ?? "(unknown source)")
                                 .font(.subheadline)
                                 .foregroundStyle(.secondary)

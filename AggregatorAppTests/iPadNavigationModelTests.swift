@@ -1,78 +1,64 @@
+import SwiftUI
 import XCTest
 @testable import AggregatorApp
 
 final class iPadNavigationModelTests: XCTestCase {
 
-    func testDefaultSelectedSectionIsThreads() {
+    // MARK: - SidebarItem
+
+    func testDefaultSelectedSidebarItemIsThreads() {
         let model = iPadNavigationModel()
-        XCTAssertEqual(model.selectedSection, .threads)
+        XCTAssertEqual(model.selectedSidebarItem, .threads)
     }
 
-    func testAllAppSectionsHaveUniqueIds() {
-        let ids = AppSection.allCases.map(\.id)
-        XCTAssertEqual(Set(ids).count, AppSection.allCases.count)
+    func testSidebarItemIdsAreUnique() {
+        let items: [SidebarItem] = [
+            .threads, .today, .podcasts,
+            .feed(.important), .feed(.unread), .feed(.saved),
+            .feed(.source(id: 5, name: "Tech News")),
+            .feed(.category(name: "Science")),
+        ]
+        XCTAssertEqual(Set(items.map(\.id)).count, items.count)
     }
 
-    func testAppSectionIdMatchesRawValue() {
-        for section in AppSection.allCases {
-            XCTAssertEqual(section.id, section.rawValue)
+    func testSidebarItemIdsAreStable() {
+        XCTAssertEqual(SidebarItem.threads.id, "threads")
+        XCTAssertEqual(SidebarItem.today.id, "today")
+        XCTAssertEqual(SidebarItem.podcasts.id, "podcasts")
+        XCTAssertEqual(SidebarItem.feed(.important).id, "feed-important")
+        XCTAssertEqual(SidebarItem.feed(.source(id: 5, name: "Tech News")).id, "feed-source-5")
+    }
+
+    func testSelectedSidebarItemCanBeSet() {
+        let model = iPadNavigationModel()
+        for item in [SidebarItem.today, .podcasts, .feed(.saved), .threads] {
+            model.selectedSidebarItem = item
+            XCTAssertEqual(model.selectedSidebarItem, item)
         }
     }
 
-    func testSelectedSectionCanBeSetToAllCases() {
-        let model = iPadNavigationModel()
-        for section in AppSection.allCases {
-            model.selectedSection = section
-            XCTAssertEqual(model.selectedSection, section)
-        }
-    }
+    // MARK: - Detail column selection state
 
-    func testInitialOptionalSelectionsAreNil() {
+    func testInitialSelectionsAreNil() {
         let model = iPadNavigationModel()
         XCTAssertNil(model.selectedThread)
         XCTAssertNil(model.selectedArticle)
-        XCTAssertNil(model.selectedSource)
         XCTAssertNil(model.selectedEpisode)
-        XCTAssertNil(model.selectedFeed)
         XCTAssertNil(model.selectedBrief)
+        XCTAssertTrue(model.detailPath.isEmpty)
     }
-
-    func testAllAppSectionsCovered() {
-        XCTAssertEqual(AppSection.allCases.count, 6,
-            "AppSection must have exactly 6 cases: threads, sources, today, podcasts, search, settings")
-        XCTAssertTrue(AppSection.allCases.contains(.threads))
-        XCTAssertTrue(AppSection.allCases.contains(.sources))
-        XCTAssertTrue(AppSection.allCases.contains(.today))
-        XCTAssertTrue(AppSection.allCases.contains(.podcasts))
-        XCTAssertTrue(AppSection.allCases.contains(.search))
-        XCTAssertTrue(AppSection.allCases.contains(.settings))
-    }
-
-    // MARK: - Detail column routing state (B-80cd72ae-subtask-subtask-2)
 
     func testSelectedBriefCanBeSetAndCleared() throws {
         let model = iPadNavigationModel()
-        let brief = try makeBrief(id: 42, headline: "Test Brief")
-        model.selectedBrief = brief
+        model.selectedBrief = try makeBrief(id: 42, headline: "Test Brief")
         XCTAssertEqual(model.selectedBrief?.id, 42)
         model.selectedBrief = nil
         XCTAssertNil(model.selectedBrief)
     }
 
-    func testSelectedFeedCanBeSetAndCleared() {
-        let model = iPadNavigationModel()
-        model.selectedFeed = .source(id: 5, name: "Tech News")
-        XCTAssertEqual(model.selectedFeed?.id, "source-5")
-        model.selectedFeed = .important
-        XCTAssertEqual(model.selectedFeed?.id, "important")
-        model.selectedFeed = nil
-        XCTAssertNil(model.selectedFeed)
-    }
-
     func testSelectedEpisodeCanBeSetAndCleared() throws {
         let model = iPadNavigationModel()
-        let episode = try makePodcastEpisode(id: 7)
-        model.selectedEpisode = episode
+        model.selectedEpisode = try makePodcastEpisode(id: 7)
         XCTAssertEqual(model.selectedEpisode?.id, 7)
         model.selectedEpisode = nil
         XCTAssertNil(model.selectedEpisode)
@@ -80,8 +66,7 @@ final class iPadNavigationModelTests: XCTestCase {
 
     func testSelectedThreadCanBeSetAndCleared() throws {
         let model = iPadNavigationModel()
-        let thread = try JSONDecoder().decode(Thread.self, from: Data(threadJSON(id: 10).utf8))
-        model.selectedThread = thread
+        model.selectedThread = try JSONDecoder().decode(Thread.self, from: Data(threadJSON(id: 10).utf8))
         XCTAssertEqual(model.selectedThread?.id, 10)
         model.selectedThread = nil
         XCTAssertNil(model.selectedThread)
@@ -89,8 +74,7 @@ final class iPadNavigationModelTests: XCTestCase {
 
     func testSelectedArticleCanBeSetAndCleared() throws {
         let model = iPadNavigationModel()
-        let article = try makeArticle(id: 99)
-        model.selectedArticle = article
+        model.selectedArticle = try makeArticle(id: 99)
         XCTAssertEqual(model.selectedArticle?.id, 99)
         model.selectedArticle = nil
         XCTAssertNil(model.selectedArticle)
@@ -98,34 +82,58 @@ final class iPadNavigationModelTests: XCTestCase {
 
     func testSelectionsAreIndependent() throws {
         let model = iPadNavigationModel()
-        let thread = try JSONDecoder().decode(Thread.self, from: Data(threadJSON(id: 1).utf8))
-        let brief = try makeBrief(id: 2, headline: "Brief")
-        let episode = try makePodcastEpisode(id: 3)
-        model.selectedThread = thread
-        model.selectedBrief = brief
-        model.selectedEpisode = episode
-        model.selectedFeed = .unread
-        XCTAssertEqual(model.selectedThread?.id, 1)
-        XCTAssertEqual(model.selectedBrief?.id, 2)
-        XCTAssertEqual(model.selectedEpisode?.id, 3)
-        XCTAssertEqual(model.selectedFeed?.id, "unread")
-        // Clearing one must not affect others
+        model.selectedThread = try JSONDecoder().decode(Thread.self, from: Data(threadJSON(id: 1).utf8))
+        model.selectedBrief = try makeBrief(id: 2, headline: "Brief")
+        model.selectedEpisode = try makePodcastEpisode(id: 3)
+
         model.selectedThread = nil
         XCTAssertNil(model.selectedThread)
-        XCTAssertEqual(model.selectedBrief?.id, 2)
+        XCTAssertEqual(model.selectedBrief?.id, 2, "Clearing one selection must not affect siblings")
         XCTAssertEqual(model.selectedEpisode?.id, 3)
     }
 
-    func testSectionSwitchDoesNotAutoclearSelections() throws {
+    // MARK: - clearSelection
+
+    func testClearSelectionClearsEverySelection() throws {
         let model = iPadNavigationModel()
-        let brief = try makeBrief(id: 5, headline: "B")
-        model.selectedSection = .today
-        model.selectedBrief = brief
-        model.selectedSection = .threads
-        // Switching sections in the model alone does not clear sibling selections;
-        // AppRootIPad clears capturedDeepLink on selection changes, not the model.
-        XCTAssertEqual(model.selectedBrief?.id, 5,
-            "Navigation model itself does not clear selections on section switch — AppRootIPad manages deep link capture independently")
+        model.selectedThread = try JSONDecoder().decode(Thread.self, from: Data(threadJSON(id: 1).utf8))
+        model.selectedArticle = try makeArticle(id: 2)
+        model.selectedBrief = try makeBrief(id: 3, headline: "B")
+        model.selectedEpisode = try makePodcastEpisode(id: 4)
+
+        model.clearSelection()
+
+        XCTAssertNil(model.selectedThread)
+        XCTAssertNil(model.selectedArticle)
+        XCTAssertNil(model.selectedBrief)
+        XCTAssertNil(model.selectedEpisode)
+    }
+
+    func testClearSelectionLeavesSidebarItemUntouched() {
+        let model = iPadNavigationModel()
+        model.selectedSidebarItem = .feed(.saved)
+        model.clearSelection()
+        XCTAssertEqual(model.selectedSidebarItem, .feed(.saved),
+                       "clearSelection clears the detail column, not the sidebar choice")
+    }
+
+    /// The detail column is one stable NavigationStack; an article opened from
+    /// inside a thread is a push on that stack. Switching selection must pop it,
+    /// otherwise the stale pushed view stays on screen.
+    func testClearSelectionResetsDetailPath() throws {
+        let model = iPadNavigationModel()
+        model.detailPath.append(ThreadArticleRef(articleId: 123))
+        model.detailPath.append(ThreadArticleRef(articleId: 456))
+        XCTAssertEqual(model.detailPath.count, 2)
+
+        model.clearSelection()
+
+        XCTAssertTrue(model.detailPath.isEmpty, "Selection change must pop the detail stack to root")
+    }
+
+    func testThreadArticleRefEquality() {
+        XCTAssertEqual(ThreadArticleRef(articleId: 1), ThreadArticleRef(articleId: 1))
+        XCTAssertNotEqual(ThreadArticleRef(articleId: 1), ThreadArticleRef(articleId: 2))
     }
 
     // MARK: - Helpers
@@ -149,6 +157,10 @@ final class iPadNavigationModelTests: XCTestCase {
         return try JSONDecoder().decode(PodcastEpisode.self, from: Data(json.utf8))
     }
 
+    // Returns JSON rather than a decoded value: a `-> Thread` annotation is
+    // ambiguous against Foundation.Thread, and the module can't be used to
+    // qualify it because the app's `AggregatorApp` App struct shadows the name.
+    // Decoding inline at the call site resolves it.
     private func threadJSON(id: Int) -> String {
         """
         {"id":\(id),"representative_title":"Thread \(id)","rolling_summary":null,

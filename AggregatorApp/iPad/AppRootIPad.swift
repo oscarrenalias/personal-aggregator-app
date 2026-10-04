@@ -68,39 +68,50 @@ struct AppRootIPad: View {
         }
     }
 
-    @ViewBuilder
+    // A single, stable NavigationStack owns the detail column. Previously each
+    // selection branch built its own stack keyed by .id(); replacing a stack
+    // that has a pushed view (an article opened from inside a thread) does not
+    // reliably tear the pushed view down, so the old article stayed on screen
+    // until it was popped by hand. Driving one stack from an explicit path lets
+    // a selection change pop to root deterministically.
     private var landscapeDetailColumn: some View {
+        @Bindable var nav = navigationModel
+        return NavigationStack(path: $nav.detailPath) {
+            landscapeDetailRoot
+        }
+        // Suppress the NavigationSplitView's outer detail-column glass nav bar;
+        // the inner NavigationStack provides its own bar that adapts correctly
+        // to hero-bleed content (iOS 26 Liquid Glass floating-pill behaviour).
+        .toolbarBackground(.hidden, for: .navigationBar)
+        .onChange(of: navigationModel.selectedThread?.id) { _, _ in resetDetailPath() }
+        .onChange(of: navigationModel.selectedArticle?.id) { _, _ in resetDetailPath() }
+        .onChange(of: navigationModel.selectedBrief?.id) { _, _ in resetDetailPath() }
+        .onChange(of: navigationModel.selectedEpisode?.id) { _, _ in resetDetailPath() }
+    }
+
+    @ViewBuilder
+    private var landscapeDetailRoot: some View {
         if let thread = navigationModel.selectedThread {
-            NavigationStack {
-                ThreadDetailView(threadId: thread.id)
-            }
-            // Suppress the NavigationSplitView's outer detail-column glass nav bar;
-            // the inner NavigationStack provides its own bar that adapts correctly
-            // to hero-bleed content (iOS 26 Liquid Glass floating-pill behaviour).
-            .toolbarBackground(.hidden, for: .navigationBar)
-            .id(thread.id)
+            ThreadDetailView(threadId: thread.id)
+                .id(thread.id)
         } else if let brief = navigationModel.selectedBrief {
-            NavigationStack {
-                BriefDetailView(brief: brief)
-                    .navigationTitle(brief.headline ?? "Daily Brief")
-            }
-            .toolbarBackground(.hidden, for: .navigationBar)
-            .id(brief.id)
+            BriefDetailView(brief: brief)
+                .navigationTitle(brief.headline ?? "Daily Brief")
+                .id(brief.id)
         } else if let episode = navigationModel.selectedEpisode {
-            NavigationStack {
-                PodcastPlayerView(episode: episode)
-            }
-            .toolbarBackground(.hidden, for: .navigationBar)
-            .id(episode.id)
+            PodcastPlayerView(episode: episode)
+                .id(episode.id)
         } else if let article = navigationModel.selectedArticle {
-            NavigationStack {
-                ArticleDetailView(articleId: article.id)
-            }
-            .toolbarBackground(.hidden, for: .navigationBar)
-            .id(article.id)
+            ArticleDetailView(articleId: article.id)
+                .id(article.id)
         } else {
             landscapePlaceholder
         }
+    }
+
+    private func resetDetailPath() {
+        guard !navigationModel.detailPath.isEmpty else { return }
+        navigationModel.detailPath = NavigationPath()
     }
 
     @ViewBuilder

@@ -24,10 +24,17 @@ final class iPadNavigationModel {
     var selectedEpisode: PodcastEpisode?
     var selectedBrief: Brief?
 
+    /// Push stack for the landscape detail column. Owned here (rather than left
+    /// implicit inside the NavigationStack) so a selection change can pop it back
+    /// to root — replacing a NavigationStack that has a pushed view does not
+    /// reliably tear the pushed view down.
+    var detailPath = NavigationPath()
+
     func clearSelection() {
         selectedThread = nil
         selectedArticle = nil
         selectedEpisode = nil
         selectedBrief = nil
+        detailPath = NavigationPath()
     }
 }
