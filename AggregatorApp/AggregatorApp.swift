@@ -29,6 +29,7 @@ struct AggregatorApp: App {
     @State private var listPreferences = ListPreferences()
     @State private var readStore = ArticleReadStore()
     @State private var deepLinkRouter = DeepLinkRouter()
+    @State private var iPadNavModel = iPadNavigationModel()
 
     init() {
         // Migration must run before CredentialsStore reads from the keychain.
@@ -47,6 +48,7 @@ struct AggregatorApp: App {
                 .environment(listPreferences)
                 .environment(readStore)
                 .environment(deepLinkRouter)
+                .environment(iPadNavModel)
                 .onOpenURL { url in
                     deepLinkRouter.handle(url)
                 }
