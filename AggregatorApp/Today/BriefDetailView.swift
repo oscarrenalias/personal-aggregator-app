@@ -35,7 +35,7 @@ struct BriefDetailView: View {
         .refreshable {
             await onRefresh?()
         }
-        .fullScreenCover(isPresented: Binding(
+        .inAppBrowser(isPresented: Binding(
             get: { safariURL != nil },
             set: { if !$0 { safariURL = nil } }
         )) {
