@@ -18,12 +18,10 @@ struct ArticleDetailView: View {
         APIClient(store: credentialsStore)
     }
 
-    /// Bleed under the bars only on iPhone with a hero image.
-    /// On iPad, NavigationSplitView injects .compact into content columns so
-    /// horizontalSizeClass is unreliable — check the idiom directly instead.
-    private func bleedRegions(_ a: Article) -> SafeAreaRegions {
-        guard UIDevice.current.userInterfaceIdiom != .pad else { return [] }
-        return (a.imageURL.flatMap { URL(string: $0) } != nil) ? .all : []
+    private static let isiPad = UIDevice.current.userInterfaceIdiom == .pad
+
+    private func hasHero(_ a: Article) -> Bool {
+        a.imageURL.flatMap { URL(string: $0) } != nil
     }
 
     private var shareURL: URL {
@@ -38,10 +36,19 @@ struct ArticleDetailView: View {
             if let error = loadError {
                 errorView(error)
             } else if let article {
-                ArticleContentView(article: article, onOpenOriginal: { safariURL = SafariURL(article.url) })
-                    // Bleed the hero under the bars; with no hero, ignore nothing
-                    // so the title keeps its normal inset below the bar.
-                    .ignoresSafeArea(bleedRegions(article), edges: .top)
+                let content = ArticleContentView(
+                    article: article,
+                    onOpenOriginal: { safariURL = SafariURL(article.url) }
+                )
+                // On iPhone: bleed the hero under the glass nav bar so it fills
+                // edge-to-edge. On iPad: the NavigationSplitView detail column
+                // provides its own nav bar; keep content below it and hide the
+                // glass background so toolbar items render as floating pills only.
+                if !Self.isiPad && hasHero(article) {
+                    content.ignoresSafeArea(.all, edges: .top)
+                } else {
+                    content
+                }
             } else {
                 ProgressView()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -51,6 +58,9 @@ struct ArticleDetailView: View {
         // content, rather than duplicated as an inline title over the image.
         .navigationBarTitleDisplayMode(.inline)
         .toolbar { readerToolbar }
+        // On iPad, hide the Liquid Glass nav bar background so the toolbar items
+        // float as glass pills without a frosted band across the top.
+        .toolbarBackground(Self.isiPad ? .hidden : .automatic, for: .navigationBar)
         .fullScreenCover(item: $safariURL) { item in
             SafariView(url: item.url)
         }

@@ -9,6 +9,6 @@ func iPadIsPortrait() -> Bool {
         .first { $0.activationState == .foregroundActive }
         ?? UIApplication.shared.connectedScenes
             .compactMap { $0 as? UIWindowScene }.first
-    let size = scene?.coordinateSpace.bounds.size ?? CGSize(width: 1024, height: 768)
+    let size = scene?.effectiveGeometry.coordinateSpace.bounds.size ?? CGSize(width: 1024, height: 768)
     return size.width < size.height
 }
