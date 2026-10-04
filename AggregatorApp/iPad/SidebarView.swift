@@ -29,8 +29,13 @@ struct SidebarView: View {
 
     var body: some View {
         @Bindable var nav = navigationModel
-        List(AppSection.allCases, selection: $nav.selectedSection) { section in
+        let selection = Binding<AppSection?>(
+            get: { nav.selectedSection },
+            set: { nav.selectedSection = $0 ?? .threads }
+        )
+        List(AppSection.allCases, selection: selection) { section in
             Label(section.label, systemImage: section.systemImage)
+                .tag(section)
                 .accessibilityLabel(section.label)
         }
         .navigationTitle("Menu")

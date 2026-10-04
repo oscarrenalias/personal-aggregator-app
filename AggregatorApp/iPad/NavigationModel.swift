@@ -18,4 +18,5 @@ final class iPadNavigationModel {
     var selectedArticle: Article?
     var selectedSource: Source?
     var selectedEpisode: PodcastEpisode?
+    var selectedFeed: ArticleFeed?
 }
