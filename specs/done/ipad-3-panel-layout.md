@@ -5,7 +5,7 @@ description: "Add iPadOS support with a fully separate 3-panel NavigationSplitVi
 dependencies: null
 priority: medium
 complexity: high
-status: planned
+status: done
 tags:
 - ipad
 - navigation
@@ -13,7 +13,7 @@ tags:
 scope:
   in: "|"
   out: "|"
-feature_root_id: B-6ca3d410
+feature_root_id: B-d4e711a8
 ---
 # iPad 3-Panel Layout
 
