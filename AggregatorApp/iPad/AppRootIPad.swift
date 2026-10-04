@@ -10,14 +10,12 @@ struct AppRootIPad: View {
             SidebarView()
                 .navigationSplitViewColumnWidth(min: 200, ideal: 220, max: 260)
         } content: {
-            Text("Section List")
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .navigationTitle("Content")
+            sectionContent
                 .navigationSplitViewColumnWidth(min: 280, ideal: 320, max: 380)
         } detail: {
-            Text("Detail")
+            Text("Select an item")
+                .foregroundStyle(.secondary)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .navigationTitle("Detail")
         }
         .onAppear {
             updateColumnVisibility()
@@ -26,6 +24,28 @@ struct AppRootIPad: View {
             NotificationCenter.default.publisher(for: UIDevice.orientationDidChangeNotification)
         ) { _ in
             updateColumnVisibility()
+        }
+    }
+
+    @ViewBuilder
+    private var sectionContent: some View {
+        switch navigationModel.selectedSection {
+        case .threads:
+            ThreadsIPadView()
+        case .today:
+            TodayIPadView()
+        case .podcasts:
+            PodcastsIPadView()
+        case .sources:
+            SourcesIPadView()
+        case .search:
+            SearchIPadView()
+        case .settings:
+            ContentUnavailableView(
+                "Settings",
+                systemImage: "gearshape",
+                description: Text("Settings panel coming soon.")
+            )
         }
     }
 
