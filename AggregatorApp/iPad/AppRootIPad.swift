@@ -7,9 +7,7 @@ struct AppRootIPad: View {
 
     var body: some View {
         NavigationSplitView(columnVisibility: $columnVisibility) {
-            Text("Sidebar")
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .navigationTitle("Menu")
+            SidebarView()
                 .navigationSplitViewColumnWidth(min: 200, ideal: 220, max: 260)
         } content: {
             Text("Section List")
