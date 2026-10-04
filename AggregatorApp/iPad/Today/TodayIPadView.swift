@@ -9,12 +9,12 @@ private enum LoadPhase {
 }
 
 struct TodayIPadView: View {
+    @Environment(iPadNavigationModel.self) private var navigationModel
     @Environment(CredentialsStore.self) private var credentialsStore
 
     @State private var briefs: [Brief] = []
     @State private var nextCursor: String? = nil
     @State private var phase: LoadPhase = .loading
-    @State private var selectedBrief: Brief? = nil
     @State private var isFetchingNextPage = false
     @State private var isFallback = false
     @State private var loadGate = LoadOnceGate()
@@ -25,9 +25,13 @@ struct TodayIPadView: View {
     var body: some View {
         Group {
             if isPortrait {
-                portraitLayout
+                NavigationStack {
+                    briefListPane(isPortrait: true)
+                        .navigationTitle("Today")
+                }
             } else {
-                landscapeLayout
+                briefListPane(isPortrait: false)
+                    .navigationTitle("Today")
             }
         }
         .onReceive(
@@ -39,43 +43,6 @@ struct TodayIPadView: View {
             guard loadGate.shouldLoad() else { return }
             guard credentialsStore.isConfigured else { phase = .loaded; return }
             await loadFirstPage()
-        }
-    }
-
-    // MARK: - Landscape: list pane + detail pane
-
-    private var landscapeLayout: some View {
-        HStack(spacing: 0) {
-            briefListPane(isPortrait: false)
-                .frame(width: 340)
-
-            Divider()
-
-            Group {
-                if let brief = selectedBrief {
-                    NavigationStack {
-                        BriefDetailView(brief: brief)
-                            .navigationTitle(brief.headline ?? "Daily Brief")
-                    }
-                } else {
-                    ContentUnavailableView(
-                        "Select a brief",
-                        systemImage: "calendar",
-                        description: Text("Choose a brief from the list to read.")
-                    )
-                }
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-        }
-        .navigationTitle("Today")
-    }
-
-    // MARK: - Portrait: full-width list, tap pushes detail
-
-    private var portraitLayout: some View {
-        NavigationStack {
-            briefListPane(isPortrait: true)
-                .navigationTitle("Today")
         }
     }
 
@@ -134,13 +101,13 @@ struct TodayIPadView: View {
                                     .onAppear { loadMoreIfNeeded(brief: brief) }
                                 } else {
                                     Button {
-                                        selectedBrief = brief
+                                        navigationModel.selectedBrief = brief
                                     } label: {
                                         BriefCardView(brief: brief, isLatest: brief.id == briefs.first?.id)
                                     }
                                     .buttonStyle(.plain)
                                     .listRowBackground(
-                                        selectedBrief?.id == brief.id
+                                        navigationModel.selectedBrief?.id == brief.id
                                             ? Color.accentColor.opacity(0.12)
                                             : Color.clear
                                     )
