@@ -66,26 +66,22 @@ struct AppRootIPad: View {
     @ViewBuilder
     private var landscapeDetailColumn: some View {
         if let thread = navigationModel.selectedThread {
+            // ThreadDetailView uses NavigationLink internally to push articles,
+            // so it needs its own NavigationStack.
             NavigationStack {
                 ThreadDetailView(threadId: thread.id)
             }
             .id(thread.id)
         } else if let brief = navigationModel.selectedBrief {
-            NavigationStack {
-                BriefDetailView(brief: brief)
-                    .navigationTitle(brief.headline ?? "Daily Brief")
-            }
-            .id(brief.id)
+            BriefDetailView(brief: brief)
+                .navigationTitle(brief.headline ?? "Daily Brief")
+                .id(brief.id)
         } else if let episode = navigationModel.selectedEpisode {
-            NavigationStack {
-                PodcastPlayerView(episode: episode)
-            }
-            .id(episode.id)
+            PodcastPlayerView(episode: episode)
+                .id(episode.id)
         } else if let article = navigationModel.selectedArticle {
-            NavigationStack {
-                ArticleDetailView(articleId: article.id)
-            }
-            .id(article.id)
+            ArticleDetailView(articleId: article.id)
+                .id(article.id)
         } else {
             landscapePlaceholder
         }
