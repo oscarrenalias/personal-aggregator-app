@@ -35,13 +35,12 @@ struct BriefDetailView: View {
         .refreshable {
             await onRefresh?()
         }
-        .sheet(isPresented: Binding(
+        .fullScreenCover(isPresented: Binding(
             get: { safariURL != nil },
             set: { if !$0 { safariURL = nil } }
         )) {
             if let url = safariURL {
                 SafariView(url: url)
-                    .presentationDetents([.large])
             }
         }
     }
