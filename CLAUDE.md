@@ -147,6 +147,41 @@ checked in `updateColumnVisibility()`, called on `.onAppear` and on every
 | Content | 280 pt | 320 pt | 380 pt |
 | Detail  | flexible (fills remaining width) | | |
 
+### Detail column content and deep link capture
+
+`AppRootIPad` routes each section's selected item to the detail column via
+`sectionDetailContent`. When nothing is selected, a `ContentUnavailableView`
+placeholder is shown:
+
+| Section  | Selected item → detail column      | No selection placeholder            |
+|----------|------------------------------------|-------------------------------------|
+| Threads  | `ThreadDetailView(threadId:)`      | "Select a thread"                   |
+| Today    | `BriefDetailView(brief:)`          | "Select a brief"                    |
+| Podcasts | `PodcastPlayerView(episode:)`      | "Select an episode"                 |
+| Sources  | `ArticleListView(feed:)`           | "Select a source"                   |
+| Search   | `ArticleDetailView(articleId:)`    | "Search results"                    |
+| Settings | —                                  | "Settings panel coming soon"        |
+
+**Deep link capture**: when `router.pendingLink` arrives, `AppRootIPad` captures
+it into a local `capturedDeepLink` state that takes priority over
+`sectionDetailContent` in the detail column. `capturedDeepLink` clears when any
+navigation model item property changes (the user makes a new selection). This
+ensures a tapped widget deep link opens the correct detail regardless of the
+current sidebar state.
+
+**`SettingsIPadView` internal layout**: rather than routing Settings detail
+through the `AppRootIPad` detail column, `SettingsIPadView` manages its own
+orientation-aware split layout inside the content column:
+
+- **Landscape**: `HStack` with a fixed 260 pt `GlassEffectContainer` section
+  list pane + a detail pane (`NavigationStack`) that renders
+  `CredentialsSettingsView` or `AboutSettingsView`.
+- **Portrait**: full-width `NavigationStack` with
+  `navigationDestination`-based push navigation.
+
+The `AppRootIPad` detail column shows a static placeholder for Settings; all
+Settings UI is self-contained within `SettingsIPadView` in the content column.
+
 ### TARGETED_DEVICE_FAMILY
 
 `project.yml` sets `TARGETED_DEVICE_FAMILY: "1,2"` for the main app target

@@ -174,7 +174,13 @@ Portrait: brief section list in detail column; tap pushes detail.
 
 Search: search bar + results list in content column; article detail in detail column.
 
-Settings: settings list in content column; settings detail (credential entry, about, etc.) in detail column.
+Settings: `SettingsIPadView` is self-contained in the content column. It manages
+its own orientation-aware split layout — in landscape an `HStack` with a 260 pt
+`GlassEffectContainer` section list + a `NavigationStack` detail pane
+(`CredentialsSettingsView` / `AboutSettingsView`); in portrait a full-width
+`NavigationStack` with `navigationDestination`-based push navigation. The
+`AppRootIPad` detail column shows a static placeholder for Settings and is not
+used by this section.
 
 ### Task 9 — Deep link routing
 
