@@ -37,7 +37,10 @@ struct SidebarView: View {
                 sourceList(selection: selection)
             }
         }
-        .navigationTitle("Feeds")
+        // No navigationTitle: the sidebar is permanently visible in landscape and
+        // its section headers already name the content, so a title only repeats
+        // what is on screen. It also cannot fit — the toolbar's glass pills fill
+        // the 200-260pt column, truncating any title to an ellipsis.
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button { showSearch = true } label: {
