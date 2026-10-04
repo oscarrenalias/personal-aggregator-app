@@ -18,7 +18,7 @@ struct TodayIPadView: View {
     @State private var isFetchingNextPage = false
     @State private var isFallback = false
     @State private var loadGate = LoadOnceGate()
-    @State private var isPortrait = UIScreen.main.bounds.width < UIScreen.main.bounds.height
+    @State private var isPortrait = iPadIsPortrait()
 
     private var apiClient: APIClient { APIClient(store: credentialsStore) }
 
@@ -37,7 +37,7 @@ struct TodayIPadView: View {
         .onReceive(
             NotificationCenter.default.publisher(for: UIDevice.orientationDidChangeNotification)
         ) { _ in
-            isPortrait = UIScreen.main.bounds.width < UIScreen.main.bounds.height
+            isPortrait = iPadIsPortrait()
         }
         .task {
             guard loadGate.shouldLoad() else { return }

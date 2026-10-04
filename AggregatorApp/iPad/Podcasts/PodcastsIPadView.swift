@@ -129,8 +129,7 @@ struct PodcastsIPadView: View {
     }
 
     private func updateOrientation() {
-        let bounds = UIScreen.main.bounds
-        isPortrait = bounds.width < bounds.height
+        isPortrait = iPadIsPortrait()
     }
 
     private func loadFirstPage(showSpinner: Bool = true) async {

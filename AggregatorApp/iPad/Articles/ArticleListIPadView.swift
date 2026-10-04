@@ -14,7 +14,7 @@ struct ArticleListIPadView: View {
     @State private var nextCursor: String? = nil
     @State private var phase: LoadPhase = .loading
     @State private var isLoadingMore = false
-    @State private var isPortrait = UIScreen.main.bounds.width < UIScreen.main.bounds.height
+    @State private var isPortrait = iPadIsPortrait()
 
     private var apiClient: APIClient { APIClient(store: credentialsStore) }
 
@@ -35,7 +35,7 @@ struct ArticleListIPadView: View {
         .onReceive(
             NotificationCenter.default.publisher(for: UIDevice.orientationDidChangeNotification)
         ) { _ in
-            isPortrait = UIScreen.main.bounds.width < UIScreen.main.bounds.height
+            isPortrait = iPadIsPortrait()
         }
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {

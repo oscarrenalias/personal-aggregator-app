@@ -107,7 +107,7 @@ private struct AboutSettingsView: View {
 
 struct SettingsIPadView: View {
     @State private var selectedSection: SettingsSection? = .credentials
-    @State private var isPortrait = UIScreen.main.bounds.width < UIScreen.main.bounds.height
+    @State private var isPortrait = iPadIsPortrait()
 
     var body: some View {
         Group {
@@ -120,7 +120,7 @@ struct SettingsIPadView: View {
         .onReceive(
             NotificationCenter.default.publisher(for: UIDevice.orientationDidChangeNotification)
         ) { _ in
-            isPortrait = UIScreen.main.bounds.width < UIScreen.main.bounds.height
+            isPortrait = iPadIsPortrait()
         }
     }
 

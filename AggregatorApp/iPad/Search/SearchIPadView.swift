@@ -18,7 +18,7 @@ struct SearchIPadView: View {
     @State private var nextCursor: String? = nil
     @State private var loadPhase: LoadPhase = .idle
     @State private var isLoadingMore = false
-    @State private var isPortrait = UIScreen.main.bounds.width < UIScreen.main.bounds.height
+    @State private var isPortrait = iPadIsPortrait()
     @State private var portraitPath = NavigationPath()
 
     private var apiClient: APIClient { APIClient(store: credentialsStore) }
@@ -157,8 +157,7 @@ struct SearchIPadView: View {
     }
 
     private func updateOrientation() {
-        let bounds = UIScreen.main.bounds
-        isPortrait = bounds.width < bounds.height
+        isPortrait = iPadIsPortrait()
     }
 
     private func runSearch(q: String) async {

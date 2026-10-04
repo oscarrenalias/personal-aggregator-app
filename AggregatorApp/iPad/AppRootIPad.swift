@@ -5,7 +5,7 @@ struct AppRootIPad: View {
     @Environment(iPadNavigationModel.self) private var navigationModel
     @Environment(DeepLinkRouter.self) private var router
     @State private var columnVisibility: NavigationSplitViewVisibility = .all
-    @State private var isPortrait = UIScreen.main.bounds.width < UIScreen.main.bounds.height
+    @State private var isPortrait = false
 
     var body: some View {
         NavigationSplitView(columnVisibility: $columnVisibility) {
@@ -125,8 +125,7 @@ struct AppRootIPad: View {
     }
 
     private func updateOrientation() {
-        let bounds = UIScreen.main.bounds
-        isPortrait = bounds.width < bounds.height
+        isPortrait = iPadIsPortrait()
         columnVisibility = isPortrait ? .doubleColumn : .all
     }
 }
