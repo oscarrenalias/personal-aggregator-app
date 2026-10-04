@@ -3,7 +3,7 @@
   "title": "ViewModel Audit",
   "agent_type": "planner",
   "description": "Read each feature folder's Swift files and answer three questions per feature area: (1) Does a ViewModel/ObservableObject/@Observable class exist separate from the view? (2) Does it hold any NavigationPath or NavigationStack-specific state? (3) Are there row/card component views (e.g. ThreadRowView) defined as separate reusable structs? Produce a table: feature \u2192 ViewModel reusable? \u2192 row components reusable? Any NavigationPath state that must be extracted before reuse should be flagged. This audit is a prerequisite for all iPad section view beads.",
-  "status": "ready",
+  "status": "done",
   "bead_type": "task",
   "parent_id": "B-d4e711a8",
   "dependencies": [],
@@ -32,28 +32,35 @@
   "changed_files": [],
   "updated_docs": [],
   "handoff_summary": {
-    "completed": "",
-    "remaining": "",
-    "risks": "",
-    "verdict": "",
-    "findings_count": 0,
-    "requires_followup": false,
+    "completed": "Audit table produced for all 6 feature areas:\n\n| Feature | Separate List ViewModel? | NavigationPath in ViewModel? | Row/Card Components Reusable? |\n|---------|--------------------------|------------------------------|-------------------------------|\n| Threads | \u274c No \u2014 all state in `ThreadsView` | \u26a0\ufe0f YES \u2014 `@State private var path = NavigationPath()` at ThreadsView.swift:19; drives iPhone NavigationStack and deep-link routing | \u2705 `ThreadCardView` (takes `thread: Thread`); `ThreadDetailView(threadId:)` clean detail |\n| Sources | \u274c No \u2014 all state in `SourcesView` | \u2705 No NavigationPath | \u274c No `SourceRowView` \u2014 source rows are inlined HStack inside `SourcesView.body`; `SourceFaviconView` and `SourceActivityDot` are reusable subcomponents only |\n| Today | \u274c No \u2014 all state in `TodayView` | \u2705 No NavigationPath | \u2705 `BriefCardView` (takes `brief: Brief`, `isLatest: Bool`); `BriefDetailView(brief:)` clean detail |\n| Podcasts | \u2705 Partial \u2014 `AudioPlayerViewModel` (@Observable) for playback; no list ViewModel | \u2705 No NavigationPath | \u2705 `PodcastEpisodeRowView` (takes `episode: PodcastEpisode`); `AudioPlayerViewModel` reusable |\n| Search | \u274c No \u2014 all state in `SearchView` | \u2705 No NavigationPath | \u2705 `ArticleRowView` (Articles/ shared component) |\n| Settings | \u274c No \u2014 minimal logic in `SettingsView` | \u2705 No NavigationPath | N/A \u2014 flat Form UI, no row pattern |\n\nKey findings:\n1. FLAGGED \u2014 Threads NavigationPath: `@State private var path = NavigationPath()` at `ThreadsView.swift:19` is coupled to the iPhone NavigationStack and deep-link consumption. iPad ThreadsIPadView must use `iPadNavigationModel.selectedThread` instead and must NOT share or reuse this state.\n2. FLAGGED \u2014 No list ViewModels exist anywhere. iPad views cannot reuse an extracted ViewModel class for list fetching \u2014 each iPad view must manage its own @State for data loading, or a new shared ViewModel class must be introduced per section.\n3. FLAGGED \u2014 Sources lacks a reusable row component. `SourceRowView.swift` must be created before SourcesIPadView can reuse it; alternatively, the row is inlined again in the iPad view.\n4. READY \u2014 `AudioPlayerViewModel` is clean and reusable for PodcastsIPadView \u2014 no navigation state, takes `episode: PodcastEpisode` and `store: CredentialsStore`.",
+    "remaining": "All remaining work is implementation. 13 beads proposed below covering: project.yml changes, NavigationModel, AppRootIPad+Sidebar, all 6 iPad section views, DeepLinkRouter update, QA pass, and code review.",
+    "risks": "1. Sources iPad view: no SourceRowView exists; bead #5 must complete before #6 or the iPad view inlines the row. 2. Threads NavigationPath is the only nav state that must not be reused \u2014 iPad ThreadsIPadView must use iPadNavigationModel.selectedThread. 3. No existing list ViewModels mean each iPad view duplicates data-fetching @State from the iPhone view \u2014 a future refactor risk but acceptable per the spec's additive-only constraint. 4. xcodegen must be re-run after every bead that adds new source files.",
+    "verdict": "approved",
+    "findings_count": 4,
+    "requires_followup": true,
     "changed_files": [],
     "updated_docs": [],
-    "next_action": "",
-    "next_agent": "",
+    "next_action": "Create implementation beads in dependency order starting with project.yml + AppRoot branch bead, then NavigationModel, then AppRootIPad+SidebarView, then all 6 iPad section views in parallel, then DeepLinkRouter update, then QA and review.",
+    "next_agent": "developer",
     "block_reason": "",
     "expected_files": [],
-    "expected_globs": [],
+    "expected_globs": [
+      "AggregatorApp/Threads/**/*.swift",
+      "AggregatorApp/Sources/**/*.swift",
+      "AggregatorApp/Today/**/*.swift",
+      "AggregatorApp/Podcasts/**/*.swift",
+      "AggregatorApp/Search/**/*.swift",
+      "AggregatorApp/Settings/**/*.swift"
+    ],
     "touched_files": [],
-    "conflict_risks": "",
-    "design_decisions": "",
-    "test_coverage_notes": "",
-    "known_limitations": ""
+    "conflict_risks": "SourceRowView extraction bead (#5) creates a new file in AggregatorApp/Sources/ with no modification to SourcesView.swift \u2014 no conflict with iPhone views. ThreadsIPadView must NOT import or reuse `path: NavigationPath` from ThreadsView. DeepLinkRouter bead modifies AggregatorApp.swift which is also touched by the AppRoot bead \u2014 sequence carefully.",
+    "design_decisions": "1. No existing list ViewModel extraction required \u2014 iPad views will own their own @State for data fetching, duplicating the iPhone view pattern. This is consistent with the spec's additive-only constraint (no modification of existing view files). 2. AudioPlayerViewModel is the only class reused directly \u2014 instantiated as @State in PodcastsIPadView. 3. Row components (ThreadCardView, BriefCardView, PodcastEpisodeRowView, ArticleRowView) are used as-is in iPad list columns. 4. SourceRowView must be created as a new file \u2014 does not modify SourcesView.swift. 5. ThreadsIPadView drives selection via iPadNavigationModel.selectedThread (binding), never via NavigationPath.",
+    "test_coverage_notes": "Existing iPhone unit tests must not be modified. iPad QA bead validates all 6 sections in portrait and landscape, deep links, and confirms iPhone layout unchanged. No new XCTest unit tests required by spec for this feature.",
+    "known_limitations": "AudioPlayerViewModel uses MPRemoteCommandCenter with a single global shared state; two instances (iPhone + iPad) running simultaneously would conflict. Spec does not address multi-window scenarios \u2014 acceptable for v1."
   },
   "block_reason": "",
-  "conflict_risks": "",
-  "branch_name": "",
+  "conflict_risks": "SourceRowView extraction bead (#5) creates a new file in AggregatorApp/Sources/ with no modification to SourcesView.swift \u2014 no conflict with iPhone views. ThreadsIPadView must NOT import or reuse `path: NavigationPath` from ThreadsView. DeepLinkRouter bead modifies AggregatorApp.swift which is also touched by the AppRoot bead \u2014 sequence carefully.",
+  "branch_name": "feature/b-d4e711a8",
   "worktree_path": "",
   "lease": null,
   "retries": 0,
@@ -64,9 +71,162 @@
       "agent_type": "scheduler",
       "summary": "Bead created",
       "details": {}
+    },
+    {
+      "timestamp": "2026-10-04T07:50:06.306288+00:00",
+      "event": "skills_loaded",
+      "agent_type": "planner",
+      "summary": "Loaded 5 skill(s) for isolated execution",
+      "details": {
+        "loaded_skills": [
+          "core/base-orchestrator",
+          "role/planner-decomposition",
+          "task/spec-intake",
+          "task/dependency-graphing",
+          "memory"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-10-04T07:50:06.306307+00:00",
+      "event": "started",
+      "agent_type": "planner",
+      "summary": "Worker started",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-10-04T07:50:06.455721+00:00",
+      "event": "guardrails_applied",
+      "agent_type": "planner",
+      "summary": "Applied guardrails from .takt/agent-runs/B-458b9a38/repo/templates/agents/planner.md",
+      "details": {
+        "template_path": ".takt/agent-runs/B-458b9a38/repo/templates/agents/planner.md"
+      }
+    },
+    {
+      "timestamp": "2026-10-04T07:55:24.867108+00:00",
+      "event": "completed",
+      "agent_type": "planner",
+      "summary": "ViewModel audit completed across all 6 feature areas. No feature has an extracted list ViewModel; all state is embedded in views. Only Threads has NavigationPath state (must be excluded from iPad nav model). Three features lack a dedicated row component (Sources); five have reusable row structs. AudioPlayerViewModel (Podcasts) is the only reusable ViewModel. Produced 13 implementation beads covering project setup through QA and review.",
+      "details": {}
     }
   ],
-  "metadata": {},
+  "metadata": {
+    "execution_root": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-458b9a38",
+    "workspace_repo_path": "repo",
+    "loaded_skills": [
+      "core/base-orchestrator",
+      "role/planner-decomposition",
+      "task/spec-intake",
+      "task/dependency-graphing",
+      "memory"
+    ],
+    "skill_bundle_hash": "a5fd8f00b5f7ad37f55c643327434b8ff20f79c491e2e7380c1ed08c065314a3",
+    "isolated_home": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-458b9a38/home",
+    "runner_backend": "claude",
+    "guardrails": {
+      "agent_type": "planner",
+      "template_path": ".takt/agent-runs/B-458b9a38/repo/templates/agents/planner.md",
+      "template_text": "# Planner Guardrails\n\nPrimary responsibility: Decompose a feature into a parent epic and actionable child beads with clear dependencies and scope.\n\nAllowed actions:\n- Read specifications and repository context.\n- Propose bead structure, dependencies, linked docs, and expected file scope.\n- Create follow-up planning work when decomposition is blocked by missing information.\n\nDisallowed actions:\n- Implement code, tests, docs, or runtime behavior changes.\n- Claim work outside planning scope as completed.\n\n## Memory\n\n**Read memory at bead start.** Before reading specs or producing a bead graph, run three searches using `$TAKT_CMD` (injected by the orchestrator):\n\n```bash\n$TAKT_CMD memory search \"<spec topic keywords>\" --namespace global\n$TAKT_CMD memory search \"<spec topic keywords>\" --namespace feature:<feature_root_id>\n$TAKT_CMD memory search \"<spec topic keywords>\" --namespace specs\n```\n\nTreat results as ambient context \u2014 apply relevant entries when scoping beads; skip entries that don't apply.\n\n**Write to memory when you identify project-wide planning knowledge** \u2014 architectural constraints, cross-cutting concerns, or patterns that should inform future planning passes.\n\n```bash\n$TAKT_CMD memory add \"<concise fact>\" --namespace global   # planners write to global only\n```\n\nExpected outputs:\n- Structured planning JSON matching the planner schema.\n- Beads with concise, role-appropriate acceptance criteria and file scope.\n\nDeveloper bead sizing:\n- Plan developer beads as a single focused change that should fit within roughly 10 minutes of implementation work.\n- Split broader logical units into dependent developer beads instead of assigning one bead to absorb multiple distinct changes.\n- If a change is likely to touch more than 2-3 functions, span multiple subsystems, or mix unrelated refactors with feature work, break it into smaller dependent beads with explicit ordering.\n\nShared follow-up beads:\n- For features with multiple related implementation beads, create shared tester, documentation, and review beads instead of duplicating that work inside each developer bead.\n- The shared tester bead should depend on the relevant implementation beads it validates.\n- The shared documentation bead should depend on the validated implementation set when docs need to describe the combined result.\n- The shared review bead should depend on the validated implementation set so review happens after the combined changes are ready.",
+      "captured_at": "2026-10-04T07:50:06.455713+00:00"
+    },
+    "worker_prompt_context": {
+      "bead_id": "B-458b9a38",
+      "feature_root_id": "B-d4e711a8",
+      "title": "ViewModel Audit",
+      "agent_type": "planner",
+      "description": "Read each feature folder's Swift files and answer three questions per feature area: (1) Does a ViewModel/ObservableObject/@Observable class exist separate from the view? (2) Does it hold any NavigationPath or NavigationStack-specific state? (3) Are there row/card component views (e.g. ThreadRowView) defined as separate reusable structs? Produce a table: feature \u2192 ViewModel reusable? \u2192 row components reusable? Any NavigationPath state that must be extracted before reuse should be flagged. This audit is a prerequisite for all iPad section view beads.",
+      "status": "in_progress",
+      "acceptance_criteria": [
+        "Table covers all 6 feature areas: Threads, Sources, Today, Podcasts, Search, Settings",
+        "Each entry clearly states whether the ViewModel is reusable as-is",
+        "Each entry states whether row/card component views are reusable as-is",
+        "Any NavigationPath or NavigationStack state embedded in ViewModels is explicitly flagged"
+      ],
+      "dependencies": [],
+      "linked_docs": [
+        "specs/drafts/ipad-3-panel-layout.md"
+      ],
+      "execution_branch_name": "feature/b-d4e711a8",
+      "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-d4e711a8",
+      "expected_files": [],
+      "expected_globs": [
+        "AggregatorApp/Threads/**/*.swift",
+        "AggregatorApp/Sources/**/*.swift",
+        "AggregatorApp/Today/**/*.swift",
+        "AggregatorApp/Podcasts/**/*.swift",
+        "AggregatorApp/Search/**/*.swift",
+        "AggregatorApp/Settings/**/*.swift"
+      ],
+      "touched_files": [],
+      "conflict_risks": "",
+      "handoff_summary": {
+        "completed": "",
+        "remaining": "",
+        "risks": "",
+        "verdict": "",
+        "findings_count": 0,
+        "requires_followup": false,
+        "changed_files": [],
+        "updated_docs": [],
+        "next_action": "",
+        "next_agent": "",
+        "block_reason": "",
+        "expected_files": [],
+        "expected_globs": [],
+        "touched_files": [],
+        "conflict_risks": "",
+        "design_decisions": "",
+        "test_coverage_notes": "",
+        "known_limitations": ""
+      }
+    },
+    "last_agent_result": {
+      "outcome": "completed",
+      "summary": "ViewModel audit completed across all 6 feature areas. No feature has an extracted list ViewModel; all state is embedded in views. Only Threads has NavigationPath state (must be excluded from iPad nav model). Three features lack a dedicated row component (Sources); five have reusable row structs. AudioPlayerViewModel (Podcasts) is the only reusable ViewModel. Produced 13 implementation beads covering project setup through QA and review.",
+      "verdict": "approved",
+      "findings_count": 4,
+      "requires_followup": true,
+      "next_agent": "developer",
+      "block_reason": ""
+    },
+    "telemetry": {
+      "cost_usd": 0.7643420999999999,
+      "duration_ms": 318412,
+      "duration_api_ms": 310806,
+      "num_turns": 22,
+      "input_tokens": 9,
+      "output_tokens": 19867,
+      "cache_creation_tokens": 66059,
+      "cache_read_tokens": 233187,
+      "stop_reason": "tool_use",
+      "session_id": "ed4c9eff-ddcd-4326-9999-6e86d06f2155",
+      "permission_denials": [],
+      "prompt_chars": 7271,
+      "prompt_lines": 158,
+      "source": "provider",
+      "attempt": 1
+    },
+    "telemetry_history": [
+      {
+        "cost_usd": 0.7643420999999999,
+        "duration_ms": 318412,
+        "duration_api_ms": 310806,
+        "num_turns": 22,
+        "input_tokens": 9,
+        "output_tokens": 19867,
+        "cache_creation_tokens": 66059,
+        "cache_read_tokens": 233187,
+        "stop_reason": "tool_use",
+        "session_id": "ed4c9eff-ddcd-4326-9999-6e86d06f2155",
+        "permission_denials": [],
+        "prompt_chars": 7271,
+        "prompt_lines": 158,
+        "source": "provider",
+        "attempt": 1
+      }
+    ]
+  },
   "labels": [],
   "recovery_for": null,
   "priority": null

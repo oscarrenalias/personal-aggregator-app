@@ -1,0 +1,258 @@
+{
+  "bead_id": "B-80cd72ae-subtask-subtask-2-review",
+  "title": "Review Wire AppRootIPad detail column for threads, podcasts, sources, search",
+  "agent_type": "review",
+  "description": "Review implementation for B-80cd72ae-subtask-subtask-2",
+  "status": "done",
+  "bead_type": "task",
+  "parent_id": "B-80cd72ae-subtask-subtask-2",
+  "dependencies": [
+    "B-80cd72ae-subtask-subtask-2",
+    "B-80cd72ae-subtask-subtask-2-test",
+    "B-80cd72ae-subtask-subtask-2-docs"
+  ],
+  "acceptance_criteria": [],
+  "linked_docs": [
+    "specs/planned/ipad-3-panel-layout.md"
+  ],
+  "feature_root_id": "B-d4e711a8",
+  "execution_branch_name": "feature/b-d4e711a8",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-d4e711a8",
+  "expected_files": [
+    "AggregatorApp/iPad/AppRootIPad.swift",
+    "AggregatorApp/iPad/NavigationModel.swift",
+    "AggregatorApp/iPad/Today/TodayIPadView.swift"
+  ],
+  "expected_globs": [],
+  "touched_files": [
+    "AggregatorApp/iPad/AppRootIPad.swift",
+    "AggregatorApp/iPad/NavigationModel.swift",
+    "AggregatorApp/iPad/Today/TodayIPadView.swift",
+    "AggregatorAppTests/iPadNavigationModelTests.swift",
+    "CLAUDE.md"
+  ],
+  "changed_files": [
+    "AggregatorApp/iPad/AppRootIPad.swift",
+    "AggregatorApp/iPad/NavigationModel.swift",
+    "AggregatorApp/iPad/Today/TodayIPadView.swift",
+    "AggregatorAppTests/iPadNavigationModelTests.swift",
+    "CLAUDE.md"
+  ],
+  "updated_docs": [
+    "CLAUDE.md"
+  ],
+  "handoff_summary": {
+    "completed": "Reviewed AppRootIPad.swift (6-section detail routing, deep link capture), NavigationModel.swift (selectedBrief field), TodayIPadView.swift (dual-mode refactor), iPadNavigationModelTests.swift (7 new routing-state tests), CLAUDE.md (detail column and dual-mode pattern docs). All acceptance criteria from the dependency chain are met.",
+    "remaining": "None for this bead.",
+    "risks": "Non-blocking: sectionDetailContent omits .id() on NavigationStack wrappers. Deep link path correctly uses .id(id), but regular selection path does not. If any detail view (ThreadDetailView, PodcastPlayerView, etc.) internally pushes sub-navigation, the NavigationStack path would persist across item switches. Design decision explicitly accepted this on the assumption detail views are terminal. No fix required now; worth revisiting if detail views gain sub-navigation in future beads.",
+    "verdict": "approved",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [
+      "AggregatorApp/iPad/AppRootIPad.swift",
+      "AggregatorApp/iPad/NavigationModel.swift",
+      "AggregatorApp/iPad/Today/TodayIPadView.swift",
+      "AggregatorAppTests/iPadNavigationModelTests.swift",
+      "CLAUDE.md"
+    ],
+    "updated_docs": [
+      "CLAUDE.md"
+    ],
+    "next_action": "Bead approved; no corrective beads required. Scheduler may proceed with the merge gate.",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [
+      "AggregatorApp/iPad/AppRootIPad.swift",
+      "AggregatorApp/iPad/NavigationModel.swift",
+      "AggregatorApp/iPad/Today/TodayIPadView.swift"
+    ],
+    "expected_globs": [],
+    "touched_files": [
+      "AggregatorApp/iPad/AppRootIPad.swift",
+      "AggregatorApp/iPad/NavigationModel.swift",
+      "AggregatorApp/iPad/Today/TodayIPadView.swift",
+      "AggregatorAppTests/iPadNavigationModelTests.swift",
+      "CLAUDE.md"
+    ],
+    "conflict_risks": "None. All changes are additive or isolated refactors. NavigationModel.swift adds one backward-compatible field. No sibling beads touch these files.",
+    "design_decisions": "NavigationStack wrappers without .id() accepted per developer design decision (detail views assumed terminal). selectedBrief lifted to iPadNavigationModel rather than local @State to allow AppRootIPad to observe it without prop-drilling. Thread.self decode context used to avoid Foundation.NSThread ambiguity.",
+    "test_coverage_notes": "7 new unit tests in iPadNavigationModelTests.swift cover all selectedXxx properties (set/clear/independence), section switching, and AppSection enum invariants. View-layer routing (deep link capture, sectionDetailContent switching) is not unit-testable without a UI harness; design-level correctness verified by code inspection.",
+    "known_limitations": "sectionDetailContent NavigationStack wrappers lack .id() \u2014 navigation back-stack may persist across same-type item switches if detail views gain sub-navigation in future iterations."
+  },
+  "block_reason": "",
+  "conflict_risks": "None. All changes are additive or isolated refactors. NavigationModel.swift adds one backward-compatible field. No sibling beads touch these files.",
+  "branch_name": "feature/b-d4e711a8",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-10-04T08:18:08.809968+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-10-04T08:57:18.112424+00:00",
+      "event": "skills_loaded",
+      "agent_type": "review",
+      "summary": "Loaded 6 skill(s) for isolated execution",
+      "details": {
+        "loaded_skills": [
+          "core/base-orchestrator",
+          "role/reviewer-signoff",
+          "capability/code-review",
+          "task/corrective-bead-creation",
+          "task/risk-assessment",
+          "memory"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-10-04T08:57:18.112442+00:00",
+      "event": "started",
+      "agent_type": "review",
+      "summary": "Worker started",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-10-04T08:57:18.114764+00:00",
+      "event": "guardrails_applied",
+      "agent_type": "review",
+      "summary": "Applied guardrails from .takt/agent-runs/B-80cd72ae-subtask-subtask-2-review/repo/templates/agents/review.md",
+      "details": {
+        "template_path": ".takt/agent-runs/B-80cd72ae-subtask-subtask-2-review/repo/templates/agents/review.md"
+      }
+    },
+    {
+      "timestamp": "2026-10-04T08:59:50.677575+00:00",
+      "event": "completed",
+      "agent_type": "review",
+      "summary": "All 5 changed files reviewed and approved. Implementation correctly routes all 6 sections in the detail column, deep link capture/clearing is complete, TodayIPadView dual-mode pattern is correct, NavigationModel gains selectedBrief, tests are thorough, and CLAUDE.md is updated accurately.",
+      "details": {}
+    }
+  ],
+  "metadata": {
+    "execution_root": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-80cd72ae-subtask-subtask-2-review",
+    "workspace_repo_path": "repo",
+    "loaded_skills": [
+      "core/base-orchestrator",
+      "role/reviewer-signoff",
+      "capability/code-review",
+      "task/corrective-bead-creation",
+      "task/risk-assessment",
+      "memory"
+    ],
+    "skill_bundle_hash": "68ad0ecb7bfe263ceb1ada56efead5a81dac8f9f2173181d0bf030dc0a3f880d",
+    "isolated_home": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-80cd72ae-subtask-subtask-2-review/home",
+    "runner_backend": "claude",
+    "guardrails": {
+      "agent_type": "review",
+      "template_path": ".takt/agent-runs/B-80cd72ae-subtask-subtask-2-review/repo/templates/agents/review.md",
+      "template_text": "# Review Guardrails\n\nPrimary responsibility: Inspect code, tests, docs, and acceptance criteria for correctness, completeness, and risk.\n\nAllowed actions:\n- Review only the changed files listed in the bead's touched_files and changed_files fields. Do not read unrelated files.\n- Validate acceptance criteria against the implementation and handoff state.\n- Block with a clear recommendation when the bead actually requires implementation work.\n\n## Memory\n\n**Read memory at bead start.** Before reviewing any files, run three searches using `$TAKT_CMD` (injected by the orchestrator):\n\n```bash\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace global\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace feature:<feature_root_id>\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace specs\n```\n\nTreat results as ambient context \u2014 apply relevant entries to inform the review; skip entries that don't apply.\n\nDo **not** write to memory \u2014 review agents are read-only.\n\nEfficiency constraints:\n- Do not run the test suite. Testing is the tester agent's responsibility.\n- Focus on correctness, completeness, and risk \u2014 not style or formatting.\n- Keep the review concise. If there are no findings, say so and approve promptly.\n\nDisallowed actions:\n- Implement feature work, tests, or docs instead of reporting findings.\n- Rewrite architecture or silently fix issues discovered during review.\n- Mark incomplete work as accepted without evidence.\n\nExpected outputs:\n- Return JSON with `outcome` set to `completed` (reviews always complete; use `verdict` for pass/fail) and `summary` as a one-line description of the review result.\n- Return JSON with structured verdict fields for every run: `verdict`, `findings_count`, and `requires_followup`.\n- Treat `verdict` as the review signoff decision: `approved` means the bead can complete, while `needs_changes` means the bead must block for follow-up work.\n- Use `verdict=approved`, `findings_count=0`, and `requires_followup=false` when no unresolved findings remain.\n- Use `verdict=needs_changes`, set `findings_count` to the unresolved finding count, set `requires_followup=true` unless there is a stronger explicit reason not to, and always include `block_reason` when any required fix remains.\n- Keep `completed`, `remaining`, and `risks` as free-form narrative context only. They inform operators, but they do not override the structured verdict or control scheduler state.\n- Review findings ordered by severity, or an explicit statement that no findings were discovered.\n- Clear blocked handoff details when the task belongs to another agent type.",
+      "captured_at": "2026-10-04T08:57:18.114752+00:00"
+    },
+    "worker_prompt_context": {
+      "bead_id": "B-80cd72ae-subtask-subtask-2-review",
+      "feature_root_id": "B-d4e711a8",
+      "title": "Review Wire AppRootIPad detail column for threads, podcasts, sources, search",
+      "agent_type": "review",
+      "description": "Review implementation for B-80cd72ae-subtask-subtask-2",
+      "status": "in_progress",
+      "acceptance_criteria": [],
+      "dependencies": [
+        "B-80cd72ae-subtask-subtask-2",
+        "B-80cd72ae-subtask-subtask-2-test",
+        "B-80cd72ae-subtask-subtask-2-docs"
+      ],
+      "linked_docs": [
+        "specs/planned/ipad-3-panel-layout.md"
+      ],
+      "execution_branch_name": "feature/b-d4e711a8",
+      "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-d4e711a8",
+      "expected_files": [
+        "AggregatorApp/iPad/AppRootIPad.swift",
+        "AggregatorApp/iPad/NavigationModel.swift",
+        "AggregatorApp/iPad/Today/TodayIPadView.swift"
+      ],
+      "expected_globs": [],
+      "touched_files": [
+        "AggregatorApp/iPad/AppRootIPad.swift",
+        "AggregatorApp/iPad/NavigationModel.swift",
+        "AggregatorApp/iPad/Today/TodayIPadView.swift",
+        "AggregatorAppTests/iPadNavigationModelTests.swift",
+        "CLAUDE.md"
+      ],
+      "conflict_risks": "None expected. All changes are additive to AppRootIPad and a pure refactor of TodayIPadView. No sibling beads touch these files. NavigationModel.swift gains one field which is backward-compatible.",
+      "handoff_summary": {
+        "completed": "",
+        "remaining": "",
+        "risks": "",
+        "verdict": "",
+        "findings_count": 0,
+        "requires_followup": false,
+        "changed_files": [],
+        "updated_docs": [],
+        "next_action": "",
+        "next_agent": "",
+        "block_reason": "",
+        "expected_files": [],
+        "expected_globs": [],
+        "touched_files": [],
+        "conflict_risks": "",
+        "design_decisions": "",
+        "test_coverage_notes": "",
+        "known_limitations": ""
+      }
+    },
+    "last_agent_result": {
+      "outcome": "completed",
+      "summary": "All 5 changed files reviewed and approved. Implementation correctly routes all 6 sections in the detail column, deep link capture/clearing is complete, TodayIPadView dual-mode pattern is correct, NavigationModel gains selectedBrief, tests are thorough, and CLAUDE.md is updated accurately.",
+      "verdict": "approved",
+      "findings_count": 0,
+      "requires_followup": false,
+      "next_agent": "",
+      "block_reason": ""
+    },
+    "telemetry": {
+      "cost_usd": 0.34954920000000006,
+      "duration_ms": 152556,
+      "duration_api_ms": 144922,
+      "num_turns": 10,
+      "input_tokens": 7,
+      "output_tokens": 8169,
+      "cache_creation_tokens": 29184,
+      "cache_read_tokens": 172964,
+      "stop_reason": "tool_use",
+      "session_id": "6230995f-33da-49c3-82e1-0c4f72acdde1",
+      "permission_denials": [],
+      "prompt_chars": 9253,
+      "prompt_lines": 173,
+      "source": "provider",
+      "attempt": 1
+    },
+    "telemetry_history": [
+      {
+        "cost_usd": 0.34954920000000006,
+        "duration_ms": 152556,
+        "duration_api_ms": 144922,
+        "num_turns": 10,
+        "input_tokens": 7,
+        "output_tokens": 8169,
+        "cache_creation_tokens": 29184,
+        "cache_read_tokens": 172964,
+        "stop_reason": "tool_use",
+        "session_id": "6230995f-33da-49c3-82e1-0c4f72acdde1",
+        "permission_denials": [],
+        "prompt_chars": 9253,
+        "prompt_lines": 173,
+        "source": "provider",
+        "attempt": 1
+      }
+    ]
+  },
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}
