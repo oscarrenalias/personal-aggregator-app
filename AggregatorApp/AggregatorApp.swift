@@ -9,15 +9,20 @@ enum DeepLink: Hashable {
 final class DeepLinkRouter {
     var pendingLink: DeepLink?
 
-    func handle(_ url: URL) {
+    func handle(_ url: URL, iPadNavModel: iPadNavigationModel? = nil) {
         guard url.scheme == "aggregator",
               let host = url.host(percentEncoded: false),
               let idString = url.pathComponents.dropFirst().first,
               let id = Int(idString) else { return }
         switch host {
-        case "article": pendingLink = .article(id)
-        case "thread":  pendingLink = .thread(id)
-        default:        break
+        case "article":
+            pendingLink = .article(id)
+            iPadNavModel?.selectedSection = .today
+        case "thread":
+            pendingLink = .thread(id)
+            iPadNavModel?.selectedSection = .threads
+        default:
+            break
         }
     }
 }
@@ -50,7 +55,7 @@ struct AggregatorApp: App {
                 .environment(deepLinkRouter)
                 .environment(iPadNavModel)
                 .onOpenURL { url in
-                    deepLinkRouter.handle(url)
+                    deepLinkRouter.handle(url, iPadNavModel: iPadNavModel)
                 }
         }
     }
