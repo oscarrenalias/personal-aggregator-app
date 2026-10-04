@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 struct ThreadDetailView: View {
     let threadId: Int
@@ -102,7 +103,8 @@ struct ThreadDetailView: View {
         // Bleed under the bars only when there's a hero; otherwise let the system
         // inset the title below the floating toolbar (matches the article reader).
         .ignoresSafeArea(hasHero(thread) ? .all : [], edges: .top)
-        .scrollEdgeEffectHidden(true, for: .top)
+        // See ArticleContentView: iPad-only suppression of the iOS 26 top-edge blur.
+        .scrollEdgeEffectHidden(UIDevice.current.userInterfaceIdiom == .pad, for: .top)
     }
 
     // MARK: - Hero image

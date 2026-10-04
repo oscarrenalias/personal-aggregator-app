@@ -17,8 +17,10 @@ struct ArticleDetailView: View {
         APIClient(store: credentialsStore)
     }
 
-    private func hasHero(_ a: Article) -> Bool {
-        a.imageURL.flatMap { URL(string: $0) } != nil
+    /// Bleed under the bars only when the article has a hero image; otherwise the
+    /// title would be hidden behind the bar.
+    private func bleedRegions(_ a: Article) -> SafeAreaRegions {
+        (a.imageURL.flatMap { URL(string: $0) } != nil) ? .all : []
     }
 
     private var shareURL: URL {
@@ -34,9 +36,9 @@ struct ArticleDetailView: View {
                 errorView(error)
             } else if let article {
                 ArticleContentView(article: article, onOpenOriginal: { safariURL = SafariURL(article.url) })
-                    // Bleed the hero under the nav bar when present; without a hero
-                    // let the system inset the title below the bar (mirrors ThreadDetailView).
-                    .ignoresSafeArea(hasHero(article) ? .all : [], edges: .top)
+                    // Bleed the hero under the bars; with no hero, ignore nothing
+                    // so the title keeps its normal inset below the bar.
+                    .ignoresSafeArea(bleedRegions(article), edges: .top)
             } else {
                 ProgressView()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)

@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 /// Pure, stateless article content: hero, title, byline, importance badge,
 /// chips, AI summary, and body.
@@ -86,11 +87,10 @@ struct ArticleContentView: View {
                 .padding(.vertical)
             }
         }
-        // iOS 26 applies a progressive blur at the scroll view's top edge so
-        // content stays legible under the bar. Over a hero image that reads as
-        // a translucent band, so suppress it and let the hero run clean to the
-        // top with the toolbar items floating over it.
-        .scrollEdgeEffectHidden(true, for: .top)
+        // iOS 26 blurs the scroll view's top edge to keep content legible under
+        // the bar. In the iPad split view that reads as a translucent band over
+        // the hero, so suppress it there. iPhone keeps the system default.
+        .scrollEdgeEffectHidden(UIDevice.current.userInterfaceIdiom == .pad, for: .top)
     }
 
     @ViewBuilder
