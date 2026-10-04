@@ -5,164 +5,132 @@ struct AppRootIPad: View {
     @Environment(iPadNavigationModel.self) private var navigationModel
     @Environment(DeepLinkRouter.self) private var router
     @State private var columnVisibility: NavigationSplitViewVisibility = .all
-    @State private var capturedDeepLink: DeepLink?
+    @State private var isPortrait = UIScreen.main.bounds.width < UIScreen.main.bounds.height
 
     var body: some View {
         NavigationSplitView(columnVisibility: $columnVisibility) {
             SidebarView()
                 .navigationSplitViewColumnWidth(min: 200, ideal: 220, max: 260)
         } content: {
-            sectionContent
+            contentColumn
                 .navigationSplitViewColumnWidth(min: 280, ideal: 320, max: 380)
         } detail: {
-            detailContent
+            detailColumn
         }
-        .onAppear {
-            updateColumnVisibility()
-            consumePendingLink()
-        }
+        .onAppear { updateOrientation() }
         .onReceive(
             NotificationCenter.default.publisher(for: UIDevice.orientationDidChangeNotification)
-        ) { _ in
-            updateColumnVisibility()
-        }
+        ) { _ in updateOrientation() }
         .onChange(of: router.pendingLink) { _, link in
-            guard link != nil else { return }
-            consumePendingLink()
-        }
-        .onChange(of: navigationModel.selectedThread?.id) { capturedDeepLink = nil }
-        .onChange(of: navigationModel.selectedArticle?.id) { capturedDeepLink = nil }
-        .onChange(of: navigationModel.selectedBrief?.id) { capturedDeepLink = nil }
-        .onChange(of: navigationModel.selectedFeed) { capturedDeepLink = nil }
-        .onChange(of: navigationModel.selectedEpisode?.id) { capturedDeepLink = nil }
-    }
-
-    @ViewBuilder
-    private var detailContent: some View {
-        if let link = capturedDeepLink {
+            guard let link else { return }
             switch link {
-            case .thread(let id):
-                NavigationStack {
-                    ThreadDetailView(threadId: id)
-                }
-                .id(id)
-            case .article(let id):
-                NavigationStack {
-                    ArticleDetailView(articleId: id)
-                }
-                .id(id)
+            case .thread:
+                navigationModel.selectedSidebarItem = .threads
+            case .article:
+                break
             }
-        } else {
-            sectionDetailContent
+            router.pendingLink = nil
         }
     }
 
-    private func consumePendingLink() {
-        guard let link = router.pendingLink else { return }
-        capturedDeepLink = link
-        router.pendingLink = nil
-    }
+    // MARK: - Content column (landscape only — hidden in portrait)
 
     @ViewBuilder
-    private var sectionDetailContent: some View {
-        switch navigationModel.selectedSection {
-        case .threads:
-            if let thread = navigationModel.selectedThread {
-                NavigationStack {
-                    ThreadDetailView(threadId: thread.id)
-                }
-            } else {
-                ContentUnavailableView(
-                    "Select a thread",
-                    systemImage: "bubble.left.and.bubble.right",
-                    description: Text("Choose a thread from the list to read.")
-                )
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-            }
-        case .today:
-            if let brief = navigationModel.selectedBrief {
-                NavigationStack {
-                    BriefDetailView(brief: brief)
-                        .navigationTitle(brief.headline ?? "Daily Brief")
-                }
-            } else {
-                ContentUnavailableView(
-                    "Select a brief",
-                    systemImage: "calendar",
-                    description: Text("Choose a brief from the list to read.")
-                )
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-            }
-        case .podcasts:
-            if let episode = navigationModel.selectedEpisode {
-                NavigationStack {
-                    PodcastPlayerView(episode: episode)
-                }
-            } else {
-                ContentUnavailableView(
-                    "Select an episode",
-                    systemImage: "headphones",
-                    description: Text("Choose an episode from the list to play.")
-                )
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-            }
-        case .sources:
-            if let feed = navigationModel.selectedFeed {
-                NavigationStack {
-                    ArticleListView(feed: feed)
-                }
-            } else {
-                ContentUnavailableView(
-                    "Select a source",
-                    systemImage: "newspaper",
-                    description: Text("Choose a source or feed to browse articles.")
-                )
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-            }
-        case .search:
-            if let article = navigationModel.selectedArticle {
-                NavigationStack {
-                    ArticleDetailView(articleId: article.id)
-                }
-            } else {
-                ContentUnavailableView(
-                    "Search results",
-                    systemImage: "magnifyingglass",
-                    description: Text("Select an article from search results to read it.")
-                )
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-            }
-        case .settings:
-            SettingsIPadView()
-        }
-    }
-
-    @ViewBuilder
-    private var sectionContent: some View {
-        switch navigationModel.selectedSection {
+    private var contentColumn: some View {
+        switch navigationModel.selectedSidebarItem {
         case .threads:
             ThreadsIPadView()
         case .today:
             TodayIPadView()
         case .podcasts:
             PodcastsIPadView()
-        case .sources:
-            SourcesIPadView()
-        case .search:
-            SearchIPadView()
-        case .settings:
-            ContentUnavailableView(
-                "Settings",
-                systemImage: "gearshape",
-                description: Text("Choose a category from the list.")
-            )
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+        case .feed(let f):
+            ArticleListIPadView(feed: f)
+                .id(f.id)
         }
     }
 
-    private func updateColumnVisibility() {
+    // MARK: - Detail column
+
+    @ViewBuilder
+    private var detailColumn: some View {
+        if isPortrait {
+            // Portrait: content column is hidden; detail column acts as the primary view
+            // and owns its own NavigationStack for push navigation.
+            portraitDetailColumn
+        } else {
+            landscapeDetailColumn
+        }
+    }
+
+    @ViewBuilder
+    private var landscapeDetailColumn: some View {
+        if let thread = navigationModel.selectedThread {
+            NavigationStack {
+                ThreadDetailView(threadId: thread.id)
+            }
+            .id(thread.id)
+        } else if let brief = navigationModel.selectedBrief {
+            NavigationStack {
+                BriefDetailView(brief: brief)
+                    .navigationTitle(brief.headline ?? "Daily Brief")
+            }
+            .id(brief.id)
+        } else if let episode = navigationModel.selectedEpisode {
+            NavigationStack {
+                PodcastPlayerView(episode: episode)
+            }
+            .id(episode.id)
+        } else if let article = navigationModel.selectedArticle {
+            NavigationStack {
+                ArticleDetailView(articleId: article.id)
+            }
+            .id(article.id)
+        } else {
+            landscapePlaceholder
+        }
+    }
+
+    @ViewBuilder
+    private var landscapePlaceholder: some View {
+        switch navigationModel.selectedSidebarItem {
+        case .threads:
+            ContentUnavailableView("Select a thread", systemImage: "bubble.left.and.bubble.right",
+                                   description: Text("Choose a thread from the list."))
+        case .today:
+            ContentUnavailableView("Select a brief", systemImage: "calendar",
+                                   description: Text("Choose a brief from the list."))
+        case .podcasts:
+            ContentUnavailableView("Select an episode", systemImage: "headphones",
+                                   description: Text("Choose an episode to play."))
+        case .feed:
+            ContentUnavailableView("Select an article", systemImage: "newspaper",
+                                   description: Text("Choose an article from the list."))
+        }
+    }
+
+    @ViewBuilder
+    private var portraitDetailColumn: some View {
+        // In portrait, the content column is hidden, so the detail column shows
+        // the full section view (with its own NavigationStack for push navigation).
+        switch navigationModel.selectedSidebarItem {
+        case .threads:
+            ThreadsIPadView()
+        case .today:
+            TodayIPadView()
+        case .podcasts:
+            PodcastsIPadView()
+        case .feed(let f):
+            NavigationStack {
+                ArticleListView(feed: f)
+            }
+            .id(f.id)
+        }
+    }
+
+    private func updateOrientation() {
         let bounds = UIScreen.main.bounds
-        let isPortrait = bounds.width < bounds.height
+        isPortrait = bounds.width < bounds.height
         columnVisibility = isPortrait ? .doubleColumn : .all
     }
 }

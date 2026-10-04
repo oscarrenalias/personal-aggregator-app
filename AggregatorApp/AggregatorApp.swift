@@ -17,10 +17,9 @@ final class DeepLinkRouter {
         switch host {
         case "article":
             pendingLink = .article(id)
-            iPadNavModel?.selectedSection = .today
         case "thread":
             pendingLink = .thread(id)
-            iPadNavModel?.selectedSection = .threads
+            iPadNavModel?.selectedSidebarItem = .threads
         default:
             break
         }
