@@ -1,0 +1,73 @@
+{
+  "bead_id": "B-458b9a38",
+  "title": "ViewModel Audit",
+  "agent_type": "planner",
+  "description": "Read each feature folder's Swift files and answer three questions per feature area: (1) Does a ViewModel/ObservableObject/@Observable class exist separate from the view? (2) Does it hold any NavigationPath or NavigationStack-specific state? (3) Are there row/card component views (e.g. ThreadRowView) defined as separate reusable structs? Produce a table: feature \u2192 ViewModel reusable? \u2192 row components reusable? Any NavigationPath state that must be extracted before reuse should be flagged. This audit is a prerequisite for all iPad section view beads.",
+  "status": "ready",
+  "bead_type": "task",
+  "parent_id": "B-d4e711a8",
+  "dependencies": [],
+  "acceptance_criteria": [
+    "Table covers all 6 feature areas: Threads, Sources, Today, Podcasts, Search, Settings",
+    "Each entry clearly states whether the ViewModel is reusable as-is",
+    "Each entry states whether row/card component views are reusable as-is",
+    "Any NavigationPath or NavigationStack state embedded in ViewModels is explicitly flagged"
+  ],
+  "linked_docs": [
+    "specs/drafts/ipad-3-panel-layout.md"
+  ],
+  "feature_root_id": "B-d4e711a8",
+  "execution_branch_name": "feature/b-d4e711a8",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-d4e711a8",
+  "expected_files": [],
+  "expected_globs": [
+    "AggregatorApp/Threads/**/*.swift",
+    "AggregatorApp/Sources/**/*.swift",
+    "AggregatorApp/Today/**/*.swift",
+    "AggregatorApp/Podcasts/**/*.swift",
+    "AggregatorApp/Search/**/*.swift",
+    "AggregatorApp/Settings/**/*.swift"
+  ],
+  "touched_files": [],
+  "changed_files": [],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "",
+    "remaining": "",
+    "risks": "",
+    "verdict": "",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [],
+    "updated_docs": [],
+    "next_action": "",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [],
+    "expected_globs": [],
+    "touched_files": [],
+    "conflict_risks": "",
+    "design_decisions": "",
+    "test_coverage_notes": "",
+    "known_limitations": ""
+  },
+  "block_reason": "",
+  "conflict_risks": "",
+  "branch_name": "",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-10-04T07:49:03.400873+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    }
+  ],
+  "metadata": {},
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

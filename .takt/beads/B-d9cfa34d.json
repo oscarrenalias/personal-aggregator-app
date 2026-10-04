@@ -1,0 +1,85 @@
+{
+  "bead_id": "B-d9cfa34d",
+  "title": "iPad layout documentation",
+  "agent_type": "documentation",
+  "description": "Update CLAUDE.md to document the iPad layout: AggregatorApp/iPad/ folder structure and its sub-folders, the NavigationModel / AppSection design, orientation detection approach (screen bounds ratio \u2014 not verticalSizeClass), column width conventions, the TARGETED_DEVICE_FAMILY change and xcodegen requirement, and how to test the iPad layout on a simulator. Also note that the iPhone code paths are branch-guarded via horizontalSizeClass.",
+  "status": "ready",
+  "bead_type": "task",
+  "parent_id": "B-d4e711a8",
+  "dependencies": [
+    "B-458b9a38",
+    "B-df2efe46",
+    "B-30a0b521",
+    "B-6414ec8c",
+    "B-46fb7e71",
+    "B-ec6ef03b",
+    "B-c924cda5",
+    "B-47b3395b",
+    "B-80cd72ae",
+    "B-fe49de12",
+    "B-bf0f6dd3",
+    "B-03f676c9",
+    "B-fda7bd0b"
+  ],
+  "acceptance_criteria": [
+    "CLAUDE.md updated with iPad/ folder structure",
+    "NavigationModel and AppSection design documented",
+    "Orientation detection approach (screen bounds ratio) documented with rationale",
+    "TARGETED_DEVICE_FAMILY change and xcodegen generate step noted",
+    "Simulator testing instructions included",
+    "No incorrect information introduced"
+  ],
+  "linked_docs": [
+    "specs/drafts/ipad-3-panel-layout.md",
+    "CLAUDE.md"
+  ],
+  "feature_root_id": "B-d4e711a8",
+  "execution_branch_name": "feature/b-d4e711a8",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-d4e711a8",
+  "expected_files": [
+    "CLAUDE.md"
+  ],
+  "expected_globs": [],
+  "touched_files": [],
+  "changed_files": [],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "",
+    "remaining": "",
+    "risks": "",
+    "verdict": "",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [],
+    "updated_docs": [],
+    "next_action": "",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [],
+    "expected_globs": [],
+    "touched_files": [],
+    "conflict_risks": "",
+    "design_decisions": "",
+    "test_coverage_notes": "",
+    "known_limitations": ""
+  },
+  "block_reason": "",
+  "conflict_risks": "",
+  "branch_name": "",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-10-04T07:49:03.416581+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    }
+  ],
+  "metadata": {},
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

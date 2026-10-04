@@ -1,0 +1,72 @@
+{
+  "bead_id": "B-fe49de12",
+  "title": "PodcastsIPadView",
+  "agent_type": "developer",
+  "description": "Create AggregatorApp/iPad/Podcasts/PodcastsIPadView.swift. 2-column layout (no supplementary column): episode list in content column; PodcastPlayerView in detail column driven by iPadNavigationModel.selectedEpisode. Portrait: episode list in detail column; tap pushes player. Reuse existing PodcastsViewModel per audit. Handle Empty, Loading, and Error states.",
+  "status": "ready",
+  "bead_type": "task",
+  "parent_id": "B-d4e711a8",
+  "dependencies": [
+    "B-458b9a38",
+    "B-ec6ef03b"
+  ],
+  "acceptance_criteria": [
+    "PodcastsIPadView.swift compiles without errors",
+    "Landscape: episode list in content column, player in detail column",
+    "Portrait: episode list in detail column, tap pushes player",
+    "Empty, Loading, Error states explicitly handled",
+    "Existing Podcasts views not modified"
+  ],
+  "linked_docs": [
+    "specs/drafts/ipad-3-panel-layout.md"
+  ],
+  "feature_root_id": "B-d4e711a8",
+  "execution_branch_name": "feature/b-d4e711a8",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-d4e711a8",
+  "expected_files": [
+    "AggregatorApp/iPad/Podcasts/PodcastsIPadView.swift"
+  ],
+  "expected_globs": [],
+  "touched_files": [],
+  "changed_files": [],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "",
+    "remaining": "",
+    "risks": "",
+    "verdict": "",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [],
+    "updated_docs": [],
+    "next_action": "",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [],
+    "expected_globs": [],
+    "touched_files": [],
+    "conflict_risks": "",
+    "design_decisions": "",
+    "test_coverage_notes": "",
+    "known_limitations": ""
+  },
+  "block_reason": "",
+  "conflict_risks": "",
+  "branch_name": "",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-10-04T07:49:03.406840+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    }
+  ],
+  "metadata": {},
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

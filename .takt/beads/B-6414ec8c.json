@@ -1,0 +1,73 @@
+{
+  "bead_id": "B-6414ec8c",
+  "title": "AppRootIPad skeleton",
+  "agent_type": "developer",
+  "description": "Create AggregatorApp/iPad/AppRootIPad.swift. Implement a NavigationSplitView with three columns: sidebar (placeholder for SidebarView), content (placeholder for section list), detail (placeholder for detail view). Wire @State columnVisibility: NavigationSplitViewVisibility = .all. Implement orientation detection using UIScreen.main.bounds width/height ratio (not verticalSizeClass) by observing UIDevice.orientationDidChangeNotification. On portrait detection set columnVisibility = .doubleColumn; on landscape set .all. Apply the column width constraints: sidebar min 200 ideal 220 max 260, content min 280 ideal 320 max 380, detail flexible.",
+  "status": "ready",
+  "bead_type": "task",
+  "parent_id": "B-d4e711a8",
+  "dependencies": [
+    "B-df2efe46",
+    "B-30a0b521"
+  ],
+  "acceptance_criteria": [
+    "AppRootIPad.swift compiles without errors",
+    "NavigationSplitView has three columns with the specified width constraints",
+    "columnVisibility defaults to .all",
+    "Orientation detection uses screen bounds ratio, not verticalSizeClass",
+    "Portrait sets columnVisibility to .doubleColumn; landscape sets .all",
+    "Placeholder columns render without crashing"
+  ],
+  "linked_docs": [
+    "specs/drafts/ipad-3-panel-layout.md"
+  ],
+  "feature_root_id": "B-d4e711a8",
+  "execution_branch_name": "feature/b-d4e711a8",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-d4e711a8",
+  "expected_files": [
+    "AggregatorApp/iPad/AppRootIPad.swift"
+  ],
+  "expected_globs": [],
+  "touched_files": [],
+  "changed_files": [],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "",
+    "remaining": "",
+    "risks": "",
+    "verdict": "",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [],
+    "updated_docs": [],
+    "next_action": "",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [],
+    "expected_globs": [],
+    "touched_files": [],
+    "conflict_risks": "",
+    "design_decisions": "",
+    "test_coverage_notes": "",
+    "known_limitations": ""
+  },
+  "block_reason": "",
+  "conflict_risks": "",
+  "branch_name": "",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-10-04T07:49:03.402799+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    }
+  ],
+  "metadata": {},
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

@@ -3,7 +3,7 @@
   "title": "DateDisplay date-only fallback parser",
   "agent_type": "developer",
   "description": "Add a date-only fallback in the private parseISO8601 method in AggregatorApp/Common/DateDisplay.swift. After the two existing ISO8601DateFormatter attempts, attempt parsing with a DateFormatter using dateFormat \"yyyy-MM-dd\" and Locale \"en_US_POSIX\". Existing callers with full ISO-8601 datetimes hit the first two passes and are unaffected. This makes monthDay, mediumDate, and relative all work for episode.date strings like \"2024-01-15\".",
-  "status": "ready",
+  "status": "done",
   "bead_type": "task",
   "parent_id": "B-8b3b82ea",
   "dependencies": [],
@@ -23,33 +23,43 @@
     "AggregatorApp/Common/DateDisplay.swift"
   ],
   "expected_globs": [],
-  "touched_files": [],
-  "changed_files": [],
+  "touched_files": [
+    "AggregatorApp/Common/DateDisplay.swift"
+  ],
+  "changed_files": [
+    "AggregatorApp/Common/DateDisplay.swift"
+  ],
   "updated_docs": [],
   "handoff_summary": {
-    "completed": "",
-    "remaining": "",
-    "risks": "",
-    "verdict": "",
+    "completed": "Modified `parseISO8601` to add a third parse pass using `DateFormatter` with format `\"yyyy-MM-dd\"` and `Locale(identifier: \"en_US_POSIX\")`. Changed the second pass from a bare `return` to an early-exit `if let` guard (same semantics, required to allow the third pass to run). Committed as f4f166a.",
+    "remaining": "N/A \u2014 implementation complete per spec.",
+    "risks": "None. The change is additive: existing callers with full ISO-8601 timestamps hit pass 1 or 2 and return before reaching the new code. The new pass only runs when both ISO8601DateFormatter attempts fail, so there is no regression risk for current callers.",
+    "verdict": "approved",
     "findings_count": 0,
     "requires_followup": false,
-    "changed_files": [],
+    "changed_files": [
+      "AggregatorApp/Common/DateDisplay.swift"
+    ],
     "updated_docs": [],
-    "next_action": "",
-    "next_agent": "",
+    "next_action": "Tester agent should verify acceptance criteria: DateDisplay.monthDay(\"2024-01-15\") == (\"JAN\", \"15\"), DateDisplay.mediumDate(\"2024-01-15\") is non-nil/non-empty, and existing full ISO-8601 inputs still parse correctly.",
+    "next_agent": "tester",
     "block_reason": "",
-    "expected_files": [],
+    "expected_files": [
+      "AggregatorApp/Common/DateDisplay.swift"
+    ],
     "expected_globs": [],
-    "touched_files": [],
-    "conflict_risks": "",
-    "design_decisions": "",
-    "test_coverage_notes": "",
-    "known_limitations": ""
+    "touched_files": [
+      "AggregatorApp/Common/DateDisplay.swift"
+    ],
+    "conflict_risks": "None \u2014 only one file changed, no shared state with sibling beads.",
+    "design_decisions": "The second existing pass was previously a bare `return withoutFractional.date(from: iso)`. Changing it to `if let date = withoutFractional.date(from: iso) { return date }` is semantically identical when it succeeds, but allows execution to fall through to the new third pass when it returns `nil`. An alternative would have been to chain all three into a single expression, but the sequential `if let / return` pattern matches the style already established by pass 1, keeping the code consistent. `en_US_POSIX` locale is required for `DateFormatter` when parsing fixed-format strings to avoid locale-driven ambiguity (standard practice for POSIX-format date strings in Swift).",
+    "test_coverage_notes": "Tester should add unit tests in `AggregatorAppTests` for: (1) `DateDisplay.monthDay(\"2024-01-15\")` returns `(\"JAN\", \"15\")`; (2) `DateDisplay.mediumDate(\"2024-01-15\")` returns a non-nil, non-empty string; (3) `DateDisplay.relative(\"2024-01-15\", now: someKnownDate)` returns a non-empty string; (4) regression: existing full ISO-8601 strings with fractional seconds and without still parse correctly. Edge cases to cover: nil input, malformed strings, date-only strings at boundary months (e.g. \"2024-12-31\", \"2024-01-01\").",
+    "known_limitations": "The date-only parser interprets `yyyy-MM-dd` strings as midnight in the system's current timezone (no timezone specified in the format string). For display purposes (monthDay, mediumDate, relative) this is acceptable, but callers that need UTC-anchored behavior for date-only strings would need a different approach. This matches the behavior of most podcast feed date fields and is consistent with the spec's stated use case."
   },
   "block_reason": "",
-  "conflict_risks": "",
-  "branch_name": "",
-  "worktree_path": "",
+  "conflict_risks": "None \u2014 only one file changed, no shared state with sibling beads.",
+  "branch_name": "feature/b-8b3b82ea",
+  "worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-8b3b82ea",
   "lease": null,
   "retries": 0,
   "execution_history": [
@@ -59,9 +69,161 @@
       "agent_type": "scheduler",
       "summary": "Bead created",
       "details": {}
+    },
+    {
+      "timestamp": "2026-09-26T17:41:47.462499+00:00",
+      "event": "skills_loaded",
+      "agent_type": "developer",
+      "summary": "Loaded 7 skill(s) for isolated execution",
+      "details": {
+        "loaded_skills": [
+          "core/base-orchestrator",
+          "role/developer-implementation",
+          "capability/code-edit",
+          "task/corrective-implementation",
+          "task/refactor-safe",
+          "task/migration",
+          "memory"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-09-26T17:41:47.462513+00:00",
+      "event": "started",
+      "agent_type": "developer",
+      "summary": "Worker started",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-09-26T17:41:47.503628+00:00",
+      "event": "guardrails_applied",
+      "agent_type": "developer",
+      "summary": "Applied guardrails from .takt/agent-runs/B-0820f355/repo/templates/agents/developer.md",
+      "details": {
+        "template_path": ".takt/agent-runs/B-0820f355/repo/templates/agents/developer.md"
+      }
+    },
+    {
+      "timestamp": "2026-09-26T17:43:19.354321+00:00",
+      "event": "completed",
+      "agent_type": "developer",
+      "summary": "Added a date-only fallback parser (`yyyy-MM-dd` with `en_US_POSIX` locale) as a third attempt in `DateDisplay.parseISO8601`. The second existing pass now returns early on success instead of being the final `return`, preserving existing behavior. File compiles cleanly (verified with `swiftc -typecheck`).",
+      "details": {}
     }
   ],
-  "metadata": {},
+  "metadata": {
+    "execution_root": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-0820f355",
+    "workspace_repo_path": "repo",
+    "loaded_skills": [
+      "core/base-orchestrator",
+      "role/developer-implementation",
+      "capability/code-edit",
+      "task/corrective-implementation",
+      "task/refactor-safe",
+      "task/migration",
+      "memory"
+    ],
+    "skill_bundle_hash": "ecae5633083d1bbec41a6e5ec6ea05bbab117f60499c19b2ed76dbbe3e1aec7c",
+    "isolated_home": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-0820f355/home",
+    "runner_backend": "claude",
+    "guardrails": {
+      "agent_type": "developer",
+      "template_path": ".takt/agent-runs/B-0820f355/repo/templates/agents/developer.md",
+      "template_text": "# Developer Guardrails\n\nPrimary responsibility: Implement only the assigned bead inside the existing architecture and file scope.\n\n## Corrective bead scope\n\nIf your `bead_id` ends in `-corrective` or `-corrective-<N>` (e.g. `B-abc12345-corrective`, `B-abc12345-test-corrective-2`), you are running as a CORRECTIVE bead. Your scope is **strictly limited to fixing the specific failure that blocked the parent bead**. Do not:\n\n- Add unrelated improvements, refactors, or cleanup, even if you notice them\n- Reapply previously-reverted changes (the operator reverted them for a reason)\n- Expand the surface area beyond what is needed to unblock the parent\n- Touch files outside what the parent bead's `expected_files` / `expected_globs` covered, unless the failure is genuinely in another file and there is no smaller fix\n\nIf you notice an unrelated issue while fixing the corrective scope: **file a separate bead** via `takt bead create` describing what you saw, but do not fix it in this corrective. The operator will prioritize and dispatch.\n\nWhen in doubt about scope: prefer the smallest possible fix. The reviewer of this corrective will check that the scope was respected.\n\nAllowed actions:\n- Modify code, configuration, or local docs required to complete the assigned bead.\n- Create sub-beads for discovered follow-up work that should be handled separately.\n- Verify your `Swift` changes compile and import correctly with a quick syntax check: ``.\n\nDisallowed actions:\n- Run any test suite \u2014 not even a targeted `` run or any subset. Test execution is exclusively the tester agent's responsibility. Running tests wastes the agent budget and delays the pipeline.\n- Redesign unrelated architecture or broaden scope beyond the assigned bead.\n- Perform final review signoff in place of a review agent.\n- Silently absorb unrelated test, documentation, or planning work that should be handed off.\n\n## Memory\n\n**Read memory at bead start.** Before touching any code, run three searches using `$TAKT_CMD` (injected by the orchestrator):\n\n```bash\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace global\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace feature:<feature_root_id>\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace specs\n```\n\nTreat results as ambient context \u2014 apply relevant entries; skip entries that don't apply.\n\n**Write to memory when you discover reusable project knowledge** \u2014 something that would have changed your approach if you had known it upfront, and is not already in CLAUDE.md or the guardrails.\n\n```bash\n$TAKT_CMD memory add \"<concise fact>\" --namespace global               # project-wide knowledge\n$TAKT_CMD memory add \"<discovery>\" --namespace feature:<feature_root_id>  # feature-scoped\n```\n\nRequired Handoff Fields:\n\nEvery developer bead **must** populate the following three fields in its output JSON. Reviewers and tester agents rely on these fields to scope their work without additional back-and-forth turns. Use `\"N/A\"` only when a field is genuinely inapplicable (e.g., a trivial rename with no design trade-offs); do not leave fields blank.\n\n- **`design_decisions`** \u2014 Document non-obvious architectural or implementation choices made during this bead. Include alternatives considered and why the chosen approach was preferred. Reviewers use this to evaluate correctness without re-deriving intent. Set to `\"N/A\"` only if the change was purely mechanical with no meaningful trade-offs.\n\n- **`test_coverage_notes`** \u2014 Describe what the tester agent should verify: new code paths, edge cases introduced, regression risks, and any known untested scenarios left to the tester. Set to `\"N/A\"` only if the bead touched no executable code paths (e.g., documentation-only changes).\n\n- **`known_limitations`** \u2014 Call out constraints, deferred work, or known gaps in the implementation. This includes out-of-scope items deliberately left for follow-up beads and any areas where the implementation is intentionally incomplete. Set to `\"N/A\"` if the implementation is complete as specified with no known gaps.\n\nExpected outputs:\n- Completed or blocked JSON with concise implementation summary.\n- Accurate touched files, changed files, risks, and follow-up handoff fields.\n- Populated `design_decisions`, `test_coverage_notes`, and `known_limitations` fields in every response.",
+      "captured_at": "2026-09-26T17:41:47.503622+00:00"
+    },
+    "worker_prompt_context": {
+      "bead_id": "B-0820f355",
+      "feature_root_id": "B-8b3b82ea",
+      "title": "DateDisplay date-only fallback parser",
+      "agent_type": "developer",
+      "description": "Add a date-only fallback in the private parseISO8601 method in AggregatorApp/Common/DateDisplay.swift. After the two existing ISO8601DateFormatter attempts, attempt parsing with a DateFormatter using dateFormat \"yyyy-MM-dd\" and Locale \"en_US_POSIX\". Existing callers with full ISO-8601 datetimes hit the first two passes and are unaffected. This makes monthDay, mediumDate, and relative all work for episode.date strings like \"2024-01-15\".",
+      "status": "in_progress",
+      "acceptance_criteria": [
+        "DateDisplay.monthDay(\"2024-01-15\") returns (\"JAN\", \"15\")",
+        "DateDisplay.mediumDate(\"2024-01-15\") returns a non-nil, non-empty string",
+        "Existing callers with full ISO-8601 datetimes continue to parse correctly",
+        "File compiles without errors"
+      ],
+      "dependencies": [],
+      "linked_docs": [
+        "specs/drafts/podcasts-tab-browse-and-play-daily-podcast-episodes.md"
+      ],
+      "execution_branch_name": "feature/b-8b3b82ea",
+      "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-8b3b82ea",
+      "expected_files": [
+        "AggregatorApp/Common/DateDisplay.swift"
+      ],
+      "expected_globs": [],
+      "touched_files": [],
+      "conflict_risks": "",
+      "handoff_summary": {
+        "completed": "",
+        "remaining": "",
+        "risks": "",
+        "verdict": "",
+        "findings_count": 0,
+        "requires_followup": false,
+        "changed_files": [],
+        "updated_docs": [],
+        "next_action": "",
+        "next_agent": "",
+        "block_reason": "",
+        "expected_files": [],
+        "expected_globs": [],
+        "touched_files": [],
+        "conflict_risks": "",
+        "design_decisions": "",
+        "test_coverage_notes": "",
+        "known_limitations": ""
+      }
+    },
+    "last_agent_result": {
+      "outcome": "completed",
+      "summary": "Added a date-only fallback parser (`yyyy-MM-dd` with `en_US_POSIX` locale) as a third attempt in `DateDisplay.parseISO8601`. The second existing pass now returns early on success instead of being the final `return`, preserving existing behavior. File compiles cleanly (verified with `swiftc -typecheck`).",
+      "verdict": "approved",
+      "findings_count": 0,
+      "requires_followup": false,
+      "next_agent": "tester",
+      "block_reason": ""
+    },
+    "telemetry": {
+      "cost_usd": 0.21876854999999998,
+      "duration_ms": 91766,
+      "duration_api_ms": 52653,
+      "num_turns": 11,
+      "input_tokens": 10,
+      "output_tokens": 2878,
+      "cache_creation_tokens": 18522,
+      "cache_read_tokens": 221561,
+      "stop_reason": "tool_use",
+      "session_id": "e2bd4d38-42e2-463a-900d-5a3105b016e2",
+      "permission_denials": [],
+      "prompt_chars": 9193,
+      "prompt_lines": 173,
+      "source": "provider",
+      "attempt": 1
+    },
+    "telemetry_history": [
+      {
+        "cost_usd": 0.21876854999999998,
+        "duration_ms": 91766,
+        "duration_api_ms": 52653,
+        "num_turns": 11,
+        "input_tokens": 10,
+        "output_tokens": 2878,
+        "cache_creation_tokens": 18522,
+        "cache_read_tokens": 221561,
+        "stop_reason": "tool_use",
+        "session_id": "e2bd4d38-42e2-463a-900d-5a3105b016e2",
+        "permission_denials": [],
+        "prompt_chars": 9193,
+        "prompt_lines": 173,
+        "source": "provider",
+        "attempt": 1
+      }
+    ]
+  },
   "labels": [],
   "recovery_for": null,
   "priority": null

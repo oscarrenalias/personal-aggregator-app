@@ -1,0 +1,229 @@
+{
+  "bead_id": "B-a0906799-review",
+  "title": "Review Thread detail: label rolling summary, collapse known facts, show all delta facts",
+  "agent_type": "review",
+  "description": "Review implementation for B-a0906799",
+  "status": "done",
+  "bead_type": "task",
+  "parent_id": "B-a0906799",
+  "dependencies": [
+    "B-a0906799",
+    "B-a0906799-test",
+    "B-a0906799-docs"
+  ],
+  "acceptance_criteria": [],
+  "linked_docs": [],
+  "feature_root_id": "B-a0906799",
+  "execution_branch_name": "feature/b-a0906799",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-a0906799",
+  "expected_files": [
+    "AggregatorApp/Threads/ThreadDetailView.swift"
+  ],
+  "expected_globs": [],
+  "touched_files": [
+    "AggregatorApp/Threads/ThreadDetailView.swift",
+    "AggregatorAppTests/ThreadDeltaTests.swift"
+  ],
+  "changed_files": [
+    "AggregatorApp/Threads/ThreadDetailView.swift",
+    "AggregatorAppTests/ThreadDeltaTests.swift"
+  ],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "Reviewed ThreadDetailView.swift and ThreadDeltaTests.swift. All acceptance criteria verified: rolling summary is labeled \"Here's the latest\", known facts use a DisclosureGroup defaulting to collapsed, article rows use allDeltas (content-filter only) while section header and coveredFacts use qualifying (timestamp-filtered). Test coverage is thorough including regression tests for both the duplication suppression and the allDeltas fix.",
+    "remaining": "",
+    "risks": "Minor latent risk: timestamp string comparison in filterNewDeltas assumes UTC-normalized ISO-8601 strings from the backend. No action needed for current contract.",
+    "verdict": "approved",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [
+      "AggregatorApp/Threads/ThreadDetailView.swift",
+      "AggregatorAppTests/ThreadDeltaTests.swift"
+    ],
+    "updated_docs": [],
+    "next_action": "Bead can complete \u2014 no follow-up work required.",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [
+      "AggregatorApp/Threads/ThreadDetailView.swift"
+    ],
+    "expected_globs": [],
+    "touched_files": [
+      "AggregatorApp/Threads/ThreadDetailView.swift",
+      "AggregatorAppTests/ThreadDeltaTests.swift"
+    ],
+    "conflict_risks": "None \u2014 only ThreadDetailView.swift modified; no shared types or protocols changed.",
+    "design_decisions": "Two separate delta lists (qualifying timestamp-filtered, all content-filtered) separate section-header/coveredFacts logic from article-row rendering. coveredFacts intentionally uses qualifying so returning visitors see full known facts on expand. DisclosureGroup view-level state resets to collapsed on each navigation push by design.",
+    "test_coverage_notes": "Static helpers (filterNewDeltas, factsCoveredByDeltas, delta(for:in:)) are tested directly without spinning up SwiftUI views, consistent with existing test file patterns. allDeltas content filter is duplicated inline in the regression test \u2014 intentional known limitation noted in handoff.",
+    "known_limitations": "Timestamp string comparison in filterNewDeltas is lexicographic and assumes UTC-normalized ISO-8601 from the backend. allDeltas() is private so the regression test mirrors its filter inline."
+  },
+  "block_reason": "",
+  "conflict_risks": "None \u2014 only ThreadDetailView.swift modified; no shared types or protocols changed.",
+  "branch_name": "feature/b-a0906799",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-09-27T13:45:32.475461+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-09-27T13:50:16.372849+00:00",
+      "event": "skills_loaded",
+      "agent_type": "review",
+      "summary": "Loaded 6 skill(s) for isolated execution",
+      "details": {
+        "loaded_skills": [
+          "core/base-orchestrator",
+          "role/reviewer-signoff",
+          "capability/code-review",
+          "task/corrective-bead-creation",
+          "task/risk-assessment",
+          "memory"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-09-27T13:50:16.372864+00:00",
+      "event": "started",
+      "agent_type": "review",
+      "summary": "Worker started",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-09-27T13:50:16.379676+00:00",
+      "event": "guardrails_applied",
+      "agent_type": "review",
+      "summary": "Applied guardrails from .takt/agent-runs/B-a0906799-review/repo/templates/agents/review.md",
+      "details": {
+        "template_path": ".takt/agent-runs/B-a0906799-review/repo/templates/agents/review.md"
+      }
+    },
+    {
+      "timestamp": "2026-09-27T13:51:41.933473+00:00",
+      "event": "completed",
+      "agent_type": "review",
+      "summary": "Review passed \u2014 all three features (rolling summary label, collapsed known facts, allDeltas for article rows) are correctly implemented and comprehensively tested. No unresolved findings.",
+      "details": {}
+    }
+  ],
+  "metadata": {
+    "execution_root": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-a0906799-review",
+    "workspace_repo_path": "repo",
+    "loaded_skills": [
+      "core/base-orchestrator",
+      "role/reviewer-signoff",
+      "capability/code-review",
+      "task/corrective-bead-creation",
+      "task/risk-assessment",
+      "memory"
+    ],
+    "skill_bundle_hash": "68ad0ecb7bfe263ceb1ada56efead5a81dac8f9f2173181d0bf030dc0a3f880d",
+    "isolated_home": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-a0906799-review/home",
+    "runner_backend": "claude",
+    "guardrails": {
+      "agent_type": "review",
+      "template_path": ".takt/agent-runs/B-a0906799-review/repo/templates/agents/review.md",
+      "template_text": "# Review Guardrails\n\nPrimary responsibility: Inspect code, tests, docs, and acceptance criteria for correctness, completeness, and risk.\n\nAllowed actions:\n- Review only the changed files listed in the bead's touched_files and changed_files fields. Do not read unrelated files.\n- Validate acceptance criteria against the implementation and handoff state.\n- Block with a clear recommendation when the bead actually requires implementation work.\n\n## Memory\n\n**Read memory at bead start.** Before reviewing any files, run three searches using `$TAKT_CMD` (injected by the orchestrator):\n\n```bash\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace global\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace feature:<feature_root_id>\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace specs\n```\n\nTreat results as ambient context \u2014 apply relevant entries to inform the review; skip entries that don't apply.\n\nDo **not** write to memory \u2014 review agents are read-only.\n\nEfficiency constraints:\n- Do not run the test suite. Testing is the tester agent's responsibility.\n- Focus on correctness, completeness, and risk \u2014 not style or formatting.\n- Keep the review concise. If there are no findings, say so and approve promptly.\n\nDisallowed actions:\n- Implement feature work, tests, or docs instead of reporting findings.\n- Rewrite architecture or silently fix issues discovered during review.\n- Mark incomplete work as accepted without evidence.\n\nExpected outputs:\n- Return JSON with `outcome` set to `completed` (reviews always complete; use `verdict` for pass/fail) and `summary` as a one-line description of the review result.\n- Return JSON with structured verdict fields for every run: `verdict`, `findings_count`, and `requires_followup`.\n- Treat `verdict` as the review signoff decision: `approved` means the bead can complete, while `needs_changes` means the bead must block for follow-up work.\n- Use `verdict=approved`, `findings_count=0`, and `requires_followup=false` when no unresolved findings remain.\n- Use `verdict=needs_changes`, set `findings_count` to the unresolved finding count, set `requires_followup=true` unless there is a stronger explicit reason not to, and always include `block_reason` when any required fix remains.\n- Keep `completed`, `remaining`, and `risks` as free-form narrative context only. They inform operators, but they do not override the structured verdict or control scheduler state.\n- Review findings ordered by severity, or an explicit statement that no findings were discovered.\n- Clear blocked handoff details when the task belongs to another agent type.",
+      "captured_at": "2026-09-27T13:50:16.379668+00:00"
+    },
+    "worker_prompt_context": {
+      "bead_id": "B-a0906799-review",
+      "feature_root_id": "B-a0906799",
+      "title": "Review Thread detail: label rolling summary, collapse known facts, show all delta facts",
+      "agent_type": "review",
+      "description": "Review implementation for B-a0906799",
+      "status": "in_progress",
+      "acceptance_criteria": [],
+      "dependencies": [
+        "B-a0906799",
+        "B-a0906799-test",
+        "B-a0906799-docs"
+      ],
+      "linked_docs": [],
+      "execution_branch_name": "feature/b-a0906799",
+      "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-a0906799",
+      "expected_files": [
+        "AggregatorApp/Threads/ThreadDetailView.swift"
+      ],
+      "expected_globs": [],
+      "touched_files": [
+        "AggregatorApp/Threads/ThreadDetailView.swift",
+        "AggregatorAppTests/ThreadDeltaTests.swift"
+      ],
+      "conflict_risks": "None \u2014 only ThreadDetailView.swift modified; no shared types or protocols changed.",
+      "handoff_summary": {
+        "completed": "",
+        "remaining": "",
+        "risks": "",
+        "verdict": "",
+        "findings_count": 0,
+        "requires_followup": false,
+        "changed_files": [],
+        "updated_docs": [],
+        "next_action": "",
+        "next_agent": "",
+        "block_reason": "",
+        "expected_files": [],
+        "expected_globs": [],
+        "touched_files": [],
+        "conflict_risks": "",
+        "design_decisions": "",
+        "test_coverage_notes": "",
+        "known_limitations": ""
+      }
+    },
+    "last_agent_result": {
+      "outcome": "completed",
+      "summary": "Review passed \u2014 all three features (rolling summary label, collapsed known facts, allDeltas for article rows) are correctly implemented and comprehensively tested. No unresolved findings.",
+      "verdict": "approved",
+      "findings_count": 0,
+      "requires_followup": false,
+      "next_agent": "",
+      "block_reason": ""
+    },
+    "telemetry": {
+      "cost_usd": 0.24122309999999997,
+      "duration_ms": 85550,
+      "duration_api_ms": 79801,
+      "num_turns": 5,
+      "input_tokens": 5,
+      "output_tokens": 4428,
+      "cache_creation_tokens": 24866,
+      "cache_read_tokens": 85307,
+      "stop_reason": "tool_use",
+      "session_id": "ca2fd376-e219-4ed9-84b1-2e241e9141b4",
+      "permission_denials": [],
+      "prompt_chars": 8550,
+      "prompt_lines": 163,
+      "source": "provider",
+      "attempt": 1
+    },
+    "telemetry_history": [
+      {
+        "cost_usd": 0.24122309999999997,
+        "duration_ms": 85550,
+        "duration_api_ms": 79801,
+        "num_turns": 5,
+        "input_tokens": 5,
+        "output_tokens": 4428,
+        "cache_creation_tokens": 24866,
+        "cache_read_tokens": 85307,
+        "stop_reason": "tool_use",
+        "session_id": "ca2fd376-e219-4ed9-84b1-2e241e9141b4",
+        "permission_denials": [],
+        "prompt_chars": 8550,
+        "prompt_lines": 163,
+        "source": "provider",
+        "attempt": 1
+      }
+    ]
+  },
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

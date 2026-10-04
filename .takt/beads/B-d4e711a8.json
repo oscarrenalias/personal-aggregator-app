@@ -1,0 +1,72 @@
+{
+  "bead_id": "B-d4e711a8",
+  "title": "iPad 3-Panel Layout",
+  "agent_type": "planner",
+  "description": "Non-runnable execution root for the iPadOS 3-panel layout feature. All implementation, testing, documentation, and review work is expressed in child beads.",
+  "status": "done",
+  "bead_type": "feature",
+  "parent_id": "B-6ca3d410",
+  "dependencies": [],
+  "acceptance_criteria": [
+    "App installs and launches on an iPad simulator without crashing",
+    "Landscape shows all 3 columns; portrait shows 2 columns; rotating live transitions correctly",
+    "All 6 sections are reachable via the sidebar on iPad",
+    "Tapping any item in the content column opens its detail in the detail column (landscape) or pushes it (portrait)",
+    "aggregator://thread/{id} and aggregator://article/{id} deep links open the correct item on iPad",
+    "All existing iPhone tests pass without modification",
+    "iPhone layout is pixel-identical to before this change"
+  ],
+  "linked_docs": [
+    "specs/drafts/ipad-3-panel-layout.md",
+    "CLAUDE.md"
+  ],
+  "feature_root_id": "B-d4e711a8",
+  "execution_branch_name": "feature/b-d4e711a8",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-d4e711a8",
+  "expected_files": [],
+  "expected_globs": [
+    "AggregatorApp/iPad/**/*.swift"
+  ],
+  "touched_files": [],
+  "changed_files": [],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "",
+    "remaining": "",
+    "risks": "",
+    "verdict": "",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [],
+    "updated_docs": [],
+    "next_action": "",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [],
+    "expected_globs": [],
+    "touched_files": [],
+    "conflict_risks": "",
+    "design_decisions": "",
+    "test_coverage_notes": "",
+    "known_limitations": ""
+  },
+  "block_reason": "",
+  "conflict_risks": "",
+  "branch_name": "",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-10-04T07:49:03.394892+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    }
+  ],
+  "metadata": {},
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

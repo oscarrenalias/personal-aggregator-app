@@ -1,0 +1,72 @@
+{
+  "bead_id": "B-30a0b521",
+  "title": "NavigationModel",
+  "agent_type": "developer",
+  "description": "Create AggregatorApp/iPad/NavigationModel.swift with two types: (1) AppSection enum with cases .threads, .sources, .today, .podcasts, .search, .settings; (2) iPadNavigationModel (@Observable final class) with properties: selectedSection: AppSection = .threads, selectedThread: Thread?, selectedArticle: Article?, selectedSource: Source?, selectedEpisode: Episode?. Also update AggregatorApp/AggregatorApp.swift to instantiate iPadNavigationModel and inject it as an @Environment object at the app root so all iPad views and the DeepLinkRouter can read it.",
+  "status": "ready",
+  "bead_type": "task",
+  "parent_id": "B-d4e711a8",
+  "dependencies": [
+    "B-458b9a38"
+  ],
+  "acceptance_criteria": [
+    "NavigationModel.swift exists and defines both AppSection and iPadNavigationModel",
+    "AppSection has exactly 6 cases matching the existing tabs",
+    "iPadNavigationModel is an @Observable class with the five selection properties",
+    "iPadNavigationModel is injected into the SwiftUI environment in AggregatorApp.swift",
+    "File compiles without errors"
+  ],
+  "linked_docs": [
+    "specs/drafts/ipad-3-panel-layout.md"
+  ],
+  "feature_root_id": "B-d4e711a8",
+  "execution_branch_name": "feature/b-d4e711a8",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-d4e711a8",
+  "expected_files": [
+    "AggregatorApp/iPad/NavigationModel.swift",
+    "AggregatorApp/AggregatorApp.swift"
+  ],
+  "expected_globs": [],
+  "touched_files": [],
+  "changed_files": [],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "",
+    "remaining": "",
+    "risks": "",
+    "verdict": "",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [],
+    "updated_docs": [],
+    "next_action": "",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [],
+    "expected_globs": [],
+    "touched_files": [],
+    "conflict_risks": "",
+    "design_decisions": "",
+    "test_coverage_notes": "",
+    "known_limitations": ""
+  },
+  "block_reason": "",
+  "conflict_risks": "",
+  "branch_name": "",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-10-04T07:49:03.402223+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    }
+  ],
+  "metadata": {},
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

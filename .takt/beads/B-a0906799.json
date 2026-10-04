@@ -1,0 +1,214 @@
+{
+  "bead_id": "B-a0906799",
+  "title": "Thread detail: label rolling summary, collapse known facts, show all delta facts",
+  "agent_type": "developer",
+  "description": "Restructure ThreadDetailView to make it cleaner and more useful as a default reading experience.\n\n## Changes to ThreadDetailView.swift\n\n### 1. Label the rolling summary as \"Here's the latest\"\nCurrently `rollingSummary` is shown as an unlabelled body-text paragraph in `headerSection`.\nAdd a `Text(\"Here's the latest\").font(.headline)` label above it, so users understand what they're reading.\nOnly show the label+text when `rollingSummary` is non-nil and non-empty (existing guard is fine).\n\n### 2. Collapse known facts behind a DisclosureGroup\nReplace the always-visible `knownFactsSection` with a `DisclosureGroup` that is collapsed by default.\n- Use `@State private var showKnownFacts: Bool = false`\n- Label: \"Known facts\"\n- Content: the existing bullet list (unchanged)\n- The disclosure group should only appear when `residualFacts` is non-empty (existing guard is fine)\n- Apply the same `.glassEffect(.regular, in: RoundedRectangle(cornerRadius: 12))` container styling as today\n\n### 3. Show delta facts for ALL active articles, not just since last visit\nCurrently `newDeltas(_:)` filters deltas by `previousLastViewedAt`, so only articles with facts newer than the last visit show bullet points.\nChange the members section so that delta facts are sourced from ALL deltas (unfiltered), not just qualifying ones:\n- Add a second computed property `allDeltas(_ thread: Thread) -> [ThreadDelta]` that returns `thread.deltas` filtered only for non-empty content (same content filter as `filterNewDeltas` but without the timestamp cutoff).\n- In `membersSection`, pass `allDeltas` as the source for matching delta facts to article rows.\n- Keep `newDeltas` / `qualifyingDeltas` for the section header label logic (\"New since last visit\" vs \"Articles\") \u2014 the label should still reflect whether there are genuinely new deltas since the last visit.\n- `coveredFacts` (used to filter residualFacts for the known facts section) should continue to use `qualifyingDeltas` so the DisclosureGroup only hides facts not already surfaced inline.\n\n## Layout order (top to bottom)\n1. Hero image (unchanged)\n2. Title + metadata line (unchanged)\n3. \"Here's the latest\" label + rollingSummary prose (labelled, same position)\n4. DisclosureGroup \"Known facts\" (collapsed by default, only if residualFacts non-empty)\n5. Section header: \"New since last visit\" or \"Articles\"\n6. Active article rows, each showing ALL delta facts for that article (not just new ones)\n7. \"Other updates\" unlinked deltas (unchanged)\n8. \"Also covered by\" suppressed members (unchanged)\n\n## Files to modify\n- `AggregatorApp/Threads/ThreadDetailView.swift`\n\n## Acceptance criteria\n- `rollingSummary` is shown with a \"Here's the latest\" heading when present\n- Known facts section is hidden by default behind a DisclosureGroup labelled \"Known facts\"\n- Tapping \"Known facts\" expands the bullet list; tapping again collapses it\n- Every active article that has ANY delta (all-time, not just since last visit) shows its newFacts bullets\n- Articles without any delta facts show title/source/date only (no empty bullet area)\n- Section header still says \"New since last visit\" when there are genuinely new deltas since the last visit, \"Articles\" otherwise\n- No regression to hero image, pagination, \"Also covered by\", or navigation to article detail",
+  "status": "done",
+  "bead_type": "task",
+  "parent_id": null,
+  "dependencies": [],
+  "acceptance_criteria": [],
+  "linked_docs": [],
+  "feature_root_id": "B-a0906799",
+  "execution_branch_name": "feature/b-a0906799",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-a0906799",
+  "expected_files": [
+    "AggregatorApp/Threads/ThreadDetailView.swift"
+  ],
+  "expected_globs": [],
+  "touched_files": [
+    "AggregatorApp/Threads/ThreadDetailView.swift"
+  ],
+  "changed_files": [
+    "AggregatorApp/Threads/ThreadDetailView.swift"
+  ],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "All acceptance criteria met: rollingSummary shows \"Here's the latest\" label when present; known facts hidden behind collapsible DisclosureGroup; every active article with any historical delta now shows its newFacts bullets; articles without deltas show title/source/date only; section header still uses qualifyingDeltas for \"New since last visit\" vs \"Articles\" logic; hero image, pagination, \"Also covered by\", and article detail navigation unchanged.",
+    "remaining": "None \u2014 bead is fully implemented.",
+    "risks": "Minor: DisclosureGroup label inherits `.headline` style; DisclosureGroup's built-in chevron indicator may interact unexpectedly with glassEffect container styling on iOS 26 \u2014 worth visual QA. The allDeltas content filter mirrors filterNewDeltas's content gate exactly (label/newFacts/reason), so any future changes to that filter must be applied to both.",
+    "verdict": "approved",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [
+      "AggregatorApp/Threads/ThreadDetailView.swift"
+    ],
+    "updated_docs": [],
+    "next_action": "Tester agent should verify: (a) rollingSummary shows with \"Here's the latest\" heading and is absent when nil/empty; (b) known facts DisclosureGroup is collapsed on first load and expands/collapses on tap; (c) articles with historical deltas (not just since last visit) display bullet facts; (d) articles with no deltas show no empty bullet area; (e) section header reads \"New since last visit\" when qualifyingDeltas match active members, \"Articles\" otherwise; (f) no regression in hero image, \"Also covered by\", \"Other updates\", or article navigation.",
+    "next_agent": "tester",
+    "block_reason": "",
+    "expected_files": [
+      "AggregatorApp/Threads/ThreadDetailView.swift"
+    ],
+    "expected_globs": [],
+    "touched_files": [
+      "AggregatorApp/Threads/ThreadDetailView.swift"
+    ],
+    "conflict_risks": "None \u2014 only ThreadDetailView.swift modified; no shared types or protocols changed.",
+    "design_decisions": "Two separate delta lists are computed in scrollContent: `qualifying` (timestamp-filtered, for section header and coveredFacts) and `all` (content-filtered only, for article row rendering). This avoids the prior behavior where articles visited before `previousLastViewedAt` showed no facts even though they had historical deltas. The `coveredFacts` set intentionally still uses `qualifying` so the DisclosureGroup hides only facts already surfaced inline to new visitors \u2014 returning visitors see the full known facts list if they expand it. DisclosureGroup state is view-level (`@State`), so it resets to collapsed on each navigation push, which is the desired default reading experience.",
+    "test_coverage_notes": "Key paths to test: (1) Thread with rollingSummary present \u2014 verify \"Here's the latest\" label appears above it; (2) Thread with nil/empty rollingSummary \u2014 verify no label or prose shown; (3) DisclosureGroup collapsed on load, expands on tap, collapses again; (4) Article with delta timestamp older than previousLastViewedAt \u2014 should now show facts (regression from old behavior); (5) Article with no deltas at all \u2014 no bullet area rendered; (6) Thread with no qualifying deltas \u2014 section header says \"Articles\"; (7) Thread with qualifying deltas matching active members \u2014 section header says \"New since last visit\"; (8) Unlinked deltas (articleId nil) still appear in \"Other updates\" from qualifyingDeltas only.",
+    "known_limitations": "The allDeltas content filter (`label != nil || !newFacts.isEmpty || reason non-empty`) is a copy of filterNewDeltas's content gate rather than a shared static. If the content gate logic changes in the future, both must be updated in sync. This is deliberate to avoid extracting a shared helper for a one-liner used in two places."
+  },
+  "block_reason": "",
+  "conflict_risks": "None \u2014 only ThreadDetailView.swift modified; no shared types or protocols changed.",
+  "branch_name": "feature/b-a0906799",
+  "worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-a0906799",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-09-27T13:42:34.555935+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-09-27T13:42:43.502665+00:00",
+      "event": "skills_loaded",
+      "agent_type": "developer",
+      "summary": "Loaded 7 skill(s) for isolated execution",
+      "details": {
+        "loaded_skills": [
+          "core/base-orchestrator",
+          "role/developer-implementation",
+          "capability/code-edit",
+          "task/corrective-implementation",
+          "task/refactor-safe",
+          "task/migration",
+          "memory"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-09-27T13:42:43.502686+00:00",
+      "event": "started",
+      "agent_type": "developer",
+      "summary": "Worker started",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-09-27T13:42:43.504843+00:00",
+      "event": "guardrails_applied",
+      "agent_type": "developer",
+      "summary": "Applied guardrails from .takt/agent-runs/B-a0906799/repo/templates/agents/developer.md",
+      "details": {
+        "template_path": ".takt/agent-runs/B-a0906799/repo/templates/agents/developer.md"
+      }
+    },
+    {
+      "timestamp": "2026-09-27T13:45:32.360759+00:00",
+      "event": "completed",
+      "agent_type": "developer",
+      "summary": "Restructured ThreadDetailView with three targeted changes: (1) added \"Here's the latest\" headline above rollingSummary, (2) replaced the always-visible knownFactsSection with a DisclosureGroup collapsed by default, (3) added allDeltas() helper and wired it as the articleDeltas source for article row fact rendering while keeping qualifyingDeltas for section header logic.",
+      "details": {}
+    }
+  ],
+  "metadata": {
+    "execution_root": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-a0906799",
+    "workspace_repo_path": "repo",
+    "loaded_skills": [
+      "core/base-orchestrator",
+      "role/developer-implementation",
+      "capability/code-edit",
+      "task/corrective-implementation",
+      "task/refactor-safe",
+      "task/migration",
+      "memory"
+    ],
+    "skill_bundle_hash": "ecae5633083d1bbec41a6e5ec6ea05bbab117f60499c19b2ed76dbbe3e1aec7c",
+    "isolated_home": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/agent-runs/B-a0906799/home",
+    "runner_backend": "claude",
+    "guardrails": {
+      "agent_type": "developer",
+      "template_path": ".takt/agent-runs/B-a0906799/repo/templates/agents/developer.md",
+      "template_text": "# Developer Guardrails\n\nPrimary responsibility: Implement only the assigned bead inside the existing architecture and file scope.\n\n## Corrective bead scope\n\nIf your `bead_id` ends in `-corrective` or `-corrective-<N>` (e.g. `B-abc12345-corrective`, `B-abc12345-test-corrective-2`), you are running as a CORRECTIVE bead. Your scope is **strictly limited to fixing the specific failure that blocked the parent bead**. Do not:\n\n- Add unrelated improvements, refactors, or cleanup, even if you notice them\n- Reapply previously-reverted changes (the operator reverted them for a reason)\n- Expand the surface area beyond what is needed to unblock the parent\n- Touch files outside what the parent bead's `expected_files` / `expected_globs` covered, unless the failure is genuinely in another file and there is no smaller fix\n\nIf you notice an unrelated issue while fixing the corrective scope: **file a separate bead** via `takt bead create` describing what you saw, but do not fix it in this corrective. The operator will prioritize and dispatch.\n\nWhen in doubt about scope: prefer the smallest possible fix. The reviewer of this corrective will check that the scope was respected.\n\nAllowed actions:\n- Modify code, configuration, or local docs required to complete the assigned bead.\n- Create sub-beads for discovered follow-up work that should be handled separately.\n- Verify your `Swift` changes compile and import correctly with a quick syntax check: ``.\n\nDisallowed actions:\n- Run any test suite \u2014 not even a targeted `` run or any subset. Test execution is exclusively the tester agent's responsibility. Running tests wastes the agent budget and delays the pipeline.\n- Redesign unrelated architecture or broaden scope beyond the assigned bead.\n- Perform final review signoff in place of a review agent.\n- Silently absorb unrelated test, documentation, or planning work that should be handed off.\n\n## Memory\n\n**Read memory at bead start.** Before touching any code, run three searches using `$TAKT_CMD` (injected by the orchestrator):\n\n```bash\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace global\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace feature:<feature_root_id>\n$TAKT_CMD memory search \"<bead topic keywords>\" --namespace specs\n```\n\nTreat results as ambient context \u2014 apply relevant entries; skip entries that don't apply.\n\n**Write to memory when you discover reusable project knowledge** \u2014 something that would have changed your approach if you had known it upfront, and is not already in CLAUDE.md or the guardrails.\n\n```bash\n$TAKT_CMD memory add \"<concise fact>\" --namespace global               # project-wide knowledge\n$TAKT_CMD memory add \"<discovery>\" --namespace feature:<feature_root_id>  # feature-scoped\n```\n\nRequired Handoff Fields:\n\nEvery developer bead **must** populate the following three fields in its output JSON. Reviewers and tester agents rely on these fields to scope their work without additional back-and-forth turns. Use `\"N/A\"` only when a field is genuinely inapplicable (e.g., a trivial rename with no design trade-offs); do not leave fields blank.\n\n- **`design_decisions`** \u2014 Document non-obvious architectural or implementation choices made during this bead. Include alternatives considered and why the chosen approach was preferred. Reviewers use this to evaluate correctness without re-deriving intent. Set to `\"N/A\"` only if the change was purely mechanical with no meaningful trade-offs.\n\n- **`test_coverage_notes`** \u2014 Describe what the tester agent should verify: new code paths, edge cases introduced, regression risks, and any known untested scenarios left to the tester. Set to `\"N/A\"` only if the bead touched no executable code paths (e.g., documentation-only changes).\n\n- **`known_limitations`** \u2014 Call out constraints, deferred work, or known gaps in the implementation. This includes out-of-scope items deliberately left for follow-up beads and any areas where the implementation is intentionally incomplete. Set to `\"N/A\"` if the implementation is complete as specified with no known gaps.\n\nExpected outputs:\n- Completed or blocked JSON with concise implementation summary.\n- Accurate touched files, changed files, risks, and follow-up handoff fields.\n- Populated `design_decisions`, `test_coverage_notes`, and `known_limitations` fields in every response.",
+      "captured_at": "2026-09-27T13:42:43.504836+00:00"
+    },
+    "worker_prompt_context": {
+      "bead_id": "B-a0906799",
+      "feature_root_id": "B-a0906799",
+      "title": "Thread detail: label rolling summary, collapse known facts, show all delta facts",
+      "agent_type": "developer",
+      "description": "Restructure ThreadDetailView to make it cleaner and more useful as a default reading experience.\n\n## Changes to ThreadDetailView.swift\n\n### 1. Label the rolling summary as \"Here's the latest\"\nCurrently `rollingSummary` is shown as an unlabelled body-text paragraph in `headerSection`.\nAdd a `Text(\"Here's the latest\").font(.headline)` label above it, so users understand what they're reading.\nOnly show the label+text when `rollingSummary` is non-nil and non-empty (existing guard is fine).\n\n### 2. Collapse known facts behind a DisclosureGroup\nReplace the always-visible `knownFactsSection` with a `DisclosureGroup` that is collapsed by default.\n- Use `@State private var showKnownFacts: Bool = false`\n- Label: \"Known facts\"\n- Content: the existing bullet list (unchanged)\n- The disclosure group should only appear when `residualFacts` is non-empty (existing guard is fine)\n- Apply the same `.glassEffect(.regular, in: RoundedRectangle(cornerRadius: 12))` container styling as today\n\n### 3. Show delta facts for ALL active articles, not just since last visit\nCurrently `newDeltas(_:)` filters deltas by `previousLastViewedAt`, so only articles with facts newer than the last visit show bullet points.\nChange the members section so that delta facts are sourced from ALL deltas (unfiltered), not just qualifying ones:\n- Add a second computed property `allDeltas(_ thread: Thread) -> [ThreadDelta]` that returns `thread.deltas` filtered only for non-empty content (same content filter as `filterNewDeltas` but without the timestamp cutoff).\n- In `membersSection`, pass `allDeltas` as the source for matching delta facts to article rows.\n- Keep `newDeltas` / `qualifyingDeltas` for the section header label logic (\"New since last visit\" vs \"Articles\") \u2014 the label should still reflect whether there are genuinely new deltas since the last visit.\n- `coveredFacts` (used to filter residualFacts for the known facts section) should continue to use `qualifyingDeltas` so the DisclosureGroup only hides facts not already surfaced inline.\n\n## Layout order (top to bottom)\n1. Hero image (unchanged)\n2. Title + metadata line (unchanged)\n3. \"Here's the latest\" label + rollingSummary prose (labelled, same position)\n4. DisclosureGroup \"Known facts\" (collapsed by default, only if residualFacts non-empty)\n5. Section header: \"New since last visit\" or \"Articles\"\n6. Active article rows, each showing ALL delta facts for that article (not just new ones)\n7. \"Other updates\" unlinked deltas (unchanged)\n8. \"Also covered by\" suppressed members (unchanged)\n\n## Files to modify\n- `AggregatorApp/Threads/ThreadDetailView.swift`\n\n## Acceptance criteria\n- `rollingSummary` is shown with a \"Here's the latest\" heading when present\n- Known facts section is hidden by default behind a DisclosureGroup labelled \"Known facts\"\n- Tapping \"Known facts\" expands the bullet list; tapping again collapses it\n- Every active article that has ANY delta (all-time, not just since last visit) shows its newFacts bullets\n- Articles without any delta facts show title/source/date only (no empty bullet area)\n- Section header still says \"New since last visit\" when there are genuinely new deltas since the last visit, \"Articles\" otherwise\n- No regression to hero image, pagination, \"Also covered by\", or navigation to article detail",
+      "status": "in_progress",
+      "acceptance_criteria": [],
+      "dependencies": [],
+      "linked_docs": [],
+      "execution_branch_name": "feature/b-a0906799",
+      "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-a0906799",
+      "expected_files": [],
+      "expected_globs": [],
+      "touched_files": [],
+      "conflict_risks": "",
+      "handoff_summary": {
+        "completed": "",
+        "remaining": "",
+        "risks": "",
+        "verdict": "",
+        "findings_count": 0,
+        "requires_followup": false,
+        "changed_files": [],
+        "updated_docs": [],
+        "next_action": "",
+        "next_agent": "",
+        "block_reason": "",
+        "expected_files": [],
+        "expected_globs": [],
+        "touched_files": [],
+        "conflict_risks": "",
+        "design_decisions": "",
+        "test_coverage_notes": "",
+        "known_limitations": ""
+      }
+    },
+    "last_agent_result": {
+      "outcome": "completed",
+      "summary": "Restructured ThreadDetailView with three targeted changes: (1) added \"Here's the latest\" headline above rollingSummary, (2) replaced the always-visible knownFactsSection with a DisclosureGroup collapsed by default, (3) added allDeltas() helper and wired it as the articleDeltas source for article row fact rendering while keeping qualifyingDeltas for section header logic.",
+      "verdict": "approved",
+      "findings_count": 0,
+      "requires_followup": false,
+      "next_agent": "tester",
+      "block_reason": ""
+    },
+    "telemetry": {
+      "cost_usd": 0.4203894000000001,
+      "duration_ms": 168669,
+      "duration_api_ms": 126275,
+      "num_turns": 15,
+      "input_tokens": 15,
+      "output_tokens": 7122,
+      "cache_creation_tokens": 27970,
+      "cache_read_tokens": 485648,
+      "stop_reason": "tool_use",
+      "session_id": "caec74b6-06a0-4a6a-a2f1-b7d1aa8ea4d8",
+      "permission_denials": [],
+      "prompt_chars": 11758,
+      "prompt_lines": 164,
+      "source": "provider",
+      "attempt": 1
+    },
+    "telemetry_history": [
+      {
+        "cost_usd": 0.4203894000000001,
+        "duration_ms": 168669,
+        "duration_api_ms": 126275,
+        "num_turns": 15,
+        "input_tokens": 15,
+        "output_tokens": 7122,
+        "cache_creation_tokens": 27970,
+        "cache_read_tokens": 485648,
+        "stop_reason": "tool_use",
+        "session_id": "caec74b6-06a0-4a6a-a2f1-b7d1aa8ea4d8",
+        "permission_denials": [],
+        "prompt_chars": 11758,
+        "prompt_lines": 164,
+        "source": "provider",
+        "attempt": 1
+      }
+    ]
+  },
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

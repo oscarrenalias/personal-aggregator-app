@@ -1,0 +1,92 @@
+{
+  "bead_id": "B-6bc849c0",
+  "title": "iPad feature review",
+  "agent_type": "review",
+  "description": "Review all iPad-specific code changes: NavigationModel design, AppRootIPad, SidebarView, all 6 section iPad views, AppRoot branch, DeepLinkRouter update, and project.yml modifications. Verify adherence to all UI conventions in CLAUDE.md: SF Symbols, semantic colors, system font styles, accessibility labels \u2265 44\u00d744 pt tap targets, Empty/Loading/Error states. Confirm no hardcoded hex colors or custom controls. Confirm iPhone code paths are untouched. Check NavigationPath state is not leaked into shared ViewModels.",
+  "status": "ready",
+  "bead_type": "task",
+  "parent_id": "B-d4e711a8",
+  "dependencies": [
+    "B-458b9a38",
+    "B-df2efe46",
+    "B-30a0b521",
+    "B-6414ec8c",
+    "B-46fb7e71",
+    "B-ec6ef03b",
+    "B-c924cda5",
+    "B-47b3395b",
+    "B-80cd72ae",
+    "B-fe49de12",
+    "B-bf0f6dd3",
+    "B-03f676c9",
+    "B-fda7bd0b",
+    "B-dbfe6ba0",
+    "B-d9cfa34d"
+  ],
+  "acceptance_criteria": [
+    "All UI conventions from CLAUDE.md are followed across all iPad views",
+    "No hardcoded hex color values anywhere in AggregatorApp/iPad/",
+    "SF Symbols used for all icons",
+    "All interactive elements have accessibility labels with \u2265 44\u00d744 pt tap targets",
+    "Empty, Loading, and Error states present in all 6 section views",
+    "iPhone code paths demonstrably unchanged",
+    "No NavigationPath or NavigationStack state leaked into shared ViewModels",
+    "No regressions introduced in existing functionality"
+  ],
+  "linked_docs": [
+    "specs/drafts/ipad-3-panel-layout.md",
+    "CLAUDE.md"
+  ],
+  "feature_root_id": "B-d4e711a8",
+  "execution_branch_name": "feature/b-d4e711a8",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-d4e711a8",
+  "expected_files": [],
+  "expected_globs": [
+    "AggregatorApp/iPad/**/*.swift",
+    "AggregatorApp/AppRoot.swift",
+    "AggregatorApp/AggregatorApp.swift",
+    "project.yml"
+  ],
+  "touched_files": [],
+  "changed_files": [],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "",
+    "remaining": "",
+    "risks": "",
+    "verdict": "",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [],
+    "updated_docs": [],
+    "next_action": "",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [],
+    "expected_globs": [],
+    "touched_files": [],
+    "conflict_risks": "",
+    "design_decisions": "",
+    "test_coverage_notes": "",
+    "known_limitations": ""
+  },
+  "block_reason": "",
+  "conflict_risks": "",
+  "branch_name": "",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-10-04T07:49:03.417280+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    }
+  ],
+  "metadata": {},
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

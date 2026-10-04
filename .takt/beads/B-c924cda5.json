@@ -1,0 +1,73 @@
+{
+  "bead_id": "B-c924cda5",
+  "title": "ThreadsIPadView",
+  "agent_type": "developer",
+  "description": "Create AggregatorApp/iPad/Threads/ThreadsIPadView.swift. Landscape: content column shows thread list \u2014 reuse existing ThreadsViewModel and ThreadRowView if the audit confirmed reusability; selection sets iPadNavigationModel.selectedThread; detail column renders ThreadDetailView / ArticleDetailView driven by selectedThread. Portrait: thread list in the detail column; tapping pushes thread detail within the detail column's implicit NavigationStack. Handle Empty, Loading, and Error states explicitly.",
+  "status": "ready",
+  "bead_type": "task",
+  "parent_id": "B-d4e711a8",
+  "dependencies": [
+    "B-458b9a38",
+    "B-ec6ef03b"
+  ],
+  "acceptance_criteria": [
+    "ThreadsIPadView.swift compiles without errors",
+    "Landscape: thread list in content column, detail view in detail column driven by selection",
+    "Portrait: thread list in detail column, tap pushes thread detail",
+    "Empty, Loading, and Error states are explicitly rendered",
+    "Existing Threads views are not modified",
+    "Reuses ThreadsViewModel without modification if audit confirmed reusable"
+  ],
+  "linked_docs": [
+    "specs/drafts/ipad-3-panel-layout.md"
+  ],
+  "feature_root_id": "B-d4e711a8",
+  "execution_branch_name": "feature/b-d4e711a8",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-d4e711a8",
+  "expected_files": [
+    "AggregatorApp/iPad/Threads/ThreadsIPadView.swift"
+  ],
+  "expected_globs": [],
+  "touched_files": [],
+  "changed_files": [],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "",
+    "remaining": "",
+    "risks": "",
+    "verdict": "",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [],
+    "updated_docs": [],
+    "next_action": "",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [],
+    "expected_globs": [],
+    "touched_files": [],
+    "conflict_risks": "",
+    "design_decisions": "",
+    "test_coverage_notes": "",
+    "known_limitations": ""
+  },
+  "block_reason": "",
+  "conflict_risks": "",
+  "branch_name": "",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-10-04T07:49:03.404835+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    }
+  ],
+  "metadata": {},
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

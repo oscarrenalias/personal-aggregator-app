@@ -1,0 +1,73 @@
+{
+  "bead_id": "B-46fb7e71",
+  "title": "SidebarView",
+  "agent_type": "developer",
+  "description": "Create AggregatorApp/iPad/SidebarView.swift \u2014 a List of all 6 AppSection cases. Each row shows the section's SF Symbol icon and label, using the same symbol names as the existing tab bar icons. Row selection updates iPadNavigationModel.selectedSection. Add accessibility labels to all rows. The selection state must visually track iPadNavigationModel.selectedSection so sidebar remains in sync when section changes programmatically (e.g. from a deep link).",
+  "status": "ready",
+  "bead_type": "task",
+  "parent_id": "B-d4e711a8",
+  "dependencies": [
+    "B-30a0b521",
+    "B-6414ec8c"
+  ],
+  "acceptance_criteria": [
+    "SidebarView.swift compiles without errors",
+    "All 6 sections are visible: Threads, Sources, Today, Podcasts, Search, Settings",
+    "SF Symbol icons match the existing tab bar icons exactly",
+    "Tapping a row updates iPadNavigationModel.selectedSection",
+    "Sidebar selection stays in sync when selectedSection changes programmatically",
+    "All rows have accessibility labels"
+  ],
+  "linked_docs": [
+    "specs/drafts/ipad-3-panel-layout.md"
+  ],
+  "feature_root_id": "B-d4e711a8",
+  "execution_branch_name": "feature/b-d4e711a8",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-d4e711a8",
+  "expected_files": [
+    "AggregatorApp/iPad/SidebarView.swift"
+  ],
+  "expected_globs": [],
+  "touched_files": [],
+  "changed_files": [],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "",
+    "remaining": "",
+    "risks": "",
+    "verdict": "",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [],
+    "updated_docs": [],
+    "next_action": "",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [],
+    "expected_globs": [],
+    "touched_files": [],
+    "conflict_risks": "",
+    "design_decisions": "",
+    "test_coverage_notes": "",
+    "known_limitations": ""
+  },
+  "block_reason": "",
+  "conflict_risks": "",
+  "branch_name": "",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-10-04T07:49:03.403365+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    }
+  ],
+  "metadata": {},
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}

@@ -1,0 +1,68 @@
+{
+  "bead_id": "B-df2efe46",
+  "title": "project.yml: iPad target family and sources",
+  "agent_type": "developer",
+  "description": "Update project.yml with two changes: (1) change TARGETED_DEVICE_FAMILY to '1,2' so the build targets both iPhone and iPad; (2) add an AggregatorApp/iPad/ sources block to the AggregatorApp target so xcodegen picks up all future files under that folder. Run xcodegen generate and confirm the project builds (the iPad folder may be empty at this stage).",
+  "status": "ready",
+  "bead_type": "task",
+  "parent_id": "B-d4e711a8",
+  "dependencies": [],
+  "acceptance_criteria": [
+    "TARGETED_DEVICE_FAMILY is '1,2' in project.yml",
+    "AggregatorApp/iPad/ sources block is present in the AggregatorApp target in project.yml",
+    "xcodegen generate runs without error",
+    "Project compiles successfully after regeneration"
+  ],
+  "linked_docs": [
+    "specs/drafts/ipad-3-panel-layout.md"
+  ],
+  "feature_root_id": "B-d4e711a8",
+  "execution_branch_name": "feature/b-d4e711a8",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/personal-aggregator-app/.takt/worktrees/B-d4e711a8",
+  "expected_files": [
+    "project.yml"
+  ],
+  "expected_globs": [],
+  "touched_files": [],
+  "changed_files": [],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "",
+    "remaining": "",
+    "risks": "",
+    "verdict": "",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [],
+    "updated_docs": [],
+    "next_action": "",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [],
+    "expected_globs": [],
+    "touched_files": [],
+    "conflict_risks": "",
+    "design_decisions": "",
+    "test_coverage_notes": "",
+    "known_limitations": ""
+  },
+  "block_reason": "",
+  "conflict_risks": "",
+  "branch_name": "",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-10-04T07:49:03.401619+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    }
+  ],
+  "metadata": {},
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}
